@@ -1,0 +1,58 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+. "$(dirname "$0")/_/husky.sh"
+echo ''
+echo '🚀 Iniciando a checagem de formatação, problemas de sintaxe, tipagem e construção.'
+echo ''
+
+# Check Prettier standards
+echo '🎨 Checando a formatação...'
+npm run check-format ||
+(
+    echo '💥💥💥 Formatação está incorreta! 💥💥💥
+      Talvez você não tenha rodado o comando "npm run format" então vamos fazer isso por você.';
+    echo ' ';
+    echo '📝 Formatando o código...';
+    npm run format
+    echo ''
+    echo '✅ Formatação realizada! Adicione as mudanças ao git e faça o commit novamente';
+    false;
+)
+echo ''
+echo '✅ Formatação sem problemas'
+echo ''
+# Check ESLint Standards
+echo '🎨 Checando a Sintaxe...'
+npm run check-lint ||
+(
+    echo '💥💥💥 Código com problemas na sintaxe! 💥💥💥
+      A checagem do ESLint falhou!. Verifique os problemas informados pelo ESlint, corrija e realize o commit novamente..'
+    false;
+)
+echo ''
+echo '✅ Sintaxe sem problemas'
+echo ''
+
+# Check tsconfig standards
+echo '✏️ Checando a tipagem...'
+npm run check-types ||
+(
+    echo '💥💥💥 Código com tipagem errada! 💥💥💥
+      O tsconfig encontrou erros na tipagem, realize as alterações necessárias e faça o commit novamente.'
+    false;
+)
+echo ''
+echo '✅ Tipagem sem problemas'
+echo ''
+echo '🔨 Inicializando a construção do projeto (Building)'
+npm run build ||
+(
+    echo '💥👷🔨💥 Ocorreu um erro na construção (Build) do projeto 💥👷🔨💥
+                Verifique os erros informados, corrija e faça o commit novamente.
+    '
+    false;
+)
+echo '✅ Projeto contruído com sucesso!'
+echo '✅ Codigo sem erros de formatação, tipagem, sintaxe e construção!'
+echo '📦️ Commit realizado, faça o git push para enviar ao repositório remoto.'
+echo ''
