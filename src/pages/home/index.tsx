@@ -1,9 +1,5 @@
-import { HomeTitle } from "./styles";
+import { HomeTitle } from "./styles"
 
 export default function Home() {
-  return (
-    <HomeTitle>
-      Home page
-    </HomeTitle>
-  )
+  return <HomeTitle>Home page</HomeTitle>
 }
