@@ -1,9 +1,13 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components"
 
 export const GlobalStyles = createGlobalStyle`
-  // Teste - aqui vamos colocar os estilos globais da aplicação
-  body {
-    background: ${({ theme }) => theme.COLORS.GRAY_700};
-    padding: 25px;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body, input, button {
+    font-family: Montserrat, sans-serif;
   }
 `
