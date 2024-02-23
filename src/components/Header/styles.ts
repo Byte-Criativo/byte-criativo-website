@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components"
 
 export const HeaderContainer = styled.header`
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
   width: calc(100% - 10%);
   min-width: 670px;
 
@@ -14,6 +14,7 @@ export const HeaderContainer = styled.header`
   top: 1rem;
   margin: 0 5%;
   padding: 1rem 2rem;
+  z-index: 2;
 
   display: flex;
   justify-content: space-between;
