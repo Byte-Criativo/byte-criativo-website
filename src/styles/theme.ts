@@ -7,6 +7,8 @@ export default {
     GRAY_LOW_OPACITY: "rgba(255, 255, 255, 0.30)",
 
     ORANGE: "#F65606",
+
+    BLUE: "#06B2F6",
   },
 
   FONT_FAMILY: {
@@ -19,6 +21,8 @@ export default {
     LG: "1.25rem",
     XL: "1.5rem",
     XXL: "1.75rem",
+
+    HEADING: "3.75rem",
   },
 
   FONT_WEIGHT: {
