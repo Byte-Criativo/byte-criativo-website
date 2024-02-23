@@ -16,12 +16,14 @@ export default {
   },
 
   FONT_SIZE: {
-    SM: "1.75rem",
+    XS: "0.75rem",
+    SM: "0.8rem",
     MD: "1rem",
     LG: "1.25rem",
     XL: "1.5rem",
     XXL: "1.75rem",
 
+    SECTION_HEADING: "3rem",
     HEADING: "3.75rem",
   },
 
