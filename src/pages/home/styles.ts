@@ -1,7 +1,49 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
-export const HomeTitle = styled.h1`
-  font-family: "Inter", sans-serif;
-  font-size: ${({ theme }) => theme.FONT_SIZE.XXL};
-  color: ${({ theme }) => theme.COLORS.WHITE};
+export const HomeContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  background: url("/background-temp.svg");
+  background-size: cover;
+`
+export const HomeContent = styled.div`
+  padding: 12.5rem 9rem;
+`
+export const HeroSection = styled.section`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  > p {
+    ${({ theme }) => css`
+      color: ${theme.COLORS.GRAY_700};
+      font-size: ${theme.FONT_SIZE.LG};
+    `}
+
+    text-align: center;
+    padding: 0 11.5rem;
+    margin-bottom: 0.5rem;
+  }
+`
+
+export const HeroHeading = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.87rem;
+
+  > h1 {
+    ${({ theme }) => css`
+      color: ${theme.COLORS.GRAY_700};
+      font-size: ${theme.FONT_SIZE.HEADING};
+      font-weight: ${theme.FONT_WEIGHT.BOLD};
+    `}
+
+    text-align: center;
+
+    span {
+      color: ${({ theme }) => theme.COLORS.ORANGE};
+    }
+  }
 `
