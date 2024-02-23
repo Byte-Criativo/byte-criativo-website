@@ -12,12 +12,14 @@ export const HeaderContainer = styled.header`
   position: fixed;
 
   top: 1rem;
-  margin: 5%;
+  margin: 0 5%;
   padding: 1rem 2rem;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  gap: 1rem;
 `
 
 export const NavArea = styled.ul`

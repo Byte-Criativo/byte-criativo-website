@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { HeaderContainer, NavArea, NavItem } from "./styles"
+import { Button } from "../Button"
 
 export function Header() {
   return (
@@ -21,7 +22,7 @@ export function Header() {
           <NavItem href="/FAQ">FAQ</NavItem>
         </li>
       </NavArea>
-      <button>Contate-nos</button>
+      <Button>Contate-nos</Button>
     </HeaderContainer>
   )
 }
