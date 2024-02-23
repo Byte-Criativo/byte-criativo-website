@@ -2,12 +2,11 @@ import styled, { css } from "styled-components"
 
 export const HomeContainer = styled.div`
   width: 100%;
-  height: 100vh;
   background: url("/background-temp.svg");
   background-size: cover;
 `
 export const HomeContent = styled.div`
-  padding: 12.5rem 9rem;
+  padding: 12.5rem 9rem 5.5rem;
 `
 export const HeroSection = styled.section`
   width: 100%;
