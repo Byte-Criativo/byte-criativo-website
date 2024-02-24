@@ -4,6 +4,7 @@ export default {
 
     GRAY_700: "#141414",
     GRAY_500: "#323232",
+    GRAY_300: "#D9D9D9",
     GRAY_LOW_OPACITY: "rgba(255, 255, 255, 0.30)",
 
     ORANGE: "#F65606",

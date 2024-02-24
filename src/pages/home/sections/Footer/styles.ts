@@ -1,5 +1,5 @@
-import Link from "next/link";
-import styled, { css } from "styled-components";
+import Link from "next/link"
+import styled, { css } from "styled-components"
 
 export const FooterContainer = styled.footer`
   width: 100%;
@@ -8,7 +8,7 @@ export const FooterContainer = styled.footer`
   right: 0;
   padding: 4.5rem 10rem;
 
-  border-top: 1px solid #D9D9D9;
+  border-top: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
 `
 
 export const FooterContent = styled.div`
@@ -20,7 +20,7 @@ export const FooterContent = styled.div`
 export const FooterMain = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #D9D9D9;
+  border-bottom: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
 
   padding-bottom: 3rem;
 `
@@ -35,7 +35,7 @@ export const FooterCompany = styled.div`
   > p {
     align-self: stretch;
 
-    color: ${({ theme }) => theme.COLORS.GRAY_500}
+    color: ${({ theme }) => theme.COLORS.GRAY_500};
   }
 `
 
@@ -58,7 +58,7 @@ export const MenuItem = styled(Link)`
   transition: color .2s;
 
   &:hover {
-    color: ${({ theme }) => theme.COLORS.ORANGE}
+    color: ${({ theme }) => theme.COLORS.ORANGE};
   }
 `
 
