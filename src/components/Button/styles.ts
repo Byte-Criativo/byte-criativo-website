@@ -20,7 +20,7 @@ export const ButtonContainer = styled.button`
 
   cursor: pointer;
 
-  transition: background 0.3s ease-in;
+  transition: background 0.2s;
 
   &:hover {
     background: ${({ theme }) => theme.COLORS.BLUE};

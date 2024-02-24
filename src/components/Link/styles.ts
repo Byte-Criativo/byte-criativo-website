@@ -1,5 +1,5 @@
-import Link from "next/link";
-import styled, { css } from "styled-components";
+import Link from "next/link"
+import styled, { css } from "styled-components"
 
 export const LinkContainer = styled(Link)`
   display: flex;
@@ -17,9 +17,9 @@ export const LinkContainer = styled(Link)`
     font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
   `}
 
-  transition: color .3s;
+  transition: color .2s;
 
   &:hover {
-    color: ${({ theme }) => theme.COLORS.BLUE} // ícone não está mudando pq é svg, decidir se vai usar biblioteca de ícones
+    color: ${({ theme }) => theme.COLORS.BLUE};
   }
 `
