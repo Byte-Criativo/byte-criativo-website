@@ -1,5 +1,5 @@
-import { HighlightCard } from "@/src/components/HighlightCard";
-import { CardsContainer } from "./styles";
+import { HighlightCard } from "@/src/components/HighlightCard"
+import { CardsContainer } from "./styles"
 
 export function CardsSection() {
   return (

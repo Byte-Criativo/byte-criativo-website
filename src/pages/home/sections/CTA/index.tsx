@@ -1,5 +1,5 @@
-import { Button } from "@/src/components/Button";
-import { CTAContainer, CTATitle } from "./styles";
+import { Button } from "@/src/components/Button"
+import { CTAContainer, CTATitle } from "./styles"
 
 export function CTASection() {
   return (

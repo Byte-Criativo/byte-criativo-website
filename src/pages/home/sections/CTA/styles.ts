@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css } from "styled-components"
 
 export const CTAContainer = styled.section`
   display: flex;
@@ -14,7 +14,7 @@ export const CTAContainer = styled.section`
   border: 3px solid ${({ theme }) => theme.COLORS.WHITE};
   border-radius: 8px;
 
-  box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.20);
+  box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
   backdrop-filter: blur(20px);
 `
 
