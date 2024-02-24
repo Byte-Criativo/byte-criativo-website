@@ -1,4 +1,8 @@
-import { SectionTitleContainer, SectionTitleHeading, SectionTitleSpan } from "./styles";
+import {
+  SectionTitleContainer,
+  SectionTitleHeading,
+  SectionTitleSpan,
+} from "./styles"
 
 interface SectionTitleProps {
   heading: string

@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
 export const CardContainer = styled.div`
   background: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
@@ -8,7 +8,6 @@ export const CardContainer = styled.div`
   border-radius: 8px;
   border: 1.5px solid ${({ theme }) => theme.COLORS.WHITE};
 
-  box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.20);
+  box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
   backdrop-filter: blur(20px);
 `
-
