@@ -8,6 +8,7 @@ export default {
     GRAY_LOW_OPACITY: "rgba(255, 255, 255, 0.30)",
 
     ORANGE: "#F65606",
+    ORANGE_DARK: "#BE4306",
 
     BLUE: "#06B2F6",
   },

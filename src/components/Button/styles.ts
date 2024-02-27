@@ -23,6 +23,6 @@ export const ButtonContainer = styled.button`
   transition: background 0.2s;
 
   &:hover {
-    background: ${({ theme }) => theme.COLORS.BLUE};
+    background: ${({ theme }) => theme.COLORS.ORANGE_DARK};
   }
 `
