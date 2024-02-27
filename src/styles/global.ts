@@ -7,7 +7,7 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  body, input, button {
+  body, input, button, textarea {
     font-family: Montserrat, sans-serif;
   }
 `
