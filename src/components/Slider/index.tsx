@@ -1,4 +1,4 @@
-import { Navigation } from "swiper/modules"
+import { Navigation, Pagination } from "swiper/modules"
 import { SwiperSlide, Swiper } from "swiper/react"
 import { SliderContainer } from "./styles"
 
@@ -11,13 +11,36 @@ export function Slider() {
   return (
     <SliderContainer>
       <Swiper
-        slidesPerView={3}
-        slidesPerGroup={3}
+        breakpoints={{
+          640: {
+            slidesPerView: 1,
+          },
+          987: {
+            slidesPerView: 2,
+            spaceBetween: 64,
+          },
+          1048: {
+            slidesPerView: 2,
+            spaceBetween: 32,
+          },
+          1350: {
+            slidesPerView: 3,
+            spaceBetween: 64,
+          },
+          1600: {
+            slidesPerView: 3,
+            spaceBetween: 64,
+          },
+          1750: {
+            slidesPerView: 4,
+            spaceBetween: 32,
+          },
+        }}
         navigation={{
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
         }}
-        modules={[Navigation]}
+        modules={[Navigation, Pagination]}
         className="mySwiper"
       >
         <div className="swiper-button-prev swiper-button">
@@ -27,7 +50,7 @@ export function Slider() {
           <ArrowRight size={48} />
         </div>
 
-        <SwiperSlide style={{ justifyContent: "flex-end" }}>
+        <SwiperSlide>
           <TeamCard
             name="Carlos Ferrer"
             occupation="CEO | full-stack dev"
@@ -43,7 +66,7 @@ export function Slider() {
             url="https://linkedin.com/in/brunaporato"
           />
         </SwiperSlide>
-        <SwiperSlide style={{ justifyContent: "flex-start" }}>
+        <SwiperSlide>
           <TeamCard
             name="Bruna Porato"
             occupation="front-end dev"
@@ -51,7 +74,7 @@ export function Slider() {
             url="https://linkedin.com/in/brunaporato"
           />
         </SwiperSlide>
-        <SwiperSlide style={{ justifyContent: "flex-end" }}>
+        <SwiperSlide>
           <TeamCard
             name="Victor Paranhos"
             occupation="Dev"
@@ -67,7 +90,7 @@ export function Slider() {
             url="https://linkedin.com/in/brunaporato"
           />
         </SwiperSlide>
-        <SwiperSlide style={{ justifyContent: "flex-start" }}>
+        <SwiperSlide>
           <TeamCard
             name="Bruna Porato"
             occupation="front-end dev"
@@ -75,7 +98,7 @@ export function Slider() {
             url="https://linkedin.com/in/brunaporato"
           />
         </SwiperSlide>
-        <SwiperSlide style={{ justifyContent: "flex-end" }}>
+        <SwiperSlide>
           <TeamCard
             name="Carlos Ferrer"
             occupation="CEO | full-stack dev"
@@ -91,7 +114,7 @@ export function Slider() {
             url="https://linkedin.com/in/brunaporato"
           />
         </SwiperSlide>
-        <SwiperSlide style={{ justifyContent: "flex-start" }}>
+        <SwiperSlide>
           <TeamCard
             name="Bruna Porato"
             occupation="front-end dev"

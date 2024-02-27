@@ -6,12 +6,16 @@ export const SliderContainer = styled.div`
   .swiper {
     width: 100%;
     height: 400px;
+
+    padding: 0 3rem;
   }
 
   .swiper-slide {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    /* border: 1px solid red; */
   }
 
   .swiper-slide img {

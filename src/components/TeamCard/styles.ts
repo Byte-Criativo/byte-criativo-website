@@ -5,6 +5,8 @@ export const TeamCardContainer = styled(Link)`
   width: 288px;
   height: 400px;
 
+  flex-shrink: 0;
+
   border-radius: 8px;
 
   display: flex;
