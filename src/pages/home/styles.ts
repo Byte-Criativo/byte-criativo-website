@@ -8,8 +8,14 @@ export const HomeContainer = styled.div`
 export const HomeContent = styled.div`
   padding: 12.5rem 9rem 5.5rem;
 
+  /* web small screen */
   @media (max-width: 1027px) {
     padding: 12.5rem 2rem 3.75rem;
+  }
+
+  /* mobile screen */
+  @media (max-width: 450px) {
+    padding: 7.75rem 1rem 3.75rem;
   }
 `
 export const HeroSection = styled.section`

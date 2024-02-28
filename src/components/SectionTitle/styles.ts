@@ -12,6 +12,11 @@ export const SectionTitleSpan = styled.span`
     font-size: ${theme.FONT_SIZE.LG};
     font-weight: ${theme.FONT_WEIGHT.BOLD};
   `}
+
+  /* mobile screen */
+    @media (max-width: 445px) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.MD};
+  }
 `
 
 export const SectionTitleHeading = styled.h2`
@@ -20,4 +25,9 @@ export const SectionTitleHeading = styled.h2`
     font-size: ${theme.FONT_SIZE.SECTION_HEADING};
     font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
   `}
+
+  /* mobile screen */
+  @media (max-width: 445px) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
+  }
 `

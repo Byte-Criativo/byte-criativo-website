@@ -14,11 +14,14 @@ export function Slider() {
         breakpoints={{
           0: {
             slidesPerView: 1,
-            spaceBetween: 0,
+          },
+          430: {
+            slidesPerView: 2,
+            spaceBetween: 8,
           },
           689: {
             slidesPerView: 2,
-            spaceBetween: 64,
+            spaceBetween: 32,
           },
           900: {
             slidesPerView: 2,

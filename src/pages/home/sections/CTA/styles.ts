@@ -24,4 +24,6 @@ export const CTATitle = styled.h2`
     font-weight: ${theme.FONT_WEIGHT.BOLD};
     font-size: 2.5rem;
   `}
+
+  text-align: center;
 `

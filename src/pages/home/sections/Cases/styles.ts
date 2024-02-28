@@ -6,6 +6,16 @@ export const CasesContainer = styled.section`
   align-items: center;
 
   margin-bottom: 7.5rem;
+
+  /* Mobile screen */
+  @media (max-width: 665px) {
+    flex-direction: column;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
 `
 
 export const CaseContent = styled.div`

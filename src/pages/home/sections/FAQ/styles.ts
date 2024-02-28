@@ -79,10 +79,12 @@ export const FAQForm = styled.form`
     align-self: flex-end;
   }
 
+  /* web small screen */
   @media (max-width: 1055px) {
     width: 50%;
   }
 
+  /* tablet screen */
   @media (max-width: 855px) {
     width: 100%;
   }

@@ -18,6 +18,7 @@ export function Header() {
     setBurgerMenuOpen(!burgerMenuOpen)
   }
 
+  // header diminuindo junto com a tela
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 855) {

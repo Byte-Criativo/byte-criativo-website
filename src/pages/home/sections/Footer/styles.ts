@@ -31,6 +31,12 @@ export const FooterMain = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
 
   padding-bottom: 3rem;
+
+  /* mobile screen */
+  @media (max-width: 665px) {
+    flex-direction: column;
+    gap: 2rem;
+  }
 `
 
 export const FooterCompany = styled.div`
@@ -44,6 +50,13 @@ export const FooterCompany = styled.div`
     align-self: stretch;
 
     color: ${({ theme }) => theme.COLORS.GRAY_500};
+  }
+
+  /* mobile screen */
+  @media (max-width: 665px) {
+    align-items: center;
+    text-align: center;
+    align-self: center;
   }
 `
 

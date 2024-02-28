@@ -27,6 +27,7 @@ export default {
 
     SECTION_HEADING: "3rem",
     HEADING: "3.75rem",
+    HEADING_MOBILE: "2.25rem",
   },
 
   FONT_WEIGHT: {

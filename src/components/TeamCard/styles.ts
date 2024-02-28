@@ -32,6 +32,11 @@ export const TeamCardContainer = styled(Link)`
       transform: scale(1.1);
     }
   }
+
+  /* mobile screen */
+  @media (max-width: 689px) {
+    flex-shrink: 1;
+  }
 `
 
 export const TeamCardGradient = styled.div`

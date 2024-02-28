@@ -10,6 +10,11 @@ export const SliderContainer = styled.div`
     height: 29rem;
 
     padding: 0 3rem;
+
+    /* tablet screen */
+    @media (max-width: 897px) {
+      padding: 0;
+    }
   }
 
   .swiper-slide {

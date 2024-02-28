@@ -12,4 +12,11 @@ export const CardsContainer = styled.section`
   @media (max-width: 1027px) {
     gap: 0.5rem;
   }
+
+  /* mobile screen */
+  @media (max-width: 665px) {
+    flex-direction: column;
+    align-self: stretch;
+    align-items: stretch;
+  }
 `

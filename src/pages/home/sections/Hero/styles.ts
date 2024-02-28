@@ -15,8 +15,14 @@ export const HeroContainer = styled.section`
     text-align: center;
     margin: 0 6rem 0.5rem;
 
+    /* web small screen */
     @media (max-width: 1027px) {
       margin: 0 5.5rem 0.5rem;
+    }
+
+    /* mobile screen */
+    @media (max-width: 450px) {
+      margin: 0 1.75rem 0.5rem;
     }
   }
 `
@@ -38,6 +44,19 @@ export const HeroHeading = styled.div`
 
     span {
       color: ${({ theme }) => theme.COLORS.ORANGE};
+    }
+  }
+
+  /* mobile screen */
+  @media (max-width: 665px) {
+    gap: 0.25rem;
+
+    img {
+      width: 2.5rem;
+    }
+
+    > h1 {
+      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
     }
   }
 `
