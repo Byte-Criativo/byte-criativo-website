@@ -33,7 +33,7 @@ export const FooterMain = styled.div`
   padding-bottom: 3rem;
 
   /* mobile screen */
-  @media (max-width: 665px) {
+  @media (max-width: 990px) {
     flex-direction: column;
     gap: 2rem;
   }
@@ -53,7 +53,7 @@ export const FooterCompany = styled.div`
   }
 
   /* mobile screen */
-  @media (max-width: 665px) {
+  @media (max-width: 855px) {
     align-items: center;
     text-align: center;
     align-self: center;
@@ -75,6 +75,7 @@ export const FooterMenu = styled.ul`
 
 export const MenuItem = styled(Link)`
   text-decoration: none;
+  white-space: nowrap;
 
   ${({ theme }) => css`
     color: ${theme.COLORS.GRAY_500};

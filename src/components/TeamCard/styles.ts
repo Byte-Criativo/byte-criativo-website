@@ -34,7 +34,7 @@ export const TeamCardContainer = styled(Link)`
   }
 
   /* mobile screen */
-  @media (max-width: 689px) {
+  @media (max-width: 1300px) {
     flex-shrink: 1;
   }
 `

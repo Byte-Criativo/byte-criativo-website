@@ -20,27 +20,31 @@ export function Slider() {
             spaceBetween: 8,
           },
           689: {
-            slidesPerView: 2,
-            spaceBetween: 32,
+            slidesPerView: 3,
+            spaceBetween: 8,
           },
           900: {
             slidesPerView: 2,
-            spaceBetween: 64,
+            spaceBetween: 16,
           },
-          1048: {
-            slidesPerView: 2,
-            spaceBetween: 32,
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 64,
           },
           1350: {
             slidesPerView: 3,
-            spaceBetween: 64,
-          },
-          1600: {
-            slidesPerView: 3,
-            spaceBetween: 64,
+            spaceBetween: 32,
           },
           1750: {
             slidesPerView: 4,
+            spaceBetween: 32,
+          },
+          2400: {
+            slidesPerView: 5,
+            spaceBetween: 32,
+          },
+          3000: {
+            slidesPerView: 6,
             spaceBetween: 32,
           },
         }}
