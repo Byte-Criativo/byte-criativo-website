@@ -3,9 +3,11 @@ import styled from "styled-components"
 export const SliderContainer = styled.div`
   width: 100%;
 
+  position: relative;
+
   .swiper {
     width: 100%;
-    height: 400px;
+    height: 29rem;
 
     padding: 0 3rem;
   }
@@ -14,8 +16,6 @@ export const SliderContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-
-    /* border: 1px solid red; */
   }
 
   .swiper-slide img {
@@ -25,8 +25,7 @@ export const SliderContainer = styled.div`
     object-fit: cover;
   }
 
-  .swiper-button-next,
-  .swiper-button-prev {
+  .swiper-button {
     width: 48px;
     height: 48px;
 
@@ -37,6 +36,11 @@ export const SliderContainer = styled.div`
 
     &::after {
       display: none;
+    }
+
+    @media (max-width: 897px) {
+      position: absolute;
+      top: 29rem;
     }
   }
 

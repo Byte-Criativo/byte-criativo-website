@@ -13,8 +13,11 @@ export const HeroContainer = styled.section`
     `}
 
     text-align: center;
-    padding: 0 11.5rem;
-    margin-bottom: 0.5rem;
+    margin: 0 6rem 0.5rem;
+
+    @media (max-width: 1027px) {
+      margin: 0 5.5rem 0.5rem;
+    }
   }
 `
 

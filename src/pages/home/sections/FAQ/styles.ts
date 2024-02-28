@@ -14,6 +14,10 @@ export const FAQContainer = styled.div`
 
     flex: 1;
   }
+
+  @media (max-width: 855px) {
+    flex-direction: column;
+  }
 `
 
 export const FAQQuestionsBox = styled.div`
@@ -34,6 +38,8 @@ export const FAQForm = styled.form`
   border: 3px solid ${({ theme }) => theme.COLORS.WHITE};
   box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
   backdrop-filter: blur(20px);
+
+  width: 26rem;
 
   h3 {
     ${({ theme }) => css`
@@ -61,7 +67,7 @@ export const FAQForm = styled.form`
   textarea {
     resize: none;
     height: 6rem;
-    width: 26rem;
+    width: 100%;
   }
 
   input:focus,
@@ -71,5 +77,13 @@ export const FAQForm = styled.form`
 
   .button {
     align-self: flex-end;
+  }
+
+  @media (max-width: 1055px) {
+    width: 50%;
+  }
+
+  @media (max-width: 855px) {
+    width: 100%;
   }
 `

@@ -7,6 +7,10 @@ export const HomeContainer = styled.div`
 `
 export const HomeContent = styled.div`
   padding: 12.5rem 9rem 5.5rem;
+
+  @media (max-width: 1027px) {
+    padding: 12.5rem 2rem 3.75rem;
+  }
 `
 export const HeroSection = styled.section`
   width: 100%;

@@ -12,10 +12,15 @@ export function Slider() {
     <SliderContainer>
       <Swiper
         breakpoints={{
-          640: {
+          0: {
             slidesPerView: 1,
+            spaceBetween: 0,
           },
-          987: {
+          689: {
+            slidesPerView: 2,
+            spaceBetween: 64,
+          },
+          900: {
             slidesPerView: 2,
             spaceBetween: 64,
           },
@@ -43,13 +48,6 @@ export function Slider() {
         modules={[Navigation, Pagination]}
         className="mySwiper"
       >
-        <div className="swiper-button-prev swiper-button">
-          <ArrowLeft size={48} />
-        </div>
-        <div className="swiper-button-next swiper-button">
-          <ArrowRight size={48} />
-        </div>
-
         <SwiperSlide>
           <TeamCard
             name="Carlos Ferrer"
@@ -106,23 +104,13 @@ export function Slider() {
             url="https://www.linkedin.com/in/ferrercarlos/"
           />
         </SwiperSlide>
-        <SwiperSlide>
-          <TeamCard
-            name="Julia Paranhos"
-            occupation="CTO | back-end dev"
-            image="https://github.com/juliarparanhos.png"
-            url="https://linkedin.com/in/brunaporato"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <TeamCard
-            name="Bruna Porato"
-            occupation="front-end dev"
-            image="https://github.com/brunaporato.png"
-            url="https://linkedin.com/in/brunaporato"
-          />
-        </SwiperSlide>
       </Swiper>
+      <div className="swiper-button-prev swiper-button">
+        <ArrowLeft size={48} />
+      </div>
+      <div className="swiper-button-next swiper-button">
+        <ArrowRight size={48} />
+      </div>
     </SliderContainer>
   )
 }

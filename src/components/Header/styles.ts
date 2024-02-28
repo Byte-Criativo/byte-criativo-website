@@ -43,3 +43,14 @@ export const NavItem = styled.a`
     color: ${({ theme }) => theme.COLORS.ORANGE};
   }
 `
+
+export const BurgerMenu = styled.div`
+  border: 1px solid red;
+`
+
+export const BurgerMenuButton = styled.button`
+  all: unset;
+  color: ${({ theme }) => theme.COLORS.ORANGE};
+
+  cursor: pointer;
+`

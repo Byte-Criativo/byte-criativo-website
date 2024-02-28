@@ -4,17 +4,25 @@ import styled, { css } from "styled-components"
 export const FooterContainer = styled.footer`
   width: 100%;
 
-  /* position: absolute; */
   right: 0;
   padding: 4.5rem 10rem;
 
   border-top: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
+
+  @media (max-width: 855px) {
+    padding: 4.5rem 2rem;
+  }
 `
 
 export const FooterContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+
+  @media (max-width: 855px) {
+    width: 100%;
+    justify-content: space-between;
+  }
 `
 
 export const FooterMain = styled.div`
@@ -45,6 +53,11 @@ export const FooterMenu = styled.ul`
   display: flex;
   align-items: flex-start;
   gap: 1.75rem;
+
+  @media (max-width: 855px) {
+    flex-direction: column;
+    align-items: flex-end;
+  }
 `
 
 export const MenuItem = styled(Link)`

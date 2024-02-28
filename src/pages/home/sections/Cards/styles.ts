@@ -8,4 +8,8 @@ export const CardsContainer = styled.section`
   gap: 2rem;
 
   justify-content: center;
+
+  @media (max-width: 1027px) {
+    gap: 0.5rem;
+  }
 `
