@@ -68,16 +68,16 @@ export function Header() {
         <>
           <NavArea>
             <li>
-              <NavItem href="/cases">Cases</NavItem>
+              <NavItem href="/#cases">Cases</NavItem>
             </li>
             <li>
-              <NavItem href="/services">Serviços</NavItem>
+              <NavItem href="/#services">Serviços</NavItem>
             </li>
             <li>
-              <NavItem href="/team">Equipe</NavItem>
+              <NavItem href="/#team">Equipe</NavItem>
             </li>
             <li>
-              <NavItem href="/FAQ">FAQ</NavItem>
+              <NavItem href="/#FAQ">FAQ</NavItem>
             </li>
           </NavArea>
           <Button>Contate-nos</Button>

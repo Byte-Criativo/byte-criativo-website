@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 export const CardsContainer = styled.section`
-  margin: 6.25rem 0;
+  padding-top: 6.25rem;
 
   display: flex;
   align-items: center;

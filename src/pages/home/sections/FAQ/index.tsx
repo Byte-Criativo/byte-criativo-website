@@ -5,7 +5,7 @@ import { Button } from "@/src/components/Button"
 
 export function FAQSection() {
   return (
-    <FAQContainer>
+    <FAQContainer id="FAQ">
       <div className="left-side">
         <SectionTitle heading="Dúvidas" span="FAQ" />
         <FAQQuestionsBox>

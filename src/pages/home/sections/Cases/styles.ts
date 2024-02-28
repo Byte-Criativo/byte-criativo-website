@@ -5,7 +5,7 @@ export const CasesContainer = styled.section`
   justify-content: space-between;
   align-items: center;
 
-  margin-bottom: 7.5rem;
+  padding-top: 7.5rem;
 
   /* Mobile screen */
   @media (max-width: 665px) {

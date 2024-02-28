@@ -7,7 +7,6 @@ export const ServicesContainer = styled.section`
   gap: 6rem;
 
   padding: 3.75rem 4rem;
-  margin-bottom: 7.5rem;
 
   background: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
   border: 3px solid ${({ theme }) => theme.COLORS.WHITE};

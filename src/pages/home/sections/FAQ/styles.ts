@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components"
 
 export const FAQContainer = styled.div`
-  margin: 7.5rem 0;
+  padding-top: 7.5rem;
 
   display: flex;
   justify-content: space-between;

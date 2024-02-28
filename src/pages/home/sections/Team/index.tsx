@@ -4,7 +4,7 @@ import { Slider } from "@/src/components/Slider"
 
 export function TeamSection() {
   return (
-    <TeamContainer>
+    <TeamContainer id="team">
       <SectionTitle span="Equipe" heading="Nosso Time" />
       <Slider />
     </TeamContainer>

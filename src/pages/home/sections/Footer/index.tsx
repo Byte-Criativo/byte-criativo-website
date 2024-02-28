@@ -26,16 +26,16 @@ export function FooterSection() {
           </FooterCompany>
           <FooterMenu>
             <li>
-              <MenuItem href="">CASE</MenuItem>
+              <MenuItem href="#cases">CASES</MenuItem>
             </li>
             <li>
-              <MenuItem href="">SERVIÇOS</MenuItem>
+              <MenuItem href="#services">SERVIÇOS</MenuItem>
             </li>
             <li>
-              <MenuItem href="">QUEM SOMOS</MenuItem>
+              <MenuItem href="#team">QUEM SOMOS</MenuItem>
             </li>
             <li>
-              <MenuItem href="">DÚVIDAS</MenuItem>
+              <MenuItem href="#FAQ">DÚVIDAS</MenuItem>
             </li>
           </FooterMenu>
         </FooterMain>

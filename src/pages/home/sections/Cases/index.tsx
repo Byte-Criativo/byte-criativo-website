@@ -8,7 +8,7 @@ import { ArrowUpRight } from "@phosphor-icons/react"
 
 export function CasesSection() {
   return (
-    <CasesContainer>
+    <CasesContainer id="cases">
       <Image src={MockupMaternite} alt="" width={400} />
       <CaseContent>
         <SectionTitle span="Nosso case" heading="Maternité" />

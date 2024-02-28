@@ -3,9 +3,11 @@ import { CTAContainer, CTATitle } from "./styles"
 
 export function CTASection() {
   return (
-    <CTAContainer>
-      <CTATitle>Vamos começar o projeto?</CTATitle>
-      <Button>Enviar Email</Button>
-    </CTAContainer>
+    <div id="contact" style={{ paddingTop: "7.5rem" }}>
+      <CTAContainer>
+        <CTATitle>Vamos começar o projeto?</CTATitle>
+        <Button>Enviar Email</Button>
+      </CTAContainer>
+    </div>
   )
 }
