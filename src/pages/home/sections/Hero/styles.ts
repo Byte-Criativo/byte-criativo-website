@@ -1,24 +1,6 @@
 import styled, { css } from "styled-components"
 
-export const HomeContainer = styled.div`
-  width: 100%;
-  background: url("/background-temp.svg");
-  background-size: cover;
-`
-export const HomeContent = styled.div`
-  padding: 12.5rem 9rem 5.5rem;
-
-  /* web small screen */
-  @media (max-width: 1027px) {
-    padding: 12.5rem 2rem 3.75rem;
-  }
-
-  /* mobile screen */
-  @media (max-width: 450px) {
-    padding: 7.75rem 1rem 3.75rem;
-  }
-`
-export const HeroSection = styled.section`
+export const HeroContainer = styled.section`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -31,8 +13,17 @@ export const HeroSection = styled.section`
     `}
 
     text-align: center;
-    padding: 0 11.5rem;
-    margin-bottom: 0.5rem;
+    margin: 0 6rem 0.5rem;
+
+    /* web small screen */
+    @media (max-width: 1027px) {
+      margin: 0 5.5rem 0.5rem;
+    }
+
+    /* mobile screen */
+    @media (max-width: 450px) {
+      margin: 0 1.75rem 0.5rem;
+    }
   }
 `
 
@@ -53,6 +44,19 @@ export const HeroHeading = styled.div`
 
     span {
       color: ${({ theme }) => theme.COLORS.ORANGE};
+    }
+  }
+
+  /* mobile screen */
+  @media (max-width: 665px) {
+    gap: 0.25rem;
+
+    img {
+      width: 2.5rem;
+    }
+
+    > h1 {
+      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
     }
   }
 `
