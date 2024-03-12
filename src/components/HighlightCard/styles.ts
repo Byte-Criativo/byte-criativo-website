@@ -5,6 +5,7 @@ export const CardContainer = styled.div`
   padding: 1rem 1.75rem;
 
   width: 22rem;
+  min-height: 12.5rem;
   border-radius: 8px;
   border: 1.5px solid ${({ theme }) => theme.COLORS.WHITE};
 
