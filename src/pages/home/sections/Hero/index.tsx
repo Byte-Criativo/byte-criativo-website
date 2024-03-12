@@ -1,5 +1,5 @@
-import { Button } from "@/src/components/Button"
-import { HeroContainer, HeroHeading } from "./styles"
+import { Button } from "@/src/components/Button";
+import { HeroContainer, HeroHeading } from "./styles";
 
 export function HeroSection() {
   return (
@@ -7,15 +7,16 @@ export function HeroSection() {
       <HeroHeading>
         <img src="/byteSymbolLeft.svg" alt="" />
         <h1>
-          Lorem ipsum <span>sit dolor</span> epte sit amet, ectetur elit
+          Soluções inteligentes e personalizadas em uma
+          <span> software house</span>
         </h1>
         <img src="/byteSymbolRight.svg" alt="" />
       </HeroHeading>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut dolor sit
+        Esqueça as soluções prontas. Descubra o que realmente impulsiona a sua
+        empresa!
       </p>
-      <Button>Começar Projeto</Button>
+      <Button>Comece seu projeto</Button>
     </HeroContainer>
-  )
+  );
 }
