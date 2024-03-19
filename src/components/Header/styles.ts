@@ -24,7 +24,7 @@ export const HeaderContainer = styled.header`
   gap: 1rem;
 
   /* tablet screen */
-  @media (max-width: 855px) {
+  @media (max-width: 895px) {
     width: calc(100% - 2rem);
   }
 
@@ -59,17 +59,4 @@ export const NavItem = styled.a`
   &:hover {
     color: ${({ theme }) => theme.COLORS.ORANGE};
   }
-`
-
-// TODO: falta finalizar o layout
-export const BurgerMenu = styled.div`
-  border: 1px solid red;
-  position: absolute;
-`
-
-export const BurgerMenuButton = styled.button`
-  all: unset;
-  color: ${({ theme }) => theme.COLORS.ORANGE};
-
-  cursor: pointer;
 `

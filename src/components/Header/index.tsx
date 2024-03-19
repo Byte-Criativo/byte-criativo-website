@@ -1,22 +1,11 @@
 import Link from "next/link"
-import {
-  BurgerMenu,
-  BurgerMenuButton,
-  HeaderContainer,
-  NavArea,
-  NavItem,
-} from "./styles"
+import { HeaderContainer, NavArea, NavItem } from "./styles"
 import { Button } from "../Button"
 import { useEffect, useState } from "react"
-import { List } from "@phosphor-icons/react"
+import { BurgerMenu } from "../BurgerMenu"
 
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false)
-  const [burgerMenuOpen, setBurgerMenuOpen] = useState(false)
-
-  function handleToggleBurgerMenu() {
-    setBurgerMenuOpen(!burgerMenuOpen)
-  }
 
   // header diminuindo junto com a tela
   useEffect(() => {
@@ -43,27 +32,7 @@ export function Header() {
         <img src="/logoByte.png" alt="Logo" />
       </Link>
       {showBurgerMenu ? (
-        <>
-          <BurgerMenuButton onClick={handleToggleBurgerMenu}>
-            <List size={42} />
-          </BurgerMenuButton>
-          {burgerMenuOpen && (
-            <BurgerMenu>
-              <li>
-                <NavItem href="/cases">Cases</NavItem>
-              </li>
-              <li>
-                <NavItem href="/services">Serviços</NavItem>
-              </li>
-              <li>
-                <NavItem href="/team">Equipe</NavItem>
-              </li>
-              <li>
-                <NavItem href="/FAQ">FAQ</NavItem>
-              </li>
-            </BurgerMenu>
-          )}
-        </>
+        <BurgerMenu />
       ) : (
         <>
           <NavArea>
@@ -80,7 +49,7 @@ export function Header() {
               <NavItem href="/#FAQ">FAQ</NavItem>
             </li>
           </NavArea>
-          <Button>Contate-nos</Button>
+          <Button href="mailto:oi@bytecriativo.com">Entre em contato</Button>
         </>
       )}
     </HeaderContainer>
