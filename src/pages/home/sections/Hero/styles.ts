@@ -48,7 +48,7 @@ export const HeroHeading = styled.div`
   }
 
   /* mobile screen */
-  @media (max-width: 665px) {
+  @media (max-width: 770px) {
     gap: 0.25rem;
 
     img {
@@ -57,6 +57,13 @@ export const HeroHeading = styled.div`
 
     > h1 {
       font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
+    }
+  }
+
+  /* opção para hero - fonte quebrando */
+  @media (max-width: 398px) {
+    img {
+      display: none;
     }
   }
 `

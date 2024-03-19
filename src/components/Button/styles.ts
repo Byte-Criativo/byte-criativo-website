@@ -1,6 +1,7 @@
+import Link from "next/link"
 import styled, { css } from "styled-components"
 
-export const ButtonContainer = styled.button`
+export const ButtonContainer = styled(Link)`
   all: unset;
   padding: 1rem 2rem;
   border-radius: 8px;
@@ -11,6 +12,8 @@ export const ButtonContainer = styled.button`
   align-self: center;
 
   width: fit-content;
+
+  white-space: nowrap;
 
   ${({ theme }) => css`
     background: ${theme.COLORS.ORANGE};

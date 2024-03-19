@@ -1,5 +1,5 @@
-import { Button } from "@/src/components/Button";
-import { HeroContainer, HeroHeading } from "./styles";
+import { Button } from "@/src/components/Button"
+import { HeroContainer, HeroHeading } from "./styles"
 
 export function HeroSection() {
   return (
@@ -16,7 +16,7 @@ export function HeroSection() {
         Esqueça as soluções prontas. Descubra o que realmente impulsiona a sua
         empresa!
       </p>
-      <Button>Comece seu projeto</Button>
+      <Button href="mailto:oi@bytecriativo.com">Comece seu projeto</Button>
     </HeroContainer>
-  );
+  )
 }
