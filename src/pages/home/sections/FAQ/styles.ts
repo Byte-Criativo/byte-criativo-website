@@ -5,6 +5,7 @@ export const FAQContainer = styled.div`
 
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 4rem;
 
   .left-side {
@@ -29,9 +30,9 @@ export const FAQQuestionsBox = styled.div`
 export const FAQForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
 
   padding: 3.75rem 2rem;
+  max-height: min-content;
 
   background: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
   border-radius: 8px;
@@ -49,7 +50,16 @@ export const FAQForm = styled.form`
     `}
   }
 
+  p {
+    margin-top: 0.5rem;
+    ${({ theme }) => css`
+      color: ${theme.COLORS.GRAY_500};
+    `}
+  }
+
   .inputs {
+    margin: 1.5rem 0;
+
     display: flex;
     flex-direction: column;
     gap: 1.5rem;

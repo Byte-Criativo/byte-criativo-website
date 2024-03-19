@@ -1,22 +1,26 @@
 import { ArrowDown, ArrowUp } from "@phosphor-icons/react"
 import { Answer, QuestionAnswerContainer, Question } from "./styles"
-import { useState } from "react"
 
 interface QuestionAnswerProps {
   question: string
   answer: string
+  isOpen?: boolean
+  onClick: () => void
 }
 
-export function QuestionAnswer({ question, answer }: QuestionAnswerProps) {
-  const [isOpen, setIsOpen] = useState(false)
-
-  function handleToggleAnswer() {
-    setIsOpen(!isOpen)
+export function QuestionAnswer({
+  isOpen = false,
+  question,
+  answer,
+  onClick,
+}: QuestionAnswerProps) {
+  function handleOnClick() {
+    onClick()
   }
 
   return (
     <QuestionAnswerContainer>
-      <Question onClick={handleToggleAnswer}>
+      <Question onClick={handleOnClick}>
         <p>{question}</p>
         {isOpen ? <ArrowUp size={32} /> : <ArrowDown size={32} />}
       </Question>
