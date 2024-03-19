@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/image"
 import {
   FooterCompany,
   FooterContainer,
@@ -7,13 +7,14 @@ import {
   FooterMenu,
   FooterNetwork,
   MenuItem,
-} from "./styles";
-import MiniLogo from "@/src/assets/MiniLogo.png";
-import { Link } from "@/src/components/Link";
-import { InstagramLogo, LinkedinLogo } from "@phosphor-icons/react";
-import CurrentYear from "@/src/components/CurrentYear";
+} from "./styles"
+import MiniLogo from "@/src/assets/MiniLogo.png"
+import { Link } from "@/src/components/Link"
+import { InstagramLogo, LinkedinLogo } from "@phosphor-icons/react"
 
 export function FooterSection() {
+  const year = new Date().getFullYear()
+
   return (
     <FooterContainer>
       <FooterContent>
@@ -23,9 +24,7 @@ export function FooterSection() {
             <p>
               ❤️ <strong>Byte Criativo;</strong>
             </p>
-            <p>
-              © <CurrentYear />. Todos os direitos reservados.
-            </p>
+            <p>© {year}. Todos os direitos reservados.</p>
             <p>CNPJ: 52.652.130/0001-02</p>
           </FooterCompany>
           <FooterMenu>
@@ -58,5 +57,5 @@ export function FooterSection() {
         </FooterNetwork>
       </FooterContent>
     </FooterContainer>
-  );
+  )
 }
