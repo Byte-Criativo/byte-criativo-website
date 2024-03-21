@@ -23,9 +23,10 @@ export const ButtonContainer = styled(Link)`
 
   cursor: pointer;
 
-  transition: background 0.2s;
+  transition: all 0.3s ease-in;
 
   &:hover {
-    background: ${({ theme }) => theme.COLORS.ORANGE_DARK};
+    /* background: ${({ theme }) => theme.COLORS.ORANGE_DARK}; */
+    padding: 1rem 2.5rem;
   }
 `
