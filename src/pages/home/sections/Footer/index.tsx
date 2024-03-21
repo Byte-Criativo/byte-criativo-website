@@ -8,7 +8,6 @@ import {
   FooterNetwork,
   MenuItem,
 } from "./styles"
-import MiniLogo from "@/src/assets/MiniLogo.png"
 import { Link } from "@/src/components/Link"
 import { InstagramLogo, LinkedinLogo } from "@phosphor-icons/react"
 
@@ -20,7 +19,7 @@ export function FooterSection() {
       <FooterContent>
         <FooterMain>
           <FooterCompany>
-            <Image src={MiniLogo} alt="" width={80} />
+            <Image src="/MiniLogo.png" alt="" width={80} height={80} />
             <p>
               ❤️ <strong>Byte Criativo;</strong>
             </p>
