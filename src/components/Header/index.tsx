@@ -6,15 +6,16 @@ import { BurgerMenu } from "../BurgerMenu"
 
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false)
+  const [resizeLogo, setResizeLogo] = useState(false)
 
   // header diminuindo junto com a tela
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 855) {
-        setShowBurgerMenu(true)
-      } else {
-        setShowBurgerMenu(false)
-      }
+      window.innerWidth < 855
+        ? setShowBurgerMenu(true)
+        : setShowBurgerMenu(false)
+
+      window.innerWidth < 400 ? setResizeLogo(true) : setResizeLogo(false)
     }
 
     handleResize()
@@ -29,10 +30,17 @@ export function Header() {
   return (
     <HeaderContainer>
       <Link href="#">
-        <img src="/logoByte.png" alt="Logo" />
+        {resizeLogo ? (
+          <img src="/MiniLogo.png" alt="Logo" width={40} height={40} />
+        ) : (
+          <img src="/logoByte.png" alt="Logo" />
+        )}
       </Link>
       {showBurgerMenu ? (
-        <BurgerMenu />
+        <>
+          <div />
+          <BurgerMenu />
+        </>
       ) : (
         <>
           <NavArea>
@@ -49,7 +57,9 @@ export function Header() {
               <NavItem href="/#FAQ">FAQ</NavItem>
             </li>
           </NavArea>
-          <Button href="mailto:oi@bytecriativo.com">Entre em contato</Button>
+          <Button href="mailto:oi@bytecriativo.com" className="button">
+            Entre em contato
+          </Button>
         </>
       )}
     </HeaderContainer>

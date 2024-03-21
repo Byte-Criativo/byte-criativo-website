@@ -16,12 +16,19 @@ export const HeaderContainer = styled.header`
   padding: 1rem 2rem;
   z-index: 99;
 
-  display: flex;
+  display: grid;
   justify-content: space-between;
   justify-self: center;
   align-items: center;
 
+  grid-template-columns: 1fr minmax(min-content, 1fr) 1fr;
+
   gap: 1rem;
+
+  .button {
+    position: absolute;
+    right: 2rem;
+  }
 
   /* tablet screen */
   @media (max-width: 895px) {
