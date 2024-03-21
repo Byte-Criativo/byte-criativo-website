@@ -7,14 +7,15 @@ export const CasesContainer = styled.section`
 
   padding-top: 7.5rem;
 
-  /* Mobile screen */
-  @media (max-width: 665px) {
-    flex-direction: column;
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 
-    img {
-      max-width: 100%;
-      height: auto;
-    }
+  /* Mobile screen */
+  @media (max-width: 825px) {
+    flex-direction: column;
+    padding-top: 3rem;
   }
 `
 
