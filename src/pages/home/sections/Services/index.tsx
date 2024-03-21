@@ -1,6 +1,6 @@
-import { SectionTitle } from "@/src/components/SectionTitle";
-import { ServicesContainer, ServicesGrid } from "./styles";
-import { CardContent } from "@/src/components/CardContent";
+import { SectionTitle } from "@/src/components/SectionTitle"
+import { ServicesContainer, ServicesGrid } from "./styles"
+import { CardContent } from "@/src/components/CardContent"
 
 export function ServicesSection() {
   return (
@@ -14,7 +14,7 @@ export function ServicesSection() {
           />
           <CardContent
             title="Back-end"
-            description="Garanta uma integração perfeita das informações, sem falhas, com nosso desenvolvimento back-end de elite"
+            description="Conte com uma integração perfeita das informações, sem falhas, com nosso desenvolvimento back-end de elite"
           />
           <CardContent
             title="UI/UX Design"
@@ -35,5 +35,5 @@ export function ServicesSection() {
         </ServicesGrid>
       </ServicesContainer>
     </div>
-  );
+  )
 }

@@ -8,6 +8,7 @@ export const ContentContainer = styled.div`
 `
 
 export const CardTitle = styled.h2`
+  min-width: 158px;
   ${({ theme }) => css`
     color: ${theme.COLORS.GRAY_700};
     font-size: ${theme.FONT_SIZE.LG};
