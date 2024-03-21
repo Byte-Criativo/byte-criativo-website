@@ -5,6 +5,8 @@ export const SliderContainer = styled.div`
 
   position: relative;
 
+  cursor: grab;
+
   .swiper {
     width: 100%;
     height: 29rem;

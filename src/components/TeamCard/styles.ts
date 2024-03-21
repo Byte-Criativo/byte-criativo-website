@@ -30,6 +30,7 @@ export const TeamCardContainer = styled(Link)`
 
     &:hover {
       transform: scale(1.1);
+      cursor: grab;
     }
   }
 
