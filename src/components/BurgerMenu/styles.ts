@@ -1,6 +1,10 @@
 import styled, { css } from "styled-components"
 import * as Dialog from "@radix-ui/react-dialog"
 
+export const BurgerMenuContainer = styled.div`
+  justify-self: flex-end;
+`
+
 export const DialogContent = styled(Dialog.Content)`
   background-color: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
   width: 100vw;
@@ -20,7 +24,13 @@ export const DialogContent = styled(Dialog.Content)`
 
   padding: 3.75rem 2rem 0;
 
-  animation: slideDown 0.5s;
+  &[data-state="open"] {
+    animation: slideDown 0.4s ease-in;
+  }
+
+  &[data-state="closed"] {
+    animation: slideUp 0.3s ease-out;
+  }
 
   @keyframes slideDown {
     from {
@@ -30,6 +40,17 @@ export const DialogContent = styled(Dialog.Content)`
     to {
       transform: translateY(0);
       opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-100%);
+      opacity: 0.3;
     }
   }
 `
