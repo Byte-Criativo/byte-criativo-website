@@ -18,5 +18,6 @@ export const CardsContainer = styled.section`
     flex-direction: column;
     align-self: stretch;
     align-items: stretch;
+    gap: 1.5rem;
   }
 `

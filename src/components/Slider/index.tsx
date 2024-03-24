@@ -16,6 +16,10 @@ export function Slider() {
             slidesPerView: 1,
           },
           430: {
+            slidesPerView: 1,
+            spaceBetween: 8,
+          },
+          500: {
             slidesPerView: 2,
             spaceBetween: 8,
           },
