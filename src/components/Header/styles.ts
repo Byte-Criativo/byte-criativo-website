@@ -51,6 +51,8 @@ export const NavArea = styled.ul`
   list-style: none;
   display: flex;
   gap: 1.75rem;
+
+  justify-self: center;
 `
 
 export const NavItem = styled.a`

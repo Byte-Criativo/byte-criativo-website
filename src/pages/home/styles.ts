@@ -6,7 +6,7 @@ export const HomeContainer = styled.div`
   background-size: cover;
 `
 export const HomeContent = styled.div`
-  padding: 12.5rem 9rem 5.5rem;
+  padding: 13.5rem 9rem 5.5rem;
 
   /* web small screen */
   @media (max-width: 1027px) {
