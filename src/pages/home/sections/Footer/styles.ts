@@ -42,13 +42,12 @@ export const FooterMain = styled.div`
 export const FooterCompany = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 18.75rem;
+  /* max-width: 18.75rem; */
   align-items: flex-start;
   gap: 1rem;
 
   > p {
     align-self: stretch;
-
     color: ${({ theme }) => theme.COLORS.GRAY_500};
   }
 
@@ -91,17 +90,21 @@ export const MenuItem = styled(Link)`
 
 export const FooterNetwork = styled.div`
   display: flex;
-  align-self: flex-end;
-  flex-direction: column;
+  justify-content: space-between;
 
-  gap: 0.75rem;
+  .followUs {
+    flex-direction: column;
 
-  > p {
-    font-size: ${({ theme }) => theme.FONT_SIZE.SM};
-  }
+    gap: 0.75rem;
 
-  > .links {
-    display: flex;
-    justify-content: space-between;
+    > p {
+      font-size: ${({ theme }) => theme.FONT_SIZE.SM};
+      color: ${({ theme }) => theme.COLORS.GRAY_700};
+    }
+
+    > .links {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 `

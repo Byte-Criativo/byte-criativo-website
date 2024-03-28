@@ -76,7 +76,7 @@ export function FAQSection() {
           <input type="email" placeholder="E-mail" />
           <textarea placeholder="Mensagem" />
         </div>
-        <Button href="mailto:oi@bytecriativo.com" className="button">
+        <Button href="mailto:contato@bcriativo.com" className="button">
           Enviar
         </Button>
       </FAQForm>

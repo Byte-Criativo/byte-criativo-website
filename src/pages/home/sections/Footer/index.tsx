@@ -23,8 +23,10 @@ export function FooterSection() {
             <p>
               ❤️ <strong>Byte Criativo;</strong>
             </p>
-            <p>© {year}. Todos os direitos reservados.</p>
+            {/* <p>© {year}. Todos os direitos reservados.</p> */}
             <p>CNPJ: 52.652.130/0001-02</p>
+            <p>(83) 99125-3377 | contato@bcriativo.com</p>
+            {/* <p>contato@bcriativo.com</p> */}
           </FooterCompany>
           <FooterMenu>
             <li>
@@ -42,16 +44,20 @@ export function FooterSection() {
           </FooterMenu>
         </FooterMain>
         <FooterNetwork>
-          <p>Siga-nos</p>
-          <div className="links">
-            <Link
-              href="https://instagram.com/bytecriativo"
-              icon={<InstagramLogo size={24} weight="bold" />}
-            />
-            <Link
-              href="https://www.linkedin.com/company/byte-criativo/"
-              icon={<LinkedinLogo size={24} weight="bold" />}
-            />
+          <p>© {year}. Todos os direitos reservados.</p>
+
+          <div className="followUs">
+            <p>Siga-nos</p>
+            <div className="links">
+              <Link
+                href="https://instagram.com/bytecriativo"
+                icon={<InstagramLogo size={24} weight="bold" />}
+              />
+              <Link
+                href="https://www.linkedin.com/company/byte-criativo/"
+                icon={<LinkedinLogo size={24} weight="bold" />}
+              />
+            </div>
           </div>
         </FooterNetwork>
       </FooterContent>

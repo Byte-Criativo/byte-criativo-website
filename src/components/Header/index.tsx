@@ -3,6 +3,7 @@ import { HeaderContainer, NavArea, NavItem } from "./styles"
 import { Button } from "../Button"
 import { useEffect, useState } from "react"
 import { BurgerMenu } from "../BurgerMenu"
+import Image from "next/image"
 
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false)
@@ -31,9 +32,9 @@ export function Header() {
     <HeaderContainer>
       <Link href="#">
         {resizeLogo ? (
-          <img src="/MiniLogo.png" alt="Logo" width={40} height={40} />
+          <Image src="/MiniLogo.png" alt="Logo" width={40} height={40} />
         ) : (
-          <img src="/logoByte.png" alt="Logo" />
+          <Image src="/logoByte.png" alt="Logo" width={216} height={39} />
         )}
       </Link>
       {showBurgerMenu ? (
@@ -57,7 +58,7 @@ export function Header() {
               <NavItem href="/#FAQ">FAQ</NavItem>
             </li>
           </NavArea>
-          <Button href="mailto:oi@bytecriativo.com" className="button">
+          <Button href="mailto:contato@bcriativo.com" className="button">
             Entre em contato
           </Button>
         </>

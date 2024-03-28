@@ -16,7 +16,7 @@ export function HeroSection() {
         Esqueça as soluções prontas. Descubra o que realmente impulsiona a sua
         empresa!
       </p>
-      <Button href="mailto:oi@bytecriativo.com">Comece seu projeto</Button>
+      <Button href="mailto:contato@bcriativo.com">Comece seu projeto</Button>
     </HeroContainer>
   )
 }
