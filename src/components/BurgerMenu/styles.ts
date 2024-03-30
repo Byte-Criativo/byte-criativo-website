@@ -22,8 +22,6 @@ export const DialogContent = styled(Dialog.Content)`
   box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
   backdrop-filter: blur(20px);
 
-  padding: 3.75rem 2rem 0;
-
   &[data-state="open"] {
     animation: slideDown 0.4s ease-in;
   }
@@ -55,6 +53,12 @@ export const DialogContent = styled(Dialog.Content)`
   }
 `
 
+export const DialogDescription = styled(Dialog.Description)`
+  position: relative;
+  height: 100vh;
+  padding: 0 2rem;
+`
+
 export const DialogTrigger = styled(Dialog.Trigger)`
   all: unset;
   color: ${({ theme }) => theme.COLORS.ORANGE};
@@ -64,6 +68,7 @@ export const DialogClose = styled(Dialog.Close)`
   all: unset;
   color: ${({ theme }) => theme.COLORS.ORANGE};
   align-self: flex-end;
+  padding: 3rem 2rem 0 0;
 `
 
 export const MenuItem = styled("a")`
@@ -87,4 +92,30 @@ export const Menu = styled("div")`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+`
+
+export const ContactButton = styled("a")`
+  width: 100%;
+  position: absolute;
+
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+
+  background-color: ${({ theme }) => theme.COLORS.GRAY_700};
+  border-radius: 12px 12px 0 0;
+  text-decoration: none;
+
+  padding: 3rem 0;
+
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.COLORS.WHITE};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+  font-size: ${({ theme }) => theme.FONT_SIZE.XL};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.COLORS.ORANGE};
+  }
 `

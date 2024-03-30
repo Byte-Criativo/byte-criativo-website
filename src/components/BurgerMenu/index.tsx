@@ -2,8 +2,10 @@ import { List, X } from "@phosphor-icons/react"
 import * as Dialog from "@radix-ui/react-dialog"
 import {
   BurgerMenuContainer,
+  ContactButton,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogTrigger,
   Menu,
   MenuItem,
@@ -34,7 +36,7 @@ export function BurgerMenu() {
             <DialogClose>
               <X size={32} weight="bold" />
             </DialogClose>
-            <Dialog.Description>
+            <DialogDescription>
               <Menu>
                 <MenuItem href="/#cases" onClick={handleToggleMenu}>
                   Cases
@@ -49,7 +51,10 @@ export function BurgerMenu() {
                   FAQ
                 </MenuItem>
               </Menu>
-            </Dialog.Description>
+              <ContactButton href="mailto:contato@bcriativo.com">
+                Entre em contato
+              </ContactButton>
+            </DialogDescription>
           </DialogContent>
         </Dialog.Portal>
       </Dialog.Root>
