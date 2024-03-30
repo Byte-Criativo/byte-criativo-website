@@ -9,7 +9,11 @@ import {
   MenuItem,
 } from "./styles"
 import { Link } from "@/src/components/Link"
-import { InstagramLogo, LinkedinLogo } from "@phosphor-icons/react"
+import {
+  InstagramLogo,
+  LinkedinLogo,
+  WhatsappLogo,
+} from "@phosphor-icons/react"
 
 export function FooterSection() {
   const year = new Date().getFullYear()
@@ -23,10 +27,18 @@ export function FooterSection() {
             <p>
               ❤️ <strong>Byte Criativo;</strong>
             </p>
-            {/* <p>© {year}. Todos os direitos reservados.</p> */}
             <p>CNPJ: 52.652.130/0001-02</p>
-            <p>(83) 99125-3377 | contato@bcriativo.com</p>
-            {/* <p>contato@bcriativo.com</p> */}
+            <span className="contact">
+              <p>contato@bcriativo.com</p>
+              {/* <div className="divisor" /> */}
+              <div className="whatsapp">
+                <p>+55 (83) 99125-3377</p>
+                <Link
+                  href="https://wa.me/5583991253377"
+                  icon={<WhatsappLogo size={20} />}
+                />
+              </div>
+            </span>
           </FooterCompany>
           <FooterMenu>
             <li>

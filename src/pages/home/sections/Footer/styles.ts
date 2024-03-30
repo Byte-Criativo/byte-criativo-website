@@ -44,11 +44,32 @@ export const FooterCompany = styled.div`
   flex-direction: column;
   /* max-width: 18.75rem; */
   align-items: flex-start;
-  gap: 1rem;
+  gap: 0.5rem;
 
   > p {
     align-self: stretch;
     color: ${({ theme }) => theme.COLORS.GRAY_500};
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    gap: 0.25rem;
+
+    color: ${({ theme }) => theme.COLORS.GRAY_500};
+  }
+
+  .divisor {
+    height: 1.25rem;
+    width: 2px;
+    background: ${({ theme }) => theme.COLORS.ORANGE};
+  }
+
+  .whatsapp {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
 
   /* mobile screen */
