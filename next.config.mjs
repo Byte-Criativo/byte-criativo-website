@@ -2,10 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  pageExtensions: ['page.tsx', 'api.ts', 'api.tsx'],
+  pageExtensions: ["page.tsx", "api.ts", "api.tsx"],
   compiler: {
     styledComponents: true,
-  }
-};
+  },
+}
 
-export default nextConfig;
+export default nextConfig
