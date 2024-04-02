@@ -21,6 +21,7 @@ export const DialogContent = styled(Dialog.Content)`
 
   box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 
   &[data-state="open"] {
     animation: slideDown 0.4s ease-in;

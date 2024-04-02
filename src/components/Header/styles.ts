@@ -7,6 +7,7 @@ export const HeaderContainer = styled.header`
   border-radius: 8px;
   box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 
   position: fixed;
 
