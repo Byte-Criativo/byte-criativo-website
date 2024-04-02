@@ -1,14 +1,14 @@
-import { SectionTitle } from "@/src/components/SectionTitle"
-import { FAQContainer, FAQForm, FAQQuestionsBox } from "./styles"
-import { QuestionAnswer } from "@/src/components/QuestionAnswer"
-import { Button } from "@/src/components/Button"
-import { useState } from "react"
+import { SectionTitle } from "@/src/components/SectionTitle";
+import { FAQContainer, FAQForm, FAQQuestionsBox } from "./styles";
+import { QuestionAnswer } from "@/src/components/QuestionAnswer";
+import { Button } from "@/src/components/Button";
+import { useState } from "react";
 
 type QuestionAnswersType = {
-  id: number
-  question: string
-  answer: string
-}
+  id: number;
+  question: string;
+  answer: string;
+};
 
 const questionsAndAnswers: QuestionAnswersType[] = [
   {
@@ -37,17 +37,17 @@ const questionsAndAnswers: QuestionAnswersType[] = [
     answer:
       "Cada projeto é único e muito particular. Portanto é impossível precificar sem ter uma real noção do escopo. Os custos e o prazo para conclusão variam conforme a complexidade e abrangência do trabalho em questão. Para ter uma noção de prazo e valores, sugerimos que preencha o formulário de detalhamento de projeto sem compromisso.",
   },
-]
+];
 
 export function FAQSection() {
-  const [isOpen, setIsOpen] = useState<number>()
+  const [isOpen, setIsOpen] = useState<number>();
 
   function handleToggleAnswer(id: number) {
     if (isOpen === id) {
-      return setIsOpen(0)
+      return setIsOpen(0);
     }
 
-    setIsOpen(id)
+    setIsOpen(id);
   }
 
   return (
@@ -64,11 +64,11 @@ export function FAQSection() {
                 isOpen={isOpen === item.id}
                 onClick={() => handleToggleAnswer(item.id)}
               />
-            )
+            );
           })}
         </FAQQuestionsBox>
       </div>
-      <FAQForm>
+      {/* <FAQForm>
         <h3>Ainda com dúvida?</h3>
         <p>Mande uma mensagem pro nosso time</p>
         <div className="inputs">
@@ -79,7 +79,7 @@ export function FAQSection() {
         <Button href="mailto:contato@bcriativo.com" className="button">
           Enviar
         </Button>
-      </FAQForm>
+      </FAQForm> */}
     </FAQContainer>
-  )
+  );
 }
