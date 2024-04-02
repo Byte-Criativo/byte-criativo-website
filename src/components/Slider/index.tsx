@@ -70,7 +70,7 @@ export function Slider() {
             name="Carlos Ferrer"
             occupation="CEO | full-stack dev"
             image={carlosferrer}
-            url="https://linkedin.com/in/carlosvferrer"
+            url="https://www.linkedin.com/in/ferrercarlos/"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -78,7 +78,7 @@ export function Slider() {
             name="Bruna Porato"
             occupation="Front-end dev"
             image={brunaporato}
-            url="https://linkedin.com/in/brunaporato"
+            url="https://linkedin.com/in/brunaporato/"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -86,7 +86,7 @@ export function Slider() {
             name="Marcella Cavalcanti"
             occupation="Product Designer"
             image={marcellacavalcanti}
-            url="https://linkedin.com/in/marcellacavalcanti"
+            url="https://www.linkedin.com/in/marcellacavalcanti2106"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -94,7 +94,7 @@ export function Slider() {
             name="Bruna Cairo"
             occupation="Copywriter"
             image={brunacairo}
-            url="https://linkedin.com/in/brunacairo"
+            url="https://www.linkedin.com/in/cairobruna/"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -102,7 +102,7 @@ export function Slider() {
             name="Victor Paranhos"
             occupation="Developer Intern"
             image={victorparanhos}
-            url="https://linkedin.com/in/victorparanhos"
+            url="https://www.linkedin.com/in/victor-paranhos-470b75210/"
           />
         </SwiperSlide>
       </Swiper>
