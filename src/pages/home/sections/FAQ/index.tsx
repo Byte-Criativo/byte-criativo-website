@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { SectionTitle } from "@/src/components/SectionTitle"
 import { FAQContainer, FAQForm, FAQQuestionsBox } from "./styles"
 import { QuestionAnswer } from "@/src/components/QuestionAnswer"
@@ -68,7 +69,7 @@ export function FAQSection() {
           })}
         </FAQQuestionsBox>
       </div>
-      <FAQForm>
+      {/* <FAQForm>
         <h3>Ainda com dúvida?</h3>
         <p>Mande uma mensagem pro nosso time</p>
         <div className="inputs">
@@ -79,7 +80,7 @@ export function FAQSection() {
         <Button href="mailto:contato@bcriativo.com" className="button">
           Enviar
         </Button>
-      </FAQForm>
+      </FAQForm> */}
     </FAQContainer>
   )
 }

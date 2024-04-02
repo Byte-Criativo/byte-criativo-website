@@ -18,7 +18,10 @@ export function CasesSection() {
           página de compra integrada, simplificamos a experiência do consumidor.
           Descubra agora.
         </CaseDescription>
-        <Link href="#" icon={<ArrowUpRight size={24} />}>
+        <Link
+          href="https://www.maternitecursos.com.br"
+          icon={<ArrowUpRight size={24} />}
+        >
           Ver mais
         </Link>
       </CaseContent>
