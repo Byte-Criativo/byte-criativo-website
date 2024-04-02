@@ -1,3 +1,4 @@
+import Image, { StaticImageData } from "next/image"
 import {
   TeamCardContainer,
   TeamCardGradient,
@@ -8,7 +9,7 @@ import {
 interface TeamCardProps {
   name: string
   occupation: string
-  image: string
+  image: StaticImageData
   url?: string
 }
 
@@ -20,7 +21,7 @@ export function TeamCard({
 }: TeamCardProps) {
   return (
     <TeamCardContainer href={url} target="_blank">
-      <img src={image} alt="" />
+      <Image src={image} alt="" width={320} height={320} />
       <TeamCardName>{name}</TeamCardName>
       <TeamCardOccupation>{occupation}</TeamCardOccupation>
       <TeamCardGradient />

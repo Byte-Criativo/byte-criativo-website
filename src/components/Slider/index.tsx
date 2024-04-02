@@ -7,6 +7,12 @@ import "swiper/css/navigation"
 import { TeamCard } from "../TeamCard"
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react"
 
+import carlosferrer from "../../assets/team_photos/carlosferrer.jpg"
+import brunaporato from "../../assets/team_photos/brunaporato.jpg"
+import marcellacavalcanti from "../../assets/team_photos/marcellacavalcanti.jpg"
+import brunacairo from "../../assets/team_photos/brunacairo.jpg"
+import victorparanhos from "../../assets/team_photos/victorparanhos.jpg"
+
 export function Slider() {
   return (
     <SliderContainer>
@@ -63,56 +69,40 @@ export function Slider() {
           <TeamCard
             name="Carlos Ferrer"
             occupation="CEO | full-stack dev"
-            image="https://github.com/carlosferrerdev.png"
-            url="https://www.linkedin.com/in/ferrercarlos/"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <TeamCard
-            name="Julia Paranhos"
-            occupation="CTO | back-end dev"
-            image="https://github.com/juliarparanhos.png"
-            url="https://linkedin.com/in/brunaporato"
+            image={carlosferrer}
+            url="https://linkedin.com/in/carlosvferrer"
           />
         </SwiperSlide>
         <SwiperSlide>
           <TeamCard
             name="Bruna Porato"
-            occupation="front-end dev"
-            image="https://github.com/brunaporato.png"
+            occupation="Front-end dev"
+            image={brunaporato}
             url="https://linkedin.com/in/brunaporato"
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <TeamCard
+            name="Marcella Cavalcanti"
+            occupation="Product Designer"
+            image={marcellacavalcanti}
+            url="https://linkedin.com/in/marcellacavalcanti"
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <TeamCard
+            name="Bruna Cairo"
+            occupation="Copywriter"
+            image={brunacairo}
+            url="https://linkedin.com/in/brunacairo"
           />
         </SwiperSlide>
         <SwiperSlide>
           <TeamCard
             name="Victor Paranhos"
-            occupation="Dev"
-            image="https://github.com/VRParanhos.png"
-            url="https://www.linkedin.com/in/brunaporato"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <TeamCard
-            name="Julia Paranhos"
-            occupation="CTO | back-end dev"
-            image="https://github.com/juliarparanhos.png"
-            url="https://linkedin.com/in/brunaporato"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <TeamCard
-            name="Bruna Porato"
-            occupation="front-end dev"
-            image="https://github.com/brunaporato.png"
-            url="https://linkedin.com/in/brunaporato"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <TeamCard
-            name="Carlos Ferrer"
-            occupation="CEO | full-stack dev"
-            image="https://github.com/carlosferrerdev.png"
-            url="https://www.linkedin.com/in/ferrercarlos/"
+            occupation="Developer Intern"
+            image={victorparanhos}
+            url="https://linkedin.com/in/victorparanhos"
           />
         </SwiperSlide>
       </Swiper>

@@ -2,7 +2,7 @@ import Link from "next/link"
 import styled, { css } from "styled-components"
 
 export const TeamCardContainer = styled(Link)`
-  width: 288px;
+  width: 324px;
   height: 400px;
 
   flex-shrink: 0;
