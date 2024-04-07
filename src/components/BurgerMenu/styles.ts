@@ -3,12 +3,12 @@ import * as Dialog from "@radix-ui/react-dialog"
 
 export const BurgerMenuContainer = styled.div`
   justify-self: flex-end;
+  max-height: 100vh;
 `
 
 export const DialogContent = styled(Dialog.Content)`
   background-color: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
   width: 100vw;
-  height: 90px;
 
   position: absolute;
   top: 0;
