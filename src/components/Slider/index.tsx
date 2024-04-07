@@ -7,11 +7,11 @@ import "swiper/css/navigation"
 import { TeamCard } from "../TeamCard"
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react"
 
-import carlosferrer from "../../assets/team_photos/carlosferrer.jpg"
-import brunaporato from "../../assets/team_photos/brunaporato.jpg"
-import marcellacavalcanti from "../../assets/team_photos/marcellacavalcanti.jpg"
-import brunacairo from "../../assets/team_photos/brunacairo.jpg"
-import victorparanhos from "../../assets/team_photos/victorparanhos.jpg"
+import carlosferrer from "../../assets/team_photos/carlosferrer.png"
+import brunaporato from "../../assets/team_photos/brunaporato.png"
+import marcellacavalcanti from "../../assets/team_photos/marcellacavalcanti.png"
+import brunacairo from "../../assets/team_photos/brunacairo.png"
+import victorparanhos from "../../assets/team_photos/victorparanhos.png"
 
 export function Slider() {
   return (
