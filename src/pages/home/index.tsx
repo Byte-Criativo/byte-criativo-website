@@ -16,7 +16,7 @@ export default function Home() {
     <>
       <NextSeo
         title="Byte Criativo | Software House"
-        description="A short description goes here." // TODO: arrumar descrição
+        description="Soluções inteligentes e personalizadas em uma software house. Isso é a ByteCriativo;"
       />
       <HomeContainer>
         <Header />
