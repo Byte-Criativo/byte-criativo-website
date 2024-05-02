@@ -52,7 +52,7 @@ export function Header() {
               <NavItem href="/#services">Serviços</NavItem>
             </li>
             <li>
-              <NavItem href="/#team">Equipe</NavItem>
+              {/* <NavItem href="/#team">Equipe</NavItem> */}
             </li>
             <li>
               <NavItem href="/#FAQ">FAQ</NavItem>
