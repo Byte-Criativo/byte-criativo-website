@@ -25,7 +25,7 @@ export function FooterSection() {
           <FooterCompany>
             <Image src="/MiniLogo.png" alt="" width={80} height={80} />
             <p>
-              ❤️ <strong>Byte Criativo;</strong>
+              <strong>Byte Criativo;</strong>
             </p>
             <p>CNPJ: 52.652.130/0001-02</p>
             <span className="contact">

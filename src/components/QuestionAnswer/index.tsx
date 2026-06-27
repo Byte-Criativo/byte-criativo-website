@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp } from "@phosphor-icons/react"
+import { ArrowDown } from "@phosphor-icons/react"
 import { Answer, QuestionAnswerContainer, Question } from "./styles"
 
 interface QuestionAnswerProps {
@@ -20,11 +20,16 @@ export function QuestionAnswer({
 
   return (
     <QuestionAnswerContainer>
-      <Question onClick={handleOnClick}>
+      <Question
+        aria-expanded={isOpen}
+        onClick={handleOnClick}
+        type="button"
+        $isOpen={isOpen}
+      >
         <p>{question}</p>
-        {isOpen ? <ArrowUp size={32} /> : <ArrowDown size={32} />}
+        <ArrowDown size={28} />
       </Question>
-      {isOpen && <Answer>{answer}</Answer>}
+      <Answer $isOpen={isOpen}>{answer}</Answer>
     </QuestionAnswerContainer>
   )
 }

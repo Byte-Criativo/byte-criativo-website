@@ -4,15 +4,16 @@ export const HeroContainer = styled.section`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.25rem;
 
   > p {
     ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
+      color: ${theme.COLORS.GRAY_500};
       font-size: ${theme.FONT_SIZE.LG};
     `}
 
     text-align: center;
+    line-height: 1.7;
     margin: 0 6rem 0.5rem;
 
     /* web small screen */
@@ -33,6 +34,11 @@ export const HeroHeading = styled.div`
   align-items: flex-start;
   gap: 1.87rem;
 
+  > img {
+    opacity: 0.78;
+    filter: drop-shadow(0 18px 34px rgba(246, 86, 6, 0.18));
+  }
+
   > h1 {
     ${({ theme }) => css`
       color: ${theme.COLORS.GRAY_700};
@@ -41,9 +47,17 @@ export const HeroHeading = styled.div`
     `}
 
     text-align: center;
+    line-height: 1.08;
 
     span {
-      color: ${({ theme }) => theme.COLORS.ORANGE};
+      color: transparent;
+      background: linear-gradient(
+        90deg,
+        ${({ theme }) => theme.COLORS.ORANGE} 0%,
+        ${({ theme }) => theme.COLORS.BLUE} 100%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
     }
   }
 

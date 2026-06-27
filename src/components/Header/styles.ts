@@ -5,7 +5,8 @@ export const HeaderContainer = styled.header`
   width: calc(100% - 5rem);
 
   border-radius: 8px;
-  box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
+  border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
+  box-shadow: 0 18px 44px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 
@@ -66,7 +67,27 @@ export const NavItem = styled.a`
   `}
 
   transition: color 0.2s ease;
+  position: relative;
+
+  &::after {
+    content: "";
+    height: 2px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: -0.4rem;
+    border-radius: 999px;
+    background: ${({ theme }) => theme.COLORS.ORANGE};
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+
   &:hover {
     color: ${({ theme }) => theme.COLORS.ORANGE};
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
   }
 `

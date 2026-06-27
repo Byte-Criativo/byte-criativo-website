@@ -8,14 +8,14 @@ export function HeroSection() {
       <HeroHeading>
         <Image src="/byteSymbolLeft.svg" alt="" width={87} height={90} />
         <h1>
-          Soluções inteligentes e personalizadas em uma
-          <span> software house</span>
+          Software sob medida para marcas que querem
+          <span> crescer com tecnologia</span>
         </h1>
         <Image src="/byteSymbolRight.svg" alt="" width={86} height={90} />
       </HeroHeading>
       <p>
-        Esqueça as soluções prontas. Descubra o que realmente impulsiona a sua
-        empresa!
+        Unimos estratégia, design e desenvolvimento para criar produtos digitais
+        elegantes, rápidos e preparados para evoluir com a sua empresa.
       </p>
       <Button href="mailto:contato@bcriativo.com">Comece seu projeto</Button>
     </HeroContainer>

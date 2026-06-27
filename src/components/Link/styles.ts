@@ -17,9 +17,17 @@ export const LinkContainer = styled(Link)`
     font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
   `}
 
-  transition: color .2s;
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  transition: color 0.2s ease;
 
   &:hover {
     color: ${({ theme }) => theme.COLORS.BLUE};
+  }
+
+  &:hover svg {
+    transform: translate(3px, -3px);
   }
 `

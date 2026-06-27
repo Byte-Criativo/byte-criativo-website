@@ -4,7 +4,21 @@ export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.25rem;
+  gap: 1rem;
+
+  .icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: ${({ theme }) => theme.COLORS.ORANGE};
+    background: ${({ theme }) => theme.COLORS.ORANGE_SOFT};
+    border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
+  }
 `
 
 export const CardTitle = styled.h2`
@@ -21,4 +35,6 @@ export const CardDescription = styled.p`
     color: ${theme.COLORS.GRAY_500};
     font-size: ${theme.FONT_SIZE.SM};
   `}
+
+  line-height: 1.6;
 `

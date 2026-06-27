@@ -18,6 +18,7 @@ export const FAQContainer = styled.div`
 
   @media (max-width: 855px) {
     flex-direction: column;
+    gap: 2.5rem;
   }
 `
 

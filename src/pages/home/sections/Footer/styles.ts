@@ -7,7 +7,8 @@ export const FooterContainer = styled.footer`
   right: 0;
   padding: 4.5rem 10rem;
 
-  border-top: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
+  border-top: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
+  background: rgba(255, 255, 255, 0.16);
 
   @media (max-width: 855px) {
     padding: 4.5rem 2rem;
@@ -28,7 +29,7 @@ export const FooterContent = styled.div`
 export const FooterMain = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
+  border-bottom: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
 
   padding-bottom: 3rem;
 
@@ -42,7 +43,6 @@ export const FooterMain = styled.div`
 export const FooterCompany = styled.div`
   display: flex;
   flex-direction: column;
-  /* max-width: 18.75rem; */
   align-items: flex-start;
   gap: 0.5rem;
 
@@ -54,7 +54,6 @@ export const FooterCompany = styled.div`
   .contact {
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
     gap: 0.25rem;
 
     color: ${({ theme }) => theme.COLORS.GRAY_500};
@@ -102,7 +101,7 @@ export const MenuItem = styled(Link)`
     font-size: ${theme.FONT_SIZE.LG};
   `}
 
-  transition: color .2s;
+  transition: color 0.2s ease;
 
   &:hover {
     color: ${({ theme }) => theme.COLORS.ORANGE};
@@ -112,8 +111,11 @@ export const MenuItem = styled(Link)`
 export const FooterNetwork = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 
   .followUs {
+    display: flex;
     flex-direction: column;
 
     gap: 0.75rem;
@@ -126,6 +128,12 @@ export const FooterNetwork = styled.div`
     > .links {
       display: flex;
       justify-content: space-between;
+      gap: 0.75rem;
     }
+  }
+
+  @media (max-width: 655px) {
+    flex-direction: column;
+    text-align: center;
   }
 `
