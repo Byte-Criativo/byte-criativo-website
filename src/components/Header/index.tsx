@@ -29,11 +29,23 @@ export function Header() {
 
   return (
     <HeaderContainer>
-      <Link href="#">
+      <Link href="/" aria-label="Página inicial da Byte Criativo">
         {resizeLogo ? (
-          <Image src="/MiniLogo.png" alt="Logo" width={40} height={40} />
+          <Image
+            src="/MiniLogo.png"
+            alt="Byte Criativo"
+            width={40}
+            height={40}
+            priority
+          />
         ) : (
-          <Image src="/logoByte.png" alt="Logo" width={216} height={39} />
+          <Image
+            src="/logoByte.png"
+            alt="Byte Criativo"
+            width={216}
+            height={39}
+            priority
+          />
         )}
       </Link>
       {showBurgerMenu ? (

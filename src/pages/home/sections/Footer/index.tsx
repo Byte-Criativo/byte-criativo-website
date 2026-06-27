@@ -16,6 +16,8 @@ import {
 } from "@phosphor-icons/react"
 import {
   CONTACT_EMAIL,
+  INSTAGRAM_URL,
+  LINKEDIN_URL,
   WHATSAPP_DISPLAY,
   WHATSAPP_URL,
 } from "@/src/lib/contact"
@@ -28,7 +30,12 @@ export function FooterSection() {
       <FooterContent>
         <FooterMain>
           <FooterCompany>
-            <Image src="/MiniLogo.png" alt="" width={80} height={80} />
+            <Image
+              src="/MiniLogo.png"
+              alt="Byte Criativo"
+              width={80}
+              height={80}
+            />
             <p>
               <strong>Byte Criativo;</strong>
             </p>
@@ -61,11 +68,11 @@ export function FooterSection() {
             <p>Siga-nos</p>
             <div className="links">
               <Link
-                href="https://instagram.com/bytecriativo"
+                href={INSTAGRAM_URL}
                 icon={<InstagramLogo size={24} weight="bold" />}
               />
               <Link
-                href="https://www.linkedin.com/company/byte-criativo/"
+                href={LINKEDIN_URL}
                 icon={<LinkedinLogo size={24} weight="bold" />}
               />
             </div>

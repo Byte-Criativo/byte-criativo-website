@@ -5,7 +5,7 @@ export const HomeContainer = styled.div`
   background: url("/background-temp.svg");
   background-size: cover;
 `
-export const HomeContent = styled.div`
+export const HomeContent = styled.main`
   padding: 13.5rem 9rem 5.5rem;
 
   /* web small screen */
