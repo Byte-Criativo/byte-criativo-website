@@ -7,17 +7,20 @@ import { CasesSection } from "./sections/Cases"
 import { ServicesSection } from "./sections/Services"
 import { CTASection } from "./sections/CTA"
 import { FooterSection } from "./sections/Footer"
-import { TeamSection } from "./sections/Team"
 import { FAQSection } from "./sections/FAQ"
-import { NextSeo } from "next-seo"
+import Head from "next/head"
+import { generateNextSeo } from "next-seo/pages"
 
 export default function Home() {
   return (
     <>
-      <NextSeo
-        title="Byte Criativo | Software House"
-        description="Soluções inteligentes e personalizadas em uma software house. Isso é a ByteCriativo;"
-      />
+      <Head>
+        {generateNextSeo({
+          title: "Byte Criativo | Software House",
+          description:
+            "Soluções inteligentes e personalizadas em uma software house. Isso é a ByteCriativo;",
+        })}
+      </Head>
       <HomeContainer>
         <Header />
         <HomeContent>
@@ -25,7 +28,6 @@ export default function Home() {
           <CardsSection />
           <CasesSection />
           <ServicesSection />
-          <TeamSection />
           <FAQSection />
           <CTASection />
         </HomeContent>

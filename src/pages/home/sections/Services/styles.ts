@@ -1,5 +1,9 @@
 import styled from "styled-components"
 
+export const ServicesWrapper = styled.div`
+  padding-top: 7.5rem;
+`
+
 export const ServicesContainer = styled.section`
   display: flex;
   align-items: flex-start;

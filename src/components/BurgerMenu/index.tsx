@@ -44,9 +44,6 @@ export function BurgerMenu() {
                 <MenuItem href="/#services" onClick={handleToggleMenu}>
                   Serviços
                 </MenuItem>
-                <MenuItem href="/#team" onClick={handleToggleMenu}>
-                  Equipe
-                </MenuItem>
                 <MenuItem href="/#FAQ" onClick={handleToggleMenu}>
                   FAQ
                 </MenuItem>

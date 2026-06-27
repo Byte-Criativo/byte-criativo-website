@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
 export const FAQContainer = styled.div`
   padding-top: 7.5rem;
@@ -25,78 +25,4 @@ export const FAQQuestionsBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
-`
-
-export const FAQForm = styled.form`
-  display: flex;
-  flex-direction: column;
-
-  padding: 3.75rem 2rem;
-  max-height: min-content;
-
-  background: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  border-radius: 8px;
-  border: 3px solid ${({ theme }) => theme.COLORS.WHITE};
-  box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  width: 26rem;
-
-  h3 {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.ORANGE};
-      font-size: 2rem;
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
-    `}
-  }
-
-  p {
-    margin-top: 0.5rem;
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-    `}
-  }
-
-  .inputs {
-    margin: 1.5rem 0;
-
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  input,
-  textarea {
-    background: none;
-    border: none;
-
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid ${({ theme }) => theme.COLORS.GRAY_500};
-  }
-
-  textarea {
-    resize: none;
-    height: 6rem;
-    width: 100%;
-  }
-
-  input:focus,
-  textarea:focus {
-    outline: none; //Confirmar se não vai ter nada quando estiver focus
-  }
-
-  .button {
-    align-self: flex-end;
-  }
-
-  /* web small screen */
-  @media (max-width: 1055px) {
-    width: 50%;
-  }
-
-  /* tablet screen */
-  @media (max-width: 855px) {
-    width: 100%;
-  }
 `

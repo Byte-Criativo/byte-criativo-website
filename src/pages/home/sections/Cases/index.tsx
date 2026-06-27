@@ -9,7 +9,13 @@ import { ArrowUpRight } from "@phosphor-icons/react"
 export function CasesSection() {
   return (
     <CasesContainer id="cases">
-      <Image src={MockupMaternite} alt="" width={590} />
+      <Image
+        src={MockupMaternite}
+        alt="Mockup do site Maternité"
+        width={590}
+        height={255}
+        style={{ maxWidth: "100%", height: "auto" }}
+      />
       <CaseContent>
         <SectionTitle span="Nosso case" heading="Maternité" />
         <CaseDescription>

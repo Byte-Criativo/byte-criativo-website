@@ -48,9 +48,6 @@ export function FooterSection() {
               <MenuItem href="#services">SERVIÇOS</MenuItem>
             </li>
             <li>
-              <MenuItem href="#team">QUEM SOMOS</MenuItem>
-            </li>
-            <li>
               <MenuItem href="#FAQ">DÚVIDAS</MenuItem>
             </li>
           </FooterMenu>

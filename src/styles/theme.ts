@@ -1,4 +1,4 @@
-export default {
+const theme = {
   COLORS: {
     WHITE: "#FFFF",
 
@@ -36,3 +36,5 @@ export default {
     BOLD: "700",
   },
 }
+
+export default theme

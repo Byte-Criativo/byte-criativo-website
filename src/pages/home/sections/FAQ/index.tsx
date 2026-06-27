@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { SectionTitle } from "@/src/components/SectionTitle"
-import { FAQContainer, FAQForm, FAQQuestionsBox } from "./styles"
+import { FAQContainer, FAQQuestionsBox } from "./styles"
 import { QuestionAnswer } from "@/src/components/QuestionAnswer"
-import { Button } from "@/src/components/Button"
 import { useState } from "react"
 
 type QuestionAnswersType = {
@@ -29,7 +27,7 @@ const questionsAndAnswers: QuestionAnswersType[] = [
     question:
       "Vocês fazem apenas o trabalho de desenvolvimento de software ou cuidam também do design?",
     answer:
-      "Para que o desenvolvimento em web seja feito da melhor forma possível, recomendamos que o cliente tenha uma identidade visual bem definida, o que vai além de ter um logotipo. Caso você não tenha esse material, a nossa equipe desenvolve esse material dentro do pacote. Afinal, toda a identidade da sua marca, desenvolvimento em software inclusive, precisa estar em unidade.",
+      "Para que o desenvolvimento em web seja feito da melhor forma possível, recomendamos que o cliente tenha uma identidade visual bem definida, o que vai além de ter um logotipo. Caso você não tenha esse material, esse desenvolvimento pode ser incluído no pacote. Afinal, toda a identidade da sua marca, desenvolvimento em software inclusive, precisa estar em unidade.",
   },
   {
     id: 4,
@@ -69,18 +67,6 @@ export function FAQSection() {
           })}
         </FAQQuestionsBox>
       </div>
-      {/* <FAQForm>
-        <h3>Ainda com dúvida?</h3>
-        <p>Mande uma mensagem pro nosso time</p>
-        <div className="inputs">
-          <input type="text" placeholder="Nome" />
-          <input type="email" placeholder="E-mail" />
-          <textarea placeholder="Mensagem" />
-        </div>
-        <Button href="mailto:contato@bcriativo.com" className="button">
-          Enviar
-        </Button>
-      </FAQForm> */}
     </FAQContainer>
   )
 }

@@ -1,13 +1,13 @@
 import { Button } from "@/src/components/Button"
-import { CTAContainer, CTATitle } from "./styles"
+import { CTAContainer, CTATitle, CTAWrapper } from "./styles"
 
 export function CTASection() {
   return (
-    <div id="contact" style={{ paddingTop: "7.5rem" }}>
+    <CTAWrapper id="contact">
       <CTAContainer>
         <CTATitle>Vamos começar seu projeto?</CTATitle>
         <Button href="mailto:contato@bcriativo.com">Enviar e-mail</Button>
       </CTAContainer>
-    </div>
+    </CTAWrapper>
   )
 }

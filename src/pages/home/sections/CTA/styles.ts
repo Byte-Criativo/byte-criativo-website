@@ -1,5 +1,9 @@
 import styled, { css } from "styled-components"
 
+export const CTAWrapper = styled.div`
+  padding-top: 7.5rem;
+`
+
 export const CTAContainer = styled.section`
   display: flex;
   flex-direction: column;

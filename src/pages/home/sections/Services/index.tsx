@@ -1,10 +1,10 @@
 import { SectionTitle } from "@/src/components/SectionTitle"
-import { ServicesContainer, ServicesGrid } from "./styles"
+import { ServicesContainer, ServicesGrid, ServicesWrapper } from "./styles"
 import { CardContent } from "@/src/components/CardContent"
 
 export function ServicesSection() {
   return (
-    <div style={{ paddingTop: "7.5rem" }} id="services">
+    <ServicesWrapper id="services">
       <ServicesContainer>
         <SectionTitle span="Nossos Serviços" heading="O que oferecemos?" />
         <ServicesGrid>
@@ -29,11 +29,11 @@ export function ServicesSection() {
             description="Desenvolvemos produtos com coesão impecável, cada um refletindo harmonia e propósito."
           />
           <CardContent
-            title="Copywrite"
+            title="Copywriting"
             description="Textos criados para catapultar o desempenho do seu site, elevando resultados."
           />
         </ServicesGrid>
       </ServicesContainer>
-    </div>
+    </ServicesWrapper>
   )
 }

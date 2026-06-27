@@ -5,8 +5,8 @@ export function CardsSection() {
   return (
     <CardsContainer>
       <HighlightCard
-        title="Equipe Multidisciplinar"
-        description="Contamos com especialistas em programação, design, UI/UX e copywrting."
+        title="Atuação Multidisciplinar"
+        description="Contamos com especialistas em programação, design, UI/UX e copywriting."
       />
       <HighlightCard
         title="Produtos Personalizados"

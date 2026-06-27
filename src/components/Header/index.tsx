@@ -12,11 +12,9 @@ export function Header() {
   // header diminuindo junto com a tela
   useEffect(() => {
     const handleResize = () => {
-      window.innerWidth < 855
-        ? setShowBurgerMenu(true)
-        : setShowBurgerMenu(false)
+      setShowBurgerMenu(window.innerWidth < 855)
 
-      window.innerWidth < 400 ? setResizeLogo(true) : setResizeLogo(false)
+      setResizeLogo(window.innerWidth < 400)
     }
 
     handleResize()
@@ -50,9 +48,6 @@ export function Header() {
             </li>
             <li>
               <NavItem href="/#services">Serviços</NavItem>
-            </li>
-            <li>
-              <NavItem href="/#team">Equipe</NavItem>
             </li>
             <li>
               <NavItem href="/#FAQ">FAQ</NavItem>
