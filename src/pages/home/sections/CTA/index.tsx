@@ -1,18 +1,16 @@
 import { Button } from "@/src/components/Button"
+import { ctaContent, sectionIds } from "@/src/content/home"
 import { WHATSAPP_URL } from "@/src/lib/contact"
 import { CTAContainer, CTADescription, CTATitle, CTAWrapper } from "./styles"
 
 export function CTASection() {
   return (
-    <CTAWrapper id="contact">
+    <CTAWrapper id={sectionIds.contact}>
       <CTAContainer>
-        <CTATitle>Vamos transformar sua ideia em produto?</CTATitle>
-        <CTADescription>
-          Conte o que você precisa. A gente te ajuda a desenhar o melhor caminho
-          para tirar sua solução do papel.
-        </CTADescription>
-        <Button href={WHATSAPP_URL} target="_blank" rel="noreferrer">
-          Enviar mensagem
+        <CTATitle>{ctaContent.title}</CTATitle>
+        <CTADescription>{ctaContent.description}</CTADescription>
+        <Button href={WHATSAPP_URL} target="_blank">
+          {ctaContent.buttonLabel}
         </Button>
       </CTAContainer>
     </CTAWrapper>

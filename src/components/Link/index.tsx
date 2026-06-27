@@ -1,5 +1,6 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react"
 import type { LinkProps } from "next/link"
+import { getSafeRel } from "@/src/lib/link-security"
 import { LinkContainer } from "./styles"
 
 type LinkComponentProps = LinkProps &
@@ -15,10 +16,8 @@ export function Link({
   rel,
   ...props
 }: LinkComponentProps) {
-  const safeRel = target === "_blank" ? (rel ?? "noopener noreferrer") : rel
-
   return (
-    <LinkContainer target={target} rel={safeRel} {...props}>
+    <LinkContainer target={target} rel={getSafeRel(target, rel)} {...props}>
       {children}
       {icon}
     </LinkContainer>

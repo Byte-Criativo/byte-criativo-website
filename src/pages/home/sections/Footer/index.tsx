@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { footerNavigationItems } from "@/src/content/home"
 import {
   FooterCompany,
   FooterContainer,
@@ -50,15 +51,11 @@ export function FooterSection() {
             </span>
           </FooterCompany>
           <FooterMenu>
-            <li>
-              <MenuItem href="#cases">CASES</MenuItem>
-            </li>
-            <li>
-              <MenuItem href="#services">SERVIÇOS</MenuItem>
-            </li>
-            <li>
-              <MenuItem href="#FAQ">DÚVIDAS</MenuItem>
-            </li>
+            {footerNavigationItems.map((item) => (
+              <li key={item.href}>
+                <MenuItem href={item.href}>{item.label}</MenuItem>
+              </li>
+            ))}
           </FooterMenu>
         </FooterMain>
         <FooterNetwork>

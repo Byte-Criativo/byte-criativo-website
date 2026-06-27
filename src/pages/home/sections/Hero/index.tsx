@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/Button"
+import { heroContent } from "@/src/content/home"
 import { WHATSAPP_URL } from "@/src/lib/contact"
 import { HeroContainer, HeroHeading } from "./styles"
 import Image from "next/image"
@@ -9,17 +10,14 @@ export function HeroSection() {
       <HeroHeading>
         <Image src="/byteSymbolLeft.svg" alt="" width={87} height={90} />
         <h1>
-          Software sob medida para marcas que querem
-          <span> crescer com tecnologia</span>
+          {heroContent.heading}
+          <span>{heroContent.highlight}</span>
         </h1>
         <Image src="/byteSymbolRight.svg" alt="" width={86} height={90} />
       </HeroHeading>
-      <p>
-        Unimos estratégia, design e desenvolvimento para criar produtos digitais
-        elegantes, rápidos e preparados para evoluir com a sua empresa.
-      </p>
-      <Button href={WHATSAPP_URL} target="_blank" rel="noreferrer">
-        Comece seu projeto
+      <p>{heroContent.description}</p>
+      <Button href={WHATSAPP_URL} target="_blank">
+        {heroContent.ctaLabel}
       </Button>
     </HeroContainer>
   )

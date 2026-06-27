@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { BurgerMenu } from "../BurgerMenu"
 import Image from "next/image"
 import { WHATSAPP_URL } from "@/src/lib/contact"
+import { navigationItems } from "@/src/content/home"
 
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false)
@@ -56,22 +57,13 @@ export function Header() {
       ) : (
         <>
           <NavArea>
-            <li>
-              <NavItem href="/#cases">Cases</NavItem>
-            </li>
-            <li>
-              <NavItem href="/#services">Serviços</NavItem>
-            </li>
-            <li>
-              <NavItem href="/#FAQ">FAQ</NavItem>
-            </li>
+            {navigationItems.map((item) => (
+              <li key={item.href}>
+                <NavItem href={item.href}>{item.label}</NavItem>
+              </li>
+            ))}
           </NavArea>
-          <Button
-            href={WHATSAPP_URL}
-            className="button"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <Button href={WHATSAPP_URL} className="button" target="_blank">
             Entre em contato
           </Button>
         </>

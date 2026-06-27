@@ -12,6 +12,8 @@ import {
 } from "./styles"
 import { useState } from "react"
 import { WHATSAPP_URL } from "@/src/lib/contact"
+import { navigationItems } from "@/src/content/home"
+import { getSafeRel } from "@/src/lib/link-security"
 
 export function BurgerMenu() {
   const [open, setOpen] = useState(false)
@@ -39,20 +41,20 @@ export function BurgerMenu() {
             </DialogClose>
             <DialogDescription>
               <Menu>
-                <MenuItem href="/#cases" onClick={handleToggleMenu}>
-                  Cases
-                </MenuItem>
-                <MenuItem href="/#services" onClick={handleToggleMenu}>
-                  Serviços
-                </MenuItem>
-                <MenuItem href="/#FAQ" onClick={handleToggleMenu}>
-                  FAQ
-                </MenuItem>
+                {navigationItems.map((item) => (
+                  <MenuItem
+                    key={item.href}
+                    href={item.href}
+                    onClick={handleToggleMenu}
+                  >
+                    {item.label}
+                  </MenuItem>
+                ))}
               </Menu>
               <ContactButton
                 href={WHATSAPP_URL}
                 target="_blank"
-                rel="noreferrer"
+                rel={getSafeRel("_blank")}
               >
                 Entre em contato
               </ContactButton>

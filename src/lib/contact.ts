@@ -5,9 +5,11 @@ export const WHATSAPP_DISPLAY = "+55 (83) 99125-3377"
 export const INSTAGRAM_URL = "https://instagram.com/bytecriativo"
 export const LINKEDIN_URL = "https://www.linkedin.com/company/byte-criativo/"
 
-const WHATSAPP_MESSAGE =
+export const WHATSAPP_MESSAGE =
   "Olá! Gostaria de conversar sobre um projeto com a Byte Criativo."
 
-export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  WHATSAPP_MESSAGE,
-)}`
+export function buildWhatsAppUrl(number: string, message: string) {
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+}
+
+export const WHATSAPP_URL = buildWhatsAppUrl(WHATSAPP_NUMBER, WHATSAPP_MESSAGE)

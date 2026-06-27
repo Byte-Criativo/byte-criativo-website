@@ -1,4 +1,5 @@
 import { SectionTitle } from "@/src/components/SectionTitle"
+import { faqSectionTitle, sectionIds } from "@/src/content/home"
 import { FAQContainer, FAQQuestionsBox } from "./styles"
 import { QuestionAnswer } from "@/src/components/QuestionAnswer"
 import { useState } from "react"
@@ -16,9 +17,12 @@ export function FAQSection() {
   }
 
   return (
-    <FAQContainer id="FAQ">
+    <FAQContainer id={sectionIds.faq}>
       <div className="left-side">
-        <SectionTitle heading="Dúvidas" span="FAQ" />
+        <SectionTitle
+          heading={faqSectionTitle.heading}
+          span={faqSectionTitle.eyebrow}
+        />
         <FAQQuestionsBox>
           {questionsAndAnswers.map((item) => {
             return (
