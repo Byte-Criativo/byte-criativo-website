@@ -14,6 +14,11 @@ import {
   LinkedinLogo,
   WhatsappLogo,
 } from "@phosphor-icons/react"
+import {
+  CONTACT_EMAIL,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_URL,
+} from "@/src/lib/contact"
 
 export function FooterSection() {
   const year = new Date().getFullYear()
@@ -29,14 +34,11 @@ export function FooterSection() {
             </p>
             <p>CNPJ: 52.652.130/0001-02</p>
             <span className="contact">
-              <p>contato@bcriativo.com</p>
+              <p>{CONTACT_EMAIL}</p>
               {/* <div className="divisor" /> */}
               <div className="whatsapp">
-                <p>+55 (83) 99125-3377</p>
-                <Link
-                  href="https://wa.me/5583991253377"
-                  icon={<WhatsappLogo size={20} />}
-                />
+                <p>{WHATSAPP_DISPLAY}</p>
+                <Link href={WHATSAPP_URL} icon={<WhatsappLogo size={20} />} />
               </div>
             </span>
           </FooterCompany>

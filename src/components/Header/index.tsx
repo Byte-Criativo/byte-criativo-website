@@ -4,6 +4,7 @@ import { Button } from "../Button"
 import { useEffect, useState } from "react"
 import { BurgerMenu } from "../BurgerMenu"
 import Image from "next/image"
+import { WHATSAPP_URL } from "@/src/lib/contact"
 
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false)
@@ -53,7 +54,12 @@ export function Header() {
               <NavItem href="/#FAQ">FAQ</NavItem>
             </li>
           </NavArea>
-          <Button href="mailto:contato@bcriativo.com" className="button">
+          <Button
+            href={WHATSAPP_URL}
+            className="button"
+            target="_blank"
+            rel="noreferrer"
+          >
             Entre em contato
           </Button>
         </>

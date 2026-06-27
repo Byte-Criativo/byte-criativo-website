@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from "./styles"
 import { useState } from "react"
+import { WHATSAPP_URL } from "@/src/lib/contact"
 
 export function BurgerMenu() {
   const [open, setOpen] = useState(false)
@@ -48,7 +49,11 @@ export function BurgerMenu() {
                   FAQ
                 </MenuItem>
               </Menu>
-              <ContactButton href="mailto:contato@bcriativo.com">
+              <ContactButton
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Entre em contato
               </ContactButton>
             </DialogDescription>

@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/Button"
+import { WHATSAPP_URL } from "@/src/lib/contact"
 import { HeroContainer, HeroHeading } from "./styles"
 import Image from "next/image"
 
@@ -17,7 +18,9 @@ export function HeroSection() {
         Unimos estratégia, design e desenvolvimento para criar produtos digitais
         elegantes, rápidos e preparados para evoluir com a sua empresa.
       </p>
-      <Button href="mailto:contato@bcriativo.com">Comece seu projeto</Button>
+      <Button href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+        Comece seu projeto
+      </Button>
     </HeroContainer>
   )
 }

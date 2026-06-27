@@ -1,11 +1,11 @@
-import { LinkProps } from "next/link"
+import type { AnchorHTMLAttributes, ReactNode } from "react"
+import type { LinkProps } from "next/link"
 import { ButtonContainer } from "./styles"
 
-interface ButtonProps extends LinkProps {
-  href: string
-  children: string
-  className?: string
-}
+type ButtonProps = LinkProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & {
+    children: ReactNode
+  }
 
 export function Button({ children, href, ...props }: ButtonProps) {
   return (
