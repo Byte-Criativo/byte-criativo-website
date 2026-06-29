@@ -9,18 +9,8 @@ export default defineConfig([
   prettierRecommended,
   {
     rules: {
-      "prettier/prettier": [
-        "error",
-        {
-          printWidth: 80,
-          tabWidth: 2,
-          doubleQuote: true,
-          trailingComma: "all",
-          arrowParens: "always",
-          semi: false,
-          endOfLine: "auto",
-        },
-      ],
+      // Options are read from .prettierrc.json (single source of truth).
+      "prettier/prettier": "error",
     },
   },
   globalIgnores([".next/**", "out/**", "build/**", "coverage/**"]),
