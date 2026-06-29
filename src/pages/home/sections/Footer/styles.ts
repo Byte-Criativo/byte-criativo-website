@@ -59,12 +59,7 @@ export const FooterCompany = styled.div`
     color: ${({ theme }) => theme.COLORS.GRAY_500};
   }
 
-  .divisor {
-    height: 1.25rem;
-    width: 2px;
-    background: ${({ theme }) => theme.COLORS.ORANGE};
-  }
-
+  .email,
   .whatsapp {
     display: flex;
     align-items: center;
@@ -106,6 +101,12 @@ export const MenuItem = styled(Link)`
   &:hover {
     color: ${({ theme }) => theme.COLORS.ORANGE};
   }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
 `
 
 export const FooterNetwork = styled.div`
@@ -135,5 +136,25 @@ export const FooterNetwork = styled.div`
   @media (max-width: 655px) {
     flex-direction: column;
     text-align: center;
+  }
+`
+
+export const CopyEmailButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+
+  color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.COLORS.ORANGE};
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline-offset: 4px;
+    border-radius: 6px;
   }
 `

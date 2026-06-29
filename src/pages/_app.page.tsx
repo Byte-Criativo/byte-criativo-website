@@ -1,4 +1,5 @@
 import { ThemeProvider } from "styled-components"
+import { Montserrat } from "next/font/google"
 import StyledComponentsRegistry from "../lib/registry"
 import theme from "../styles/theme"
 import { GlobalStyles } from "../styles/global"
@@ -6,13 +7,20 @@ import { AppProps } from "next/app"
 import Head from "next/head"
 import { generateDefaultSeo } from "next-seo/pages"
 import {
+  DEFAULT_OG_IMAGES,
   DEFAULT_SEO_DESCRIPTION,
   DEFAULT_SEO_TITLE,
   HOME_URL,
-  OG_IMAGE_URL,
   ROBOTS_PROPS,
   SITE_NAME,
 } from "../lib/seo"
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+  variable: "--font-montserrat",
+})
 
 export default function App({ Component, ...pageProps }: AppProps) {
   return (
@@ -31,15 +39,7 @@ export default function App({ Component, ...pageProps }: AppProps) {
             siteName: SITE_NAME,
             title: DEFAULT_SEO_TITLE,
             description: DEFAULT_SEO_DESCRIPTION,
-            images: [
-              {
-                url: OG_IMAGE_URL,
-                width: 1200,
-                height: 630,
-                alt: "Byte Criativo - software sob medida",
-                type: "image/png",
-              },
-            ],
+            images: DEFAULT_OG_IMAGES,
           },
           twitter: {
             cardType: "summary_large_image",
@@ -49,7 +49,12 @@ export default function App({ Component, ...pageProps }: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <GlobalStyles />
-        <Component {...pageProps} />
+        <div
+          className={montserrat.variable}
+          style={{ fontFamily: "var(--font-montserrat), sans-serif" }}
+        >
+          <Component {...pageProps} />
+        </div>
       </ThemeProvider>
     </StyledComponentsRegistry>
   )

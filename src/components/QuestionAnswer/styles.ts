@@ -47,19 +47,23 @@ export const Question = styled.button<{ $isOpen: boolean }>`
   }
 `
 
-export const Answer = styled.p<{ $isOpen: boolean }>`
+export const AnswerWrapper = styled.div<{ $isOpen: boolean }>`
+  display: grid;
+  grid-template-rows: ${({ $isOpen }) => ($isOpen ? "1fr" : "0fr")};
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  transition:
+    grid-template-rows 0.25s ease,
+    opacity 0.2s ease;
+`
+
+export const Answer = styled.p`
   ${({ theme }) => css`
     color: ${theme.COLORS.GRAY_500};
     font-size: ${theme.FONT_SIZE.MD};
   `}
 
-  max-height: ${({ $isOpen }) => ($isOpen ? "12rem" : "0")};
-  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  min-height: 0;
   overflow: hidden;
   line-height: 1.7;
-  padding-top: ${({ $isOpen }) => ($isOpen ? "1rem" : "0")};
-  transition:
-    max-height 0.25s ease,
-    opacity 0.2s ease,
-    padding-top 0.2s ease;
+  padding-top: 1rem;
 `

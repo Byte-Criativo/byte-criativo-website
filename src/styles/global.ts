@@ -9,6 +9,7 @@ export const GlobalStyles = createGlobalStyle`
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 7rem;
   }
 
   body {
@@ -18,8 +19,8 @@ export const GlobalStyles = createGlobalStyle`
     text-rendering: optimizeLegibility;
   }
 
-  body, input, button, textarea {
-    font-family: Montserrat, sans-serif;
+  input, button, textarea {
+    font-family: inherit;
   }
 
   ::selection {

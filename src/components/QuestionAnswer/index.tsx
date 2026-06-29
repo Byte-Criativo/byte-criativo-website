@@ -1,5 +1,11 @@
+import { useId } from "react"
 import { ArrowDown } from "@phosphor-icons/react"
-import { Answer, QuestionAnswerContainer, Question } from "./styles"
+import {
+  Answer,
+  AnswerWrapper,
+  QuestionAnswerContainer,
+  Question,
+} from "./styles"
 
 interface QuestionAnswerProps {
   question: string
@@ -14,22 +20,31 @@ export function QuestionAnswer({
   answer,
   onClick,
 }: QuestionAnswerProps) {
-  function handleOnClick() {
-    onClick()
-  }
+  const id = useId()
+  const questionId = `${id}-question`
+  const answerId = `${id}-answer`
 
   return (
     <QuestionAnswerContainer>
       <Question
+        id={questionId}
         aria-expanded={isOpen}
-        onClick={handleOnClick}
+        aria-controls={answerId}
+        onClick={onClick}
         type="button"
         $isOpen={isOpen}
       >
         <p>{question}</p>
-        <ArrowDown size={28} />
+        <ArrowDown size={28} aria-hidden />
       </Question>
-      <Answer $isOpen={isOpen}>{answer}</Answer>
+      <AnswerWrapper
+        id={answerId}
+        role="region"
+        aria-labelledby={questionId}
+        $isOpen={isOpen}
+      >
+        <Answer>{answer}</Answer>
+      </AnswerWrapper>
     </QuestionAnswerContainer>
   )
 }

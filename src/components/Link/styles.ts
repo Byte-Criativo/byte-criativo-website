@@ -12,7 +12,7 @@ export const LinkContainer = styled(Link)`
   text-decoration: none;
 
   ${({ theme }) => css`
-    color: ${theme.COLORS.ORANGE};
+    color: ${theme.COLORS.ORANGE_DARK};
     font-size: ${theme.FONT_SIZE.LG};
     font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
   `}
@@ -29,5 +29,11 @@ export const LinkContainer = styled(Link)`
 
   &:hover svg {
     transform: translate(3px, -3px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline-offset: 4px;
+    border-radius: 8px;
   }
 `

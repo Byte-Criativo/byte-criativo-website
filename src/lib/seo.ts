@@ -14,6 +14,15 @@ export const DEFAULT_SEO_TITLE = `${HOME_SEO_TITLE} | ${SITE_NAME}`
 export const DEFAULT_SEO_DESCRIPTION =
   "Software house que cria sites, sistemas web, back-end, UI/UX e produtos digitais sob medida para empresas que querem crescer com tecnologia."
 export const OG_IMAGE_URL = `${SITE_URL}/og-image.png`
+export const DEFAULT_OG_IMAGES = [
+  {
+    url: OG_IMAGE_URL,
+    width: 1200,
+    height: 630,
+    alt: "Byte Criativo - software sob medida",
+    type: "image/png",
+  },
+]
 export const LOGO_URL = `${SITE_URL}/logoByte.png`
 export const ROBOTS_PROPS = {
   maxSnippet: -1,

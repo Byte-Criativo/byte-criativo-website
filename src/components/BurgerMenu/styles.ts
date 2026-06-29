@@ -6,6 +6,18 @@ export const BurgerMenuContainer = styled.div`
   max-height: 100vh;
 `
 
+export const HiddenTitle = styled(Dialog.Title)`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+`
+
 export const DialogContent = styled(Dialog.Content)`
   background-color: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
   width: 100vw;
@@ -63,6 +75,13 @@ export const DialogDescription = styled(Dialog.Description)`
 export const DialogTrigger = styled(Dialog.Trigger)`
   all: unset;
   color: ${({ theme }) => theme.COLORS.ORANGE};
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
 `
 
 export const DialogClose = styled(Dialog.Close)`
@@ -70,6 +89,13 @@ export const DialogClose = styled(Dialog.Close)`
   color: ${({ theme }) => theme.COLORS.ORANGE};
   align-self: flex-end;
   padding: 3rem 2rem 0 0;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
 `
 
 export const MenuItem = styled("a")`
@@ -85,6 +111,12 @@ export const MenuItem = styled("a")`
   transition: color 0.2s ease;
   &:hover {
     color: ${({ theme }) => theme.COLORS.ORANGE};
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline-offset: 4px;
+    border-radius: 8px;
   }
 `
 
@@ -118,5 +150,11 @@ export const ContactButton = styled("a")`
 
   &:hover {
     background-color: ${({ theme }) => theme.COLORS.ORANGE};
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.WHITE};
+    outline-offset: -6px;
+    border-radius: 12px 12px 0 0;
   }
 `

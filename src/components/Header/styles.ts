@@ -19,17 +19,18 @@ export const HeaderContainer = styled.header`
   z-index: 99;
 
   display: grid;
-  justify-content: space-between;
-  justify-self: center;
-  align-items: center;
-
   grid-template-columns: 1fr minmax(min-content, 1fr) 1fr;
-
+  align-items: center;
   gap: 1rem;
 
-  .button {
-    position: absolute;
-    right: 2rem;
+  .logo {
+    grid-column: 1;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .logo-mini {
+    display: none;
   }
 
   /* tablet screen */
@@ -47,14 +48,52 @@ export const HeaderContainer = styled.header`
   @media (max-width: 430px) {
     width: calc(100% - 2rem);
   }
+
+  /* swap wordmark for icon on very small screens */
+  @media (max-width: 400px) {
+    .logo-full {
+      display: none;
+    }
+    .logo-mini {
+      display: block;
+    }
+  }
 `
 
 export const NavArea = styled.ul`
+  grid-column: 2;
   list-style: none;
   display: flex;
   gap: 1.75rem;
 
   justify-self: center;
+
+  @media (max-width: 855px) {
+    display: none;
+  }
+`
+
+export const HeaderActions = styled.div`
+  grid-column: 3;
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+
+  /* burger hidden on desktop */
+  > div {
+    display: none;
+  }
+
+  @media (max-width: 855px) {
+    .button {
+      display: none;
+    }
+
+    > div {
+      display: block;
+    }
+  }
 `
 
 export const NavItem = styled.a`
@@ -87,7 +126,14 @@ export const NavItem = styled.a`
     color: ${({ theme }) => theme.COLORS.ORANGE};
   }
 
-  &:hover::after {
+  &:hover::after,
+  &:focus-visible::after {
     transform: scaleX(1);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline-offset: 6px;
+    border-radius: 4px;
   }
 `

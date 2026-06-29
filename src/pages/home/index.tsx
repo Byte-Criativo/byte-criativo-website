@@ -11,12 +11,12 @@ import { FAQSection } from "./sections/FAQ"
 import Head from "next/head"
 import { generateNextSeo } from "next-seo/pages"
 import {
+  DEFAULT_OG_IMAGES,
   DEFAULT_SEO_DESCRIPTION,
   DEFAULT_SEO_TITLE,
   HOME_JSON_LD,
   HOME_URL,
   HOME_SEO_TITLE,
-  OG_IMAGE_URL,
   ROBOTS_PROPS,
 } from "@/src/lib/seo"
 
@@ -33,15 +33,7 @@ export default function Home() {
             title: DEFAULT_SEO_TITLE,
             description: DEFAULT_SEO_DESCRIPTION,
             url: HOME_URL,
-            images: [
-              {
-                url: OG_IMAGE_URL,
-                width: 1200,
-                height: 630,
-                alt: "Byte Criativo - software sob medida",
-                type: "image/png",
-              },
-            ],
+            images: DEFAULT_OG_IMAGES,
           },
         })}
         <script

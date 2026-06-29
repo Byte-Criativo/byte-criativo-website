@@ -5,8 +5,8 @@ const contentSecurityPolicy = `
   frame-ancestors 'none';
   form-action 'self';
   img-src 'self' data: https:;
-  font-src 'self' https://fonts.gstatic.com data:;
-  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' data:;
+  style-src 'self' 'unsafe-inline';
   script-src 'self' 'unsafe-inline';
   connect-src 'self';
   upgrade-insecure-requests;

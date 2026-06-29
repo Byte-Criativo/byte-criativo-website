@@ -1,6 +1,6 @@
 const theme = {
   COLORS: {
-    WHITE: "#FFFF",
+    WHITE: "#FFFFFF",
 
     GRAY_700: "#141414",
     GRAY_500: "#323232",
@@ -19,7 +19,7 @@ const theme = {
   },
 
   FONT_FAMILY: {
-    MONTSERRAT: "Montserrat, sans-serif",
+    MONTSERRAT: "var(--font-montserrat), sans-serif",
   },
 
   FONT_SIZE: {

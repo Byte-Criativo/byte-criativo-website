@@ -8,7 +8,7 @@ export const SectionTitleContainer = styled.div`
 
 export const SectionTitleSpan = styled.span`
   ${({ theme }) => css`
-    color: ${theme.COLORS.ORANGE};
+    color: ${theme.COLORS.ORANGE_DARK};
     font-size: ${theme.FONT_SIZE.LG};
     font-weight: ${theme.FONT_WEIGHT.BOLD};
   `}

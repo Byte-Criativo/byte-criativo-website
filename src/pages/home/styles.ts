@@ -2,8 +2,10 @@ import styled, { css } from "styled-components"
 
 export const HomeContainer = styled.div`
   width: 100%;
-  background: url("/background-temp.svg");
+  background-image: url("/background.svg");
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `
 export const HomeContent = styled.main`
   padding: 13.5rem 9rem 5.5rem;

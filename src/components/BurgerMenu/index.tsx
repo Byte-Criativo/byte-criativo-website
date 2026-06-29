@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogTrigger,
+  HiddenTitle,
   Menu,
   MenuItem,
 } from "./styles"
@@ -30,14 +31,15 @@ export function BurgerMenu() {
   return (
     <BurgerMenuContainer>
       <Dialog.Root open={open} onOpenChange={handleToggleMenu}>
-        <DialogTrigger>
-          <List size={32} weight="bold" />
+        <DialogTrigger aria-label="Abrir menu">
+          <List size={32} weight="bold" aria-hidden />
         </DialogTrigger>
         <Dialog.Portal>
           <Dialog.Overlay />
           <DialogContent>
-            <DialogClose>
-              <X size={32} weight="bold" />
+            <HiddenTitle>Menu de navegação</HiddenTitle>
+            <DialogClose aria-label="Fechar menu">
+              <X size={32} weight="bold" aria-hidden />
             </DialogClose>
             <DialogDescription>
               <Menu>

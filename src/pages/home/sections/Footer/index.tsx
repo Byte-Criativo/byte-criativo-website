@@ -1,6 +1,8 @@
+import { useState } from "react"
 import Image from "next/image"
 import { footerNavigationItems } from "@/src/content/home"
 import {
+  CopyEmailButton,
   FooterCompany,
   FooterContainer,
   FooterContent,
@@ -11,6 +13,8 @@ import {
 } from "./styles"
 import { Link } from "@/src/components/Link"
 import {
+  Check,
+  Copy,
   InstagramLogo,
   LinkedinLogo,
   WhatsappLogo,
@@ -25,6 +29,17 @@ import {
 
 export function FooterSection() {
   const year = new Date().getFullYear()
+  const [copied, setCopied] = useState(false)
+
+  async function handleCopyEmail() {
+    try {
+      await navigator.clipboard.writeText(CONTACT_EMAIL)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Área de transferência indisponível — ignora silenciosamente.
+    }
+  }
 
   return (
     <FooterContainer>
@@ -38,12 +53,24 @@ export function FooterSection() {
               height={80}
             />
             <p>
-              <strong>Byte Criativo;</strong>
+              <strong>Byte Criativo</strong>
             </p>
             <p>CNPJ: 52.652.130/0001-02</p>
             <span className="contact">
-              <p>{CONTACT_EMAIL}</p>
-              {/* <div className="divisor" /> */}
+              <div className="email">
+                <p>{CONTACT_EMAIL}</p>
+                <CopyEmailButton
+                  type="button"
+                  onClick={handleCopyEmail}
+                  aria-label={copied ? "E-mail copiado" : "Copiar e-mail"}
+                >
+                  {copied ? (
+                    <Check size={18} weight="bold" />
+                  ) : (
+                    <Copy size={18} />
+                  )}
+                </CopyEmailButton>
+              </div>
               <div className="whatsapp">
                 <p>{WHATSAPP_DISPLAY}</p>
                 <Link href={WHATSAPP_URL} icon={<WhatsappLogo size={20} />} />
