@@ -24,12 +24,14 @@ O projeto foi organizado para ser simples de manter: os textos principais ficam 
 - React 19
 - TypeScript
 - styled-components
+- next/font (Montserrat self-hosted)
 - next-seo
 - Phosphor Icons
 - Radix UI Dialog
 - ESLint e Prettier
+- Husky (hook de pre-commit)
 - Node Test Runner
-- Tailwind/PostCSS configurados no projeto
+- PostCSS com autoprefixer
 
 ## Como Rodar o Projeto
 
@@ -86,10 +88,38 @@ npm run lint
 Executa ESLint e Prettier.
 
 ```bash
+npm run check-format
+```
+
+Verifica a formatação com Prettier sem alterar arquivos.
+
+```bash
+npm run format
+```
+
+Formata o código com Prettier.
+
+```bash
+npm run check-lint
+```
+
+Roda o ESLint.
+
+```bash
+npm run check-types
+```
+
+Verifica a tipagem com TypeScript (`tsc --noEmit`).
+
+```bash
 npm test
 ```
 
 Executa `npm run build` e depois roda os testes automatizados em `tests/`.
+
+### Hook de Pré-commit
+
+O projeto usa Husky. A cada commit, um hook roda automaticamente `check-format`, `check-lint` e `check-types`. Se algum falhar, o commit é bloqueado até a correção. O build de produção não roda no commit (a Vercel o executa no deploy).
 
 ## Estrutura de Pastas
 
