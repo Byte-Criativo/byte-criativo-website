@@ -3,10 +3,11 @@ import * as Dialog from "@radix-ui/react-dialog"
 import {
   BurgerMenuContainer,
   ContactButton,
+  DialogBody,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogTrigger,
+  HiddenDescription,
   HiddenTitle,
   Menu,
   MenuItem,
@@ -38,10 +39,14 @@ export function BurgerMenu() {
           <Dialog.Overlay />
           <DialogContent>
             <HiddenTitle>Menu de navegação</HiddenTitle>
+            <HiddenDescription>
+              Navegue pelas seções do site ou fale com a Byte Criativo pelo
+              WhatsApp.
+            </HiddenDescription>
             <DialogClose aria-label="Fechar menu">
               <X size={32} weight="bold" aria-hidden />
             </DialogClose>
-            <DialogDescription>
+            <DialogBody>
               <Menu>
                 {navigationItems.map((item) => (
                   <MenuItem
@@ -60,7 +65,7 @@ export function BurgerMenu() {
               >
                 Entre em contato
               </ContactButton>
-            </DialogDescription>
+            </DialogBody>
           </DialogContent>
         </Dialog.Portal>
       </Dialog.Root>
