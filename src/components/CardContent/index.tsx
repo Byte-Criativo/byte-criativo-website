@@ -1,5 +1,6 @@
 import { CardDescription, CardTitle, ContentContainer } from "./styles"
 import Image from "next/image"
+// @ts-expect-error SVG import not typed
 import Icon from "../../assets/icons/LogoIcon.svg"
 import { ReactNode } from "react"
 

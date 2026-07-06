@@ -9,6 +9,7 @@ import {
   CaseTags,
 } from "./styles"
 
+// @ts-expect-error Image import not typed
 import CaseUndergroundPB from "@/src/assets/case-undergroundpb.png"
 import { ArrowUpRight } from "@phosphor-icons/react"
 
