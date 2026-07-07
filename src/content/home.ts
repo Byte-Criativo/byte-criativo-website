@@ -89,7 +89,7 @@ export const featuredCase = {
   result:
     "O projeto saiu de uma presença dispersa para um produto digital vivo, com descoberta organizada, navegação responsiva e base técnica preparada para novas frentes editoriais.",
   description:
-    "Desenvolvido por mim, o Underground PB reúne a cena alternativa e independente da Paraíba em uma plataforma viva: catálogo de bandas, agenda de shows, notícias, memória da cena, playlist integrada, cadastro de artistas e contribuição para manter o projeto ativo. Um produto cultural pensado para descoberta, participação e fortalecimento da comunidade underground paraibana.",
+    "Desenvolvido por nós, o Underground PB reúne a cena alternativa e independente da Paraíba em uma plataforma viva: catálogo de bandas, agenda de shows, notícias, memória da cena, playlist integrada, cadastro de artistas e contribuição para manter o projeto ativo. Um produto cultural pensado para descoberta, participação e fortalecimento da comunidade underground paraibana.",
   href: "https://www.undergroundpb.com.br/",
   linkLabel: "Acessar site",
 } as const
