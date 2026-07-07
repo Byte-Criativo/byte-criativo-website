@@ -35,6 +35,7 @@ export function ServicesSection() {
               icon={serviceIcons[service.icon]}
               title={service.title}
               description={service.description}
+              href={service.href}
             />
           ))}
         </ServicesGrid>

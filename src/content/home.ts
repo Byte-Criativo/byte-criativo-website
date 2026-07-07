@@ -1,6 +1,8 @@
 export const sectionIds = {
   cases: "cases",
   services: "services",
+  process: "process",
+  audience: "audience",
   faq: "FAQ",
   contact: "contact",
 } as const
@@ -13,6 +15,10 @@ export const navigationItems = [
   {
     label: "Serviços",
     href: `/#${sectionIds.services}`,
+  },
+  {
+    label: "Processo",
+    href: `/#${sectionIds.process}`,
   },
   {
     label: "FAQ",
@@ -30,37 +36,44 @@ export const footerNavigationItems = [
     href: `/#${sectionIds.services}`,
   },
   {
+    label: "PROCESSO",
+    href: `/#${sectionIds.process}`,
+  },
+  {
     label: "DÚVIDAS",
     href: `/#${sectionIds.faq}`,
   },
 ] as const
 
 export const heroContent = {
-  heading: "Software sob medida para marcas que querem",
-  highlight: " crescer com tecnologia",
+  eyebrow: "Software house para projetos sob medida",
+  heading: "Sites, sistemas e produtos digitais para empresas que querem",
+  highlight: " vender mais e operar melhor",
   description:
-    "Unimos estratégia, design e desenvolvimento para criar produtos digitais elegantes, rápidos e preparados para evoluir com a sua empresa.",
-  ctaLabel: "Comece seu projeto",
+    "Unimos estratégia, UI/UX, desenvolvimento e copy para transformar ideias em experiências digitais rápidas, claras e prontas para crescer junto com o negócio.",
+  ctaLabel: "Agendar diagnóstico gratuito",
+  secondaryCtaLabel: "Ver serviços",
+  secondaryCtaHref: `/#${sectionIds.services}`,
 } as const
 
 export const highlightCards = [
   {
     icon: "shapes",
-    title: "Estratégia Multidisciplinar",
+    title: "Diagnóstico antes do código",
     description:
-      "Contamos com especialistas em programação, design, UI/UX e copywriting.",
+      "Entendemos objetivo, público, operação e restrições antes de propor a solução.",
   },
   {
     icon: "sparkle",
-    title: "Soluções Sob Medida",
+    title: "Entrega pensada para conversão",
     description:
-      "Nosso compromisso é encontrar a solução perfeita para o seu desafio.",
+      "Desenhamos jornadas, textos e interfaces para reduzir fricção e gerar contatos.",
   },
   {
     icon: "lifebuoy",
-    title: "Suporte Evolutivo",
+    title: "Base pronta para evoluir",
     description:
-      "Após a entrega do seu projeto, desfrute da tranquilidade com nosso suporte contínuo.",
+      "Seu produto nasce com estrutura para manutenção, melhorias e novas integrações.",
   },
 ] as const
 
@@ -69,64 +82,150 @@ export const featuredCase = {
   title: "Underground PB",
   imageAlt: "Preview do site Underground PB",
   tags: ["Plataforma cultural", "Agenda & bandas", "PWA"],
+  problem:
+    "A cena alternativa paraibana precisava de um espaço próprio para reunir artistas, eventos, notícias e memória em uma experiência fácil de explorar.",
+  solution:
+    "Criamos uma plataforma cultural com catálogo de bandas, agenda de shows, conteúdo editorial, playlist integrada, cadastro de artistas e recursos de participação da comunidade.",
+  result:
+    "O projeto saiu de uma presença dispersa para um produto digital vivo, com descoberta organizada, navegação responsiva e base técnica preparada para novas frentes editoriais.",
   description:
     "Desenvolvido por mim, o Underground PB reúne a cena alternativa e independente da Paraíba em uma plataforma viva: catálogo de bandas, agenda de shows, notícias, memória da cena, playlist integrada, cadastro de artistas e contribuição para manter o projeto ativo. Um produto cultural pensado para descoberta, participação e fortalecimento da comunidade underground paraibana.",
   href: "https://www.undergroundpb.com.br/",
   linkLabel: "Acessar site",
 } as const
 
+export const audienceSectionTitle = {
+  eyebrow: "Para quem fazemos",
+  heading: "Projetos digitais para negócios que precisam sair do improviso",
+} as const
+
+export const audiences = [
+  {
+    title: "Empresas em crescimento",
+    description:
+      "Sites, sistemas internos e integrações para times que precisam organizar processos e vender com mais previsibilidade.",
+  },
+  {
+    title: "Marcas lançando uma nova oferta",
+    description:
+      "Landing pages, páginas institucionais e jornadas de conversão para validar mercado, captar leads e explicar valor com clareza.",
+  },
+  {
+    title: "Operações com gargalos manuais",
+    description:
+      "Produtos web e automações para substituir planilhas, retrabalho e ferramentas desconectadas.",
+  },
+] as const
+
 export const services = [
   {
     icon: "code",
-    title: "Front-end",
+    title: "Desenvolvimento de sites",
     description:
-      "Garanta um site deslumbrante e eficiente que cativa à primeira vista.",
+      "Páginas rápidas, responsivas e preparadas para SEO, campanhas e conversão.",
+    href: "/servicos/desenvolvimento-de-sites",
   },
   {
     icon: "database",
-    title: "Back-end",
+    title: "Sistemas web sob medida",
     description:
-      "Integrações estáveis, dados bem estruturados e bases técnicas prontas para crescer.",
+      "Ferramentas internas, painéis, portais e fluxos digitais para ganhar eficiência.",
+    href: "/servicos/sistemas-web-sob-medida",
   },
   {
     icon: "browser",
     title: "UI/UX Design",
     description:
-      "Interfaces claras, bonitas e desenhadas para reduzir fricção em cada jornada.",
+      "Interfaces claras, bonitas e desenhadas para reduzir dúvidas em cada etapa.",
+    href: "/servicos/ui-ux-design",
   },
   {
     icon: "shapes",
-    title: "Design Gráfico",
+    title: "Landing pages",
     description:
-      "Crie uma identidade visual que ressoa perfeitamente com a essência da sua marca.",
+      "Páginas focadas em oferta, tráfego pago, captura de leads e lançamento.",
+    href: "/servicos/landing-pages",
   },
   {
     icon: "strategy",
     title: "Design de Produto",
     description:
-      "Desenvolvemos produtos com coesão impecável, cada um refletindo harmonia e propósito.",
+      "Estruturação de produto, jornada, escopo e priorização antes da construção.",
+    href: "/servicos/design-de-produto",
   },
   {
     icon: "penNib",
-    title: "Copywriting",
+    title: "Copywriting para web",
     description:
-      "Textos diretos e estratégicos para comunicar valor e conduzir à ação.",
+      "Textos diretos para explicar valor, sustentar confiança e conduzir à ação.",
+    href: "/servicos/copywriting-para-web",
   },
 ] as const
 
 export const servicesSectionTitle = {
   eyebrow: "Nossos Serviços",
-  heading: "O que oferecemos?",
+  heading: "O que a Byte Criativo pode construir com você",
 } as const
+
+export const processSectionTitle = {
+  eyebrow: "Processo",
+  heading: "Um caminho claro do diagnóstico ao lançamento",
+} as const
+
+export const processSteps = [
+  {
+    title: "Diagnóstico",
+    description:
+      "Mapeamos objetivo, público, concorrência, operação atual e critérios de sucesso do projeto.",
+  },
+  {
+    title: "Proposta e escopo",
+    description:
+      "Organizamos prioridades, entregáveis, prazo, investimento e riscos antes de começar.",
+  },
+  {
+    title: "Design e desenvolvimento",
+    description:
+      "Construímos com acompanhamento próximo, decisões registradas e validações ao longo do caminho.",
+  },
+  {
+    title: "Entrega e evolução",
+    description:
+      "Publicamos, testamos, medimos pontos críticos e deixamos uma base preparada para melhorias.",
+  },
+] as const
+
+export const trustSectionTitle = {
+  eyebrow: "Por que funciona",
+  heading: "Menos improviso, mais clareza para decidir e vender",
+} as const
+
+export const trustSignals = [
+  {
+    value: "Estratégia + execução",
+    label:
+      "A mesma visão que define a jornada também cuida da interface, do código e da mensagem.",
+  },
+  {
+    value: "SEO desde a base",
+    label:
+      "Metadados, performance, estrutura semântica e conteúdo rastreável entram no projeto desde o início.",
+  },
+  {
+    value: "Contato direto",
+    label:
+      "Você conversa com quem entende do produto, do escopo e das decisões técnicas.",
+  },
+] as const
 
 export const faqSectionTitle = {
   eyebrow: "FAQ",
-  heading: "Dúvidas",
+  heading: "Dúvidas antes de começar",
 } as const
 
 export const ctaContent = {
-  title: "Vamos transformar sua ideia em produto?",
+  title: "Vamos entender qual solução faz sentido para o seu negócio?",
   description:
-    "Conte o que você precisa. A gente te ajuda a desenhar o melhor caminho para tirar sua solução do papel.",
-  buttonLabel: "Enviar mensagem",
+    "Conte em poucas linhas o que você quer vender, organizar ou lançar. A gente responde com próximos passos, caminhos possíveis e uma noção inicial de escopo.",
+  buttonLabel: "Falar sobre meu projeto",
 } as const

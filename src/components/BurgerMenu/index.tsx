@@ -16,6 +16,7 @@ import { useState } from "react"
 import { WHATSAPP_URL } from "@/src/lib/contact"
 import { navigationItems } from "@/src/content/home"
 import { getSafeRel } from "@/src/lib/link-security"
+import { trackWhatsAppClick } from "@/src/lib/analytics"
 
 export function BurgerMenu() {
   const [open, setOpen] = useState(false)
@@ -62,8 +63,9 @@ export function BurgerMenu() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel={getSafeRel("_blank")}
+                onClick={() => trackWhatsAppClick("menu")}
               >
-                Entre em contato
+                Agendar diagnóstico
               </ContactButton>
             </DialogBody>
           </DialogContent>

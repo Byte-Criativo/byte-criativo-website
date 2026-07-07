@@ -5,6 +5,7 @@ import { BurgerMenu } from "../BurgerMenu"
 import Image from "next/image"
 import { WHATSAPP_URL } from "@/src/lib/contact"
 import { navigationItems } from "@/src/content/home"
+import { trackWhatsAppClick } from "@/src/lib/analytics"
 
 export function Header() {
   return (
@@ -40,8 +41,13 @@ export function Header() {
       </NavArea>
 
       <HeaderActions>
-        <Button href={WHATSAPP_URL} className="button" target="_blank">
-          Entre em contato
+        <Button
+          href={WHATSAPP_URL}
+          className="button"
+          target="_blank"
+          onClick={() => trackWhatsAppClick("header")}
+        >
+          Agendar diagnóstico
         </Button>
         <BurgerMenu />
       </HeaderActions>

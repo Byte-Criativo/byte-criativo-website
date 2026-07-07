@@ -20,6 +20,14 @@ test("sitemap.xml lista a URL canonica da home", () => {
     sitemap,
     /<loc>https:\/\/www\.bytecriativotech\.com\.br\/<\/loc>/,
   )
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/www\.bytecriativotech\.com\.br\/servicos\/desenvolvimento-de-sites<\/loc>/,
+  )
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/www\.bytecriativotech\.com\.br\/servicos\/sistemas-web-sob-medida<\/loc>/,
+  )
   assert.match(sitemap, /<priority>1\.0<\/priority>/)
 })
 

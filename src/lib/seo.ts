@@ -9,10 +9,10 @@ import {
 export const SITE_URL = "https://www.bytecriativotech.com.br"
 export const HOME_URL = `${SITE_URL}/`
 export const SITE_NAME = "Byte Criativo"
-export const HOME_SEO_TITLE = "Software House e Produtos Digitais Sob Medida"
+export const HOME_SEO_TITLE = "Software House, Sites e Sistemas Web Sob Medida"
 export const DEFAULT_SEO_TITLE = `${HOME_SEO_TITLE} | ${SITE_NAME}`
 export const DEFAULT_SEO_DESCRIPTION =
-  "Software house que cria sites, sistemas web, back-end, UI/UX e produtos digitais sob medida para empresas que querem crescer com tecnologia."
+  "A Byte Criativo cria sites, sistemas web, landing pages, UI/UX e produtos digitais sob medida para empresas que querem vender mais e operar melhor."
 export const OG_IMAGE_URL = `${SITE_URL}/og-image.png`
 export const DEFAULT_OG_IMAGES = [
   {

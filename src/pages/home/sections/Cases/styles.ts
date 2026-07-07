@@ -61,3 +61,33 @@ export const CaseTags = styled.div`
     text-transform: uppercase;
   }
 `
+
+export const CaseHighlights = styled.ul`
+  display: grid;
+  gap: 0.85rem;
+  list-style: none;
+
+  li {
+    display: grid;
+    gap: 0.25rem;
+    padding-left: 1rem;
+    border-left: 3px solid ${({ theme }) => theme.COLORS.ORANGE};
+  }
+
+  strong {
+    ${({ theme }) => css`
+      color: ${theme.COLORS.GRAY_700};
+      font-size: ${theme.FONT_SIZE.SM};
+      font-weight: ${theme.FONT_WEIGHT.BOLD};
+    `}
+  }
+
+  span {
+    ${({ theme }) => css`
+      color: ${theme.COLORS.GRAY_500};
+      font-size: ${theme.FONT_SIZE.SM};
+    `}
+
+    line-height: 1.65;
+  }
+`

@@ -25,12 +25,12 @@ test("renderiza metadados SEO essenciais da home", () => {
 
   assert.match(
     html,
-    /<title data-next-head="">Software House e Produtos Digitais Sob Medida \| Byte Criativo<\/title>/,
+    /<title data-next-head="">Software House, Sites e Sistemas Web Sob Medida \| Byte Criativo<\/title>/,
   )
 
   assert.match(
     html,
-    /<meta name="description" content="Software house que cria sites, sistemas web, back-end, UI\/UX e produtos digitais sob medida para empresas que querem crescer com tecnologia\."/,
+    /<meta name="description" content="A Byte Criativo cria sites, sistemas web, landing pages, UI\/UX e produtos digitais sob medida para empresas que querem vender mais e operar melhor\."/,
   )
 
   assert.equal(

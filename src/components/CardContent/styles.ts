@@ -1,3 +1,4 @@
+import Link from "next/link"
 import styled, { css } from "styled-components"
 
 export const ContentContainer = styled.div`
@@ -37,4 +38,34 @@ export const CardDescription = styled.p`
   `}
 
   line-height: 1.6;
+`
+
+export const CardAction = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: auto;
+
+  text-decoration: none;
+
+  ${({ theme }) => css`
+    color: ${theme.COLORS.ORANGE_DARK};
+    font-size: ${theme.FONT_SIZE.SM};
+    font-weight: ${theme.FONT_WEIGHT.BOLD};
+  `}
+
+  &::after {
+    content: "→";
+    transition: transform 0.2s ease;
+  }
+
+  &:hover::after {
+    transform: translateX(3px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
 `

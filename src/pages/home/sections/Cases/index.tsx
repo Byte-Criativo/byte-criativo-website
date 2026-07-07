@@ -5,11 +5,11 @@ import Image from "next/image"
 import {
   CaseContent,
   CaseDescription,
+  CaseHighlights,
   CasesContainer,
   CaseTags,
 } from "./styles"
 
-// @ts-expect-error Image import not typed
 import CaseUndergroundPB from "@/src/assets/case-undergroundpb.png"
 import { ArrowUpRight } from "@phosphor-icons/react"
 
@@ -33,6 +33,20 @@ export function CasesSection() {
             <span key={tag}>{tag}</span>
           ))}
         </CaseTags>
+        <CaseHighlights>
+          <li>
+            <strong>Desafio</strong>
+            <span>{featuredCase.problem}</span>
+          </li>
+          <li>
+            <strong>Solução</strong>
+            <span>{featuredCase.solution}</span>
+          </li>
+          <li>
+            <strong>Resultado</strong>
+            <span>{featuredCase.result}</span>
+          </li>
+        </CaseHighlights>
         <CaseDescription>{featuredCase.description}</CaseDescription>
         <Link href={featuredCase.href} icon={<ArrowUpRight size={24} />}>
           {featuredCase.linkLabel}

@@ -8,6 +8,9 @@ import { ServicesSection } from "./sections/Services"
 import { CTASection } from "./sections/CTA"
 import { FooterSection } from "./sections/Footer"
 import { FAQSection } from "./sections/FAQ"
+import { AudienceSection } from "./sections/Audience"
+import { ProcessSection } from "./sections/Process"
+import { TrustSection } from "./sections/Trust"
 import Head from "next/head"
 import { generateNextSeo } from "next-seo/pages"
 import {
@@ -47,8 +50,11 @@ export default function Home() {
         <HomeContent>
           <HeroSection />
           <CardsSection />
+          <AudienceSection />
           <CasesSection />
           <ServicesSection />
+          <ProcessSection />
+          <TrustSection />
           <FAQSection />
           <CTASection />
         </HomeContent>

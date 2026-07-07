@@ -26,6 +26,7 @@ import {
   WHATSAPP_DISPLAY,
   WHATSAPP_URL,
 } from "@/src/lib/contact"
+import { trackWhatsAppClick } from "@/src/lib/analytics"
 
 export function FooterSection() {
   const year = new Date().getFullYear()
@@ -73,7 +74,12 @@ export function FooterSection() {
               </div>
               <div className="whatsapp">
                 <p>{WHATSAPP_DISPLAY}</p>
-                <Link href={WHATSAPP_URL} icon={<WhatsappLogo size={20} />} />
+                <Link
+                  href={WHATSAPP_URL}
+                  icon={<WhatsappLogo size={20} />}
+                  aria-label="Falar com a Byte Criativo pelo WhatsApp"
+                  onClick={() => trackWhatsAppClick("footer")}
+                />
               </div>
             </span>
           </FooterCompany>
@@ -94,10 +100,12 @@ export function FooterSection() {
               <Link
                 href={INSTAGRAM_URL}
                 icon={<InstagramLogo size={24} weight="bold" />}
+                aria-label="Acessar Instagram da Byte Criativo"
               />
               <Link
                 href={LINKEDIN_URL}
                 icon={<LinkedinLogo size={24} weight="bold" />}
+                aria-label="Acessar LinkedIn da Byte Criativo"
               />
             </div>
           </div>

@@ -4,7 +4,8 @@ declare global {
   }
 }
 
-export type WhatsAppLocation = "hero" | "header" | "cta" | "menu" | "footer"
+export type WhatsAppLocation =
+  "hero" | "header" | "cta" | "menu" | "footer" | "service-page"
 
 /** Empurra um evento para o dataLayer do GTM. No-op seguro em SSR. */
 export function pushToDataLayer(event: Record<string, unknown>): void {

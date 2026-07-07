@@ -28,6 +28,21 @@ export const HeroContainer = styled.section`
   }
 `
 
+export const HeroEyebrow = styled.span`
+  align-self: center;
+  width: fit-content;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
+  border-radius: 999px;
+  background: ${({ theme }) => theme.COLORS.BLUE_SOFT};
+
+  ${({ theme }) => css`
+    color: ${theme.COLORS.GRAY_700};
+    font-size: ${theme.FONT_SIZE.SM};
+    font-weight: ${theme.FONT_WEIGHT.BOLD};
+  `}
+`
+
 export const HeroHeading = styled.div`
   display: flex;
   justify-content: space-between;
@@ -78,6 +93,31 @@ export const HeroHeading = styled.div`
   @media (max-width: 398px) {
     img {
       display: none;
+    }
+  }
+`
+
+export const HeroActions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  > a:last-child {
+    color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
+    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    text-decoration: none;
+    padding: 0.75rem 0.5rem;
+
+    &:hover {
+      color: ${({ theme }) => theme.COLORS.BLUE};
+    }
+
+    &:focus-visible {
+      outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+      outline-offset: 4px;
+      border-radius: 4px;
     }
   }
 `
