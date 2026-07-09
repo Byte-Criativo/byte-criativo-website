@@ -235,10 +235,13 @@ export const CardImage = styled.div`
 export const TagList = styled.ul`
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
+  align-self: start;
   gap: 0.5rem;
   list-style: none;
 
   li {
+    width: fit-content;
     padding: 0.35rem 0.55rem;
     border-radius: 999px;
     background: ${({ theme }) => theme.COLORS.BLUE_SOFT};

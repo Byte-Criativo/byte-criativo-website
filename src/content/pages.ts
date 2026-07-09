@@ -1,4 +1,6 @@
 import { CONTACT_EMAIL, WHATSAPP_DISPLAY } from "@/src/lib/contact"
+import CaseUndergroundPB from "@/src/assets/case-undergroundpb.png"
+import type { StaticImageData } from "next/image"
 
 export type MarketingCard = {
   title: string
@@ -7,7 +9,7 @@ export type MarketingCard = {
   href?: string
   ctaLabel?: string
   tags?: string[]
-  imageSrc?: string
+  imageSrc?: string | StaticImageData
   imageAlt?: string
 }
 
@@ -429,7 +431,7 @@ export const pagesContent = {
             href: "https://www.undergroundpb.com.br/",
             ctaLabel: "Acessar projeto",
             tags: ["Next.js", "PWA", "Conteúdo editorial"],
-            imageSrc: "/case-undergroundpb.png",
+            imageSrc: CaseUndergroundPB,
             imageAlt:
               "Preview do projeto Underground PB desenvolvido pela Byte Criativo",
           },
