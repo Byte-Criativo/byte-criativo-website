@@ -9,39 +9,55 @@ export const sectionIds = {
 
 export const navigationItems = [
   {
-    label: "Cases",
-    href: `/#${sectionIds.cases}`,
+    label: "Início",
+    href: "/",
+  },
+  {
+    label: "Sobre",
+    href: "/sobre",
   },
   {
     label: "Serviços",
-    href: `/#${sectionIds.services}`,
+    href: "/servicos",
   },
   {
-    label: "Processo",
-    href: `/#${sectionIds.process}`,
+    label: "Portfólio",
+    href: "/portfolio",
   },
   {
-    label: "FAQ",
-    href: `/#${sectionIds.faq}`,
+    label: "Blog",
+    href: "/blog",
+  },
+  {
+    label: "Contato",
+    href: "/contato",
   },
 ] as const
 
 export const footerNavigationItems = [
   {
-    label: "CASES",
-    href: `/#${sectionIds.cases}`,
+    label: "INÍCIO",
+    href: "/",
+  },
+  {
+    label: "SOBRE",
+    href: "/sobre",
   },
   {
     label: "SERVIÇOS",
-    href: `/#${sectionIds.services}`,
+    href: "/servicos",
   },
   {
-    label: "PROCESSO",
-    href: `/#${sectionIds.process}`,
+    label: "PORTFÓLIO",
+    href: "/portfolio",
   },
   {
-    label: "DÚVIDAS",
-    href: `/#${sectionIds.faq}`,
+    label: "BLOG",
+    href: "/blog",
+  },
+  {
+    label: "CONTATO",
+    href: "/contato",
   },
 ] as const
 
