@@ -1,13 +1,16 @@
 import { test, expect } from "@playwright/test"
 
 test.describe("Home", () => {
-  test("navegação por âncora rola até a seção de serviços", async ({
-    page,
-  }) => {
+  test("navegação principal abre a página de serviços", async ({ page }) => {
     await page.goto("/")
     await page.locator("header").getByRole("link", { name: "Serviços" }).click()
-    await expect(page).toHaveURL(/#services$/)
-    await expect(page.locator("#services")).toBeInViewport()
+    await expect(page).toHaveURL(/\/servicos$/)
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: /sites, sistemas e soluções digitais/i,
+      }),
+    ).toBeVisible()
   })
 
   test("FAQ abre a resposta ao clicar na pergunta", async ({ page }) => {
