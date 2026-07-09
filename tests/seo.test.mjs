@@ -61,6 +61,14 @@ test("mantem Open Graph e Twitter Card prontos para compartilhamento", () => {
   )
 })
 
+test("inclui Google tag para mensuracao", () => {
+  assert.match(
+    html,
+    /https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-2W71B1J3SQ/,
+  )
+  assert.match(html, /gtag\('config', 'G-2W71B1J3SQ'\)/)
+})
+
 test("inclui JSON-LD valido para organizacao, pagina, site e FAQ", () => {
   const jsonLdMatch = html.match(
     /<script type="application\/ld\+json" data-next-head="">(.+?)<\/script>/,

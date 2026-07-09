@@ -46,6 +46,21 @@ export default class MyDocument extends Document {
             sizes="80x80"
           />
           <link rel="apple-touch-icon" href="/MiniLogo.png" />
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-2W71B1J3SQ"
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', 'G-2W71B1J3SQ');
+              `,
+            }}
+          />
         </Head>
         <body>
           <Main />

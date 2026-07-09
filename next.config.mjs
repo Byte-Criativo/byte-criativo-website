@@ -7,8 +7,8 @@ const contentSecurityPolicy = `
   img-src 'self' data: https:;
   font-src 'self' data:;
   style-src 'self' 'unsafe-inline';
-  script-src 'self' 'unsafe-inline';
-  connect-src 'self';
+  script-src 'self' 'unsafe-inline' https://www.googletagmanager.com;
+  connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com;
   upgrade-insecure-requests;
 `
   .replace(/\s{2,}/g, " ")
