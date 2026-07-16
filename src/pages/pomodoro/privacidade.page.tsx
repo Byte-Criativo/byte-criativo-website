@@ -2,12 +2,7 @@ import Head from "next/head"
 import { generateNextSeo } from "next-seo/pages"
 import { Header } from "@/src/components/Header"
 import { FooterSection } from "@/src/pages/home/sections/Footer"
-import {
-  DEFAULT_OG_IMAGES,
-  ROBOTS_PROPS,
-  SITE_NAME,
-  SITE_URL,
-} from "@/src/lib/seo"
+import { DEFAULT_OG_IMAGES, ROBOTS_PROPS, SITE_NAME } from "@/src/lib/seo"
 import {
   ContactLink,
   PageContainer,
@@ -17,7 +12,7 @@ import {
   PrivacySection,
 } from "./privacidade.styles"
 
-const canonical = `${SITE_URL}/pomodoro/privacidade`
+const canonical = "https://www.bcriativo.com/pomodoro/privacidade"
 const description =
   "Saiba como o Pomodoro para macOS armazena preferências e estatísticas localmente e protege a privacidade dos usuários."
 

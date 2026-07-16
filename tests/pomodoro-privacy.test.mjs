@@ -20,6 +20,6 @@ test("expõe metadados próprios para a política", () => {
   )
   assert.match(
     html,
-    /<link rel="canonical" href="https:\/\/www\.bytecriativotech\.com\.br\/pomodoro\/privacidade"/,
+    /<link rel="canonical" href="https:\/\/www\.bcriativo\.com\/pomodoro\/privacidade"/,
   )
 })
