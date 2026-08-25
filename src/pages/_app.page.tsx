@@ -1,6 +1,5 @@
 import { ThemeProvider } from "styled-components"
 import { Montserrat } from "next/font/google"
-import StyledComponentsRegistry from "../lib/registry"
 import theme from "../styles/theme"
 import { GlobalStyles } from "../styles/global"
 import { AppProps } from "next/app"
@@ -24,13 +23,12 @@ const montserrat = Montserrat({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <StyledComponentsRegistry>
+    <>
       <Head>
         {generateDefaultSeo({
           defaultTitle: DEFAULT_SEO_TITLE,
           titleTemplate: `%s | ${SITE_NAME}`,
           description: DEFAULT_SEO_DESCRIPTION,
-          canonical: HOME_URL,
           themeColor: theme.COLORS.ORANGE,
           openGraph: {
             type: "website",
@@ -56,6 +54,6 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </div>
       </ThemeProvider>
-    </StyledComponentsRegistry>
+    </>
   )
 }
