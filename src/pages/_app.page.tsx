@@ -1,5 +1,9 @@
 import { ThemeProvider } from "styled-components"
-import { Montserrat } from "next/font/google"
+import {
+  Bricolage_Grotesque,
+  Instrument_Sans,
+  JetBrains_Mono,
+} from "next/font/google"
 import theme from "../styles/theme"
 import { GlobalStyles } from "../styles/global"
 import { AppProps } from "next/app"
@@ -14,11 +18,25 @@ import {
   SITE_NAME,
 } from "../lib/seo"
 
-const montserrat = Montserrat({
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["500", "600", "700"],
   display: "swap",
-  variable: "--font-montserrat",
+  variable: "--font-display",
+})
+
+const body = Instrument_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+  variable: "--font-body",
+})
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  variable: "--font-mono",
 })
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -48,8 +66,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <div
-          className={montserrat.variable}
-          style={{ fontFamily: "var(--font-montserrat), sans-serif" }}
+          className={`${display.variable} ${body.variable} ${mono.variable}`}
+          style={{ fontFamily: "var(--font-body), sans-serif" }}
         >
           <Component {...pageProps} />
         </div>

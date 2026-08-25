@@ -1,40 +1,129 @@
 const theme = {
+  color: {
+    bg: "#FAFAF7",
+    surface: "#FFFFFF",
+    surface2: "#F1F1EC",
+    ink: "#121216",
+    muted: "#55555E",
+    border: "#E4E4DE",
+    accent: "#F65606",
+    accentStrong: "#C24405",
+    accentSoft: "rgba(246, 86, 6, 0.10)",
+    success: "#1E8F5A",
+    destructive: "#C43B3B",
+    dark: {
+      bg: "#121216",
+      surface: "#1C1C21",
+      text: "#FAFAF7",
+      muted: "#A8A8B3",
+      border: "#2A2A31",
+    },
+  },
+
+  glass: {
+    bg: "rgba(255, 255, 255, 0.55)",
+    border: "rgba(255, 255, 255, 0.65)",
+    highlight: "inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+    blur: "16px",
+    shadow: "0 18px 44px rgba(18, 18, 22, 0.08)",
+    fallbackBg: "rgba(255, 255, 255, 0.95)",
+    darkBg: "rgba(28, 28, 33, 0.55)",
+    darkBorder: "rgba(255, 255, 255, 0.12)",
+    darkFallbackBg: "rgba(28, 28, 33, 0.95)",
+  },
+
+  font: {
+    display: "var(--font-display), sans-serif",
+    body: "var(--font-body), sans-serif",
+    mono: "var(--font-mono), monospace",
+  },
+
+  text: {
+    display: "clamp(2.5rem, 5vw + 1rem, 4.25rem)",
+    h1: "clamp(2.25rem, 4vw + 0.75rem, 3.5rem)",
+    h2: "clamp(1.75rem, 2.5vw + 0.5rem, 2.5rem)",
+    h3: "1.375rem",
+    bodyLg: "1.125rem",
+    body: "1rem",
+    small: "0.875rem",
+    caption: "0.75rem",
+  },
+
+  weight: {
+    regular: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+  },
+
+  space: {
+    xs: "0.5rem",
+    sm: "0.75rem",
+    md: "1rem",
+    lg: "1.5rem",
+    xl: "2rem",
+    x2: "3rem",
+    x3: "4rem",
+    x4: "6rem",
+    x5: "8rem",
+  },
+
+  radius: {
+    sm: "8px",
+    md: "14px",
+    lg: "22px",
+    pill: "999px",
+  },
+
+  shadow: {
+    soft: "0 1px 2px rgba(18, 18, 22, 0.06)",
+    lift: "0 12px 32px -12px rgba(18, 18, 22, 0.16)",
+  },
+
+  motion: {
+    fast: "120ms",
+    base: "200ms",
+    slow: "320ms",
+    ease: "cubic-bezier(0.32, 0.72, 0, 1)",
+  },
+
+  bp: {
+    sm: "480px",
+    md: "768px",
+    lg: "1024px",
+    xl: "1280px",
+  },
+
+  // ===== LEGADO — remover na Task 18 (não usar em código novo) =====
   COLORS: {
     WHITE: "#FFFFFF",
-
-    GRAY_700: "#141414",
-    GRAY_500: "#323232",
-    GRAY_300: "#D9D9D9",
-    GRAY_100: "#F6F6F6",
-    GRAY_LOW_OPACITY: "rgba(255, 255, 255, 0.30)",
-    GLASS_BORDER: "rgba(255, 255, 255, 0.64)",
-    SHADOW_SOFT: "rgba(20, 20, 20, 0.08)",
-
+    GRAY_700: "#121216",
+    GRAY_500: "#55555E",
+    GRAY_300: "#E4E4DE",
+    GRAY_100: "#FAFAF7",
+    GRAY_LOW_OPACITY: "rgba(255, 255, 255, 0.55)",
+    GLASS_BORDER: "rgba(255, 255, 255, 0.65)",
+    SHADOW_SOFT: "rgba(18, 18, 22, 0.08)",
     ORANGE: "#F65606",
-    ORANGE_DARK: "#BE4306",
-    ORANGE_SOFT: "rgba(246, 86, 6, 0.12)",
-
-    BLUE: "#06B2F6",
-    BLUE_SOFT: "rgba(6, 178, 246, 0.14)",
+    ORANGE_DARK: "#C24405",
+    ORANGE_SOFT: "rgba(246, 86, 6, 0.10)",
+    BLUE: "#C24405",
+    BLUE_SOFT: "rgba(246, 86, 6, 0.10)",
   },
-
   FONT_FAMILY: {
-    MONTSERRAT: "var(--font-montserrat), sans-serif",
+    MONTSERRAT: "var(--font-body), sans-serif",
   },
-
   FONT_SIZE: {
     XS: "0.75rem",
-    SM: "0.8rem",
+    SM: "0.875rem",
     MD: "1rem",
-    LG: "1.25rem",
-    XL: "1.5rem",
+    LG: "1.125rem",
+    XL: "1.375rem",
     XXL: "1.75rem",
-
-    SECTION_HEADING: "3rem",
-    HEADING: "3.75rem",
+    SECTION_HEADING: "clamp(1.75rem, 2.5vw + 0.5rem, 2.5rem)",
+    HEADING: "clamp(2.25rem, 4vw + 0.75rem, 3.5rem)",
     HEADING_MOBILE: "2.25rem",
   },
-
   FONT_WEIGHT: {
     REGULAR: "400",
     SEMI_BOLD: "500",
