@@ -44,12 +44,7 @@ export type MarketingPageContent = {
 export const pageRoutes = [
   "/sobre",
   "/servicos",
-  "/sites-profissionais",
-  "/sistemas-web",
-  "/landing-pages",
-  "/automacao-e-integracoes",
   "/portfolio",
-  "/blog",
   "/contato",
 ] as const
 
@@ -120,7 +115,7 @@ export const pagesContent = {
       "A Byte Criativo planeja, desenvolve e evolui projetos digitais com foco em clareza, performance, conversão e manutenção sustentável.",
     primaryCtaLabel: "Solicitar orçamento",
     secondaryCtaLabel: "Ver páginas específicas",
-    secondaryCtaHref: "/sites-profissionais",
+    secondaryCtaHref: "/servicos/desenvolvimento-de-sites",
     sections: [
       {
         title: "Principais frentes de atuação",
@@ -131,28 +126,28 @@ export const pagesContent = {
             title: "Criação de sites profissionais",
             description:
               "Sites institucionais responsivos, rápidos e preparados para apresentar sua empresa, gerar confiança e receber contatos qualificados.",
-            href: "/sites-profissionais",
+            href: "/servicos/desenvolvimento-de-sites",
             ctaLabel: "Ver sites profissionais",
           },
           {
             title: "Desenvolvimento de sistemas web",
             description:
               "Sistemas sob medida, painéis administrativos e plataformas para organizar processos e substituir controles improvisados.",
-            href: "/sistemas-web",
+            href: "/servicos/sistemas-web-sob-medida",
             ctaLabel: "Ver sistemas web",
           },
           {
             title: "Landing pages de alta conversão",
             description:
               "Páginas para campanhas, anúncios, lançamentos e captação de leads com copy, design objetivo e CTAs claros.",
-            href: "/landing-pages",
+            href: "/servicos/landing-pages",
             ctaLabel: "Ver landing pages",
           },
           {
             title: "Automações e integrações",
             description:
               "Conexão entre ferramentas, formulários, APIs, planilhas, e-mails e fluxos internos para reduzir tarefas manuais.",
-            href: "/automacao-e-integracoes",
+            href: "/servicos/automacao-e-integracoes",
             ctaLabel: "Ver automações",
           },
           {
@@ -173,234 +168,6 @@ export const pagesContent = {
       description:
         "Explique o que precisa desenvolver ou melhorar. A Byte Criativo ajuda a organizar o escopo e indicar o melhor caminho.",
       buttonLabel: "Falar sobre minha demanda",
-    },
-  },
-  sitesProfissionais: {
-    route: "/sites-profissionais",
-    title: "Sites Profissionais",
-    seoTitle: "Criação de Sites Profissionais para Empresas",
-    description:
-      "Criação de sites profissionais, responsivos e otimizados para SEO para empresas que precisam fortalecer sua presença digital.",
-    eyebrow: "Criação de sites",
-    heroTitle: "Site profissional para transmitir confiança e gerar contatos.",
-    heroDescription:
-      "Desenvolvemos sites para empresas com comunicação clara, estrutura semântica, performance e experiência responsiva. Um bom site apresenta sua oferta, ajuda o cliente a decidir e torna sua marca mais encontrável no Google.",
-    primaryCtaLabel: "Solicitar site profissional",
-    secondaryCtaLabel: "Ver portfólio",
-    secondaryCtaHref: "/portfolio",
-    sections: [
-      {
-        title: "O que um site profissional precisa entregar",
-        cards: [
-          {
-            title: "Design responsivo",
-            description:
-              "Layout adaptado para desktop, tablet e mobile, com leitura confortável e navegação simples.",
-          },
-          {
-            title: "SEO básico e semântica",
-            description:
-              "Títulos, metadados, hierarquia de conteúdo e URLs amigáveis para criar uma base rastreável.",
-          },
-          {
-            title: "Performance",
-            description:
-              "Páginas leves e bem estruturadas para reduzir espera, melhorar experiência e apoiar campanhas.",
-          },
-          {
-            title: "Comunicação clara",
-            description:
-              "Textos organizados para explicar serviços, diferenciais, provas e próximos passos sem ruído.",
-          },
-          {
-            title: "Formulários e WhatsApp",
-            description:
-              "Caminhos diretos de contato para transformar visitantes interessados em conversas comerciais.",
-          },
-          {
-            title: "Manutenção futura",
-            description:
-              "Base preparada para novas páginas, ajustes de conteúdo, SEO contínuo e melhorias de conversão.",
-          },
-        ],
-      },
-    ],
-    finalCta: {
-      title: "Sua empresa precisa de uma presença digital mais profissional?",
-      description:
-        "A Byte Criativo cria sites com estrutura clara, boa performance e foco em conversão.",
-      buttonLabel: "Pedir orçamento de site",
-    },
-  },
-  sistemasWeb: {
-    route: "/sistemas-web",
-    title: "Sistemas Web Sob Medida",
-    seoTitle: "Desenvolvimento de Sistema Web Sob Medida",
-    description:
-      "Desenvolvimento de sistemas web sob medida, software personalizado, painéis administrativos e plataformas para empresas.",
-    eyebrow: "Software personalizado",
-    heroTitle: "Sistemas web para organizar processos e reduzir retrabalho.",
-    heroDescription:
-      "Criamos sistemas web sob medida para empresas que precisam substituir planilhas, centralizar informações, controlar acessos e transformar processos manuais em fluxos digitais confiáveis.",
-    primaryCtaLabel: "Planejar meu sistema",
-    secondaryCtaLabel: "Ver automações",
-    secondaryCtaHref: "/automacao-e-integracoes",
-    sections: [
-      {
-        title: "Exemplos de sistemas que podemos desenvolver",
-        cards: [
-          {
-            title: "Sistemas de cadastro",
-            description:
-              "Cadastros de clientes, produtos, equipes, documentos e informações críticas com organização e busca.",
-          },
-          {
-            title: "Painéis administrativos",
-            description:
-              "Áreas internas para acompanhar dados, editar conteúdos, aprovar solicitações e gerenciar rotinas.",
-          },
-          {
-            title: "Plataformas de gestão",
-            description:
-              "Fluxos personalizados para vendas, atendimento, operações, projetos, agenda ou prestação de serviços.",
-          },
-          {
-            title: "Dashboards",
-            description:
-              "Visualização de indicadores, filtros e relatórios para apoiar decisões do dia a dia.",
-          },
-          {
-            title: "Login e permissões",
-            description:
-              "Controle de acesso por perfil para proteger informações e separar responsabilidades.",
-          },
-          {
-            title: "Integrações com APIs",
-            description:
-              "Conexão com ferramentas externas para pagamentos, CRM, agendas, formulários e outros sistemas.",
-          },
-        ],
-      },
-    ],
-    finalCta: {
-      title: "Planilhas e controles manuais estão limitando sua operação?",
-      description:
-        "Vamos mapear o processo e definir um primeiro sistema viável para sua empresa.",
-      buttonLabel: "Conversar sobre sistema web",
-    },
-  },
-  landingPages: {
-    route: "/landing-pages",
-    title: "Landing Pages",
-    seoTitle: "Criação de Landing Pages de Alta Conversão",
-    description:
-      "Criação de landing pages para campanhas, páginas de vendas, páginas de captura, anúncios e validação de ofertas.",
-    eyebrow: "Páginas para campanha",
-    heroTitle: "Landing pages focadas em oferta, tráfego e conversão.",
-    heroDescription:
-      "Desenvolvemos landing pages para campanhas, lançamentos, anúncios, captação de leads e validação de ofertas. A página é construída para responder rápido, reduzir dúvidas e conduzir o visitante para a ação.",
-    primaryCtaLabel: "Criar landing page",
-    secondaryCtaLabel: "Ver sites profissionais",
-    secondaryCtaHref: "/sites-profissionais",
-    sections: [
-      {
-        title: "Elementos essenciais de uma landing page",
-        cards: [
-          {
-            title: "Estrutura de conversão",
-            description:
-              "Blocos organizados para promessa, benefício, prova, objeções e chamada para ação.",
-          },
-          {
-            title: "Copywriting",
-            description:
-              "Texto claro para explicar a oferta, reforçar valor e orientar a decisão do visitante.",
-          },
-          {
-            title: "Design objetivo",
-            description:
-              "Interface sem distrações, com hierarquia visual e foco no próximo passo.",
-          },
-          {
-            title: "Formulários e CTAs",
-            description:
-              "Campos e botões bem posicionados para captação de leads, vendas ou conversas no WhatsApp.",
-          },
-          {
-            title: "Velocidade",
-            description:
-              "Carregamento rápido para não desperdiçar tráfego pago nem prejudicar a experiência.",
-          },
-          {
-            title: "Integrações",
-            description:
-              "Conexão com WhatsApp, e-mail, CRM ou ferramentas usadas na operação comercial.",
-          },
-        ],
-      },
-    ],
-    finalCta: {
-      title: "Vai rodar uma campanha ou validar uma nova oferta?",
-      description:
-        "A Byte Criativo cria uma página de campanha com mensagem, design e tecnologia trabalhando juntos.",
-      buttonLabel: "Solicitar landing page",
-    },
-  },
-  automacaoIntegracoes: {
-    route: "/automacao-e-integracoes",
-    title: "Automação e Integrações",
-    seoTitle: "Automação de Processos e Integração de Sistemas",
-    description:
-      "Automação de processos, integração com API, sistemas integrados e redução de tarefas manuais para empresas.",
-    eyebrow: "Processos mais conectados",
-    heroTitle: "Automações para economizar tempo e reduzir erros.",
-    heroDescription:
-      "A Byte Criativo ajuda empresas a conectar ferramentas digitais, automatizar tarefas repetitivas e criar fluxos mais previsíveis entre formulários, sistemas, planilhas, e-mails, agendas, CRMs e APIs.",
-    primaryCtaLabel: "Automatizar processo",
-    secondaryCtaLabel: "Ver sistemas web",
-    secondaryCtaHref: "/sistemas-web",
-    sections: [
-      {
-        title: "O que pode ser automatizado ou integrado",
-        cards: [
-          {
-            title: "Formulários e cadastros",
-            description:
-              "Envio automático de dados, organização de leads e atualização de registros sem retrabalho.",
-          },
-          {
-            title: "APIs externas",
-            description:
-              "Integrações com plataformas que já fazem parte da rotina da empresa.",
-          },
-          {
-            title: "E-mails automáticos",
-            description:
-              "Notificações, confirmações, alertas e mensagens operacionais disparadas por eventos.",
-          },
-          {
-            title: "Planilhas conectadas",
-            description:
-              "Fluxos que alimentam ou leem planilhas quando elas ainda fazem parte da operação.",
-          },
-          {
-            title: "Pagamentos, agenda e CRM",
-            description:
-              "Conexões para reduzir etapas manuais entre venda, atendimento, cobrança e acompanhamento.",
-          },
-          {
-            title: "Sistemas integrados",
-            description:
-              "Pontes entre ferramentas para centralizar dados e diminuir erros de digitação ou duplicidade.",
-          },
-        ],
-      },
-    ],
-    finalCta: {
-      title: "Qual tarefa repetitiva mais consome tempo hoje?",
-      description:
-        "Descreva o fluxo atual. A Byte Criativo avalia o que pode ser conectado, simplificado ou automatizado.",
-      buttonLabel: "Mapear automação",
     },
   },
   portfolio: {
@@ -450,72 +217,6 @@ export const pagesContent = {
       description:
         "Vamos entender seu objetivo e construir uma solução digital com estratégia, experiência e base técnica.",
       buttonLabel: "Começar meu projeto",
-    },
-  },
-  blog: {
-    route: "/blog",
-    title: "Blog",
-    seoTitle: "Blog sobre Sites, Sistemas Web e Automação",
-    description:
-      "Conteúdos da Byte Criativo sobre sites profissionais, landing pages, sistemas web sob medida, automação e estratégia digital.",
-    eyebrow: "Conteúdo e SEO",
-    heroTitle:
-      "Ideias práticas para empresas que querem crescer com tecnologia.",
-    heroDescription:
-      "O blog da Byte Criativo será usado para explicar decisões digitais, orientar contratações e fortalecer a estratégia de SEO com conteúdos úteis para empresas.",
-    primaryCtaLabel: "Sugerir pauta",
-    secondaryCtaLabel: "Falar com a Byte",
-    secondaryCtaHref: "/contato",
-    sections: [
-      {
-        title: "Temas iniciais preparados",
-        description:
-          "A listagem já está pronta para evoluir para posts dinâmicos ou páginas individuais de artigos.",
-        cards: [
-          {
-            title: "Por que sua empresa precisa de um site profissional?",
-            meta: "Sites profissionais",
-            description:
-              "Como um site ajuda a transmitir confiança, organizar serviços e gerar contatos comerciais.",
-            ctaLabel: "Em breve",
-          },
-          {
-            title: "Diferença entre site institucional e landing page",
-            meta: "Estratégia digital",
-            description:
-              "Quando usar cada formato e como escolher a estrutura certa para presença, campanha ou captação.",
-            ctaLabel: "Em breve",
-          },
-          {
-            title: "Quando vale a pena criar um sistema web sob medida?",
-            meta: "Sistemas web",
-            description:
-              "Sinais de que planilhas, ferramentas soltas e processos manuais estão limitando a operação.",
-            ctaLabel: "Em breve",
-          },
-          {
-            title: "Como a automação pode reduzir tarefas manuais",
-            meta: "Automação",
-            description:
-              "Exemplos de fluxos digitais que economizam tempo e reduzem erros em empresas.",
-            ctaLabel: "Em breve",
-          },
-          {
-            title:
-              "O que observar antes de contratar uma empresa para seu site?",
-            meta: "Contratação",
-            description:
-              "Critérios técnicos, estratégicos e comerciais para tomar uma decisão mais segura.",
-            ctaLabel: "Em breve",
-          },
-        ],
-      },
-    ],
-    finalCta: {
-      title: "Quer transformar uma dúvida em conteúdo ou projeto?",
-      description:
-        "A Byte Criativo pode ajudar a organizar uma estratégia de presença digital e SEO para sua empresa.",
-      buttonLabel: "Conversar sobre estratégia",
     },
   },
   contato: {

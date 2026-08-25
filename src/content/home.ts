@@ -24,10 +24,6 @@ export const navigationItems = [
     href: "/portfolio",
   },
   {
-    label: "Blog",
-    href: "/blog",
-  },
-  {
     label: "Contato",
     href: "/contato",
   },
@@ -49,10 +45,6 @@ export const footerNavigationItems = [
   {
     label: "PORTFÓLIO",
     href: "/portfolio",
-  },
-  {
-    label: "BLOG",
-    href: "/blog",
   },
   {
     label: "CONTATO",

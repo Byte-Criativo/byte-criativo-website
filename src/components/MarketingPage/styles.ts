@@ -1,12 +1,9 @@
 import Link from "next/link"
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
 export const PageContainer = styled.div`
   width: 100%;
-  background-image: url("/background.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: ${({ theme }) => theme.color.bg};
 `
 
 export const PageMain = styled.main`
@@ -26,65 +23,44 @@ export const PageMain = styled.main`
 
 export const PageHero = styled.section`
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.42fr);
-  gap: 3rem;
-  align-items: center;
-
-  @media (max-width: 880px) {
-    grid-template-columns: 1fr;
-  }
+  gap: ${({ theme }) => theme.space.lg};
 `
 
 export const HeroContent = styled.div`
   display: grid;
-  gap: 1.5rem;
+  gap: ${({ theme }) => theme.space.lg};
   max-width: 58rem;
 
   > span {
-    width: fit-content;
-    padding: 0.5rem 0.8rem;
-    border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-    border-radius: 999px;
-    background: ${({ theme }) => theme.COLORS.BLUE_SOFT};
-
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.SM};
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
-    `}
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.text.caption};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.color.muted};
   }
 
   h1 {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.HEADING};
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
-    `}
-
+    font-family: ${({ theme }) => theme.font.display};
+    font-size: ${({ theme }) => theme.text.h1};
+    font-weight: ${({ theme }) => theme.weight.bold};
     line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: ${({ theme }) => theme.color.ink};
   }
 
   p {
     max-width: 52rem;
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-      font-size: ${theme.FONT_SIZE.LG};
-    `}
-
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.7;
-  }
-
-  @media (max-width: 770px) {
-    h1 {
-      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
-    }
   }
 `
 
 export const HeroActions = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: ${({ theme }) => theme.space.md};
   flex-wrap: wrap;
 
   > a {
@@ -92,92 +68,39 @@ export const HeroActions = styled.div`
   }
 `
 
-export const SecondaryLink = styled(Link)`
-  color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
-  text-decoration: none;
-  padding: 0.75rem 0.5rem;
-
-  &:hover {
-    color: ${({ theme }) => theme.COLORS.BLUE};
-  }
-
-  &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
-    outline-offset: 4px;
-    border-radius: 4px;
-  }
-`
-
-export const HeroPanel = styled.aside`
-  display: grid;
-  gap: 1rem;
-  padding: 1.25rem;
-  border: 1.5px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  border-radius: 8px;
-  background: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  box-shadow: 0 24px 60px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  p {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-      font-size: ${theme.FONT_SIZE.MD};
-    `}
-
-    line-height: 1.65;
-  }
-
-  strong {
-    color: ${({ theme }) => theme.COLORS.GRAY_700};
-    font-size: ${({ theme }) => theme.FONT_SIZE.XL};
-    line-height: 1.3;
-  }
-`
-
 export const PageSection = styled.section`
   display: grid;
-  gap: 1.5rem;
+  gap: ${({ theme }) => theme.space.lg};
 
   > span {
-    color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-    font-size: ${({ theme }) => theme.FONT_SIZE.SM};
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    font-family: ${({ theme }) => theme.font.mono};
+    color: ${({ theme }) => theme.color.accent};
+    font-size: ${({ theme }) => theme.text.small};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
   h2 {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.SECTION_HEADING};
-      font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
-    `}
-
+    font-family: ${({ theme }) => theme.font.display};
+    font-size: ${({ theme }) => theme.text.h2};
+    font-weight: ${({ theme }) => theme.weight.semibold};
     line-height: 1.12;
+    color: ${({ theme }) => theme.color.ink};
   }
 
   > p {
     max-width: 54rem;
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-      font-size: ${theme.FONT_SIZE.LG};
-    `}
-
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.7;
-  }
-
-  @media (max-width: 770px) {
-    h2 {
-      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
-    }
   }
 `
 
 export const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: ${({ theme }) => theme.space.lg};
 
   @media (max-width: 980px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -190,32 +113,45 @@ export const CardGrid = styled.div`
 
 export const PageCard = styled.article`
   display: grid;
-  gap: 0.8rem;
+  gap: ${({ theme }) => theme.space.sm};
   min-height: 12rem;
-  padding: 1.25rem;
-  border: 1.5px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  border-radius: 8px;
-  background: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  box-shadow: 0 16px 42px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  padding: ${({ theme }) => theme.space.xl};
+
+  background: ${({ theme }) => theme.color.surface};
+  border: 1px solid ${({ theme }) => theme.color.border};
+  border-radius: ${({ theme }) => theme.radius.md};
+
+  transition:
+    box-shadow ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease},
+    transform ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease};
+
+  &:hover {
+    box-shadow: ${({ theme }) => theme.shadow.lift};
+    transform: translateY(-2px);
+  }
 
   h3 {
-    color: ${({ theme }) => theme.COLORS.GRAY_700};
-    font-size: ${({ theme }) => theme.FONT_SIZE.LG};
+    font-family: ${({ theme }) => theme.font.display};
+    color: ${({ theme }) => theme.color.ink};
+    font-size: ${({ theme }) => theme.text.h3};
+    font-weight: ${({ theme }) => theme.weight.semibold};
     line-height: 1.35;
   }
 
   p {
-    color: ${({ theme }) => theme.COLORS.GRAY_500};
-    font-size: ${({ theme }) => theme.FONT_SIZE.MD};
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.body};
     line-height: 1.65;
   }
 
   small {
-    color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-    font-size: ${({ theme }) => theme.FONT_SIZE.SM};
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    font-family: ${({ theme }) => theme.font.mono};
+    color: ${({ theme }) => theme.color.accent};
+    font-size: ${({ theme }) => theme.text.small};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    letter-spacing: 0.04em;
     line-height: 1.4;
   }
 `
@@ -224,8 +160,8 @@ export const CardImage = styled.div`
   position: relative;
   overflow: hidden;
   aspect-ratio: 16 / 10;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
+  border-radius: ${({ theme }) => theme.radius.sm};
+  border: 1px solid ${({ theme }) => theme.color.border};
 
   img {
     object-fit: cover;
@@ -237,33 +173,33 @@ export const TagList = styled.ul`
   flex-wrap: wrap;
   align-items: flex-start;
   align-self: start;
-  gap: 0.5rem;
+  gap: ${({ theme }) => theme.space.xs};
   list-style: none;
 
   li {
     width: fit-content;
     padding: 0.35rem 0.55rem;
-    border-radius: 999px;
-    background: ${({ theme }) => theme.COLORS.BLUE_SOFT};
-    color: ${({ theme }) => theme.COLORS.GRAY_700};
-    font-size: ${({ theme }) => theme.FONT_SIZE.XS};
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background: ${({ theme }) => theme.color.accentSoft};
+    color: ${({ theme }) => theme.color.ink};
+    font-size: ${({ theme }) => theme.text.caption};
+    font-weight: ${({ theme }) => theme.weight.medium};
   }
 `
 
 export const CardLink = styled(Link)`
   width: fit-content;
-  color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-  font-size: ${({ theme }) => theme.FONT_SIZE.SM};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+  color: ${({ theme }) => theme.color.accent};
+  font-size: ${({ theme }) => theme.text.small};
+  font-weight: ${({ theme }) => theme.weight.semibold};
   text-decoration: none;
 
   &:hover {
-    color: ${({ theme }) => theme.COLORS.BLUE};
+    color: ${({ theme }) => theme.color.accentStrong};
   }
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accent};
     outline-offset: 4px;
     border-radius: 4px;
   }
@@ -271,27 +207,28 @@ export const CardLink = styled(Link)`
 
 export const OrderedList = styled.ol`
   display: grid;
-  gap: 1rem;
+  gap: ${({ theme }) => theme.space.md};
   list-style: none;
 
   li {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 1rem;
+    gap: ${({ theme }) => theme.space.md};
     align-items: start;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
+    padding-bottom: ${({ theme }) => theme.space.md};
+    border-bottom: 1px solid ${({ theme }) => theme.color.border};
   }
 
   span {
-    color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-    font-size: ${({ theme }) => theme.FONT_SIZE.SM};
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    font-family: ${({ theme }) => theme.font.mono};
+    color: ${({ theme }) => theme.color.accent};
+    font-size: ${({ theme }) => theme.text.small};
+    font-weight: ${({ theme }) => theme.weight.medium};
   }
 
   p {
-    color: ${({ theme }) => theme.COLORS.GRAY_500};
-    font-size: ${({ theme }) => theme.FONT_SIZE.LG};
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.65;
   }
 `
@@ -299,41 +236,35 @@ export const OrderedList = styled.ol`
 export const FinalCta = styled.section`
   display: grid;
   justify-items: center;
-  gap: 1.25rem;
-  padding: 4rem 2rem;
-  border-radius: 8px;
-  border: 1.5px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  background:
-    linear-gradient(135deg, rgba(246, 86, 6, 0.12), rgba(6, 178, 246, 0.1)),
-    ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  box-shadow: 0 24px 60px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
+  gap: ${({ theme }) => theme.space.lg};
+  padding: ${({ theme }) => theme.space.x3} ${({ theme }) => theme.space.xl};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  border: 1px solid ${({ theme }) => theme.color.border};
+  background: ${({ theme }) => theme.color.accentSoft};
   text-align: center;
 
   h2 {
     max-width: 44rem;
-    color: ${({ theme }) => theme.COLORS.GRAY_700};
-    font-size: ${({ theme }) => theme.FONT_SIZE.SECTION_HEADING};
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    font-family: ${({ theme }) => theme.font.display};
+    color: ${({ theme }) => theme.color.ink};
+    font-size: ${({ theme }) => theme.text.h2};
+    font-weight: ${({ theme }) => theme.weight.bold};
     line-height: 1.12;
   }
 
   p {
     max-width: 38rem;
-    color: ${({ theme }) => theme.COLORS.GRAY_500};
-    font-size: ${({ theme }) => theme.FONT_SIZE.LG};
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.7;
   }
 
   > a {
-    margin-top: 0.5rem;
+    margin-top: ${({ theme }) => theme.space.xs};
     white-space: normal;
   }
 
   @media (max-width: 770px) {
-    padding: 3rem 1.25rem;
-
-    h2 {
-      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
-    }
+    padding: ${({ theme }) => theme.space.x2} ${({ theme }) => theme.space.lg};
   }
 `

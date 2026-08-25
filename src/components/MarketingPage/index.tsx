@@ -23,14 +23,12 @@ import {
   FinalCta,
   HeroActions,
   HeroContent,
-  HeroPanel,
   OrderedList,
   PageCard,
   PageContainer,
   PageHero,
   PageMain,
   PageSection,
-  SecondaryLink,
   TagList,
 } from "./styles"
 
@@ -132,16 +130,12 @@ export function MarketingPage({ page }: MarketingPageProps) {
                   {page.primaryCtaLabel}
                 </Button>
                 {page.secondaryCtaHref && page.secondaryCtaLabel ? (
-                  <SecondaryLink href={page.secondaryCtaHref}>
+                  <Button href={page.secondaryCtaHref} variant="ghost">
                     {page.secondaryCtaLabel}
-                  </SecondaryLink>
+                  </Button>
                 ) : null}
               </HeroActions>
             </HeroContent>
-            <HeroPanel aria-label="Resumo da página">
-              <strong>{page.title}</strong>
-              <p>{page.description}</p>
-            </HeroPanel>
           </PageHero>
 
           {page.sections.map((section) => (
