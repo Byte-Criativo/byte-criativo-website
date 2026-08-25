@@ -6,12 +6,12 @@ import {
   FooterCompany,
   FooterContainer,
   FooterContent,
+  FooterIconLink,
   FooterMain,
   FooterMenu,
   FooterNetwork,
   MenuItem,
 } from "./styles"
-import { Link } from "@/src/components/Link"
 import {
   Check,
   Copy,
@@ -74,7 +74,7 @@ export function FooterSection() {
               </div>
               <div className="whatsapp">
                 <p>{WHATSAPP_DISPLAY}</p>
-                <Link
+                <FooterIconLink
                   href={WHATSAPP_URL}
                   icon={<WhatsappLogo size={20} />}
                   aria-label="Falar com a Byte Criativo pelo WhatsApp"
@@ -97,12 +97,12 @@ export function FooterSection() {
           <div className="followUs">
             <p>Siga-nos</p>
             <div className="links">
-              <Link
+              <FooterIconLink
                 href={INSTAGRAM_URL}
                 icon={<InstagramLogo size={24} weight="bold" />}
                 aria-label="Acessar Instagram da Byte Criativo"
               />
-              <Link
+              <FooterIconLink
                 href={LINKEDIN_URL}
                 icon={<LinkedinLogo size={24} weight="bold" />}
                 aria-label="Acessar LinkedIn da Byte Criativo"

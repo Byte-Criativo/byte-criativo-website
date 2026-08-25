@@ -1,14 +1,26 @@
 import Link from "next/link"
 import styled, { css } from "styled-components"
+import { Link as ContactLink } from "@/src/components/Link"
+import { HOME_BP } from "@/src/pages/home/styles"
 
 export const FooterContainer = styled.footer`
   width: 100%;
-
-  right: 0;
   padding: 4.5rem 10rem;
 
-  border-top: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  background: rgba(255, 255, 255, 0.16);
+  /*
+   * HomeContent (src/pages/home/styles.ts) fecha com padding-bottom de
+   * 5.5rem/3.75rem — sem cancelar essa faixa aqui, o fundo claro da página
+   * apareceria entre a banda do CTA e o Footer. A margem negativa reproduz
+   * o mesmo valor para que os dois fundos escuros fiquem contínuos.
+   */
+  margin-top: -5.5rem;
+
+  border-top: 1px solid ${({ theme }) => theme.color.dark.border};
+  background: ${({ theme }) => theme.color.dark.bg};
+
+  @media (max-width: ${HOME_BP.tablet}) {
+    margin-top: -3.75rem;
+  }
 
   @media (max-width: 855px) {
     padding: 4.5rem 2rem;
@@ -29,7 +41,7 @@ export const FooterContent = styled.div`
 export const FooterMain = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
+  border-bottom: 1px solid ${({ theme }) => theme.color.dark.border};
 
   padding-bottom: 3rem;
 
@@ -48,7 +60,7 @@ export const FooterCompany = styled.div`
 
   > p {
     align-self: stretch;
-    color: ${({ theme }) => theme.COLORS.GRAY_500};
+    color: ${({ theme }) => theme.color.dark.muted};
   }
 
   .contact {
@@ -56,7 +68,7 @@ export const FooterCompany = styled.div`
     flex-direction: column;
     gap: 0.25rem;
 
-    color: ${({ theme }) => theme.COLORS.GRAY_500};
+    color: ${({ theme }) => theme.color.dark.muted};
   }
 
   .email,
@@ -92,18 +104,18 @@ export const MenuItem = styled(Link)`
   white-space: nowrap;
 
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_500};
-    font-size: ${theme.FONT_SIZE.LG};
+    color: ${theme.color.dark.text};
+    font-size: ${theme.text.bodyLg};
   `}
 
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${({ theme }) => theme.COLORS.ORANGE};
+    color: ${({ theme }) => theme.color.accent};
   }
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accent};
     outline-offset: 4px;
     border-radius: 6px;
   }
@@ -115,6 +127,8 @@ export const FooterNetwork = styled.div`
   align-items: center;
   gap: 1rem;
 
+  color: ${({ theme }) => theme.color.dark.muted};
+
   .followUs {
     display: flex;
     flex-direction: column;
@@ -122,8 +136,8 @@ export const FooterNetwork = styled.div`
     gap: 0.75rem;
 
     > p {
-      font-size: ${({ theme }) => theme.FONT_SIZE.SM};
-      color: ${({ theme }) => theme.COLORS.GRAY_700};
+      font-size: ${({ theme }) => theme.text.small};
+      color: ${({ theme }) => theme.color.dark.muted};
     }
 
     > .links {
@@ -139,21 +153,35 @@ export const FooterNetwork = styled.div`
   }
 `
 
+export const FooterIconLink = styled(ContactLink)`
+  color: ${({ theme }) => theme.color.dark.text};
+
+  &:hover {
+    color: ${({ theme }) => theme.color.accent};
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.color.accent};
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+`
+
 export const CopyEmailButton = styled.button`
   all: unset;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
 
-  color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
+  color: ${({ theme }) => theme.color.dark.text};
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${({ theme }) => theme.COLORS.ORANGE};
+    color: ${({ theme }) => theme.color.accent};
   }
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accent};
     outline-offset: 4px;
     border-radius: 6px;
   }
