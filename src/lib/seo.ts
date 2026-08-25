@@ -6,7 +6,7 @@ import {
   LINKEDIN_URL,
 } from "@/src/lib/contact"
 
-export const SITE_URL = "https://www.bytecriativotech.com.br"
+export const SITE_URL = "https://www.bcriativo.com"
 export const HOME_URL = `${SITE_URL}/`
 export const SITE_NAME = "Byte Criativo"
 export const HOME_SEO_TITLE = "Software House, Sites e Sistemas Web Sob Medida"

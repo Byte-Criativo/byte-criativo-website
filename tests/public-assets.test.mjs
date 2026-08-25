@@ -7,26 +7,20 @@ test("robots.txt permite indexacao e aponta para o sitemap canonico", () => {
 
   assert.match(robots, /User-agent: \*/)
   assert.match(robots, /Allow: \//)
-  assert.match(
-    robots,
-    /Sitemap: https:\/\/www\.bytecriativotech\.com\.br\/sitemap\.xml/,
-  )
+  assert.match(robots, /Sitemap: https:\/\/www\.bcriativo\.com\/sitemap\.xml/)
 })
 
 test("sitemap.xml lista a URL canonica da home", () => {
   const sitemap = readFileSync("public/sitemap.xml", "utf8")
 
+  assert.match(sitemap, /<loc>https:\/\/www\.bcriativo\.com\/<\/loc>/)
   assert.match(
     sitemap,
-    /<loc>https:\/\/www\.bytecriativotech\.com\.br\/<\/loc>/,
+    /<loc>https:\/\/www\.bcriativo\.com\/servicos\/desenvolvimento-de-sites<\/loc>/,
   )
   assert.match(
     sitemap,
-    /<loc>https:\/\/www\.bytecriativotech\.com\.br\/servicos\/desenvolvimento-de-sites<\/loc>/,
-  )
-  assert.match(
-    sitemap,
-    /<loc>https:\/\/www\.bytecriativotech\.com\.br\/servicos\/sistemas-web-sob-medida<\/loc>/,
+    /<loc>https:\/\/www\.bcriativo\.com\/servicos\/sistemas-web-sob-medida<\/loc>/,
   )
   assert.match(sitemap, /<priority>1\.0<\/priority>/)
 })

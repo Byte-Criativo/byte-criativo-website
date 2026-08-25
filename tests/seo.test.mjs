@@ -35,7 +35,7 @@ test("renderiza metadados SEO essenciais da home", () => {
 
   assert.equal(
     getAttribute(getHeadTag(/<link rel="canonical"[^>]+>/), "href"),
-    "https://www.bytecriativotech.com.br/",
+    "https://www.bcriativo.com/",
   )
 
   assert.equal(
@@ -47,12 +47,12 @@ test("renderiza metadados SEO essenciais da home", () => {
 test("mantem Open Graph e Twitter Card prontos para compartilhamento", () => {
   assert.equal(
     getAttribute(getHeadTag(/<meta property="og:url"[^>]+>/), "content"),
-    "https://www.bytecriativotech.com.br/",
+    "https://www.bcriativo.com/",
   )
 
   assert.equal(
     getAttribute(getHeadTag(/<meta property="og:image"[^>]+>/), "content"),
-    "https://www.bytecriativotech.com.br/og-image.png",
+    "https://www.bcriativo.com/og-image.png",
   )
 
   assert.equal(
@@ -91,7 +91,7 @@ test("inclui JSON-LD valido para organizacao, pagina, site e FAQ", () => {
   )
   const faq = jsonLd["@graph"].find((item) => item["@type"] === "FAQPage")
 
-  assert.equal(organization.url, "https://www.bytecriativotech.com.br/")
+  assert.equal(organization.url, "https://www.bcriativo.com/")
   assert.equal(organization.email, "contato@bcriativo.com")
   assert.ok(organization.sameAs.includes("https://instagram.com/bytecriativo"))
   assert.ok(faq.mainEntity.length >= 4)
@@ -100,7 +100,7 @@ test("inclui JSON-LD valido para organizacao, pagina, site e FAQ", () => {
 test("evita sinais que prejudicam indexacao ou contato", () => {
   assert.doesNotMatch(html, /noindex/)
   assert.doesNotMatch(html, /nofollow/)
-  assert.doesNotMatch(html, /bytecriativotech\.com\.br\/\//)
+  assert.doesNotMatch(html, /bcriativo\.com\/\//)
   assert.doesNotMatch(html, /mailto:contato@bcriativo\.com/)
   assert.doesNotMatch(html, /team_photos|#team|Nosso Time/)
 })

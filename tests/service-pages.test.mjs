@@ -53,7 +53,7 @@ test("renderiza paginas de servico com SEO e conteudo no HTML estatico", () => {
       `.next/server/pages/servicos/${service.slug}.html`,
       "utf8",
     )
-    const canonical = `https://www.bytecriativotech.com.br/servicos/${service.slug}`
+    const canonical = `https://www.bcriativo.com/servicos/${service.slug}`
 
     assert.ok(
       html.includes(`<title data-next-head="">${service.title}</title>`),
