@@ -1,8 +1,8 @@
 # Byte Criativo Website
 
-Site institucional da Byte Criativo, desenvolvido com Next.js, React, styled-components e TypeScript. A página apresenta a empresa, diferenciais, case autoral, serviços, FAQ, CTA para WhatsApp e rodapé com canais oficiais.
+Site institucional da Byte Criativo, desenvolvido com Next.js, React, styled-components e TypeScript. Além da home, o site tem páginas próprias de Sobre, Serviços (hub e páginas individuais por serviço), Portfólio e Contato — todas com navegação, SEO, segurança e testes cobrindo o conjunto.
 
-O projeto foi organizado para ser simples de manter: os textos principais ficam centralizados em arquivos de conteúdo, os metadados de SEO ficam em um módulo próprio, os contatos ficam em uma única fonte de verdade e há testes automatizados para proteger SEO, segurança e arquivos públicos.
+O projeto foi organizado para ser simples de manter: os textos principais ficam centralizados em arquivos de conteúdo, os metadados de SEO ficam em um módulo próprio, os contatos ficam em uma única fonte de verdade e há testes automatizados (unitários, de integração e end-to-end) para proteger SEO, segurança, redirecionamentos e arquivos públicos.
 
 ## Sumário
 
@@ -20,17 +20,18 @@ O projeto foi organizado para ser simples de manter: os textos principais ficam 
 
 ## Tecnologias
 
-- Next.js 16
+- Next.js 16 (Pages Router)
 - React 19
 - TypeScript
 - styled-components
-- next/font (Montserrat self-hosted)
+- next/font (Google Fonts self-hospedadas: Bricolage Grotesque no display, Instrument Sans no corpo, JetBrains Mono nos rótulos/monoespaçado)
 - next-seo
 - Phosphor Icons
-- Radix UI Dialog
+- Radix UI Dialog (menu mobile)
 - ESLint e Prettier
 - Husky (hook de pre-commit)
-- Node Test Runner
+- Node Test Runner + Vitest (Testing Library) para testes unitários/integração
+- Playwright para testes end-to-end
 - PostCSS com autoprefixer
 
 ## Como Rodar o Projeto
@@ -85,7 +86,7 @@ Roda a versão de produção depois de um build.
 npm run lint
 ```
 
-Executa ESLint e Prettier.
+Executa o ESLint (alias de `check-lint`).
 
 ```bash
 npm run check-format
@@ -112,10 +113,22 @@ npm run check-types
 Verifica a tipagem com TypeScript (`tsc --noEmit`).
 
 ```bash
+npm run test:unit
+```
+
+Roda os testes unitários/integração com Vitest (componentes React e módulos de `src/lib/`).
+
+```bash
+npm run test:e2e
+```
+
+Roda os testes end-to-end com Playwright (`e2e/`). Exige um Chrome instalado; use `--channel chrome` se necessário.
+
+```bash
 npm test
 ```
 
-Executa `npm run build` e depois roda os testes automatizados em `tests/`.
+Executa `npm run build`, depois os testes de `tests/*.test.mjs` (Node Test Runner) e por fim `vitest run`. É o comando usado no checklist de publicação; não inclui os testes end-to-end do Playwright.
 
 ### Hook de Pré-commit
 
@@ -125,13 +138,14 @@ O projeto usa Husky. A cada commit, um hook roda automaticamente `check-format`,
 
 ```text
 public/
-  MiniLogo.png
   logoByte.png
+  MiniLogo.png
   og-image.png
   robots.txt
   sitemap.xml
 
 src/
+  assets/
   components/
   content/
   lib/
@@ -139,65 +153,104 @@ src/
   styles/
 
 tests/
+e2e/
 ```
 
 ### `public/`
 
 Arquivos públicos servidos diretamente pelo site.
 
-- `MiniLogo.png`: ícone/fav icon e logo reduzida.
 - `logoByte.png`: logo principal.
+- `MiniLogo.png`: ícone/favicon e logo reduzida.
 - `og-image.png`: imagem usada em compartilhamentos sociais.
 - `robots.txt`: orientação de indexação para crawlers.
 - `sitemap.xml`: mapa do site enviado ao Google.
+
+### `src/assets/`
+
+Imagens e ícones importados diretamente pelo código (otimizados pelo `next/image`).
+
+- `case-undergroundpb-screenshot.png`: preview do case autoral exibido na Cases.
+- `icons/`: ícones SVG próprios (ex.: `LogoIcon.svg`, usado como fallback nos cards).
 
 ### `src/components/`
 
 Componentes reutilizáveis, como:
 
-- `Header`
-- `BurgerMenu`
-- `Button`
-- `Link`
-- `CardContent`
-- `HighlightCard`
-- `QuestionAnswer`
-- `SectionTitle`
+- `Header`: navegação principal e CTA de contato.
+- `BurgerMenu`: menu mobile (Radix UI Dialog).
+- `Button`: botão de link com variantes `primary`/`ghost`.
+- `Link`: link com proteção `noopener noreferrer` automática.
+- `CardContent`: card de ícone + título + descrição usado em Serviços e nas páginas de marketing.
+- `LeadForm`: formulário da seção CTA da home (nome, empresa, necessidade) que monta a mensagem e abre o WhatsApp.
+- `MarketingPage`: template compartilhado pelas páginas `/sobre`, `/servicos`, `/portfolio` e `/contato`.
+- `QuestionAnswer`: item de pergunta/resposta usado no FAQ.
+- `SectionTitle`: cabeçalho padrão (eyebrow + heading) usado em todas as seções.
 
 ### `src/content/`
 
 Conteúdo editável do site.
 
-- `home.ts`: textos da home, navegação, serviços, case, CTA e IDs de seção.
+- `home.ts`: textos da home — navegação, footer, hero, case, serviços, processo, diferenciais ("por que a Byte Criativo"), FAQ (títulos) e CTA.
 - `faq.ts`: perguntas e respostas do FAQ.
+- `services.ts`: conteúdo das páginas individuais de serviço (`/servicos/[slug]`).
+- `pages.ts`: conteúdo das páginas de marketing renderizadas pelo `MarketingPage` (`/sobre`, `/servicos`, `/portfolio`, `/contato`).
 
 ### `src/lib/`
 
 Configurações e utilitários compartilhados.
 
 - `contact.ts`: e-mail, telefone, WhatsApp e redes sociais.
-- `seo.ts`: title, description, canonical, Open Graph e JSON-LD.
+- `seo.ts`: domínio, title, description, canonical, Open Graph e JSON-LD.
 - `link-security.ts`: garante `noopener noreferrer` em links externos.
-- `registry.tsx`: registry de styled-components para SSR.
+- `lead.ts`: monta a mensagem de WhatsApp a partir dos campos do `LeadForm`.
+- `analytics.ts`: eventos para o `dataLayer` (ex.: clique em CTA de WhatsApp).
 
 ### `src/pages/`
 
 Páginas do Next.js usando Pages Router.
 
-- `_app.page.tsx`: configura providers, estilos globais e SEO padrão.
-- `_document.page.tsx`: configura HTML base, fonte, favicon e styled-components.
+- `_app.page.tsx`: providers, fontes (`next/font`), estilos globais e SEO padrão.
+- `_document.page.tsx`: HTML base, favicon, tag do Google e coleta de estilos do styled-components para SSR.
 - `index.page.tsx`: aponta para a home.
-- `home/`: página principal e suas seções.
+- `home/`: página principal e suas seções (ver abaixo).
+- `sobre.page.tsx`, `contato.page.tsx`, `portfolio.page.tsx`: páginas de marketing renderizadas via `MarketingPage`.
+- `servicos.page.tsx`: hub de serviços (também via `MarketingPage`).
+- `servicos/[slug].page.tsx`: página individual de cada serviço, gerada estaticamente a partir de `services.ts`.
+
+### `src/pages/home/sections/`
+
+Cada seção da home tem sua própria pasta com `index.tsx` e `styles.ts`:
+
+- `Hero`
+- `Cases`
+- `Services`
+- `Process`
+- `WhyUs`
+- `FAQ`
+- `CTA`
+- `Footer`
 
 ### `tests/`
 
-Testes automatizados com Node Test Runner.
+Testes de integração com Node Test Runner (rodam contra o build de produção).
 
 - `seo.test.mjs`
 - `security.test.mjs`
 - `public-assets.test.mjs`
+- `redirects.test.mjs`
+- `service-pages.test.mjs`
+- `ssr-styles.test.mjs`
+
+### `e2e/`
+
+Testes end-to-end com Playwright, rodando contra o servidor de desenvolvimento.
+
+- `home.spec.ts`: navegação principal, menu mobile, FAQ e CTA de WhatsApp.
 
 ## Como o Site Funciona, Seção Por Seção
+
+A home (`src/pages/home/index.tsx`) compõe as seções nesta ordem: Header, Hero, Cases, Serviços, Processo, Por que a Byte Criativo, FAQ, CTA (com formulário) e Footer.
 
 ### 1. Header
 
@@ -210,9 +263,9 @@ src/components/Header/index.tsx
 O header exibe:
 
 - Logo da Byte Criativo.
-- Links de navegação para Cases, Serviços e FAQ.
-- Botão "Entre em contato", que abre o WhatsApp.
-- Menu mobile quando a largura da tela é menor que o limite definido no componente.
+- Navegação para Início, Sobre, Serviços, Portfólio e Contato.
+- Botão "Falar sobre um projeto", que abre o WhatsApp.
+- Menu mobile (`BurgerMenu`) abaixo do breakpoint definido no componente.
 
 A navegação vem de:
 
@@ -220,10 +273,11 @@ A navegação vem de:
 src/content/home.ts
 ```
 
-Constante:
+Constantes:
 
 ```ts
 navigationItems
+footerNavigationItems
 ```
 
 ### 2. Hero
@@ -236,10 +290,10 @@ src/pages/home/sections/Hero/index.tsx
 
 É a primeira área da página. Ela mostra:
 
+- Eyebrow ("software house · design e engenharia").
 - Título principal.
-- Destaque visual no trecho "crescer com tecnologia".
 - Texto de apoio.
-- Botão para iniciar conversa via WhatsApp.
+- Botões para iniciar conversa via WhatsApp e para ver os projetos (Cases).
 
 O conteúdo vem de:
 
@@ -253,33 +307,7 @@ em:
 src/content/home.ts
 ```
 
-### 3. Cards de Destaque
-
-Arquivo principal:
-
-```text
-src/pages/home/sections/Cards/index.tsx
-```
-
-Mostra três diferenciais:
-
-- Estratégia Multidisciplinar.
-- Soluções Sob Medida.
-- Suporte Evolutivo.
-
-O conteúdo vem de:
-
-```ts
-highlightCards
-```
-
-em:
-
-```text
-src/content/home.ts
-```
-
-### 4. Cases
+### 3. Cases
 
 Arquivo principal:
 
@@ -292,7 +320,7 @@ Mostra o case autoral Underground PB, com:
 - Imagem de preview.
 - Título.
 - Tags.
-- Descrição.
+- Desafio, solução e resultado.
 - Link para acessar o site.
 
 O conteúdo vem de:
@@ -310,10 +338,10 @@ src/content/home.ts
 A imagem usada fica em:
 
 ```text
-src/assets/case-undergroundpb.png
+src/assets/case-undergroundpb-screenshot.png
 ```
 
-### 5. Serviços
+### 4. Serviços
 
 Arquivo principal:
 
@@ -321,14 +349,15 @@ Arquivo principal:
 src/pages/home/sections/Services/index.tsx
 ```
 
-Lista os serviços oferecidos:
+Lista os serviços oferecidos como cards (ícone, título, descrição e link "Saiba mais" para a página individual em `/servicos/[slug]`):
 
-- Front-end.
-- Back-end.
+- Desenvolvimento de sites.
+- Sistemas web sob medida.
 - UI/UX Design.
-- Design Gráfico.
+- Landing pages.
 - Design de Produto.
-- Copywriting.
+- Copywriting para web.
+- Automação e integrações.
 
 O conteúdo vem de:
 
@@ -343,7 +372,53 @@ em:
 src/content/home.ts
 ```
 
-### 6. FAQ
+### 5. Processo
+
+Arquivo principal:
+
+```text
+src/pages/home/sections/Process/index.tsx
+```
+
+Mostra as etapas numeradas do processo de trabalho (diagnóstico, proposta e escopo, design e desenvolvimento, entrega e evolução).
+
+O conteúdo vem de:
+
+```ts
+processSteps
+processSectionTitle
+```
+
+em:
+
+```text
+src/content/home.ts
+```
+
+### 6. Por Que a Byte Criativo
+
+Arquivo principal:
+
+```text
+src/pages/home/sections/WhyUs/index.tsx
+```
+
+Lista os diferenciais (diagnóstico antes do código, SEO/performance/segurança desde a base, contato direto).
+
+O conteúdo vem de:
+
+```ts
+whyUs
+whyUsSectionTitle
+```
+
+em:
+
+```text
+src/content/home.ts
+```
+
+### 7. FAQ
 
 Arquivo principal:
 
@@ -351,7 +426,7 @@ Arquivo principal:
 src/pages/home/sections/FAQ/index.tsx
 ```
 
-Renderiza perguntas e respostas com abertura/fechamento por interação.
+Renderiza perguntas e respostas com abertura/fechamento por interação (`QuestionAnswer`).
 
 As perguntas ficam em:
 
@@ -367,7 +442,7 @@ src/lib/seo.ts
 
 Isso evita divergência entre o que aparece na tela e o que o Google lê como dado estruturado.
 
-### 7. CTA Final
+### 8. CTA Final (com formulário)
 
 Arquivo principal:
 
@@ -375,11 +450,7 @@ Arquivo principal:
 src/pages/home/sections/CTA/index.tsx
 ```
 
-Mostra a chamada final:
-
-- Título.
-- Texto curto.
-- Botão para WhatsApp.
+Mostra a chamada final com título, texto curto e o `LeadForm`: um formulário (nome, empresa opcional, necessidade) que monta a mensagem e abre o WhatsApp já preenchido.
 
 O conteúdo vem de:
 
@@ -393,7 +464,13 @@ em:
 src/content/home.ts
 ```
 
-### 8. Footer
+O formulário em si vive em:
+
+```text
+src/components/LeadForm
+```
+
+### 9. Footer
 
 Arquivo principal:
 
@@ -405,7 +482,7 @@ Exibe:
 
 - Logo reduzida.
 - CNPJ.
-- E-mail.
+- E-mail (com botão de copiar).
 - WhatsApp.
 - Links de navegação.
 - Instagram.
@@ -430,6 +507,21 @@ em:
 src/content/home.ts
 ```
 
+### Outras páginas
+
+Além da home, quatro páginas de marketing compartilham o mesmo template (`MarketingPage`) e só variam pelo conteúdo em `src/content/pages.ts`:
+
+- `/sobre` — apresentação da empresa, princípios de trabalho e diferenciais.
+- `/servicos` — hub com as frentes de atuação e link para cada página de serviço.
+- `/portfolio` — projetos em destaque (case Underground PB) e espaço preparado para novos cases.
+- `/contato` — canais de contato e o que enviar no primeiro contato.
+
+Cada serviço também tem uma página própria, gerada estaticamente a partir de `src/content/services.ts`:
+
+```text
+src/pages/servicos/[slug].page.tsx
+```
+
 ## Como Alterar Textos, Links e Conteúdos
 
 ### Alterar textos da home
@@ -442,12 +534,12 @@ src/content/home.ts
 
 Esse arquivo controla:
 
-- Links da navbar.
-- Links do footer.
+- Links da navbar e do footer.
 - Texto do hero.
-- Cards de destaque.
 - Case principal.
-- Lista de serviços.
+- Lista de serviços (cards da home).
+- Etapas do processo.
+- Diferenciais ("por que a Byte Criativo").
 - Título do FAQ.
 - CTA final.
 
@@ -468,6 +560,26 @@ Cada item tem:
   answer: string
 }
 ```
+
+### Alterar as páginas de Sobre, Serviços (hub), Portfólio e Contato
+
+Edite:
+
+```text
+src/content/pages.ts
+```
+
+Cada página é um objeto `MarketingPageContent` com eyebrow, hero, seções de cards/listas e CTA final — a estrutura visual é a mesma para as quatro; só o conteúdo muda.
+
+### Alterar as páginas individuais de serviço
+
+Edite:
+
+```text
+src/content/services.ts
+```
+
+Cada serviço é um objeto `ServicePage` com slug, hero, seções de conteúdo e FAQ próprio, renderizado em `/servicos/[slug]`.
 
 ### Alterar WhatsApp, e-mail ou redes sociais
 
@@ -519,6 +631,14 @@ Edite:
 src/styles/theme.ts
 ```
 
+As fontes (Bricolage Grotesque, Instrument Sans, JetBrains Mono) são carregadas via `next/font/google` em:
+
+```text
+src/pages/_app.page.tsx
+```
+
+e disponibilizadas como variáveis CSS (`--font-display`, `--font-body`, `--font-mono`) consumidas pelo tema.
+
 ### Alterar estilos globais
 
 Edite:
@@ -555,6 +675,7 @@ Arquivos importantes:
 src/lib/seo.ts
 src/pages/_app.page.tsx
 src/pages/home/index.tsx
+src/pages/servicos/[slug].page.tsx
 public/robots.txt
 public/sitemap.xml
 public/og-image.png
@@ -571,12 +692,14 @@ O site configura:
 - Imagem social `1200x630`.
 - JSON-LD com `Organization`, `WebSite`, `WebPage` e `FAQPage`.
 - `robots.txt`.
-- `sitemap.xml`.
+- `sitemap.xml`, cobrindo a home, `/sobre`, `/servicos`, `/portfolio`, `/contato` e todas as páginas individuais de `/servicos/[slug]`.
+
+URLs antigas de serviço (`/sites-profissionais`, `/sistemas-web`, `/landing-pages`, `/automacao-e-integracoes`) e o antigo blog vazio foram removidos; as três primeiras têm redirecionamento 301 configurado em `next.config.mjs` para a página de serviço correspondente em `/servicos/[slug]` (testado em `tests/redirects.test.mjs`). O blog não chegou a publicar conteúdo, então foi removido sem necessidade de redirect.
 
 Após o deploy, envie este sitemap no Google Search Console:
 
 ```text
-https://www.bytecriativotech.com.br/sitemap.xml
+https://www.bcriativo.com/sitemap.xml
 ```
 
 ## Segurança
@@ -610,40 +733,24 @@ noopener noreferrer
 
 ## Testes
 
-Os testes ficam em:
+Há três camadas de teste automatizado: unitários/integração com Vitest, integração de build com Node Test Runner e end-to-end com Playwright.
 
-```text
-tests/
+### `src/**/*.test.ts(x)` (Vitest)
+
+Testes unitários de componentes React e módulos de `src/lib/` (ex.: `LeadForm`, `analytics.ts`, `contact.ts`, `lead.ts`, `link-security.ts`). Rodam com:
+
+```bash
+npm run test:unit
 ```
 
-### `tests/seo.test.mjs`
+### `tests/` (Node Test Runner, contra o build de produção)
 
-Valida:
-
-- Idioma `pt-BR`.
-- Title.
-- Description.
-- Canonical.
-- Robots.
-- Open Graph.
-- Twitter Card.
-- JSON-LD.
-- Ausência de sinais ruins como `noindex`, `nofollow`, `mailto` antigo e referências à seção Equipe removida.
-
-### `tests/public-assets.test.mjs`
-
-Valida:
-
-- `robots.txt`.
-- `sitemap.xml`.
-- Dimensões da imagem Open Graph.
-
-### `tests/security.test.mjs`
-
-Valida:
-
-- Headers de segurança no Next.js.
-- Proteção `noopener noreferrer` em links com `target="_blank"`.
+- `seo.test.mjs`: idioma `pt-BR`, title, description, canonical, robots, Open Graph, Twitter Card, JSON-LD e ausência de sinais ruins (`noindex`, `nofollow`, seções antigas removidas).
+- `public-assets.test.mjs`: `robots.txt`, `sitemap.xml` e dimensões da imagem Open Graph.
+- `security.test.mjs`: headers de segurança no Next.js e proteção `noopener noreferrer` em links com `target="_blank"`.
+- `redirects.test.mjs`: redirecionamento 301 das URLs antigas de serviço.
+- `service-pages.test.mjs`: conteúdo e SEO das páginas individuais de `/servicos/[slug]`.
+- `ssr-styles.test.mjs`: estilos do styled-components presentes no HTML renderizado no servidor.
 
 Para executar:
 
@@ -651,7 +758,15 @@ Para executar:
 npm test
 ```
 
-Esse comando faz build de produção antes de rodar os testes.
+Esse comando faz build de produção, roda os testes de `tests/` e depois `vitest run`.
+
+### `e2e/` (Playwright, contra o servidor de desenvolvimento)
+
+- `home.spec.ts`: navegação principal, menu mobile, abertura do FAQ e CTA de WhatsApp com proteção anti-tabnabbing.
+
+```bash
+npm run test:e2e
+```
 
 ## Deploy na Vercel
 
@@ -689,8 +804,8 @@ npm audit --audit-level=moderate
 Confira também:
 
 - Se o WhatsApp em `src/lib/contact.ts` está correto.
-- Se o domínio em `src/lib/seo.ts` está correto.
-- Se `public/sitemap.xml` aponta para o domínio certo.
+- Se o domínio em `src/lib/seo.ts` está correto (`https://www.bcriativo.com`).
+- Se `public/sitemap.xml` aponta para o domínio certo e inclui todas as páginas atuais.
 - Se `public/robots.txt` aponta para o sitemap certo.
 - Se a imagem `public/og-image.png` está atualizada.
 - Se o deploy da Vercel concluiu sem erro.
@@ -703,3 +818,4 @@ Confira também:
 - Ao adicionar links externos, use os componentes `Link` ou `Button` para manter a proteção de segurança.
 - Ao mudar FAQ, rode `npm test` para garantir que o JSON-LD continua válido.
 - Ao mudar SEO, rode `npm test` para garantir que title, canonical, robots e Open Graph continuam corretos.
+- Ao mudar navegação, layout ou textos visíveis, rode `npm run test:e2e` para garantir que os fluxos principais (menu mobile, FAQ, CTA de WhatsApp) continuam funcionando.
