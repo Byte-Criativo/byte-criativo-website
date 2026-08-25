@@ -1,29 +1,19 @@
 import styled from "styled-components"
 
-export const FAQContainer = styled.div`
-  padding-top: 7.5rem;
-
+export const FAQContainer = styled.section`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 4rem;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space.x2};
 
-  .left-side {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+  padding-top: ${({ theme }) => theme.space.x4};
 
-    flex: 1;
-  }
-
-  @media (max-width: 855px) {
-    flex-direction: column;
-    gap: 2.5rem;
+  @media (max-width: ${({ theme }) => theme.bp.lg}) {
+    padding-top: ${({ theme }) => theme.space.x3};
   }
 `
 
 export const FAQQuestionsBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: ${({ theme }) => theme.space.lg};
 `

@@ -47,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
           defaultTitle: DEFAULT_SEO_TITLE,
           titleTemplate: `%s | ${SITE_NAME}`,
           description: DEFAULT_SEO_DESCRIPTION,
-          themeColor: theme.COLORS.ORANGE,
+          themeColor: theme.color.accent,
           openGraph: {
             type: "website",
             locale: "pt_BR",

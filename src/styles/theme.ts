@@ -93,42 +93,6 @@ const theme = {
     lg: "1024px",
     xl: "1280px",
   },
-
-  // ===== LEGADO — remover na Task 18 (não usar em código novo) =====
-  COLORS: {
-    WHITE: "#FFFFFF",
-    GRAY_700: "#121216",
-    GRAY_500: "#55555E",
-    GRAY_300: "#E4E4DE",
-    GRAY_100: "#FAFAF7",
-    GRAY_LOW_OPACITY: "rgba(255, 255, 255, 0.55)",
-    GLASS_BORDER: "rgba(255, 255, 255, 0.65)",
-    SHADOW_SOFT: "rgba(18, 18, 22, 0.08)",
-    ORANGE: "#F65606",
-    ORANGE_DARK: "#C24405",
-    ORANGE_SOFT: "rgba(246, 86, 6, 0.10)",
-    BLUE: "#C24405",
-    BLUE_SOFT: "rgba(246, 86, 6, 0.10)",
-  },
-  FONT_FAMILY: {
-    MONTSERRAT: "var(--font-body), sans-serif",
-  },
-  FONT_SIZE: {
-    XS: "0.75rem",
-    SM: "0.875rem",
-    MD: "1rem",
-    LG: "1.125rem",
-    XL: "1.375rem",
-    XXL: "1.75rem",
-    SECTION_HEADING: "clamp(1.75rem, 2.5vw + 0.5rem, 2.5rem)",
-    HEADING: "clamp(2.25rem, 4vw + 0.75rem, 3.5rem)",
-    HEADING_MOBILE: "2.25rem",
-  },
-  FONT_WEIGHT: {
-    REGULAR: "400",
-    SEMI_BOLD: "500",
-    BOLD: "700",
-  },
 }
 
 export default theme

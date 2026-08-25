@@ -18,25 +18,23 @@ export function FAQSection() {
 
   return (
     <FAQContainer id={sectionIds.faq}>
-      <div className="left-side">
-        <SectionTitle
-          heading={faqSectionTitle.heading}
-          span={faqSectionTitle.eyebrow}
-        />
-        <FAQQuestionsBox>
-          {questionsAndAnswers.map((item) => {
-            return (
-              <QuestionAnswer
-                key={item.id}
-                question={item.question}
-                answer={item.answer}
-                isOpen={isOpen === item.id}
-                onClick={() => handleToggleAnswer(item.id)}
-              />
-            )
-          })}
-        </FAQQuestionsBox>
-      </div>
+      <SectionTitle
+        heading={faqSectionTitle.heading}
+        span={faqSectionTitle.eyebrow}
+      />
+      <FAQQuestionsBox>
+        {questionsAndAnswers.map((item) => {
+          return (
+            <QuestionAnswer
+              key={item.id}
+              question={item.question}
+              answer={item.answer}
+              isOpen={isOpen === item.id}
+              onClick={() => handleToggleAnswer(item.id)}
+            />
+          )
+        })}
+      </FAQQuestionsBox>
     </FAQContainer>
   )
 }

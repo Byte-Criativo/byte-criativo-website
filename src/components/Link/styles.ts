@@ -13,8 +13,8 @@ export const LinkContainer = styled(Link)`
 
   ${({ theme }) => css`
     color: ${theme.color.ink};
-    font-size: ${theme.FONT_SIZE.LG};
-    font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
+    font-size: ${theme.text.bodyLg};
+    font-weight: ${theme.weight.medium};
   `}
 
   svg {

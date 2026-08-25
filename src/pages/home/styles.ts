@@ -31,10 +31,7 @@ export const HOME_BP = {
 
 export const HomeContainer = styled.div`
   width: 100%;
-  background-image: url("/background.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: ${({ theme }) => theme.color.bg};
 `
 export const HomeContent = styled.main`
   padding: 13.5rem ${HOME_PADDING_X.base} ${HOME_PADDING_BOTTOM.base};
@@ -57,8 +54,8 @@ export const HeroSection = styled.section`
 
   > p {
     ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.LG};
+      color: ${theme.color.ink};
+      font-size: ${theme.text.bodyLg};
     `}
 
     text-align: center;
@@ -75,15 +72,15 @@ export const HeroHeading = styled.div`
 
   > h1 {
     ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.HEADING};
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
+      color: ${theme.color.ink};
+      font-size: ${theme.text.h1};
+      font-weight: ${theme.weight.bold};
     `}
 
     text-align: center;
 
     span {
-      color: ${({ theme }) => theme.COLORS.ORANGE};
+      color: ${({ theme }) => theme.color.accent};
     }
   }
 `

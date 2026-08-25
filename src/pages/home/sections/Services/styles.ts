@@ -58,14 +58,4 @@ export const ServiceCard = styled.div`
     display: flex;
     flex-direction: column;
   }
-
-  /* The doubled "&&" boosts specificity above CardContent's own
-     ".icon" rule so this override always wins regardless of
-     styled-components' style-insertion order — do not simplify to a
-     single "&", that would make the pastel box reappear intermittently. */
-  && .icon {
-    background: transparent;
-    border: none;
-    color: ${({ theme }) => theme.color.accent};
-  }
 `

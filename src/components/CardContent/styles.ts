@@ -10,31 +10,28 @@ export const ContentContainer = styled.div`
   .icon {
     width: 3rem;
     height: 3rem;
-    border-radius: 8px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: ${({ theme }) => theme.COLORS.ORANGE};
-    background: ${({ theme }) => theme.COLORS.ORANGE_SOFT};
-    border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
+    color: ${({ theme }) => theme.color.accent};
   }
 `
 
 export const CardTitle = styled.h2`
   min-width: 158px;
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_700};
-    font-size: ${theme.FONT_SIZE.LG};
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
+    color: ${theme.color.ink};
+    font-size: ${theme.text.bodyLg};
+    font-weight: ${theme.weight.bold};
   `}
 `
 
 export const CardDescription = styled.p`
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_500};
-    font-size: ${theme.FONT_SIZE.SM};
+    color: ${theme.color.muted};
+    font-size: ${theme.text.small};
   `}
 
   line-height: 1.6;
@@ -49,9 +46,9 @@ export const CardAction = styled(Link)`
   text-decoration: none;
 
   ${({ theme }) => css`
-    color: ${theme.COLORS.ORANGE_DARK};
-    font-size: ${theme.FONT_SIZE.SM};
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
+    color: ${theme.color.accentStrong};
+    font-size: ${theme.text.small};
+    font-weight: ${theme.weight.bold};
   `}
 
   &::after {
@@ -64,7 +61,7 @@ export const CardAction = styled(Link)`
   }
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accentStrong};
     outline-offset: 4px;
     border-radius: 4px;
   }

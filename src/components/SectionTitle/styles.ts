@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
 export const SectionTitleContainer = styled.div`
   display: flex;
@@ -7,27 +7,17 @@ export const SectionTitleContainer = styled.div`
 `
 
 export const SectionTitleSpan = styled.span`
-  ${({ theme }) => css`
-    color: ${theme.COLORS.ORANGE_DARK};
-    font-size: ${theme.FONT_SIZE.LG};
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
-  `}
-
-  /* mobile screen */
-    @media (max-width: 445px) {
-    font-size: ${({ theme }) => theme.FONT_SIZE.MD};
-  }
+  font-family: ${({ theme }) => theme.font.mono};
+  font-size: ${({ theme }) => theme.text.caption};
+  font-weight: ${({ theme }) => theme.weight.medium};
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.color.muted};
 `
 
 export const SectionTitleHeading = styled.h2`
-  ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_700};
-    font-size: ${theme.FONT_SIZE.SECTION_HEADING};
-    font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
-  `}
-
-  /* mobile screen */
-  @media (max-width: 445px) {
-    font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
-  }
+  font-family: ${({ theme }) => theme.font.display};
+  color: ${({ theme }) => theme.color.ink};
+  font-size: ${({ theme }) => theme.text.h2};
+  font-weight: ${({ theme }) => theme.weight.semibold};
 `

@@ -41,13 +41,6 @@ export type MarketingPageContent = {
   }
 }
 
-export const pageRoutes = [
-  "/sobre",
-  "/servicos",
-  "/portfolio",
-  "/contato",
-] as const
-
 export const pagesContent = {
   sobre: {
     route: "/sobre",
