@@ -1,30 +1,32 @@
 import styled, { css } from "styled-components"
+import { HOME_BP, HOME_PADDING_X } from "@/src/pages/home/styles"
 
 /**
  * Banda full-bleed: cancela o padding horizontal de HomeContent
  * (src/pages/home/styles.ts) para que o fundo escuro ocupe a viewport
  * inteira, e reaplica o mesmo valor como padding para manter o
- * conteúdo alinhado com as demais seções. Os breakpoints espelham
- * exatamente os de HomeContent para não deixar sobra/falta de margem.
+ * conteúdo alinhado com as demais seções. Importa HOME_PADDING_X/HOME_BP
+ * de HomeContent como fonte única de verdade — os dois arquivos não podem
+ * divergir porque compartilham as mesmas constantes.
  */
 export const CTAWrapper = styled.section`
-  margin-left: -9rem;
-  margin-right: -9rem;
-  padding: ${({ theme }) => theme.space.x4} 9rem;
+  margin-left: -${HOME_PADDING_X.base};
+  margin-right: -${HOME_PADDING_X.base};
+  padding: ${({ theme }) => theme.space.x4} ${HOME_PADDING_X.base};
 
   background: ${({ theme }) => theme.color.dark.bg};
   color: ${({ theme }) => theme.color.dark.text};
 
-  @media (max-width: 1027px) {
-    margin-left: -2rem;
-    margin-right: -2rem;
-    padding: ${({ theme }) => theme.space.x3} 2rem;
+  @media (max-width: ${HOME_BP.tablet}) {
+    margin-left: -${HOME_PADDING_X.tablet};
+    margin-right: -${HOME_PADDING_X.tablet};
+    padding: ${({ theme }) => theme.space.x3} ${HOME_PADDING_X.tablet};
   }
 
-  @media (max-width: 450px) {
-    margin-left: -1rem;
-    margin-right: -1rem;
-    padding: ${({ theme }) => theme.space.x3} 1rem;
+  @media (max-width: ${HOME_BP.mobile}) {
+    margin-left: -${HOME_PADDING_X.mobile};
+    margin-right: -${HOME_PADDING_X.mobile};
+    padding: ${({ theme }) => theme.space.x3} ${HOME_PADDING_X.mobile};
   }
 `
 
