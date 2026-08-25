@@ -2,7 +2,6 @@ export const sectionIds = {
   cases: "cases",
   services: "services",
   process: "process",
-  audience: "audience",
   faq: "FAQ",
   contact: "contact",
 } as const
@@ -71,27 +70,6 @@ export const heroContent = {
   secondaryCtaHref: "/portfolio",
 } as const
 
-export const highlightCards = [
-  {
-    icon: "shapes",
-    title: "Diagnóstico antes do código",
-    description:
-      "Entendemos objetivo, público, operação e restrições antes de propor a solução.",
-  },
-  {
-    icon: "sparkle",
-    title: "Entrega pensada para conversão",
-    description:
-      "Desenhamos jornadas, textos e interfaces para reduzir fricção e gerar contatos.",
-  },
-  {
-    icon: "lifebuoy",
-    title: "Base pronta para evoluir",
-    description:
-      "Seu produto nasce com estrutura para manutenção, melhorias e novas integrações.",
-  },
-] as const
-
 export const featuredCase = {
   eyebrow: "prova de trabalho",
   title: "Underground PB",
@@ -108,29 +86,6 @@ export const featuredCase = {
   href: "https://www.undergroundpb.com.br/",
   linkLabel: "Acessar site",
 } as const
-
-export const audienceSectionTitle = {
-  eyebrow: "Para quem fazemos",
-  heading: "Projetos digitais para negócios que precisam sair do improviso",
-} as const
-
-export const audiences = [
-  {
-    title: "Empresas em crescimento",
-    description:
-      "Sites, sistemas internos e integrações para times que precisam organizar processos e vender com mais previsibilidade.",
-  },
-  {
-    title: "Marcas lançando uma nova oferta",
-    description:
-      "Landing pages, páginas institucionais e jornadas de conversão para validar mercado, captar leads e explicar valor com clareza.",
-  },
-  {
-    title: "Operações com gargalos manuais",
-    description:
-      "Produtos web e automações para substituir planilhas, retrabalho e ferramentas desconectadas.",
-  },
-] as const
 
 export const services = [
   {
@@ -217,26 +172,26 @@ export const processSteps = [
   },
 ] as const
 
-export const trustSectionTitle = {
-  eyebrow: "Por que funciona",
-  heading: "Menos improviso, mais clareza para decidir e vender",
+export const whyUsSectionTitle = {
+  eyebrow: "diferenciais",
+  heading: "Por que a Byte Criativo",
 } as const
 
-export const trustSignals = [
+export const whyUs = [
   {
-    value: "Estratégia + execução",
-    label:
-      "A mesma visão que define a jornada também cuida da interface, do código e da mensagem.",
+    title: "Diagnóstico antes do código",
+    description:
+      "Entendemos objetivo, público e operação antes de propor qualquer solução.",
   },
   {
-    value: "SEO desde a base",
-    label:
-      "Metadados, performance, estrutura semântica e conteúdo rastreável entram no projeto desde o início.",
+    title: "SEO, performance e segurança desde a base",
+    description:
+      "Não são extras: entram na estrutura do projeto no primeiro dia.",
   },
   {
-    value: "Contato direto",
-    label:
-      "Você conversa com quem entende do produto, do escopo e das decisões técnicas.",
+    title: "Contato direto",
+    description:
+      "Quem responde sua mensagem é quem projeta e desenvolve, então nada se perde no caminho.",
   },
 ] as const
 

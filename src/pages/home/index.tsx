@@ -2,15 +2,13 @@ import { Header } from "@/src/components/Header"
 import { HomeContainer, HomeContent } from "./styles"
 
 import { HeroSection } from "./sections/Hero"
-import { CardsSection } from "./sections/Cards"
 import { CasesSection } from "./sections/Cases"
 import { ServicesSection } from "./sections/Services"
 import { CTASection } from "./sections/CTA"
 import { FooterSection } from "./sections/Footer"
 import { FAQSection } from "./sections/FAQ"
-import { AudienceSection } from "./sections/Audience"
 import { ProcessSection } from "./sections/Process"
-import { TrustSection } from "./sections/Trust"
+import { WhyUsSection } from "./sections/WhyUs"
 import Head from "next/head"
 import { generateNextSeo } from "next-seo/pages"
 import {
@@ -49,12 +47,10 @@ export default function Home() {
         <Header />
         <HomeContent>
           <HeroSection />
-          <CardsSection />
-          <AudienceSection />
           <CasesSection />
           <ServicesSection />
           <ProcessSection />
-          <TrustSection />
+          <WhyUsSection />
           <FAQSection />
           <CTASection />
         </HomeContent>
