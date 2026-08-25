@@ -57,6 +57,30 @@ const nextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: "/sites-profissionais",
+        destination: "/servicos/desenvolvimento-de-sites",
+        permanent: true,
+      },
+      {
+        source: "/sistemas-web",
+        destination: "/servicos/sistemas-web-sob-medida",
+        permanent: true,
+      },
+      {
+        source: "/landing-pages",
+        destination: "/servicos/landing-pages",
+        permanent: true,
+      },
+      {
+        source: "/automacao-e-integracoes",
+        destination: "/servicos/automacao-e-integracoes",
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig
