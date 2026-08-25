@@ -15,12 +15,16 @@ test.describe("Home", () => {
 
   test("FAQ abre a resposta ao clicar na pergunta", async ({ page }) => {
     await page.goto("/")
-    const question = page.getByRole("button", { name: /Quais os trabalhos/ })
+    const question = page.getByRole("button", {
+      name: /O que a Byte Criativo desenvolve/,
+    })
     await expect(question).toHaveAttribute("aria-expanded", "false")
     await question.click()
     await expect(question).toHaveAttribute("aria-expanded", "true")
     const answerId = await question.getAttribute("aria-controls")
-    await expect(page.locator(`#${answerId}`)).toContainText(/web apps/i)
+    await expect(page.locator(`#${answerId}`)).toContainText(
+      /sistemas web sob medida/i,
+    )
   })
 
   test("menu mobile abre e mostra os itens de navegação", async ({ page }) => {

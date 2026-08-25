@@ -6,7 +6,7 @@ export const QuestionAnswerContainer = styled.div`
 
   padding: 0 0 0.75rem;
 
-  border-bottom: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
+  border-bottom: 1px solid ${({ theme }) => theme.color.border};
 `
 
 export const Question = styled.button<{ $isOpen: boolean }>`
@@ -17,18 +17,20 @@ export const Question = styled.button<{ $isOpen: boolean }>`
   width: 100%;
   padding: 0.25rem 0;
 
-  color: ${({ theme }) => theme.COLORS.ORANGE};
+  color: ${({ theme }) => theme.color.accent};
 
   p {
     ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
+      font-family: ${theme.font.body};
+      color: ${theme.color.ink};
+      font-weight: ${theme.weight.semibold};
     `}
     flex: 1;
   }
 
   svg {
     flex-shrink: 0;
+    color: ${({ theme }) => theme.color.accent};
     transition: transform 0.2s ease;
     transform: rotate(${({ $isOpen }) => ($isOpen ? "180deg" : "0deg")});
   }
@@ -37,13 +39,7 @@ export const Question = styled.button<{ $isOpen: boolean }>`
   transition: color 0.2s ease;
 
   &:hover p {
-    color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-  }
-
-  &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
-    outline-offset: 4px;
-    border-radius: 8px;
+    color: ${({ theme }) => theme.color.accentStrong};
   }
 `
 
@@ -58,8 +54,8 @@ export const AnswerWrapper = styled.div<{ $isOpen: boolean }>`
 
 export const Answer = styled.p`
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_500};
-    font-size: ${theme.FONT_SIZE.MD};
+    color: ${theme.color.muted};
+    font-size: ${theme.text.body};
   `}
 
   min-height: 0;

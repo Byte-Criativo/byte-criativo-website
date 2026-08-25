@@ -7,28 +7,26 @@ export type QuestionAnswer = {
 export const questionsAndAnswers: QuestionAnswer[] = [
   {
     id: 1,
-    question: "Quais os trabalhos desenvolvidos pela Byte Criativo?",
+    question: "O que a Byte Criativo desenvolve?",
     answer:
-      "Desenvolvemos soluções em softwares, como web apps dinâmicos e intuitivos, aplicativos mobile para Android e iOS, e-commerces e demais soluções que você necessitar. Nós criamos experiências memoráveis que conectam, convertem e retêm.",
+      "Sites institucionais, sistemas web sob medida, landing pages, automações e produtos digitais. Também cuidamos de UI/UX e dos textos, para o projeto sair completo.",
   },
   {
     id: 2,
-    question: "Como se dá o processo de criação da Byte Criativo?",
+    question: "Como funciona o processo?",
     answer:
-      "Examinamos a demanda, para que o orçamento seja condizente com o escopo do trabalho. Depois vem a parte de desenvolvimento, onde deixamos você por dentro do processo, esclarecendo quaisquer dúvidas. Como cada projeto é personalizado, o tempo de entrega também varia. Projeto pronto, entregamos e nos mantemos disponíveis para suportes necessários.",
+      "Começamos entendendo seu objetivo e sua operação. Com isso definimos escopo, prazo e investimento antes de escrever código. Durante o desenvolvimento você acompanha as decisões, e depois da entrega seguimos disponíveis para evolução.",
   },
   {
     id: 3,
-    question:
-      "Vocês fazem apenas o trabalho de desenvolvimento de software ou cuidam também do design?",
+    question: "Quanto custa e quanto tempo leva?",
     answer:
-      "Para que o desenvolvimento em web seja feito da melhor forma possível, recomendamos que o cliente tenha uma identidade visual bem definida, o que vai além de ter um logotipo. Caso você não tenha esse material, esse desenvolvimento pode ser incluído no pacote. Afinal, toda a identidade da sua marca, desenvolvimento em software inclusive, precisa estar em unidade.",
+      "Depende do escopo. Um site institucional e um sistema com login e painéis são projetos muito diferentes. Depois da primeira conversa, você recebe uma proposta com valores, etapas e prazo.",
   },
   {
     id: 4,
-    question:
-      "Qual o valor do investimento que terei que fazer e qual a duração de um projeto?",
+    question: "Preciso ter tudo definido antes de falar com vocês?",
     answer:
-      "Cada projeto é único e muito particular. Portanto é impossível precificar sem ter uma real noção do escopo. Os custos e o prazo para conclusão variam conforme a complexidade e abrangência do trabalho em questão. Para ter uma noção de prazo e valores, sugerimos que preencha o formulário de detalhamento de projeto sem compromisso.",
+      "Não. Pode chegar com uma ideia solta ou um problema de operação. Organizar isso em escopo é parte do nosso trabalho.",
   },
 ]
