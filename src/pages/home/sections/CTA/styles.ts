@@ -1,51 +1,81 @@
 import styled, { css } from "styled-components"
 
-export const CTAWrapper = styled.div`
-  padding-top: 7.5rem;
+/**
+ * Banda full-bleed: cancela o padding horizontal de HomeContent
+ * (src/pages/home/styles.ts) para que o fundo escuro ocupe a viewport
+ * inteira, e reaplica o mesmo valor como padding para manter o
+ * conteúdo alinhado com as demais seções. Os breakpoints espelham
+ * exatamente os de HomeContent para não deixar sobra/falta de margem.
+ */
+export const CTAWrapper = styled.section`
+  margin-left: -9rem;
+  margin-right: -9rem;
+  padding: ${({ theme }) => theme.space.x4} 9rem;
+
+  background: ${({ theme }) => theme.color.dark.bg};
+  color: ${({ theme }) => theme.color.dark.text};
+
+  @media (max-width: 1027px) {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    padding: ${({ theme }) => theme.space.x3} 2rem;
+  }
+
+  @media (max-width: 450px) {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding: ${({ theme }) => theme.space.x3} 1rem;
+  }
 `
 
-export const CTAContainer = styled.section`
+export const CTAContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  gap: ${({ theme }) => theme.space.lg};
 
-  padding: 4.5rem 2rem;
-  margin-bottom: 5.5rem;
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: ${({ theme }) => theme.space.x2} ${({ theme }) => theme.space.xl};
 
-  background:
-    linear-gradient(135deg, rgba(246, 86, 6, 0.12), rgba(6, 178, 246, 0.1)),
-    ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  border: 1.5px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.radius.lg};
+  border: 1px solid ${({ theme }) => theme.glass.darkBorder};
+  background: ${({ theme }) => theme.glass.darkFallbackBg};
 
-  box-shadow: 0 24px 60px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  @supports (backdrop-filter: blur(1px)) {
+    background: ${({ theme }) => theme.glass.darkBg};
+    backdrop-filter: blur(${({ theme }) => theme.glass.blur});
+    -webkit-backdrop-filter: blur(${({ theme }) => theme.glass.blur});
+  }
 
-  > a {
-    margin-top: 1rem;
+  > form {
+    margin-top: ${({ theme }) => theme.space.sm};
+  }
+
+  @media (max-width: 450px) {
+    padding: ${({ theme }) => theme.space.xl} ${({ theme }) => theme.space.lg};
   }
 `
 
 export const CTATitle = styled.h2`
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_500};
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
-    font-size: 2.5rem;
+    color: ${theme.color.dark.text};
+    font-family: ${theme.font.display};
+    font-weight: ${theme.weight.bold};
+    font-size: ${theme.text.h2};
   `}
 
   text-align: center;
 `
 
 export const CTADescription = styled.p`
-  max-width: 36rem;
+  max-width: 32rem;
   text-align: center;
   line-height: 1.7;
 
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_500};
-    font-size: ${theme.FONT_SIZE.LG};
+    color: ${theme.color.dark.muted};
+    font-size: ${theme.text.bodyLg};
   `}
 `

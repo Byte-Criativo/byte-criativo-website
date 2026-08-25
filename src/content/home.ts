@@ -204,5 +204,4 @@ export const ctaContent = {
   title: "Vamos entender qual solução faz sentido para o seu negócio?",
   description:
     "Conte em poucas linhas o que você quer vender, organizar ou lançar. A gente responde com próximos passos, caminhos possíveis e uma noção inicial de escopo.",
-  buttonLabel: "Falar sobre meu projeto",
 } as const
