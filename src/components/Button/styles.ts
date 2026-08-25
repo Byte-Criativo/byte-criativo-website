@@ -1,53 +1,65 @@
 import Link from "next/link"
 import styled, { css } from "styled-components"
 
-export const ButtonContainer = styled(Link)`
-  all: unset;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-
-  display: flex;
+export const ButtonContainer = styled(Link)<{ $variant: "primary" | "ghost" }>`
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  align-self: center;
-
   width: fit-content;
-
+  padding: 0.875rem 1.75rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  text-decoration: none;
   white-space: nowrap;
-
-  ${({ theme }) => css`
-    background: ${theme.COLORS.ORANGE};
-    color: ${theme.COLORS.WHITE};
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
-    box-shadow: 0 14px 30px ${theme.COLORS.ORANGE_SOFT};
-  `}
-
   cursor: pointer;
-  overflow: hidden;
+
+  font-family: ${({ theme }) => theme.font.body};
+  font-size: ${({ theme }) => theme.text.body};
+  font-weight: ${({ theme }) => theme.weight.semibold};
 
   transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+    background-color ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease},
+    color ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease},
+    transform ${({ theme }) => theme.motion.fast}
+      ${({ theme }) => theme.motion.ease},
+    box-shadow ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease};
 
   &::after {
     content: "→";
     margin-left: 0.5rem;
-    transition: transform 0.2s ease;
-  }
-
-  &:hover {
-    background: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-    box-shadow: 0 18px 38px rgba(190, 67, 6, 0.2);
-    transform: translateY(-2px);
+    transition: transform ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease};
   }
 
   &:hover::after {
     transform: translateX(4px);
   }
 
-  &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
-    outline-offset: 3px;
+  &:active {
+    transform: translateY(1px);
   }
+
+  ${({ theme, $variant }) =>
+    $variant === "primary"
+      ? css`
+          background: ${theme.color.accent};
+          color: ${theme.color.surface};
+          box-shadow: ${theme.shadow.soft};
+
+          &:hover {
+            background: ${theme.color.accentStrong};
+            box-shadow: ${theme.shadow.lift};
+          }
+        `
+      : css`
+          background: transparent;
+          color: ${theme.color.ink};
+          box-shadow: inset 0 0 0 1.5px ${theme.color.border};
+
+          &:hover {
+            box-shadow: inset 0 0 0 1.5px ${theme.color.ink};
+          }
+        `}
 `
