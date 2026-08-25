@@ -1,12 +1,18 @@
 import { SectionTitle } from "@/src/components/SectionTitle"
 import { sectionIds, services, servicesSectionTitle } from "@/src/content/home"
-import { ServicesContainer, ServicesGrid, ServicesWrapper } from "./styles"
+import {
+  ServiceCard,
+  ServicesContainer,
+  ServicesGrid,
+  ServicesWrapper,
+} from "./styles"
 import { CardContent } from "@/src/components/CardContent"
 import {
   Browser,
   Code,
   Database,
   PenNib,
+  Plugs,
   Shapes,
   Strategy,
 } from "@phosphor-icons/react"
@@ -16,6 +22,7 @@ const serviceIcons = {
   code: <Code size={26} weight="duotone" />,
   database: <Database size={26} weight="duotone" />,
   penNib: <PenNib size={26} weight="duotone" />,
+  plugs: <Plugs size={26} weight="duotone" />,
   shapes: <Shapes size={26} weight="duotone" />,
   strategy: <Strategy size={26} weight="duotone" />,
 } as const
@@ -30,13 +37,14 @@ export function ServicesSection() {
         />
         <ServicesGrid>
           {services.map((service) => (
-            <CardContent
-              key={service.title}
-              icon={serviceIcons[service.icon]}
-              title={service.title}
-              description={service.description}
-              href={service.href}
-            />
+            <ServiceCard key={service.title}>
+              <CardContent
+                icon={serviceIcons[service.icon]}
+                title={service.title}
+                description={service.description}
+                href={service.href}
+              />
+            </ServiceCard>
           ))}
         </ServicesGrid>
       </ServicesContainer>

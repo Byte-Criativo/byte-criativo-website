@@ -1,45 +1,53 @@
 import styled from "styled-components"
 
 export const ServicesWrapper = styled.div`
-  padding-top: 7.5rem;
+  padding-top: ${({ theme }) => theme.space.x4};
+
+  @media (max-width: ${({ theme }) => theme.bp.lg}) {
+    padding-top: ${({ theme }) => theme.space.x3};
+  }
 `
 
 export const ServicesContainer = styled.section`
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 6rem;
-
-  padding: 3.75rem 4rem;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.42),
-      rgba(255, 255, 255, 0.18)
-    ),
-    ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  border: 1.5px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  border-radius: 12px;
-  box-shadow: 0 24px 60px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
-
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  @media (max-width: 855px) {
-    padding: 3.75rem 2rem;
-    flex-direction: column;
-  }
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space.x2};
 `
 
 export const ServicesGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  row-gap: 2rem;
-  column-gap: 3rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: ${({ theme }) => theme.space.xl};
 
-  @media (max-width: 855px) {
-    width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+  @media (max-width: ${({ theme }) => theme.bp.lg}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: ${({ theme }) => theme.bp.md}) {
+    grid-template-columns: 1fr;
+  }
+`
+
+export const ServiceCard = styled.div`
+  background: ${({ theme }) => theme.color.surface};
+  border: 1px solid ${({ theme }) => theme.color.border};
+  border-radius: ${({ theme }) => theme.radius.md};
+  padding: ${({ theme }) => theme.space.xl};
+
+  transition:
+    box-shadow ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease},
+    transform ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease};
+
+  &:hover {
+    box-shadow: ${({ theme }) => theme.shadow.lift};
+    transform: translateY(-2px);
+  }
+
+  && .icon {
+    background: transparent;
+    border: none;
+    color: ${({ theme }) => theme.color.accent};
   }
 `

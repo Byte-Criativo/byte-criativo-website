@@ -280,6 +280,50 @@ export const servicePages: ServicePage[] = [
       },
     ],
   },
+  {
+    slug: "automacao-e-integracoes",
+    title: "Automação e integrações",
+    seoTitle: "Automação de Processos e Integração de Sistemas",
+    eyebrow: "Processos mais conectados",
+    description:
+      "Conectamos ferramentas, automatizamos tarefas repetitivas e criamos fluxos previsíveis entre formulários, sistemas, planilhas, e-mails, agendas, CRMs e APIs.",
+    promise:
+      "Quando a rotina depende de copiar e colar entre ferramentas, automatizar costuma ser o caminho mais barato para ganhar tempo e reduzir erros.",
+    bestFor: [
+      "Empresas com etapas manuais repetitivas entre sistemas",
+      "Times que dependem de várias ferramentas desconectadas",
+      "Operações que perdem tempo com digitação duplicada",
+    ],
+    outcomes: [
+      "Fluxos automáticos entre as ferramentas que você já usa",
+      "Menos erros de digitação e retrabalho",
+      "Dados centralizados para decidir com mais segurança",
+    ],
+    deliverables: [
+      "Mapeamento do fluxo atual e dos pontos de fricção",
+      "Integrações com APIs, planilhas, e-mails e CRMs",
+      "Automação de notificações e rotinas operacionais",
+      "Documentação essencial de uso",
+    ],
+    process: [
+      "Entendimento do processo e das ferramentas atuais",
+      "Priorização do fluxo com maior ganho de tempo",
+      "Implementação incremental com validações",
+      "Acompanhamento e ajustes após a entrega",
+    ],
+    faqs: [
+      {
+        question: "Preciso trocar as ferramentas que já uso?",
+        answer:
+          "Na maioria dos casos, não. A automação aproveita o que já funciona e conecta as pontas, desde que as ferramentas tenham APIs ou formatos de exportação utilizáveis.",
+      },
+      {
+        question: "Automação serve para empresas pequenas?",
+        answer:
+          "Sim. Quanto menor o time, mais caro é o tempo gasto com tarefas repetitivas. Fluxos simples já trazem ganho perceptível.",
+      },
+    ],
+  },
 ]
 
 export function getServicePage(slug: string) {

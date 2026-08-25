@@ -33,6 +33,11 @@ const servicePages = [
     title: "Copywriting para Sites e Landing Pages | Byte Criativo",
     h1: "Copywriting para web",
   },
+  {
+    slug: "automacao-e-integracoes",
+    title: "Automação de Processos e Integração de Sistemas | Byte Criativo",
+    h1: "Automação e integrações",
+  },
 ]
 
 function getAttribute(tag, attribute) {

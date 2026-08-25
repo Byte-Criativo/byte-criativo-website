@@ -175,6 +175,13 @@ export const services = [
       "Textos diretos para explicar valor, sustentar confiança e conduzir à ação.",
     href: "/servicos/copywriting-para-web",
   },
+  {
+    icon: "plugs",
+    title: "Automação e integrações",
+    description:
+      "Conexões entre ferramentas, APIs e planilhas para reduzir tarefas manuais.",
+    href: "/servicos/automacao-e-integracoes",
+  },
 ] as const
 
 export const servicesSectionTitle = {
