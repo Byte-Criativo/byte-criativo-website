@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
 /**
  * Padding horizontal de HomeContent e os breakpoints em que ele muda.
@@ -44,43 +44,5 @@ export const HomeContent = styled.main`
   /* mobile screen */
   @media (max-width: ${HOME_BP.mobile}) {
     padding: 7.75rem ${HOME_PADDING_X.mobile} ${HOME_PADDING_BOTTOM.mobile};
-  }
-`
-export const HeroSection = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  > p {
-    ${({ theme }) => css`
-      color: ${theme.color.ink};
-      font-size: ${theme.text.bodyLg};
-    `}
-
-    text-align: center;
-    padding: 0 11.5rem;
-    margin-bottom: 0.5rem;
-  }
-`
-
-export const HeroHeading = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1.87rem;
-
-  > h1 {
-    ${({ theme }) => css`
-      color: ${theme.color.ink};
-      font-size: ${theme.text.h1};
-      font-weight: ${theme.weight.bold};
-    `}
-
-    text-align: center;
-
-    span {
-      color: ${({ theme }) => theme.color.accent};
-    }
   }
 `

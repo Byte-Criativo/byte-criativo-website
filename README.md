@@ -694,7 +694,7 @@ O site configura:
 - `robots.txt`.
 - `sitemap.xml`, cobrindo a home, `/sobre`, `/servicos`, `/portfolio`, `/contato` e todas as páginas individuais de `/servicos/[slug]`.
 
-URLs antigas de serviço (`/sites-profissionais`, `/sistemas-web`, `/landing-pages`, `/automacao-e-integracoes`) e o antigo blog vazio foram removidos; as três primeiras têm redirecionamento 301 configurado em `next.config.mjs` para a página de serviço correspondente em `/servicos/[slug]` (testado em `tests/redirects.test.mjs`). O blog não chegou a publicar conteúdo, então foi removido sem necessidade de redirect.
+URLs antigas de serviço (`/sites-profissionais`, `/sistemas-web`, `/landing-pages`, `/automacao-e-integracoes`) e o antigo blog vazio foram removidos; todas as quatro têm redirecionamento 301 configurado em `next.config.mjs` para a página de serviço correspondente em `/servicos/[slug]` (testado em `tests/redirects.test.mjs`). O blog não chegou a publicar conteúdo, então foi removido sem necessidade de redirect.
 
 Após o deploy, envie este sitemap no Google Search Console:
 

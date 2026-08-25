@@ -64,13 +64,13 @@ export const ServiceHeroActions = styled.div`
   flex-wrap: wrap;
 
   > a:last-child {
-    color: ${({ theme }) => theme.color.accent};
+    color: ${({ theme }) => theme.color.accentStrong};
     font-weight: ${({ theme }) => theme.weight.semibold};
     text-decoration: none;
     padding: 0.75rem 0.5rem;
 
     &:hover {
-      color: ${({ theme }) => theme.color.accentStrong};
+      color: ${({ theme }) => theme.color.ink};
     }
 
     &:focus-visible {
@@ -149,7 +149,7 @@ export const ServiceProcessList = styled.ol`
 
   span {
     font-family: ${({ theme }) => theme.font.mono};
-    color: ${({ theme }) => theme.color.accent};
+    color: ${({ theme }) => theme.color.accentStrong};
     font-size: ${({ theme }) => theme.text.small};
     font-weight: ${({ theme }) => theme.weight.medium};
     letter-spacing: 0.06em;

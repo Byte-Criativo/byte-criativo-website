@@ -189,13 +189,13 @@ export const TagList = styled.ul`
 
 export const CardLink = styled(Link)`
   width: fit-content;
-  color: ${({ theme }) => theme.color.accent};
+  color: ${({ theme }) => theme.color.accentStrong};
   font-size: ${({ theme }) => theme.text.small};
   font-weight: ${({ theme }) => theme.weight.semibold};
   text-decoration: none;
 
   &:hover {
-    color: ${({ theme }) => theme.color.accentStrong};
+    color: ${({ theme }) => theme.color.ink};
   }
 
   &:focus-visible {

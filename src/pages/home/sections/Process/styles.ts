@@ -37,7 +37,7 @@ export const ProcessStep = styled.article`
 
   span {
     font-family: ${({ theme }) => theme.font.mono};
-    color: ${({ theme }) => theme.color.accent};
+    color: ${({ theme }) => theme.color.accentStrong};
     font-size: ${({ theme }) => theme.text.small};
     font-weight: ${({ theme }) => theme.weight.medium};
     letter-spacing: 0.06em;
