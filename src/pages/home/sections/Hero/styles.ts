@@ -1,99 +1,61 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
 export const HeroContainer = styled.section`
-  width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 2.25rem;
+  align-items: center;
+  gap: ${({ theme }) => theme.space.lg};
+  padding: ${({ theme }) => theme.space.x4} 0 ${({ theme }) => theme.space.x3};
+  text-align: center;
 
   > p {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-      font-size: ${theme.FONT_SIZE.LG};
-    `}
+    max-width: 44rem;
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
+    line-height: 1.6;
+  }
+`
 
-    text-align: center;
-    line-height: 1.7;
-    margin: 0 6rem 0.5rem;
+export const HeroBackdrop = styled.div`
+  position: absolute;
+  top: 50%;
+  right: -2rem;
+  transform: translateY(-55%);
+  z-index: -1;
+  font-family: ${({ theme }) => theme.font.display};
+  font-weight: ${({ theme }) => theme.weight.bold};
+  font-size: clamp(18rem, 34vw, 30rem);
+  line-height: 1;
+  color: ${({ theme }) => theme.color.surface2};
+  user-select: none;
+  pointer-events: none;
 
-    /* web small screen */
-    @media (max-width: 1027px) {
-      margin: 0 5.5rem 0.5rem;
-    }
-
-    /* mobile screen */
-    @media (max-width: 450px) {
-      margin: 0 1.75rem 0.5rem;
-    }
+  @media (max-width: ${({ theme }) => theme.bp.md}) {
+    display: none;
   }
 `
 
 export const HeroEyebrow = styled.span`
-  align-self: center;
-  width: fit-content;
-  padding: 0.5rem 0.8rem;
-  border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  border-radius: 999px;
-  background: ${({ theme }) => theme.COLORS.BLUE_SOFT};
-
-  ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_700};
-    font-size: ${theme.FONT_SIZE.SM};
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
-  `}
+  font-family: ${({ theme }) => theme.font.mono};
+  font-size: ${({ theme }) => theme.text.caption};
+  font-weight: ${({ theme }) => theme.weight.medium};
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.color.muted};
 `
 
-export const HeroHeading = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1.87rem;
+export const HeroHeading = styled.h1`
+  max-width: 56rem;
+  font-family: ${({ theme }) => theme.font.display};
+  font-size: ${({ theme }) => theme.text.display};
+  font-weight: ${({ theme }) => theme.weight.bold};
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: ${({ theme }) => theme.color.ink};
 
-  > img {
-    opacity: 0.78;
-    filter: drop-shadow(0 18px 34px rgba(246, 86, 6, 0.18));
-  }
-
-  > h1 {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.HEADING};
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
-    `}
-
-    text-align: center;
-    line-height: 1.08;
-
-    span {
-      color: transparent;
-      background: linear-gradient(
-        90deg,
-        ${({ theme }) => theme.COLORS.ORANGE} 0%,
-        ${({ theme }) => theme.COLORS.BLUE} 100%
-      );
-      background-clip: text;
-      -webkit-background-clip: text;
-    }
-  }
-
-  /* mobile screen */
-  @media (max-width: 770px) {
-    gap: 0.25rem;
-
-    img {
-      width: 2.5rem;
-    }
-
-    > h1 {
-      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
-    }
-  }
-
-  /* opção para hero - fonte quebrando */
-  @media (max-width: 398px) {
-    img {
-      display: none;
-    }
+  > span {
+    color: ${({ theme }) => theme.color.accent};
   }
 `
 
@@ -101,23 +63,7 @@ export const HeroActions = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: ${({ theme }) => theme.space.md};
   flex-wrap: wrap;
-
-  > a:last-child {
-    color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
-    text-decoration: none;
-    padding: 0.75rem 0.5rem;
-
-    &:hover {
-      color: ${({ theme }) => theme.COLORS.BLUE};
-    }
-
-    &:focus-visible {
-      outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
-      outline-offset: 4px;
-      border-radius: 4px;
-    }
-  }
+  margin-top: ${({ theme }) => theme.space.xs};
 `

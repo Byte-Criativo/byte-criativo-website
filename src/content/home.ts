@@ -62,14 +62,13 @@ export const footerNavigationItems = [
 ] as const
 
 export const heroContent = {
-  eyebrow: "Software house para projetos sob medida",
-  heading: "Sites, sistemas e produtos digitais para empresas que querem",
-  highlight: " vender mais e operar melhor",
+  eyebrow: "software house · design e engenharia",
+  heading: "Sites e sistemas sob medida para vender mais e operar melhor",
   description:
-    "Unimos estratégia, UI/UX, desenvolvimento e copy para transformar ideias em experiências digitais rápidas, claras e prontas para crescer junto com o negócio.",
-  ctaLabel: "Agendar diagnóstico gratuito",
-  secondaryCtaLabel: "Ver serviços",
-  secondaryCtaHref: `/#${sectionIds.services}`,
+    "A Byte Criativo planeja, desenha e desenvolve o projeto inteiro com o mesmo time. Você conversa direto com quem decide e escreve o código.",
+  ctaLabel: "Falar sobre meu projeto",
+  secondaryCtaLabel: "Ver projetos",
+  secondaryCtaHref: "/portfolio",
 } as const
 
 export const highlightCards = [
