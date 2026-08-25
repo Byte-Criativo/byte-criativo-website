@@ -1,5 +1,5 @@
 import { CONTACT_EMAIL, WHATSAPP_DISPLAY } from "@/src/lib/contact"
-import CaseUndergroundPB from "@/src/assets/case-undergroundpb.png"
+import CaseUndergroundPB from "@/src/assets/case-undergroundpb-screenshot.png"
 import type { StaticImageData } from "next/image"
 
 export type MarketingCard = {

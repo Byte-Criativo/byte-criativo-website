@@ -93,7 +93,7 @@ export const highlightCards = [
 ] as const
 
 export const featuredCase = {
-  eyebrow: "Case autoral",
+  eyebrow: "prova de trabalho",
   title: "Underground PB",
   imageAlt: "Preview do site Underground PB",
   tags: ["Plataforma cultural", "Agenda & bandas", "PWA"],

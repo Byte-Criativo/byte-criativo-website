@@ -6,23 +6,25 @@ import {
   CaseContent,
   CaseDescription,
   CaseHighlights,
+  CaseImage,
   CasesContainer,
   CaseTags,
 } from "./styles"
 
-import CaseUndergroundPB from "@/src/assets/case-undergroundpb.png"
+import CaseUndergroundPB from "@/src/assets/case-undergroundpb-screenshot.png"
 import { ArrowUpRight } from "@phosphor-icons/react"
 
 export function CasesSection() {
   return (
     <CasesContainer id={sectionIds.cases}>
-      <Image
-        src={CaseUndergroundPB}
-        alt={featuredCase.imageAlt}
-        width={590}
-        height={310}
-        style={{ maxWidth: "100%", height: "auto" }}
-      />
+      <CaseImage>
+        <Image
+          src={CaseUndergroundPB}
+          alt={featuredCase.imageAlt}
+          fill
+          sizes="(max-width: 1024px) 100vw, 55vw"
+        />
+      </CaseImage>
       <CaseContent>
         <SectionTitle
           span={featuredCase.eyebrow}
