@@ -41,6 +41,12 @@ export const Question = styled.button<{ $isOpen: boolean }>`
   &:hover p {
     color: ${({ theme }) => theme.color.accentStrong};
   }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.color.accentStrong};
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
 `
 
 export const AnswerWrapper = styled.div<{ $isOpen: boolean }>`

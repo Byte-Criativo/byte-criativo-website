@@ -228,7 +228,7 @@ export default function ServicePage({
                 >
                   Falar sobre este serviço
                 </Button>
-                <Link href="/#services">Ver todos os serviços</Link>
+                <Link href="/servicos">Ver todos os serviços</Link>
               </ServiceHeroActions>
             </ServiceIntro>
           </ServiceHero>

@@ -47,7 +47,7 @@ export const FooterMain = styled.div`
   padding-bottom: 3rem;
 
   /* mobile screen */
-  @media (max-width: 990px) {
+  @media (max-width: ${HOME_BP.tablet}) {
     flex-direction: column;
     gap: 2rem;
   }
