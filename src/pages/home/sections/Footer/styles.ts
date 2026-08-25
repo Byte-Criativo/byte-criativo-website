@@ -1,7 +1,7 @@
 import Link from "next/link"
 import styled, { css } from "styled-components"
 import { Link as ContactLink } from "@/src/components/Link"
-import { HOME_BP } from "@/src/pages/home/styles"
+import { HOME_BP, HOME_PADDING_BOTTOM } from "@/src/pages/home/styles"
 
 export const FooterContainer = styled.footer`
   width: 100%;
@@ -9,17 +9,18 @@ export const FooterContainer = styled.footer`
 
   /*
    * HomeContent (src/pages/home/styles.ts) fecha com padding-bottom de
-   * 5.5rem/3.75rem — sem cancelar essa faixa aqui, o fundo claro da página
-   * apareceria entre a banda do CTA e o Footer. A margem negativa reproduz
-   * o mesmo valor para que os dois fundos escuros fiquem contínuos.
+   * HOME_PADDING_BOTTOM — sem cancelar essa faixa aqui, o fundo claro da
+   * página apareceria entre a banda do CTA e o Footer. A margem negativa
+   * importa a mesma constante (fonte única de verdade) para que os dois
+   * fundos escuros fiquem contínuos mesmo que o valor mude no futuro.
    */
-  margin-top: -5.5rem;
+  margin-top: -${HOME_PADDING_BOTTOM.base};
 
   border-top: 1px solid ${({ theme }) => theme.color.dark.border};
   background: ${({ theme }) => theme.color.dark.bg};
 
   @media (max-width: ${HOME_BP.tablet}) {
-    margin-top: -3.75rem;
+    margin-top: -${HOME_PADDING_BOTTOM.mobile};
   }
 
   @media (max-width: 855px) {

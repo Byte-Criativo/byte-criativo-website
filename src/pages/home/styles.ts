@@ -12,6 +12,18 @@ export const HOME_PADDING_X = {
   mobile: "1rem",
 } as const
 
+/**
+ * Padding-bottom de HomeContent (mesmo valor nos breakpoints tablet e
+ * mobile — só muda uma vez, em HOME_BP.tablet). Fonte única de verdade
+ * consumida também pelo Footer (src/pages/home/sections/Footer/styles.ts),
+ * que precisa cancelar exatamente essa faixa com uma margem negativa para
+ * ficar contínuo com a banda escura do CTA, sem costura visível.
+ */
+export const HOME_PADDING_BOTTOM = {
+  base: "5.5rem",
+  mobile: "3.75rem",
+} as const
+
 export const HOME_BP = {
   tablet: "1027px",
   mobile: "450px",
@@ -25,16 +37,16 @@ export const HomeContainer = styled.div`
   background-repeat: no-repeat;
 `
 export const HomeContent = styled.main`
-  padding: 13.5rem ${HOME_PADDING_X.base} 5.5rem;
+  padding: 13.5rem ${HOME_PADDING_X.base} ${HOME_PADDING_BOTTOM.base};
 
   /* web small screen */
   @media (max-width: ${HOME_BP.tablet}) {
-    padding: 12.5rem ${HOME_PADDING_X.tablet} 3.75rem;
+    padding: 12.5rem ${HOME_PADDING_X.tablet} ${HOME_PADDING_BOTTOM.mobile};
   }
 
   /* mobile screen */
   @media (max-width: ${HOME_BP.mobile}) {
-    padding: 7.75rem ${HOME_PADDING_X.mobile} 3.75rem;
+    padding: 7.75rem ${HOME_PADDING_X.mobile} ${HOME_PADDING_BOTTOM.mobile};
   }
 `
 export const HeroSection = styled.section`
