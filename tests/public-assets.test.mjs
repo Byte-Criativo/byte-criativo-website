@@ -25,7 +25,7 @@ test("sitemap.xml lista a URL canonica da home", () => {
   assert.match(sitemap, /<priority>1\.0<\/priority>/)
 })
 
-test("sitemap.xml contem exatamente as 12 URLs finais do site", () => {
+test("sitemap.xml contem exatamente as 13 URLs finais do site", () => {
   const sitemap = readFileSync("public/sitemap.xml", "utf8")
 
   const expectedLocs = [
@@ -41,6 +41,7 @@ test("sitemap.xml contem exatamente as 12 URLs finais do site", () => {
     "https://www.bcriativo.com/servicos/design-de-produto",
     "https://www.bcriativo.com/servicos/copywriting-para-web",
     "https://www.bcriativo.com/servicos/automacao-e-integracoes",
+    "https://www.bcriativo.com/pomodoro/privacidade",
   ]
 
   const actualLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
@@ -50,7 +51,7 @@ test("sitemap.xml contem exatamente as 12 URLs finais do site", () => {
   assert.deepEqual(
     actualLocs.sort(),
     [...expectedLocs].sort(),
-    "sitemap deve conter exatamente as 12 URLs finais, nem mais nem menos",
+    "sitemap deve conter exatamente as 13 URLs finais, nem mais nem menos",
   )
 
   for (const loc of expectedLocs) {
