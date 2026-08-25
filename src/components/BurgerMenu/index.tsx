@@ -2,10 +2,10 @@ import { List, X } from "@phosphor-icons/react"
 import * as Dialog from "@radix-ui/react-dialog"
 import {
   BurgerMenuContainer,
-  ContactButton,
   DialogBody,
   DialogClose,
   DialogContent,
+  DialogFooter,
   DialogTrigger,
   HiddenDescription,
   HiddenTitle,
@@ -15,7 +15,7 @@ import {
 import { useState } from "react"
 import { WHATSAPP_URL } from "@/src/lib/contact"
 import { navigationItems } from "@/src/content/home"
-import { getSafeRel } from "@/src/lib/link-security"
+import { Button } from "../Button"
 import { trackWhatsAppClick } from "@/src/lib/analytics"
 
 export function BurgerMenu() {
@@ -59,14 +59,15 @@ export function BurgerMenu() {
                   </MenuItem>
                 ))}
               </Menu>
-              <ContactButton
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel={getSafeRel("_blank")}
-                onClick={() => trackWhatsAppClick("menu")}
-              >
-                Agendar diagnóstico
-              </ContactButton>
+              <DialogFooter>
+                <Button
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  onClick={() => trackWhatsAppClick("menu")}
+                >
+                  Falar sobre um projeto
+                </Button>
+              </DialogFooter>
             </DialogBody>
           </DialogContent>
         </Dialog.Portal>

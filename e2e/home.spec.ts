@@ -41,7 +41,7 @@ test.describe("Home", () => {
     await page.goto("/")
     const cta = page
       .locator("header")
-      .getByRole("link", { name: /Agendar diagnóstico/ })
+      .getByRole("link", { name: /Falar sobre um projeto/ })
     await expect(cta).toHaveAttribute("target", "_blank")
     await expect(cta).toHaveAttribute("rel", /noopener/)
     await expect(cta).toHaveAttribute("rel", /noreferrer/)

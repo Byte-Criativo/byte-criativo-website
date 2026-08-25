@@ -47,7 +47,7 @@ export function Header() {
           target="_blank"
           onClick={() => trackWhatsAppClick("header")}
         >
-          Agendar diagnóstico
+          Falar sobre um projeto
         </Button>
         <BurgerMenu />
       </HeaderActions>

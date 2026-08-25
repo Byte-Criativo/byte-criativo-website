@@ -27,7 +27,6 @@ export const HiddenDescription = styled(Dialog.Description)`
 `
 
 export const DialogContent = styled(Dialog.Content)`
-  background-color: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
   width: 100vw;
 
   position: absolute;
@@ -39,9 +38,16 @@ export const DialogContent = styled(Dialog.Content)`
   flex-direction: column;
   gap: 2.5rem;
 
-  box-shadow: 0px 4px 20px 10px rgba(227, 227, 227, 0.2);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: ${({ theme }) => theme.glass.fallbackBg};
+  box-shadow:
+    ${({ theme }) => theme.glass.shadow},
+    ${({ theme }) => theme.glass.highlight};
+
+  @supports (backdrop-filter: blur(1px)) {
+    background: ${({ theme }) => theme.glass.bg};
+    backdrop-filter: blur(${({ theme }) => theme.glass.blur});
+    -webkit-backdrop-filter: blur(${({ theme }) => theme.glass.blur});
+  }
 
   &[data-state="open"] {
     animation: slideDown 0.4s ease-in;
@@ -82,11 +88,11 @@ export const DialogBody = styled.div`
 
 export const DialogTrigger = styled(Dialog.Trigger)`
   all: unset;
-  color: ${({ theme }) => theme.COLORS.ORANGE};
+  color: ${({ theme }) => theme.color.accent};
   cursor: pointer;
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accentStrong};
     outline-offset: 4px;
     border-radius: 8px;
   }
@@ -94,13 +100,13 @@ export const DialogTrigger = styled(Dialog.Trigger)`
 
 export const DialogClose = styled(Dialog.Close)`
   all: unset;
-  color: ${({ theme }) => theme.COLORS.ORANGE};
+  color: ${({ theme }) => theme.color.accent};
   align-self: flex-end;
   padding: 3rem 2rem 0 0;
   cursor: pointer;
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accentStrong};
     outline-offset: 4px;
     border-radius: 8px;
   }
@@ -111,18 +117,21 @@ export const MenuItem = styled("a")`
   text-transform: uppercase;
 
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_700};
-    font-size: ${theme.FONT_SIZE.SECTION_HEADING};
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
+    color: ${theme.color.ink};
+    font-family: ${theme.font.display};
+    font-size: ${theme.text.h3};
+    font-weight: ${theme.weight.bold};
   `}
 
-  transition: color 0.2s ease;
+  transition: color ${({ theme }) => theme.motion.base}
+    ${({ theme }) => theme.motion.ease};
+
   &:hover {
-    color: ${({ theme }) => theme.COLORS.ORANGE};
+    color: ${({ theme }) => theme.color.accent};
   }
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accentStrong};
     outline-offset: 4px;
     border-radius: 8px;
   }
@@ -135,34 +144,20 @@ export const Menu = styled("div")`
   gap: 2rem;
 `
 
-export const ContactButton = styled("a")`
+export const DialogFooter = styled.div`
   width: 100%;
   position: absolute;
-
   right: 0;
   bottom: 0;
 
   display: flex;
   justify-content: center;
 
-  background-color: ${({ theme }) => theme.COLORS.GRAY_700};
-  border-radius: 12px 12px 0 0;
-  text-decoration: none;
+  border-top: 1px solid ${({ theme }) => theme.glass.border};
+  padding: ${({ theme }) => theme.space.lg} ${({ theme }) => theme.space.xl}
+    ${({ theme }) => theme.space.x2};
 
-  padding: 3rem 0;
-
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.COLORS.WHITE};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
-  font-size: ${({ theme }) => theme.FONT_SIZE.XL};
-
-  &:hover {
-    background-color: ${({ theme }) => theme.COLORS.ORANGE};
-  }
-
-  &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.WHITE};
-    outline-offset: -6px;
-    border-radius: 12px 12px 0 0;
+  > a {
+    width: 100%;
   }
 `

@@ -1,27 +1,31 @@
 import styled, { css } from "styled-components"
 
 export const HeaderContainer = styled.header`
-  background-color: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  width: calc(100% - 5rem);
-
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  box-shadow: 0 18px 44px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
   position: fixed;
-
   top: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  padding: 1rem 2rem;
   z-index: 99;
+  width: min(72rem, calc(100% - 2rem));
+  padding: 0.875rem 1.5rem;
 
   display: grid;
   grid-template-columns: 1fr minmax(min-content, 1fr) 1fr;
   align-items: center;
   gap: 1rem;
+
+  border-radius: ${({ theme }) => theme.radius.lg};
+  border: 1px solid ${({ theme }) => theme.glass.border};
+  background: ${({ theme }) => theme.glass.fallbackBg};
+  box-shadow:
+    ${({ theme }) => theme.glass.shadow},
+    ${({ theme }) => theme.glass.highlight};
+
+  @supports (backdrop-filter: blur(1px)) {
+    background: ${({ theme }) => theme.glass.bg};
+    backdrop-filter: blur(${({ theme }) => theme.glass.blur});
+    -webkit-backdrop-filter: blur(${({ theme }) => theme.glass.blur});
+  }
 
   .logo {
     grid-column: 1;
@@ -33,24 +37,8 @@ export const HeaderContainer = styled.header`
     display: none;
   }
 
-  /* tablet screen */
-  @media (max-width: 895px) {
-    width: calc(100% - 2rem);
-  }
-
-  /* mobile screen */
-  @media (max-width: 665px) {
-    padding: 1rem;
-    width: calc(100% - 5rem);
-  }
-
-  /* mobile small screen */
-  @media (max-width: 430px) {
-    width: calc(100% - 2rem);
-  }
-
   /* swap wordmark for icon on very small screens */
-  @media (max-width: 400px) {
+  @media (max-width: ${({ theme }) => theme.bp.sm}) {
     .logo-full {
       display: none;
     }
@@ -68,7 +56,7 @@ export const NavArea = styled.ul`
 
   justify-self: center;
 
-  @media (max-width: 855px) {
+  @media (max-width: ${({ theme }) => theme.bp.lg}) {
     display: none;
   }
 `
@@ -85,7 +73,7 @@ export const HeaderActions = styled.div`
     display: none;
   }
 
-  @media (max-width: 855px) {
+  @media (max-width: ${({ theme }) => theme.bp.lg}) {
     .button {
       display: none;
     }
@@ -100,12 +88,14 @@ export const NavItem = styled.a`
   text-decoration: none;
 
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_500};
-    font-size: ${theme.FONT_SIZE.MD};
-    font-weight: ${theme.FONT_WEIGHT.REGULAR};
+    color: ${theme.color.ink};
+    font-family: ${theme.font.body};
+    font-size: ${theme.text.body};
+    font-weight: ${theme.weight.regular};
   `}
 
-  transition: color 0.2s ease;
+  transition: color ${({ theme }) => theme.motion.base}
+    ${({ theme }) => theme.motion.ease};
   position: relative;
 
   &::after {
@@ -116,14 +106,15 @@ export const NavItem = styled.a`
     left: 0;
     bottom: -0.4rem;
     border-radius: 999px;
-    background: ${({ theme }) => theme.COLORS.ORANGE};
+    background: ${({ theme }) => theme.color.accent};
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.2s ease;
+    transition: transform ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease};
   }
 
   &:hover {
-    color: ${({ theme }) => theme.COLORS.ORANGE};
+    color: ${({ theme }) => theme.color.accent};
   }
 
   &:hover::after,
@@ -132,7 +123,7 @@ export const NavItem = styled.a`
   }
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accentStrong};
     outline-offset: 6px;
     border-radius: 4px;
   }
