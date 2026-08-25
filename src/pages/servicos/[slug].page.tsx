@@ -1,5 +1,6 @@
 import { Header } from "@/src/components/Header"
 import { Button } from "@/src/components/Button"
+import { QuestionAnswer } from "@/src/components/QuestionAnswer"
 import { FooterSection } from "@/src/pages/home/sections/Footer"
 import {
   buildWhatsAppUrl,
@@ -22,6 +23,7 @@ import {
 } from "@/src/content/services"
 import Head from "next/head"
 import Link from "next/link"
+import { useState } from "react"
 import type {
   GetStaticPaths,
   GetStaticProps,
@@ -32,19 +34,17 @@ import { trackWhatsAppClick } from "@/src/lib/analytics"
 import {
   RelatedGrid,
   RelatedLink,
-  ServiceCard,
   ServiceCta,
-  ServiceGrid,
+  ServiceFaqList,
   ServiceHero,
   ServiceHeroActions,
-  ServiceHeroMedia,
   ServiceIntro,
+  ServiceList,
   ServiceMain,
   ServicePageContainer,
   ServiceProcessList,
   ServiceSection,
 } from "./styles"
-import Image from "next/image"
 
 type ServicePageProps = {
   service: ServicePage
@@ -87,8 +87,14 @@ export default function ServicePage({
   service,
   relatedServices,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const [openFaqIndex, setOpenFaqIndex] = useState<number>()
+
   if (!service) {
     return null
+  }
+
+  function handleToggleFaq(index: number) {
+    setOpenFaqIndex((current) => (current === index ? undefined : index))
   }
 
   const canonical = `${SITE_URL}/servicos/${service.slug}`
@@ -160,7 +166,7 @@ export default function ServicePage({
             "@type": "ListItem",
             position: 2,
             name: "Serviços",
-            item: `${HOME_URL}#services`,
+            item: `${SITE_URL}/servicos`,
           },
           {
             "@type": "ListItem",
@@ -225,38 +231,34 @@ export default function ServicePage({
                 <Link href="/#services">Ver todos os serviços</Link>
               </ServiceHeroActions>
             </ServiceIntro>
-            <ServiceHeroMedia aria-hidden="true">
-              <Image src="/byteSymbolLeft.svg" alt="" width={87} height={90} />
-              <Image src="/byteSymbolRight.svg" alt="" width={86} height={90} />
-            </ServiceHeroMedia>
           </ServiceHero>
 
           <ServiceSection>
             <h2>Quando faz sentido contratar</h2>
-            <ServiceGrid>
+            <ServiceList>
               {service.bestFor.map((item) => (
-                <ServiceCard key={item}>{item}</ServiceCard>
+                <li key={item}>{item}</li>
               ))}
-            </ServiceGrid>
+            </ServiceList>
           </ServiceSection>
 
           <ServiceSection>
             <h2>O que buscamos entregar</h2>
             <p>{service.promise}</p>
-            <ServiceGrid>
+            <ServiceList>
               {service.outcomes.map((outcome) => (
-                <ServiceCard key={outcome}>{outcome}</ServiceCard>
+                <li key={outcome}>{outcome}</li>
               ))}
-            </ServiceGrid>
+            </ServiceList>
           </ServiceSection>
 
           <ServiceSection>
             <h2>Entregáveis comuns</h2>
-            <ServiceGrid>
+            <ServiceList>
               {service.deliverables.map((deliverable) => (
-                <ServiceCard key={deliverable}>{deliverable}</ServiceCard>
+                <li key={deliverable}>{deliverable}</li>
               ))}
-            </ServiceGrid>
+            </ServiceList>
           </ServiceSection>
 
           <ServiceSection>
@@ -273,14 +275,17 @@ export default function ServicePage({
 
           <ServiceSection>
             <h2>Dúvidas frequentes</h2>
-            <ServiceGrid>
-              {service.faqs.map((faq) => (
-                <ServiceCard key={faq.question}>
-                  <strong>{faq.question}</strong>
-                  <small>{faq.answer}</small>
-                </ServiceCard>
+            <ServiceFaqList>
+              {service.faqs.map((faq, index) => (
+                <QuestionAnswer
+                  key={faq.question}
+                  question={faq.question}
+                  answer={faq.answer}
+                  isOpen={openFaqIndex === index}
+                  onClick={() => handleToggleFaq(index)}
+                />
               ))}
-            </ServiceGrid>
+            </ServiceFaqList>
           </ServiceSection>
 
           <ServiceCta>

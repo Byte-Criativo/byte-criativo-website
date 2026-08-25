@@ -1,158 +1,111 @@
 import Link from "next/link"
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
 export const ServicePageContainer = styled.div`
   width: 100%;
-  background-image: url("/background.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: ${({ theme }) => theme.color.bg};
 `
 
 export const ServiceMain = styled.main`
   display: grid;
-  gap: 6rem;
-  padding: 13.5rem 9rem 2rem;
+  gap: ${({ theme }) => theme.space.x4};
+  padding: 13.5rem 9rem 5.5rem;
 
   @media (max-width: 1027px) {
-    padding: 12.5rem 2rem 2rem;
+    padding: 12.5rem 2rem 4rem;
   }
 
   @media (max-width: 450px) {
-    gap: 4rem;
-    padding: 7.75rem 1rem 2rem;
+    gap: ${({ theme }) => theme.space.x3};
+    padding: 7.75rem 1rem 3.75rem;
   }
 `
 
 export const ServiceHero = styled.section`
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 3rem;
-  align-items: center;
-
-  @media (max-width: 760px) {
-    grid-template-columns: 1fr;
-  }
+  gap: ${({ theme }) => theme.space.lg};
 `
 
 export const ServiceIntro = styled.div`
   display: grid;
-  gap: 1.5rem;
-  max-width: 54rem;
+  gap: ${({ theme }) => theme.space.lg};
+  max-width: 58rem;
 
   > span {
-    width: fit-content;
-    padding: 0.5rem 0.8rem;
-    border: 1px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-    border-radius: 999px;
-    background: ${({ theme }) => theme.COLORS.BLUE_SOFT};
-
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.SM};
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
-    `}
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.text.caption};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.color.muted};
   }
 
   h1 {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.HEADING};
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
-    `}
-
+    font-family: ${({ theme }) => theme.font.display};
+    font-size: ${({ theme }) => theme.text.h1};
+    font-weight: ${({ theme }) => theme.weight.bold};
     line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: ${({ theme }) => theme.color.ink};
   }
 
   p {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-      font-size: ${theme.FONT_SIZE.LG};
-    `}
-
+    max-width: 52rem;
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.7;
-  }
-
-  @media (max-width: 770px) {
-    h1 {
-      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
-    }
   }
 `
 
 export const ServiceHeroActions = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: ${({ theme }) => theme.space.md};
   flex-wrap: wrap;
 
   > a:last-child {
-    color: ${({ theme }) => theme.COLORS.ORANGE_DARK};
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    color: ${({ theme }) => theme.color.accent};
+    font-weight: ${({ theme }) => theme.weight.semibold};
     text-decoration: none;
     padding: 0.75rem 0.5rem;
 
     &:hover {
-      color: ${({ theme }) => theme.COLORS.BLUE};
+      color: ${({ theme }) => theme.color.accentStrong};
     }
 
     &:focus-visible {
-      outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+      outline: 3px solid ${({ theme }) => theme.color.accent};
       outline-offset: 4px;
       border-radius: 4px;
     }
   }
 `
 
-export const ServiceHeroMedia = styled.div`
-  display: flex;
-  gap: 1rem;
-
-  img {
-    opacity: 0.78;
-    filter: drop-shadow(0 18px 34px rgba(246, 86, 6, 0.18));
-  }
-
-  @media (max-width: 760px) {
-    display: none;
-  }
-`
-
 export const ServiceSection = styled.section`
   display: grid;
-  gap: 1.5rem;
+  gap: ${({ theme }) => theme.space.lg};
 
   h2 {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.SECTION_HEADING};
-      font-weight: ${theme.FONT_WEIGHT.SEMI_BOLD};
-    `}
-
+    font-family: ${({ theme }) => theme.font.display};
+    font-size: ${({ theme }) => theme.text.h2};
+    font-weight: ${({ theme }) => theme.weight.semibold};
     line-height: 1.12;
+    color: ${({ theme }) => theme.color.ink};
   }
 
   > p {
-    max-width: 52rem;
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-      font-size: ${theme.FONT_SIZE.LG};
-    `}
-
+    max-width: 54rem;
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.7;
-  }
-
-  @media (max-width: 770px) {
-    h2 {
-      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
-    }
   }
 `
 
-export const ServiceGrid = styled.div`
+export const ServiceList = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: ${({ theme }) => theme.space.md} ${({ theme }) => theme.space.xl};
+  list-style: none;
 
   @media (max-width: 920px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -161,123 +114,99 @@ export const ServiceGrid = styled.div`
   @media (max-width: 620px) {
     grid-template-columns: 1fr;
   }
-`
 
-export const ServiceCard = styled.article`
-  display: grid;
-  gap: 0.75rem;
-  min-height: 8rem;
-  padding: 1.25rem;
-  border: 1.5px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  border-radius: 8px;
-  background: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  box-shadow: 0 16px 42px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_500};
-    font-size: ${theme.FONT_SIZE.MD};
-  `}
-
-  line-height: 1.65;
-
-  strong {
-    color: ${({ theme }) => theme.COLORS.GRAY_700};
-    font-size: ${({ theme }) => theme.FONT_SIZE.LG};
-    line-height: 1.35;
-  }
-
-  small {
-    color: ${({ theme }) => theme.COLORS.GRAY_500};
-    font-size: ${({ theme }) => theme.FONT_SIZE.SM};
+  li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: ${({ theme }) => theme.color.ink};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.65;
+
+    &::before {
+      content: ";";
+      position: absolute;
+      left: 0;
+      font-family: ${({ theme }) => theme.font.mono};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      color: ${({ theme }) => theme.color.accent};
+    }
   }
 `
 
 export const ServiceProcessList = styled.ol`
   display: grid;
-  gap: 1rem;
+  gap: ${({ theme }) => theme.space.md};
   list-style: none;
 
   li {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 1rem;
+    gap: ${({ theme }) => theme.space.md};
     align-items: start;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid ${({ theme }) => theme.COLORS.GRAY_300};
+    padding-bottom: ${({ theme }) => theme.space.md};
+    border-bottom: 1px solid ${({ theme }) => theme.color.border};
   }
 
   span {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.ORANGE_DARK};
-      font-size: ${theme.FONT_SIZE.SM};
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
-    `}
+    font-family: ${({ theme }) => theme.font.mono};
+    color: ${({ theme }) => theme.color.accent};
+    font-size: ${({ theme }) => theme.text.small};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    letter-spacing: 0.06em;
   }
 
   p {
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-      font-size: ${theme.FONT_SIZE.LG};
-    `}
-
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.65;
   }
+`
+
+export const ServiceFaqList = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.space.sm};
 `
 
 export const ServiceCta = styled.section`
   display: grid;
   justify-items: center;
-  gap: 1.25rem;
-  padding: 4rem 2rem;
-  border-radius: 8px;
-  border: 1.5px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  background:
-    linear-gradient(135deg, rgba(246, 86, 6, 0.12), rgba(6, 178, 246, 0.1)),
-    ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  box-shadow: 0 24px 60px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
+  gap: ${({ theme }) => theme.space.lg};
+  padding: ${({ theme }) => theme.space.x3} ${({ theme }) => theme.space.xl};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  border: 1px solid ${({ theme }) => theme.color.border};
+  background: ${({ theme }) => theme.color.accentSoft};
   text-align: center;
 
   h2 {
     max-width: 42rem;
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_700};
-      font-size: ${theme.FONT_SIZE.SECTION_HEADING};
-      font-weight: ${theme.FONT_WEIGHT.BOLD};
-    `}
-
+    font-family: ${({ theme }) => theme.font.display};
+    font-size: ${({ theme }) => theme.text.h2};
+    font-weight: ${({ theme }) => theme.weight.bold};
     line-height: 1.12;
+    color: ${({ theme }) => theme.color.ink};
   }
 
   p {
     max-width: 34rem;
-    ${({ theme }) => css`
-      color: ${theme.COLORS.GRAY_500};
-      font-size: ${theme.FONT_SIZE.LG};
-    `}
-
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.bodyLg};
     line-height: 1.7;
   }
 
   > a {
-    margin-top: 0.5rem;
+    margin-top: ${({ theme }) => theme.space.xs};
+    white-space: normal;
   }
 
   @media (max-width: 770px) {
-    padding: 3rem 1.25rem;
-
-    h2 {
-      font-size: ${({ theme }) => theme.FONT_SIZE.HEADING_MOBILE};
-    }
+    padding: ${({ theme }) => theme.space.x2} ${({ theme }) => theme.space.lg};
   }
 `
 
 export const RelatedGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: ${({ theme }) => theme.space.lg};
 
   @media (max-width: 920px) {
     grid-template-columns: 1fr;
@@ -286,37 +215,42 @@ export const RelatedGrid = styled.div`
 
 export const RelatedLink = styled(Link)`
   display: grid;
-  gap: 0.75rem;
+  gap: ${({ theme }) => theme.space.sm};
   min-height: 11rem;
-  padding: 1.25rem;
-  border-radius: 8px;
-  border: 1.5px solid ${({ theme }) => theme.COLORS.GLASS_BORDER};
-  background: ${({ theme }) => theme.COLORS.GRAY_LOW_OPACITY};
-  box-shadow: 0 16px 42px ${({ theme }) => theme.COLORS.SHADOW_SOFT};
+  padding: ${({ theme }) => theme.space.xl};
+  border-radius: ${({ theme }) => theme.radius.md};
+  border: 1px solid ${({ theme }) => theme.color.border};
+  background: ${({ theme }) => theme.color.surface};
   text-decoration: none;
   transition:
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
+    border-color ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease},
+    box-shadow ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease},
+    transform ${({ theme }) => theme.motion.base}
+      ${({ theme }) => theme.motion.ease};
 
   strong {
-    color: ${({ theme }) => theme.COLORS.GRAY_700};
-    font-size: ${({ theme }) => theme.FONT_SIZE.LG};
+    font-family: ${({ theme }) => theme.font.display};
+    color: ${({ theme }) => theme.color.ink};
+    font-size: ${({ theme }) => theme.text.h3};
+    font-weight: ${({ theme }) => theme.weight.semibold};
   }
 
   span {
-    color: ${({ theme }) => theme.COLORS.GRAY_500};
-    font-size: ${({ theme }) => theme.FONT_SIZE.SM};
+    color: ${({ theme }) => theme.color.muted};
+    font-size: ${({ theme }) => theme.text.small};
     line-height: 1.65;
   }
 
   &:hover {
-    border-color: ${({ theme }) => theme.COLORS.ORANGE};
-    transform: translateY(-3px);
+    border-color: ${({ theme }) => theme.color.accent};
+    box-shadow: ${({ theme }) => theme.shadow.lift};
+    transform: translateY(-2px);
   }
 
   &:focus-visible {
-    outline: 3px solid ${({ theme }) => theme.COLORS.BLUE};
+    outline: 3px solid ${({ theme }) => theme.color.accent};
     outline-offset: 4px;
   }
 `
