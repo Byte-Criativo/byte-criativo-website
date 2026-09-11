@@ -97,9 +97,12 @@ export const PageSection = styled.section`
   }
 `
 
-export const CardGrid = styled.div`
+export const CardGrid = styled.div<{ $columns?: 2 | 3 }>`
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(
+    ${({ $columns = 3 }) => $columns},
+    minmax(0, 1fr)
+  );
   gap: ${({ theme }) => theme.space.lg};
 
   @media (max-width: 980px) {

@@ -11,7 +11,7 @@ import {
   CaseTags,
 } from "./styles"
 
-import CaseUndergroundPB from "@/src/assets/case-undergroundpb-screenshot.png"
+import CaseUndergroundPB from "@/src/assets/case-undergroundpb-screenshot.webp"
 import { ArrowUpRight } from "@phosphor-icons/react"
 
 export function CasesSection() {

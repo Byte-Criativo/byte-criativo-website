@@ -65,14 +65,15 @@ export const heroContent = {
 export const featuredCase = {
   eyebrow: "prova de trabalho",
   title: "Underground PB",
-  imageAlt: "Preview do site Underground PB",
-  tags: ["Plataforma cultural", "Agenda & bandas", "PWA"],
+  imageAlt:
+    "Página inicial do Underground PB, com destaque para shows e a cena independente da Paraíba",
+  tags: ["Plataforma cultural", "Agenda & bandas", "Conteúdo editorial"],
   problem:
     "A cena alternativa paraibana precisava de um espaço próprio para reunir artistas, eventos, notícias e memória em uma experiência fácil de explorar.",
   solution:
     "Criamos uma plataforma cultural com catálogo de bandas, agenda de shows, conteúdo editorial, playlist integrada, cadastro de artistas e recursos de participação da comunidade.",
   result:
-    "O projeto saiu de uma presença dispersa para um produto digital vivo, com descoberta organizada, navegação responsiva e base técnica preparada para novas frentes editoriais.",
+    "Bandas, shows, lançamentos, palcos e histórias da cena reunidos em um mesmo espaço, com caminhos para explorar e contribuir com o acervo.",
   description:
     "Desenvolvido por nós, o Underground PB reúne a cena alternativa e independente da Paraíba em uma plataforma viva: catálogo de bandas, agenda de shows, notícias, memória da cena, playlist integrada, cadastro de artistas e contribuição para manter o projeto ativo. Um produto cultural pensado para descoberta, participação e fortalecimento da comunidade underground paraibana.",
   href: "https://www.undergroundpb.com.br/",

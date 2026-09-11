@@ -1,5 +1,6 @@
 import { CONTACT_EMAIL, WHATSAPP_DISPLAY } from "@/src/lib/contact"
-import CaseUndergroundPB from "@/src/assets/case-undergroundpb-screenshot.png"
+import CaseUndergroundPB from "@/src/assets/case-undergroundpb-screenshot.webp"
+import CaseFestivalAlumio from "@/src/assets/case-festival-alumio-screenshot.webp"
 import type { StaticImageData } from "next/image"
 
 export type MarketingCard = {
@@ -18,6 +19,7 @@ export type MarketingSection = {
   title: string
   description?: string
   cards?: MarketingCard[]
+  columns?: 2 | 3
   orderedItems?: string[]
 }
 
@@ -173,7 +175,7 @@ export const pagesContent = {
     heroTitle:
       "Projetos digitais desenvolvidos com estratégia e cuidado técnico.",
     heroDescription:
-      "Conheça trabalhos e estruturas preparadas para sites, sistemas, produtos digitais e experiências web. Novos projetos serão adicionados conforme forem publicados.",
+      "Conheça projetos desenvolvidos pela Byte Criativo para conectar pessoas, valorizar iniciativas e criar experiências digitais.",
     primaryCtaLabel: "Quero um projeto assim",
     secondaryCtaLabel: "Ver serviços",
     secondaryCtaHref: "/servicos",
@@ -181,26 +183,36 @@ export const pagesContent = {
       {
         title: "Projetos em destaque",
         description:
-          "A estrutura abaixo está preparada para receber novos cases com categoria, descrição, tecnologias, imagem, links e detalhes.",
+          "Explore os projetos e acesse os sites para conhecer cada experiência.",
+        columns: 2,
         cards: [
           {
             title: "Underground PB",
             meta: "Plataforma cultural",
             description:
-              "Produto digital para reunir bandas, eventos, notícias, agenda e memória da cena alternativa paraibana.",
+              "Plataforma cultural que reúne bandas, agenda de shows, lançamentos, notícias, palcos e memória da cena independente da Paraíba.",
             href: "https://www.undergroundpb.com.br/",
             ctaLabel: "Acessar projeto",
-            tags: ["Next.js", "PWA", "Conteúdo editorial"],
+            tags: [
+              "Plataforma cultural",
+              "Agenda de shows",
+              "Conteúdo editorial",
+            ],
             imageSrc: CaseUndergroundPB,
             imageAlt:
-              "Preview do projeto Underground PB desenvolvido pela Byte Criativo",
+              "Página inicial do Underground PB, com destaque para shows e a cena independente da Paraíba",
           },
           {
-            title: "Novos projetos em breve",
-            meta: "Portfólio em evolução",
+            title: "Festival Alumiô",
+            meta: "Site de festival",
             description:
-              "Em breve, novos projetos desenvolvidos pela Byte Criativo estarão disponíveis aqui.",
-            tags: ["Sites", "Sistemas", "Landing pages"],
+              "Site do Festival Alumiô, encontro de música e arte no Centro Histórico de João Pessoa. Reúne programação, locais do circuito, memória do festival e orientações para o público.",
+            href: "https://www.festivalalumio.com.br/",
+            ctaLabel: "Acessar projeto",
+            tags: ["Festival cultural", "Programação", "Circuito cultural"],
+            imageSrc: CaseFestivalAlumio,
+            imageAlt:
+              "Página inicial do Festival Alumiô 2026, com identidade colorida, datas e chamada Vem alumiar o Centro",
           },
         ],
       },

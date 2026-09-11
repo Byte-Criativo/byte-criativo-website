@@ -145,7 +145,7 @@ export function MarketingPage({ page }: MarketingPageProps) {
               {section.description ? <p>{section.description}</p> : null}
 
               {section.cards ? (
-                <CardGrid>
+                <CardGrid $columns={section.columns}>
                   {section.cards.map((card) => (
                     <PageCard key={card.title}>
                       {card.imageSrc && card.imageAlt ? (
@@ -154,7 +154,11 @@ export function MarketingPage({ page }: MarketingPageProps) {
                             src={card.imageSrc}
                             alt={card.imageAlt}
                             fill
-                            sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 33vw"
+                            sizes={
+                              section.columns === 2
+                                ? "(max-width: 640px) 100vw, 50vw"
+                                : "(max-width: 640px) 100vw, (max-width: 980px) 50vw, 33vw"
+                            }
                           />
                         </CardImage>
                       ) : null}
