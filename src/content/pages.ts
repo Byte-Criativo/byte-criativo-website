@@ -35,6 +35,7 @@ export type MarketingPageContent = {
   primaryCtaHref?: string
   secondaryCtaLabel?: string
   secondaryCtaHref?: string
+  whatsappMessage: string
   sections: MarketingSection[]
   finalCta: {
     title: string
@@ -58,6 +59,8 @@ export const pagesContent = {
     primaryCtaLabel: "Conversar com a Byte Criativo",
     secondaryCtaLabel: "Ver serviços",
     secondaryCtaHref: "/servicos",
+    whatsappMessage:
+      "Olá! Li sobre a Byte Criativo e quero conversar sobre um projeto.",
     sections: [
       {
         title: "Desenvolvimento com visão estratégica",
@@ -111,6 +114,8 @@ export const pagesContent = {
     primaryCtaLabel: "Solicitar orçamento",
     secondaryCtaLabel: "Ver páginas específicas",
     secondaryCtaHref: "/servicos/desenvolvimento-de-sites",
+    whatsappMessage:
+      "Olá! Vi os serviços da Byte Criativo e quero falar sobre um projeto.",
     sections: [
       {
         title: "Principais frentes de atuação",
@@ -179,6 +184,8 @@ export const pagesContent = {
     primaryCtaLabel: "Quero um projeto assim",
     secondaryCtaLabel: "Ver serviços",
     secondaryCtaHref: "/servicos",
+    whatsappMessage:
+      "Olá! Vi os trabalhos da Byte Criativo e quero falar sobre um projeto.",
     sections: [
       {
         title: "Projetos em destaque",
@@ -237,6 +244,8 @@ export const pagesContent = {
     primaryCtaLabel: "Falar pelo WhatsApp",
     secondaryCtaLabel: "Enviar e-mail",
     secondaryCtaHref: `mailto:${CONTACT_EMAIL}`,
+    whatsappMessage:
+      "Olá! Vim pela página de contato da Byte Criativo e quero falar sobre um projeto.",
     sections: [
       {
         title: "O que enviar no primeiro contato",

@@ -45,10 +45,7 @@ export function MarketingPage({ page }: MarketingPageProps) {
   const title = `${page.seoTitle} | ${SITE_NAME}`
   const whatsappUrl =
     page.primaryCtaHref ??
-    buildWhatsAppUrl(
-      WHATSAPP_NUMBER,
-      `Olá! Gostaria de conversar sobre ${page.title.toLowerCase()} com a Byte Criativo.`,
-    )
+    buildWhatsAppUrl(WHATSAPP_NUMBER, page.whatsappMessage)
 
   const jsonLd = {
     "@context": "https://schema.org",
