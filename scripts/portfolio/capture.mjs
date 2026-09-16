@@ -86,68 +86,89 @@ async function scrollToBottomInSteps(page) {
 await mkdir(outDir, { recursive: true })
 const browser = await chromium.launch({ channel: "chrome", headless: true })
 const manifest = []
+const failures = []
 
-for (const url of urls) {
-  for (const vp of viewports) {
-    const context = await browser.newContext({
-      viewport: { width: vp.width, height: vp.height },
-      deviceScaleFactor: vp.dpr,
-      isMobile: vp.isMobile,
-      hasTouch: vp.isMobile,
-      locale: "pt-BR",
-      timezoneId: "America/Fortaleza",
-      reducedMotion: "reduce",
-      colorScheme: "light",
-    })
-    const page = await context.newPage()
-    await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 })
-    await page.evaluate(() => document.fonts.ready)
-    await page.waitForTimeout(1500)
-    await dismissConsentBanner(page)
+try {
+  for (const url of urls) {
+    for (const vp of viewports) {
+      const context = await browser.newContext({
+        viewport: { width: vp.width, height: vp.height },
+        deviceScaleFactor: vp.dpr,
+        isMobile: vp.isMobile,
+        hasTouch: vp.isMobile,
+        locale: "pt-BR",
+        timezoneId: "America/Fortaleza",
+        reducedMotion: "reduce",
+        colorScheme: "light",
+      })
+      try {
+        const page = await context.newPage()
+        await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 })
+        await page.evaluate(() => document.fonts.ready)
+        await page.waitForTimeout(1500)
+        await dismissConsentBanner(page)
 
-    const pagePath = new URL(url).pathname.replace(/\/$/, "") || "/home"
-    const base = pagePath.slice(1).replace(/\//g, "_")
+        const pagePath = new URL(url).pathname.replace(/\/$/, "") || "/home"
+        const base = pagePath.slice(1).replace(/\//g, "_")
 
-    const file = `${base}-${vp.name}.png`
-    await page.screenshot({ path: path.join(outDir, file) })
-    manifest.push({
-      file,
-      url,
-      viewport: `${vp.width}x${vp.height}`,
-      dpr: vp.dpr,
-      theme: "light",
-      capturedAt: new Date().toISOString(),
-      fullPage: false,
-    })
+        const file = `${base}-${vp.name}.png`
+        await page.screenshot({ path: path.join(outDir, file) })
+        manifest.push({
+          file,
+          url,
+          viewport: `${vp.width}x${vp.height}`,
+          dpr: vp.dpr,
+          theme: "light",
+          capturedAt: new Date().toISOString(),
+          fullPage: false,
+        })
 
-    await scrollToBottomInSteps(page)
-    const fullFile = `${base}-${vp.name}-full.png`
-    // scale: "css" mantém a captura em pixels CSS (não multiplicados pelo
-    // dpr). Sem isso, páginas altas em viewport mobile (dpr 3) passam do
-    // limite de textura do Chromium (~16384px) e o PNG sai com blocos de
-    // conteúdo corrompidos/repetidos.
-    await page.screenshot({
-      path: path.join(outDir, fullFile),
-      fullPage: true,
-      scale: "css",
-    })
-    manifest.push({
-      file: fullFile,
-      url,
-      viewport: `${vp.width}x${vp.height}`,
-      dpr: vp.dpr,
-      theme: "light",
-      capturedAt: new Date().toISOString(),
-      fullPage: true,
-    })
-
-    await context.close()
+        await scrollToBottomInSteps(page)
+        const fullFile = `${base}-${vp.name}-full.png`
+        // scale: "css" mantém a captura em pixels CSS (não multiplicados pelo
+        // dpr). Sem isso, páginas altas em viewport mobile (dpr 3) passam do
+        // limite de textura do Chromium (~16384px) e o PNG sai com blocos de
+        // conteúdo corrompidos/repetidos. Como o arquivo sai em 1 px por
+        // px CSS, a densidade real dessa captura é sempre 1x.
+        await page.screenshot({
+          path: path.join(outDir, fullFile),
+          fullPage: true,
+          scale: "css",
+        })
+        manifest.push({
+          file: fullFile,
+          url,
+          viewport: `${vp.width}x${vp.height}`,
+          dpr: 1,
+          theme: "light",
+          capturedAt: new Date().toISOString(),
+          fullPage: true,
+        })
+      } catch (error) {
+        failures.push({
+          url,
+          viewport: `${vp.width}x${vp.height}`,
+          error: error.message,
+        })
+      } finally {
+        await context.close()
+      }
+    }
   }
+} finally {
+  await browser.close()
 }
 
-await browser.close()
 await writeFile(
   path.join(outDir, "manifest.json"),
   JSON.stringify(manifest, null, 2),
 )
 console.log(`${manifest.length} capturas em ${outDir}`)
+
+if (failures.length > 0) {
+  console.error(`${failures.length} falha(s) de captura:`)
+  for (const failure of failures) {
+    console.error(`  ${failure.url} (${failure.viewport}): ${failure.error}`)
+  }
+  process.exit(1)
+}
