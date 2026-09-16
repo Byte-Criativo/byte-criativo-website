@@ -19,13 +19,13 @@ Hoje não há nenhuma tag de analytics/ads instalada.
 
 Pontos de contato de WhatsApp (todos usam `WHATSAPP_URL` de `src/lib/contact.ts`):
 
-| # | Local | Componente atual | `location` |
-|---|-------|------------------|------------|
-| 1 | Hero | `Button` (`src/pages/home/sections/Hero/index.tsx`) | `hero` |
-| 2 | Header | `Button` (`src/components/Header/index.tsx`) | `header` |
-| 3 | Seção CTA | `Button` (`src/pages/home/sections/CTA/index.tsx`) | `cta` |
-| 4 | Menu mobile | `ContactButton` (`src/components/BurgerMenu/index.tsx`) | `menu` |
-| 5 | Footer | `Link` de ícone (`src/pages/home/sections/Footer/index.tsx`) | `footer` |
+| #   | Local       | Componente atual                                             | `location` |
+| --- | ----------- | ------------------------------------------------------------ | ---------- |
+| 1   | Hero        | `Button` (`src/pages/home/sections/Hero/index.tsx`)          | `hero`     |
+| 2   | Header      | `Button` (`src/components/Header/index.tsx`)                 | `header`   |
+| 3   | Seção CTA   | `Button` (`src/pages/home/sections/CTA/index.tsx`)           | `cta`      |
+| 4   | Menu mobile | `ContactButton` (`src/components/BurgerMenu/index.tsx`)      | `menu`     |
+| 5   | Footer      | `Link` de ícone (`src/pages/home/sections/Footer/index.tsx`) | `footer`   |
 
 E-mail no Footer é um botão de **copiar para a área de transferência** (não é
 `mailto:`), telefone não é renderizado em lugar nenhum, e Instagram/LinkedIn são
@@ -84,7 +84,7 @@ links de engajamento. Nada disso será rastreado nesta iteração (ver "Fora de 
 
 ### Arquivos modificados
 
-- **`src/pages/_document.page.tsx`** — script inline de *consent default* no
+- **`src/pages/_document.page.tsx`** — script inline de _consent default_ no
   `<Head>`, renderizado só quando `NEXT_PUBLIC_GTM_ID` existir. Ver "Ordem de
   carregamento".
 - **`src/pages/_app.page.tsx`** — carrega `<GoogleTagManager gtmId={…} />` de

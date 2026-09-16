@@ -4,7 +4,7 @@
 
 **Objetivo:** Medir cliques no WhatsApp como conversão do Google Ads, carregando o Google Tag Manager com Consent Mode v2 (LGPD) e um banner de consentimento próprio, sem colocar nenhum ID do Google Ads no repositório.
 
-**Arquitetura:** O código do site só empurra um evento limpo (`whatsapp_click`) para o `window.dataLayer`; o mapeamento para a tag de conversão do Google Ads é feito na interface do GTM. Uma variável `NEXT_PUBLIC_GTM_ID` liga/desliga todo o carregamento de tags e do banner — sem ela, o site se comporta exatamente como hoje. Um script inline de *consent default* roda antes do GTM para garantir a ordem correta do consentimento.
+**Arquitetura:** O código do site só empurra um evento limpo (`whatsapp_click`) para o `window.dataLayer`; o mapeamento para a tag de conversão do Google Ads é feito na interface do GTM. Uma variável `NEXT_PUBLIC_GTM_ID` liga/desliga todo o carregamento de tags e do banner — sem ela, o site se comporta exatamente como hoje. Um script inline de _consent default_ roda antes do GTM para garantir a ordem correta do consentimento.
 
 **Tech Stack:** Next.js 16 (Pages Router), TypeScript, styled-components, `@next/third-parties/google` (GTM), Vitest + Testing Library, node:test, Playwright.
 
@@ -25,6 +25,7 @@
 ## Estrutura de arquivos
 
 **Criar:**
+
 - `src/lib/analytics.ts` — `pushToDataLayer`, `trackWhatsAppClick`, tipo `WhatsAppLocation`, augmentation de `window.dataLayer`.
 - `src/lib/analytics.test.ts`
 - `src/lib/consent.ts` — cookie de consentimento + `applyConsent` + `consentDefaultScript`.
@@ -38,6 +39,7 @@
 - `.env.example`
 
 **Modificar:**
+
 - `next.config.mjs` — ampliar CSP para GTM/Google Ads.
 - `tests/security.test.mjs` — travar os domínios do GTM na CSP.
 - `src/pages/_document.page.tsx` — script inline de consent default.
@@ -53,10 +55,12 @@
 ## Task 1: Camada de analytics (`dataLayer` + evento de WhatsApp)
 
 **Files:**
+
 - Create: `src/lib/analytics.ts`
 - Test: `src/lib/analytics.test.ts`
 
 **Interfaces:**
+
 - Consumes: nada.
 - Produces:
   - `type WhatsAppLocation = "hero" | "header" | "cta" | "menu" | "footer"`
@@ -141,10 +145,12 @@ git commit -m "feat: adiciona camada de analytics para eventos do dataLayer"
 ## Task 2: Estado de consentimento (cookie + Consent Mode v2)
 
 **Files:**
+
 - Create: `src/lib/consent.ts`
 - Test: `src/lib/consent.test.ts`
 
 **Interfaces:**
+
 - Consumes: augmentation `Window.dataLayer` (Task 1).
 - Produces:
   - `type ConsentValue = "granted" | "denied"`
@@ -309,10 +315,12 @@ git commit -m "feat: adiciona estado de consentimento com Consent Mode v2"
 ## Task 3: Componente `WhatsAppButton`
 
 **Files:**
+
 - Create: `src/components/WhatsAppButton/index.tsx`
 - Test: `src/components/WhatsAppButton/WhatsAppButton.test.tsx`
 
 **Interfaces:**
+
 - Consumes: `trackWhatsAppClick`, `WhatsAppLocation` (Task 1); `Button` (`@/src/components/Button`); `WHATSAPP_URL` (`@/src/lib/contact`).
 - Produces: `WhatsAppButton({ location, children, href?, ...props })` — renderiza o `Button` com `href={WHATSAPP_URL}` (default), `target="_blank"` e `onClick` de tracking.
 
@@ -334,14 +342,18 @@ describe("WhatsAppButton", () => {
   })
 
   it("renderiza âncora do WhatsApp em nova aba", () => {
-    renderWithTheme(<WhatsAppButton location="hero">Fale conosco</WhatsAppButton>)
+    renderWithTheme(
+      <WhatsAppButton location="hero">Fale conosco</WhatsAppButton>,
+    )
     const link = screen.getByRole("link", { name: "Fale conosco" })
     expect(link).toHaveAttribute("href", WHATSAPP_URL)
     expect(link).toHaveAttribute("target", "_blank")
   })
 
   it("empurra whatsapp_click com o location ao clicar", async () => {
-    renderWithTheme(<WhatsAppButton location="cta">Fale conosco</WhatsAppButton>)
+    renderWithTheme(
+      <WhatsAppButton location="cta">Fale conosco</WhatsAppButton>,
+    )
     await userEvent.click(screen.getByRole("link", { name: "Fale conosco" }))
     expect(window.dataLayer).toContainEqual({
       event: "whatsapp_click",
@@ -410,12 +422,14 @@ git commit -m "feat: adiciona WhatsAppButton com rastreamento de conversão"
 ## Task 4: Banner de consentimento (`CookieConsent`)
 
 **Files:**
+
 - Create: `src/content/consent.ts`
 - Create: `src/components/CookieConsent/index.tsx`
 - Create: `src/components/CookieConsent/styles.ts`
 - Test: `src/components/CookieConsent/CookieConsent.test.tsx`
 
 **Interfaces:**
+
 - Consumes: `readStoredConsent`, `writeStoredConsent`, `applyConsent`, `CONSENT_COOKIE` (Task 2).
 - Produces: `CookieConsent()` — banner client-side que aparece só quando não há escolha salva.
 
@@ -454,7 +468,9 @@ describe("CookieConsent", () => {
 
   it("Aceitar persiste granted, concede consentimento e some", async () => {
     renderWithTheme(<CookieConsent />)
-    await userEvent.click(await screen.findByRole("button", { name: "Aceitar" }))
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Aceitar" }),
+    )
     expect(document.cookie).toContain(`${CONSENT_COOKIE}=granted`)
     const last = window.dataLayer!.at(-1) as IArguments
     expect(last[0]).toBe("consent")
@@ -466,7 +482,9 @@ describe("CookieConsent", () => {
 
   it("Recusar persiste denied e some", async () => {
     renderWithTheme(<CookieConsent />)
-    await userEvent.click(await screen.findByRole("button", { name: "Recusar" }))
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Recusar" }),
+    )
     expect(document.cookie).toContain(`${CONSENT_COOKIE}=denied`)
     expect(
       screen.queryByRole("region", { name: "Aviso de cookies" }),
@@ -662,10 +680,12 @@ git commit -m "feat: adiciona banner de consentimento de cookies"
 ## Task 5: Ampliar a CSP para GTM/Google Ads
 
 **Files:**
+
 - Modify: `next.config.mjs` (bloco `contentSecurityPolicy`)
 - Modify: `tests/security.test.mjs` (adicionar asserções)
 
 **Interfaces:**
+
 - Consumes: nada.
 - Produces: CSP que permite `www.googletagmanager.com`, `www.googleadservices.com`, `www.google.com`, `googleads.g.doubleclick.net`, `td.doubleclick.net`.
 
@@ -697,30 +717,34 @@ const contentSecurityPolicy = `
 Em `tests/security.test.mjs`, dentro do teste `"configura headers de seguranca para todas as rotas"`, logo após a asserção de `upgrade-insecure-requests`, adicionar:
 
 ```js
-  assert.match(
-    headers["Content-Security-Policy"],
-    /script-src[^;]*www\.googletagmanager\.com/,
-  )
-  assert.match(
-    headers["Content-Security-Policy"],
-    /connect-src[^;]*www\.googletagmanager\.com/,
-  )
+assert.match(
+  headers["Content-Security-Policy"],
+  /script-src[^;]*www\.googletagmanager\.com/,
+)
+assert.match(
+  headers["Content-Security-Policy"],
+  /connect-src[^;]*www\.googletagmanager\.com/,
+)
 ```
 
 - [ ] **Step 3: Verificar a CSP diretamente (sem build)**
 
 Run:
+
 ```bash
 node -e "import('./next.config.mjs').then(async (m) => { const h = (await m.default.headers())[0].headers.find(x => x.key === 'Content-Security-Policy').value; if (!/script-src[^;]*googletagmanager/.test(h) || !/connect-src[^;]*googletagmanager/.test(h)) { throw new Error('CSP sem GTM'); } console.log('CSP OK'); })"
 ```
+
 Expected: imprime `CSP OK`.
 
 - [ ] **Step 4: Confirmar que as diretivas travadas continuam presentes**
 
 Run:
+
 ```bash
 node -e "import('./next.config.mjs').then(async (m) => { const h = (await m.default.headers())[0].headers.find(x => x.key === 'Content-Security-Policy').value; for (const d of [\"default-src 'self'\", \"object-src 'none'\", \"frame-ancestors 'none'\", 'upgrade-insecure-requests']) { if (!h.includes(d)) throw new Error('faltou ' + d); } console.log('diretivas OK'); })"
 ```
+
 Expected: imprime `diretivas OK`. (As asserções de `security.test.mjs` só rodam de verdade na Task 9, após o build.)
 
 - [ ] **Step 5: Commit**
@@ -735,11 +759,13 @@ git commit -m "feat: amplia CSP para permitir GTM e Google Ads"
 ## Task 6: Carregar GTM + consent default no `_app` e `_document`
 
 **Files:**
+
 - Modify: `src/pages/_document.page.tsx`
 - Modify: `src/pages/_app.page.tsx`
 - Modify: `package.json` (via `npm install`)
 
 **Interfaces:**
+
 - Consumes: `consentDefaultScript` (Task 2); `CookieConsent` (Task 4); `GoogleTagManager` (`@next/third-parties/google`).
 - Produces: carregamento condicional (só com `NEXT_PUBLIC_GTM_ID`) do script de consent default, do container GTM e do banner.
 
@@ -759,12 +785,14 @@ import { consentDefaultScript } from "../lib/consent"
 E dentro de `render()`, no início do `<Head>` (antes das tags `<link>`), inserir:
 
 ```tsx
-          {process.env.NEXT_PUBLIC_GTM_ID && (
-            <script
-              // Consent default DEVE rodar antes do GTM (ordem do Consent Mode v2).
-              dangerouslySetInnerHTML={{ __html: consentDefaultScript() }}
-            />
-          )}
+{
+  process.env.NEXT_PUBLIC_GTM_ID && (
+    <script
+      // Consent default DEVE rodar antes do GTM (ordem do Consent Mode v2).
+      dangerouslySetInnerHTML={{ __html: consentDefaultScript() }}
+    />
+  )
+}
 ```
 
 - [ ] **Step 3: Carregar GTM + banner no `_app`**
@@ -779,7 +807,7 @@ import { CookieConsent } from "../components/CookieConsent"
 Dentro de `App`, antes do `return`, ler a variável:
 
 ```tsx
-  const gtmId = process.env.NEXT_PUBLIC_GTM_ID
+const gtmId = process.env.NEXT_PUBLIC_GTM_ID
 ```
 
 No JSX, dentro do `<div className={montserrat.variable} ...>`, logo após `<Component {...pageProps} />`, adicionar o banner; e logo após esse `</div>`, ainda dentro do `<ThemeProvider>`, adicionar o container:
@@ -804,9 +832,11 @@ Expected: build conclui com sucesso (sem `NEXT_PUBLIC_GTM_ID` definido, o script
 - [ ] **Step 6: Verificação manual com o GTM ligado**
 
 Run:
+
 ```bash
 NEXT_PUBLIC_GTM_ID=GTM-TESTE npm run dev
 ```
+
 Abrir `http://localhost:3000`, confirmar que o banner de cookies aparece; no DevTools, confirmar a requisição a `googletagmanager.com/gtm.js?id=GTM-TESTE` e, no console, `window.dataLayer[0]` contendo o `consent`/`default`. Encerrar o servidor depois.
 
 - [ ] **Step 7: Commit**
@@ -821,6 +851,7 @@ git commit -m "feat: carrega GTM e banner de consentimento condicionalmente"
 ## Task 7: Instrumentar os 5 CTAs de WhatsApp
 
 **Files:**
+
 - Modify: `src/pages/home/sections/Hero/index.tsx`
 - Modify: `src/components/Header/index.tsx`
 - Modify: `src/pages/home/sections/CTA/index.tsx`
@@ -828,6 +859,7 @@ git commit -m "feat: carrega GTM e banner de consentimento condicionalmente"
 - Modify: `src/pages/home/sections/Footer/index.tsx`
 
 **Interfaces:**
+
 - Consumes: `WhatsAppButton` (Task 3); `trackWhatsAppClick` (Task 1).
 - Produces: os 5 CTAs empurrando `whatsapp_click` com o `location` correto.
 
@@ -836,7 +868,7 @@ git commit -m "feat: carrega GTM e banner de consentimento condicionalmente"
 Em `src/pages/home/sections/Hero/index.tsx`: remover o import `Button` e o import `WHATSAPP_URL`; adicionar `import { WhatsAppButton } from "@/src/components/WhatsAppButton"`. Trocar o botão:
 
 ```tsx
-      <WhatsAppButton location="hero">{heroContent.ctaLabel}</WhatsAppButton>
+<WhatsAppButton location="hero">{heroContent.ctaLabel}</WhatsAppButton>
 ```
 
 - [ ] **Step 2: Header → WhatsAppButton (`location="header"`, mantém `className`)**
@@ -844,9 +876,9 @@ Em `src/pages/home/sections/Hero/index.tsx`: remover o import `Button` e o impor
 Em `src/components/Header/index.tsx`: remover o import `Button` e o import `WHATSAPP_URL`; adicionar `import { WhatsAppButton } from "@/src/components/WhatsAppButton"`. Trocar o botão:
 
 ```tsx
-        <WhatsAppButton location="header" className="button">
-          Entre em contato
-        </WhatsAppButton>
+<WhatsAppButton location="header" className="button">
+  Entre em contato
+</WhatsAppButton>
 ```
 
 - [ ] **Step 3: CTA → WhatsAppButton (`location="cta"`)**
@@ -854,7 +886,7 @@ Em `src/components/Header/index.tsx`: remover o import `Button` e o import `WHAT
 Em `src/pages/home/sections/CTA/index.tsx`: remover o import `Button` e o import `WHATSAPP_URL`; adicionar `import { WhatsAppButton } from "@/src/components/WhatsAppButton"`. Trocar o botão:
 
 ```tsx
-        <WhatsAppButton location="cta">{ctaContent.buttonLabel}</WhatsAppButton>
+<WhatsAppButton location="cta">{ctaContent.buttonLabel}</WhatsAppButton>
 ```
 
 - [ ] **Step 4: BurgerMenu → onClick (`location="menu"`)**
@@ -862,14 +894,14 @@ Em `src/pages/home/sections/CTA/index.tsx`: remover o import `Button` e o import
 Em `src/components/BurgerMenu/index.tsx`: adicionar `import { trackWhatsAppClick } from "@/src/lib/analytics"`. No `ContactButton`, adicionar o `onClick` (manter `href`, `target`, `rel`):
 
 ```tsx
-              <ContactButton
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel={getSafeRel("_blank")}
-                onClick={() => trackWhatsAppClick("menu")}
-              >
-                Entre em contato
-              </ContactButton>
+<ContactButton
+  href={WHATSAPP_URL}
+  target="_blank"
+  rel={getSafeRel("_blank")}
+  onClick={() => trackWhatsAppClick("menu")}
+>
+  Entre em contato
+</ContactButton>
 ```
 
 - [ ] **Step 5: Footer → onClick (`location="footer"`)**
@@ -877,11 +909,11 @@ Em `src/components/BurgerMenu/index.tsx`: adicionar `import { trackWhatsAppClick
 Em `src/pages/home/sections/Footer/index.tsx`: adicionar `import { trackWhatsAppClick } from "@/src/lib/analytics"`. No `Link` de WhatsApp, adicionar o `onClick`:
 
 ```tsx
-                <Link
-                  href={WHATSAPP_URL}
-                  icon={<WhatsappLogo size={20} />}
-                  onClick={() => trackWhatsAppClick("footer")}
-                />
+<Link
+  href={WHATSAPP_URL}
+  icon={<WhatsappLogo size={20} />}
+  onClick={() => trackWhatsAppClick("footer")}
+/>
 ```
 
 - [ ] **Step 6: Checar tipos, lint e testes de componente**
@@ -901,9 +933,11 @@ git commit -m "feat: instrumenta os CTAs de WhatsApp com evento de conversão"
 ## Task 8: Teste E2E do evento `whatsapp_click`
 
 **Files:**
+
 - Modify: `e2e/home.spec.ts`
 
 **Interfaces:**
+
 - Consumes: instrumentação da Task 7.
 - Produces: cobertura E2E de que o clique no CTA do header empurra `whatsapp_click` para o `dataLayer`.
 
@@ -912,30 +946,29 @@ git commit -m "feat: instrumenta os CTAs de WhatsApp com evento de conversão"
 Em `e2e/home.spec.ts`, dentro do `test.describe("Home", ...)`, adicionar:
 
 ```ts
-  test("clique no WhatsApp registra whatsapp_click no dataLayer", async ({
-    page,
-    context,
-  }) => {
-    await page.goto("/")
-    const cta = page
-      .locator("header")
-      .getByRole("link", { name: /Entre em contato/ })
+test("clique no WhatsApp registra whatsapp_click no dataLayer", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/")
+  const cta = page
+    .locator("header")
+    .getByRole("link", { name: /Entre em contato/ })
 
-    // O WhatsApp abre em nova aba: captura e fecha o popup.
-    const popupPromise = context.waitForEvent("page")
-    await cta.click()
-    await (await popupPromise).close()
+  // O WhatsApp abre em nova aba: captura e fecha o popup.
+  const popupPromise = context.waitForEvent("page")
+  await cta.click()
+  await (await popupPromise).close()
 
-    const events = await page.evaluate(
-      () =>
-        (window as unknown as { dataLayer?: unknown[] }).dataLayer ?? [],
-    )
-    expect(events).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ event: "whatsapp_click", location: "header" }),
-      ]),
-    )
-  })
+  const events = await page.evaluate(
+    () => (window as unknown as { dataLayer?: unknown[] }).dataLayer ?? [],
+  )
+  expect(events).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ event: "whatsapp_click", location: "header" }),
+    ]),
+  )
+})
 ```
 
 - [ ] **Step 2: Rodar o E2E**
@@ -955,10 +988,12 @@ git commit -m "test: cobre o evento whatsapp_click no dataLayer (E2E)"
 ## Task 9: Documentação e verificação final da suíte
 
 **Files:**
+
 - Create: `.env.example`
 - Modify: `README.md`
 
 **Interfaces:**
+
 - Consumes: tudo acima.
 - Produces: variável de ambiente documentada e suíte completa verde.
 
