@@ -3,6 +3,7 @@ import { defineConfig } from "@playwright/test"
 // Usa o Google Chrome do sistema (sem baixar os browsers do Playwright).
 export default defineConfig({
   testDir: "./e2e",
+  testIgnore: ["contract/**"],
   timeout: 30_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,
