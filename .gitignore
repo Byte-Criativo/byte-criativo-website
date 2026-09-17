@@ -28,6 +28,12 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# private notes and secrets
+/.claude-local/
+.env
+.env.*
+!.env.example
+
 # vercel
 .vercel
 
