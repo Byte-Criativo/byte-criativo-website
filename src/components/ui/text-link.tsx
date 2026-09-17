@@ -33,10 +33,8 @@ export function textLinkClasses(
   return cn(BASE, VARIANTE[variante], className)
 }
 
-export type TextLinkProps = {
+type TextLinkComum = {
   href: string
-  variante?: TextLinkVariante
-  externo?: boolean
   /** Complemento da RC5: entra depois do texto visível, em VisuallyHidden. */
   complemento?: string
   id?: string
@@ -45,6 +43,13 @@ export type TextLinkProps = {
   "data-indice-link"?: string
   children: ReactNode
 }
+
+// M6: "Modificador externo: vale para acao e inline; nunca para navegacao"
+// (especificação). União discriminada em vez de `variante?: TextLinkVariante;
+// externo?: boolean` soltos, que aceitava `variante="navegacao" externo`.
+export type TextLinkProps =
+  | (TextLinkComum & { variante?: "acao" | "inline"; externo?: boolean })
+  | (TextLinkComum & { variante: "navegacao"; externo?: never })
 
 export function TextLink({
   href,

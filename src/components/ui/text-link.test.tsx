@@ -130,4 +130,16 @@ describe("TextLink", () => {
       "focus-visible:decoration-(length:--border-w-decorative)",
     )
   })
+
+  // M6: "Modificador externo: vale para acao e inline; nunca para
+  // navegacao" (especificação). tsc (npm run typecheck) falha com "Unused
+  // '@ts-expect-error' directive" se o tipo voltar a aceitar a combinação.
+  it("M6: variante navegacao com externo não compila (tipo mais estrito)", () => {
+    render(
+      // @ts-expect-error externo nunca vale para a variante navegacao.
+      <TextLink href="/portfolio" variante="navegacao" externo>
+        Trabalhos
+      </TextLink>,
+    )
+  })
 })
