@@ -161,7 +161,7 @@ try {
 
 await writeFile(
   path.join(outDir, "manifest.json"),
-  JSON.stringify(manifest, null, 2),
+  JSON.stringify(manifest, null, 2) + "\n",
 )
 console.log(`${manifest.length} capturas em ${outDir}`)
 
