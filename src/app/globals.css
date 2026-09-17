@@ -313,10 +313,14 @@
 }
 
 @layer base {
+  /* RC1, M2: os três números do foco duplo vêm de --focus-width,
+     --focus-offset e --focus-halo-width (L1.1, tokens.json focus.*), não de
+     valores soltos — a mesma largura/deslocamento/halo definidos uma única
+     vez e conferidos contra o JSON em src/styles/tokens-escala.test.ts. */
   :focus-visible {
-    outline: 2px solid var(--focus-ring);
-    outline-offset: 3px;
-    box-shadow: 0 0 0 5px var(--focus-halo);
+    outline: var(--focus-width) solid var(--focus-ring);
+    outline-offset: var(--focus-offset);
+    box-shadow: 0 0 0 var(--focus-halo-width) var(--focus-halo);
   }
 }
 

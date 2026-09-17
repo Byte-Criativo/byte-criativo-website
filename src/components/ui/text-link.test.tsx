@@ -45,6 +45,19 @@ describe("TextLink", () => {
     )
   })
 
+  // M1: espaço comum (U+0020) antes do ↗ deixa o glifo quebrar sozinho para
+  // a linha seguinte, separado da palavra anterior. U+00A0 (espaço não
+  // separável) impede a quebra ali.
+  it("M1: o ↗ usa espaço não separável (U+00A0), não espaço comum", () => {
+    render(
+      <TextLink href="https://exemplo.com" externo>
+        Ver projeto no ar
+      </TextLink>,
+    )
+    const marcador = screen.getByText("↗", { exact: false })
+    expect(marcador.textContent).toBe(" ↗")
+  })
+
   // R51: assertiva com toHaveAccessibleName sobre o nome completo, não só
   // um trecho — pega o bug de concatenar texto visível e complemento sem
   // espaço (dom-accessibility-api não junta nós de texto com espaço).

@@ -79,8 +79,10 @@ export function TextLink({
       ) : null}
       {externo ? (
         <>
-          {/* Marcador de destino, não seta decorativa (RC8). */}
-          <span aria-hidden="true">{" ↗"}</span>{" "}
+          {/* Marcador de destino, não seta decorativa (RC8). Espaço não
+              separável (U+00A0) antes do glifo para ele não quebrar sozinho
+              para a linha seguinte, longe da palavra anterior. */}
+          <span aria-hidden="true">{" ↗"}</span>{" "}
           <VisuallyHidden>(abre em nova aba)</VisuallyHidden>
         </>
       ) : null}

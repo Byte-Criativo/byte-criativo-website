@@ -333,7 +333,12 @@ describe("globals.css: prefers-reduced-motion zera as durações", () => {
 })
 
 describe("globals.css: :focus-visible dentro de @layer base", () => {
-  it("outline usa border.focus em --focus-ring e o halo usa --focus-halo", () => {
+  // M2: a regra usava números soltos (2px/3px/5px) em vez de
+  // --focus-width/--focus-offset/--focus-halo-width, que a Fase 7 (L1.1)
+  // levou para o CSS a partir de tokens.json (conferido em
+  // src/styles/tokens-escala.test.ts). Duplicar o valor aqui e lá é o tipo
+  // de drift que os tokens existem para evitar.
+  it("outline, offset e halo vêm de --focus-width/--focus-offset/--focus-halo-width e das cores --focus-ring/--focus-halo", () => {
     const layerStart = css.indexOf("@layer base {")
     expect(layerStart, "@layer base ausente em globals.css").toBeGreaterThan(-1)
     const focusStart = css.indexOf(":focus-visible {", layerStart)
@@ -344,10 +349,12 @@ describe("globals.css: :focus-visible dentro de @layer base", () => {
     const focusEnd = css.indexOf("}", focusStart)
     const focusBlock = css.slice(focusStart, focusEnd)
 
-    const outlineWidth = tokensJson.border.focus
     expect(focusBlock).toContain(
-      `outline: ${outlineWidth} solid var(--focus-ring)`,
+      "outline: var(--focus-width) solid var(--focus-ring)",
     )
-    expect(focusBlock).toMatch(/box-shadow:[^;]*var\(--focus-halo\)/)
+    expect(focusBlock).toContain("outline-offset: var(--focus-offset)")
+    expect(focusBlock).toMatch(
+      /box-shadow:[^;]*var\(--focus-halo-width\)[^;]*var\(--focus-halo\)/,
+    )
   })
 })
