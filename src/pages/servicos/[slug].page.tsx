@@ -99,10 +99,7 @@ export default function ServicePage({
 
   const canonical = `${SITE_URL}/servicos/${service.slug}`
   const title = `${service.seoTitle} | ${SITE_NAME}`
-  const whatsappUrl = buildWhatsAppUrl(
-    WHATSAPP_NUMBER,
-    `Olá! Gostaria de conversar sobre ${service.title.toLowerCase()} com a Byte Criativo.`,
-  )
+  const whatsappUrl = buildWhatsAppUrl(WHATSAPP_NUMBER, service.whatsappMessage)
 
   const jsonLd = {
     "@context": "https://schema.org",

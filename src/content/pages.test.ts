@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { pagesContent } from "./pages"
 import { buildWhatsAppUrl, WHATSAPP_NUMBER } from "@/src/lib/contact"
+import { hasConsecutiveRepeatedWords } from "@/src/test/whatsapp-message"
 
 const expectedMessages: Record<string, string> = {
   sobre: "Olá! Li sobre a Byte Criativo e quero conversar sobre um projeto.",
@@ -10,11 +11,6 @@ const expectedMessages: Record<string, string> = {
     "Olá! Vi os trabalhos da Byte Criativo e quero falar sobre um projeto.",
   contato:
     "Olá! Vim pela página de contato da Byte Criativo e quero falar sobre um projeto.",
-}
-
-function hasConsecutiveRepeatedWords(message: string) {
-  const words = message.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []
-  return words.some((word, index) => index > 0 && word === words[index - 1])
 }
 
 describe("pagesContent whatsappMessage", () => {

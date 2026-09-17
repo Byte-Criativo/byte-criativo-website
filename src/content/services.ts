@@ -5,6 +5,7 @@ export type ServicePage = {
   description: string
   eyebrow: string
   promise: string
+  whatsappMessage: string
   bestFor: string[]
   outcomes: string[]
   deliverables: string[]
@@ -25,6 +26,8 @@ export const servicePages: ServicePage[] = [
       "Criamos sites institucionais, páginas comerciais e experiências web sob medida para empresas que precisam explicar valor, aparecer no Google e transformar visitas em conversas.",
     promise:
       "Um site bem construído não é só uma vitrine: ele organiza sua proposta, reduz dúvidas, sustenta campanhas e cria uma base confiável para novas oportunidades.",
+    whatsappMessage:
+      "Olá! Vi a página de sites da Byte Criativo e quero conversar sobre um site para o meu negócio.",
     bestFor: [
       "Empresas que dependem de indicação, mas querem gerar demanda própria",
       "Negócios que têm um site antigo, lento ou desalinhado com a oferta atual",
@@ -69,6 +72,8 @@ export const servicePages: ServicePage[] = [
       "Desenvolvemos sistemas web, painéis, portais e fluxos internos para empresas que precisam reduzir retrabalho, conectar informações e operar com mais previsibilidade.",
     promise:
       "Quando planilhas e processos manuais começam a limitar o crescimento, um sistema sob medida ajuda a transformar conhecimento operacional em produto digital utilizável.",
+    whatsappMessage:
+      "Olá! Vi a página de sistemas sob medida da Byte Criativo e quero conversar sobre um sistema para a minha operação.",
     bestFor: [
       "Empresas com etapas manuais repetitivas",
       "Times que dependem de várias ferramentas desconectadas",
@@ -113,6 +118,8 @@ export const servicePages: ServicePage[] = [
       "Projetamos interfaces para sites, sistemas e produtos digitais com foco em clareza, consistência, conversão e facilidade de uso.",
     promise:
       "Design útil é o que ajuda alguém a entender, decidir e agir. A estética importa, mas ela precisa servir à jornada.",
+    whatsappMessage:
+      "Olá! Vi a página de UI/UX da Byte Criativo e quero conversar sobre a interface de um produto.",
     bestFor: [
       "Produtos digitais com baixa conversão ou muita dúvida do usuário",
       "Sistemas difíceis de usar por equipes internas",
@@ -157,6 +164,8 @@ export const servicePages: ServicePage[] = [
       "Criamos landing pages para campanhas, validação de ofertas, captação de leads e lançamentos, combinando copy, design e implementação rápida.",
     promise:
       "Uma landing page precisa responder rápido: o que é, para quem é, por que confiar e qual é o próximo passo.",
+    whatsappMessage:
+      "Olá! Vi a página de landing pages da Byte Criativo. Tenho uma campanha ou lançamento e quero conversar sobre uma página.",
     bestFor: [
       "Campanhas de tráfego pago",
       "Lançamento de serviço, produto ou lista de espera",
@@ -201,6 +210,8 @@ export const servicePages: ServicePage[] = [
       "Ajudamos a estruturar produtos digitais, priorizar funcionalidades, organizar jornadas e transformar ideias em escopos mais claros para desenvolvimento.",
     promise:
       "Antes de investir em tecnologia, vale entender qual problema precisa ser resolvido, para quem, com qual prioridade e com qual primeira versão.",
+    whatsappMessage:
+      "Olá! Vi a página de design de produto da Byte Criativo e quero ajuda para definir o que construir primeiro.",
     bestFor: [
       "Ideias de produto que ainda estão abstratas",
       "Empresas que querem digitalizar uma operação, mas não sabem por onde começar",
@@ -245,6 +256,8 @@ export const servicePages: ServicePage[] = [
       "Criamos e refinamos textos para sites, landing pages e produtos digitais com foco em clareza, posicionamento, objeções e conversão.",
     promise:
       "A interface guia o olhar, mas o texto ajuda a decisão. Copywriting bem feito torna a oferta mais fácil de entender e mais forte para vender.",
+    whatsappMessage:
+      "Olá! Vi a página de textos para web da Byte Criativo e quero conversar sobre os textos do meu site.",
     bestFor: [
       "Sites que explicam pouco ou dependem demais de reunião para vender",
       "Landing pages com tráfego, mas baixa conversão",
@@ -289,6 +302,8 @@ export const servicePages: ServicePage[] = [
       "Conectamos ferramentas, automatizamos tarefas repetitivas e criamos fluxos previsíveis entre formulários, sistemas, planilhas, e-mails, agendas, CRMs e APIs.",
     promise:
       "Quando a rotina depende de copiar e colar entre ferramentas, automatizar costuma ser o caminho mais barato para ganhar tempo e reduzir erros.",
+    whatsappMessage:
+      "Olá! Vi a página de automações da Byte Criativo e quero conversar sobre conectar as ferramentas que uso.",
     bestFor: [
       "Empresas com etapas manuais repetitivas entre sistemas",
       "Times que dependem de várias ferramentas desconectadas",
