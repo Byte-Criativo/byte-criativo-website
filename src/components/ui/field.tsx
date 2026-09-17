@@ -58,16 +58,11 @@ export function Field({
 
   const Caixa = tipo === "opcoes" ? "fieldset" : "div"
 
-  return (
-    <Caixa className={cn("flex flex-col gap-(--space-2)", className)}>
-      {tipo === "opcoes" ? (
-        <legend className={classesRotulo}>{textoRotulo}</legend>
-      ) : (
-        <label htmlFor={id} className={classesRotulo}>
-          {textoRotulo}
-        </label>
-      )}
-
+  // Ajuda, controle, erro e contador, juntos: no tipo "campo" eles são
+  // filhos diretos do <div> flex; no tipo "opcoes" eles precisam de um
+  // wrapper próprio (ver comentário abaixo do <legend>).
+  const conteudo = (
+    <>
       {ajuda ? (
         <Text id={idAjuda} papel="caption" tom="muted">
           {ajuda}
@@ -79,7 +74,7 @@ export function Field({
       {erro ? (
         <p
           id={idErro}
-          className="flex items-start gap-(--space-2) text-caption text-danger-text"
+          className="flex items-start gap-(--space-2) text-caption text-danger-text [&_svg]:h-(--space-4) [&_svg]:w-(--space-4)"
         >
           <Icon nome="alerta" />
           {erro}
@@ -96,6 +91,37 @@ export function Field({
           {contador}
         </Text>
       ) : null}
+    </>
+  )
+
+  return (
+    <Caixa
+      className={cn(
+        // Um <fieldset> com display:flex vira, por definição do próprio
+        // HTML, uma caixa anônima de conteúdo que exclui a legend: o `gap`
+        // daqui não alcança o espaço entre a legend e o resto (o wrapper
+        // abaixo é quem carrega esse gap). .campo-grupo-refluxo (globals.css)
+        // reseta o min-width:min-content padrão do fieldset, que travaria o
+        // refluxo em 320 px.
+        tipo === "opcoes"
+          ? "campo-grupo-refluxo"
+          : "flex flex-col gap-(--space-2)",
+        className,
+      )}
+    >
+      {tipo === "opcoes" ? (
+        <legend className={classesRotulo}>{textoRotulo}</legend>
+      ) : (
+        <label htmlFor={id} className={classesRotulo}>
+          {textoRotulo}
+        </label>
+      )}
+
+      {tipo === "opcoes" ? (
+        <div className="flex flex-col gap-(--space-2)">{conteudo}</div>
+      ) : (
+        conteudo
+      )}
     </Caixa>
   )
 }

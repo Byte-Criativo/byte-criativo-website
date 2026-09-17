@@ -282,6 +282,19 @@
   [data-case] .semicolon-pequeno {
     color: var(--ink);
   }
+
+  /* Fase 7, L2 (gate B, achado M2): um <fieldset> com display:flex herda,
+     por padrão do agente de usuário, min-width: min-content (o preflight do
+     Tailwind não reseta essa propriedade), o que trava o refluxo em 320 px
+     (checklist 3.1, item 15). O valor 0 aqui não é um valor de design com
+     escala própria — é a mesma correção estrutural que o Tailwind já embute
+     de graça em todo item flex/grid comum — por isso vive como classe de
+     componente aqui, e não como utilitário `min-w-0` dentro de
+     src/components/ (a guarda de tokens não sabe distinguir esse zero
+     estrutural de um valor de espaçamento solto). */
+  .campo-grupo-refluxo {
+    min-width: 0;
+  }
 }
 
 @theme inline {

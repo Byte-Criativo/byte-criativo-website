@@ -163,4 +163,44 @@ describe("Field", () => {
       }),
     ).toBeInTheDocument()
   })
+
+  it("no grupo de opções, o espaçamento entre ajuda/controle/erro vive num wrapper irmão da legend, não no gap do fieldset (M2)", () => {
+    const { container } = render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+        ajuda="Escolha uma opção"
+        erro="Escolha uma opção."
+      >
+        {() => <input type="radio" name="tipo" value="site" />}
+      </Field>,
+    )
+    const fieldset = container.querySelector("fieldset")
+    const legend = container.querySelector("legend")
+    expect(fieldset).not.toBeNull()
+    expect(legend).not.toBeNull()
+    // O navegador tira a legend da caixa anônima que vira o container flex
+    // do fieldset: o gap do próprio fieldset não separa a legend do
+    // conteúdo. O espaçamento precisa viver num wrapper próprio, irmão da
+    // legend, para não depender desse comportamento.
+    const wrapper = legend?.nextElementSibling
+    expect(wrapper).not.toBeNull()
+    expect(wrapper).toHaveClass("flex", "flex-col", "gap-(--space-2)")
+    // .campo-grupo-refluxo (globals.css) reseta o min-width:min-content
+    // padrão do fieldset, que travaria o refluxo em 320 px (o preflight não
+    // reseta essa propriedade sozinho).
+    expect(fieldset).toHaveClass("campo-grupo-refluxo")
+  })
+
+  it("o ícone da mensagem de erro fica na escala do texto, não em 24 px cheios (M3)", () => {
+    const { container } = render(
+      <Field id="email" label="Seu e-mail" obrigatorio erro="E-mail inválido.">
+        {(aria) => <Input {...aria} name="email" autoComplete="email" />}
+      </Field>,
+    )
+    const erro = container.querySelector("#email-erro")
+    expect(erro).toHaveClass("[&_svg]:h-(--space-4)", "[&_svg]:w-(--space-4)")
+  })
 })
