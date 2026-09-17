@@ -52,8 +52,11 @@ Chrome instalado no sistema em vez do Chromium baixado pelo Playwright.
 1. **Unitário** (Vitest + Testing Library): `src/**/*.test.ts(x)`, junto
    do código que testam — tokens, contraste, SEO, contato.
 2. **E2E** (Playwright, projetos chromium/webkit/firefox/mobile):
-   `e2e/*.spec.ts` sobe a app numa porta livre; cobre privacidade (zero
-   terceiros, zero cookies) e acessibilidade (axe na home).
+   `e2e/*.spec.ts` sobe a app com `npm run build && npm run start` na porta
+   de `PORT` (3000 por padrão) e, fora do CI, reaproveita um servidor já
+   rodando nessa porta (`playwright.config.ts`); localmente, use
+   `PORT=3217 PW_CHANNEL=chrome npx playwright test`. Cobre privacidade
+   (zero terceiros, zero cookies) e acessibilidade (axe na home).
 3. **Contrato HTTP** (Playwright, `e2e/contract/`): roda contra um
    servidor já no ar, apontado por `BASE_URL` — headers de segurança, 404
    em rota inexistente e, conforme a Fase 8 avança, as rotas preservadas.
@@ -75,12 +78,16 @@ Os tokens de cor, tipografia, espaçamento e movimento vivem em
 `src/app/globals.css` e testados em `src/styles/tokens.test.ts`. Os
 documentos de design (estratégia visual, arquitetura técnica, arquitetura
 de informação, conteúdo dos casos) que originaram esses tokens ficam fora
-deste repositório, no diretório de trabalho do projeto.
+deste repositório, no diretório de trabalho do projeto. O `docs/` deste
+repositório ainda guarda artefatos do site antigo
+(`docs/byte-criativo-growth-todo.md`, `docs/superpowers/**`), mantidos até
+a decisão D2 sobre onde vivem os documentos de design da reescrita.
 
 ## CI
 
-`.github/workflows/ci.yml` roda três jobs a cada push/PR: `quality`
-(format, lint, typecheck, testes unitários, `npm audit`), `e2e`
-(Playwright contra build local + contrato HTTP) e `lighthouse` (LHCI). O
-hook de pré-commit (`.husky/pre-commit`) roda `format:check`, `lint` e
-`typecheck` antes de cada commit.
+`.github/workflows/ci.yml` roda três jobs: `quality` (format, lint,
+typecheck, testes unitários, `npm audit`), `e2e` (Playwright contra build
+local + contrato HTTP) e `lighthouse` (LHCI). Disparam em qualquer pull
+request e em pushes para `main` e `redesign/v2` (não em pushes para outras
+branches). O hook de pré-commit (`.husky/pre-commit`) roda `format:check`,
+`lint` e `typecheck` antes de cada commit.
