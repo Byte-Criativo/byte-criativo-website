@@ -353,3 +353,67 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Sala: véu da parede no nível externo (fora de data-case, por isso --bg é
+   a cor da parede) entre a superfície e a obra. Só opacity e transform
+   animam (plano de qualidade 2.3, item 8): nenhuma cor é interpolada. */
+@layer components {
+  .sala::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity var(--dur-slow) var(--ease-museum);
+  }
+
+  .sala[data-estado="parede"]::before {
+    opacity: 1;
+  }
+
+  /* position: relative sem z-index: posiciona o cavalete sem criar
+     contexto de empilhamento. */
+  .sala-superficie {
+    position: relative;
+  }
+
+  .sala-obra {
+    position: relative;
+    z-index: 2;
+    transform: translateY(0);
+    transition: transform var(--dur-slow) var(--ease-museum);
+  }
+
+  .sala[data-estado="parede"] .sala-obra {
+    transform: translateY(var(--space-3));
+  }
+
+  /* Cavalete: duas linhas desenhadas com border num elemento vazio, para
+     continuarem visíveis em cores forçadas. */
+  .sala-cavalete {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 62%;
+    height: var(--space-7);
+    transform: translateX(-50%);
+    border-top: var(--border-w-easel) solid var(--room-easel);
+  }
+
+  .sala-cavalete::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: var(--border-w-easel) solid var(--room-easel);
+  }
+
+  @media (min-width: 64rem) {
+    .sala-cavalete {
+      height: var(--space-8);
+    }
+  }
+}

@@ -140,3 +140,29 @@ describe("globals.css: RC7, o ponto e vírgula é pontuação", () => {
     )
   })
 })
+
+describe("globals.css: momento orquestrado da sala", () => {
+  const sala = css.slice(css.indexOf("/* Sala"))
+
+  it("o véu anima só opacity e a obra só transform", () => {
+    expect(sala).toMatch(/\.sala::before[\s\S]*opacity: 0;/)
+    expect(sala).toMatch(
+      /transition:\s*opacity var\(--dur-slow\) var\(--ease-museum\)/,
+    )
+    expect(sala).toMatch(
+      /transition:\s*transform var\(--dur-slow\) var\(--ease-museum\)/,
+    )
+  })
+
+  it("nada anima cor, largura, altura ou espaçamento", () => {
+    expect(sala).not.toContain("transition: background-color")
+    expect(sala).not.toMatch(
+      /transition:[^;]*\b(width|height|margin|padding|top|left)\b/,
+    )
+  })
+
+  it("o véu usa --bg (a parede) e o cavalete usa --room-easel", () => {
+    expect(sala).toContain("background: var(--bg)")
+    expect(sala).toContain("var(--room-easel)")
+  })
+})
