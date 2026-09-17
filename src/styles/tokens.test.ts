@@ -268,3 +268,86 @@ describe("tokens de cor: palette", () => {
     expect(palette["signal-ink"]).toBe("#B83F00")
   })
 })
+
+// A partir daqui: invariantes de globals.css que só existiam nos gates
+// descartáveis da Fase 6 (gate-6.2.mjs via gate-lib.mjs#checkTokenCss).
+// Portadas para cá para sobreviver depois que os gates forem descartados.
+
+describe("tokens de cor: guarda de não-vacuidade", () => {
+  it("requiredPairs tem pelo menos 86 pares (tokens.json não encolheu)", () => {
+    expect(requiredPairs.length).toBeGreaterThanOrEqual(86)
+  })
+})
+
+describe("globals.css: @theme inline expõe as cores para o Tailwind", () => {
+  it("define --color-<nome> para as 19 vars de tema + --color-action, --color-on-action e --font-sans", () => {
+    const themeInline = block("@theme inline")
+    const names = Object.keys(lightTheme)
+    expect(names.length).toBe(19)
+    for (const varName of names) {
+      const nome = varName.replace(/^--/, "")
+      expect(themeInline, `--color-${nome}`).toContain(
+        `--color-${nome}: var(${varName})`,
+      )
+    }
+    expect(themeInline).toContain("--color-action: var(--action-bg)")
+    expect(themeInline).toContain("--color-on-action: var(--action-ink)")
+    expect(themeInline).toContain(
+      "--font-sans: var(--ff-sans), ui-sans-serif, system-ui, sans-serif",
+    )
+  })
+})
+
+describe("globals.css: prefers-reduced-motion zera as durações", () => {
+  it("o bloco @media (prefers-reduced-motion: reduce) zera --dur-instant, --dur-fast, --dur-base e --dur-slow", () => {
+    const mediaStart = css.indexOf("@media (prefers-reduced-motion: reduce)")
+    expect(
+      mediaStart,
+      "bloco @media (prefers-reduced-motion: reduce) ausente",
+    ).toBeGreaterThan(-1)
+    const rootStart = css.indexOf(":root {", mediaStart)
+    expect(
+      rootStart,
+      ":root aninhado em prefers-reduced-motion ausente",
+    ).toBeGreaterThan(-1)
+    const rootEnd = css.indexOf("}", rootStart)
+    const nestedRoot = css.slice(rootStart, rootEnd)
+    for (const varName of [
+      "--dur-instant",
+      "--dur-fast",
+      "--dur-base",
+      "--dur-slow",
+    ]) {
+      const re = new RegExp(`${varName}:\\s*([^;]+);`)
+      const match = re.exec(nestedRoot)
+      expect(match, `${varName} ausente em prefers-reduced-motion`).not.toBe(
+        null,
+      )
+      const value = match?.[1] ?? ""
+      expect(
+        Number.parseFloat(value),
+        `${varName} deveria zerar, valor encontrado: ${value}`,
+      ).toBe(0)
+    }
+  })
+})
+
+describe("globals.css: :focus-visible dentro de @layer base", () => {
+  it("outline usa border.focus em --focus-ring e o halo usa --focus-halo", () => {
+    const layerStart = css.indexOf("@layer base {")
+    expect(layerStart, "@layer base ausente em globals.css").toBeGreaterThan(-1)
+    const focusStart = css.indexOf(":focus-visible {", layerStart)
+    expect(
+      focusStart,
+      ":focus-visible dentro de @layer base ausente",
+    ).toBeGreaterThan(-1)
+    const focusEnd = css.indexOf("}", focusStart)
+    const focusBlock = css.slice(focusStart, focusEnd)
+
+    const outlineWidth = tokensJson.border.focus
+    expect(focusBlock).toContain(
+      `outline: ${outlineWidth} solid var(--focus-ring)`,
+    )
+    expect(focusBlock).toMatch(/box-shadow:[^;]*var\(--focus-halo\)/)
+  })
+})
