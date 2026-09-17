@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { Field } from "./field"
 import { Input } from "./input"
+import { Textarea } from "./textarea"
 
 describe("Field", () => {
   it("associa o label visível ao controle e diz se é obrigatório", () => {
@@ -91,6 +92,58 @@ describe("Field", () => {
       "aria-hidden",
       "true",
     )
+  })
+
+  it("funciona também com Textarea: describedby e invalid chegam ao controle certo (I1)", () => {
+    render(
+      <Field
+        id="contexto"
+        label="Conte um pouco do contexto"
+        obrigatorio
+        ajuda="Pode ser em poucas linhas"
+        erro="Escreva pelo menos uma frase."
+        contador="120 de 2.000 caracteres"
+      >
+        {(aria) => <Textarea {...aria} name="contexto" />}
+      </Field>,
+    )
+    const campo = screen.getByRole("textbox")
+    expect(campo.tagName).toBe("TEXTAREA")
+    expect(campo).toHaveAttribute("aria-invalid", "true")
+    expect(campo).toHaveAttribute(
+      "aria-describedby",
+      "contexto-erro contexto-ajuda contexto-contador",
+    )
+  })
+
+  it("mantém a ordem no DOM: label, ajuda, controle, erro e contador, nessa sequência (I2)", () => {
+    const { container } = render(
+      <Field
+        id="contexto"
+        label="Conte um pouco do contexto"
+        obrigatorio
+        ajuda="Pode ser em poucas linhas"
+        erro="Escreva pelo menos uma frase."
+        contador="120 de 2.000 caracteres"
+      >
+        {(aria) => <Input {...aria} name="contexto" autoComplete="off" />}
+      </Field>,
+    )
+    const rotulo = container.querySelector("label")
+    const ajuda = container.querySelector("#contexto-ajuda")
+    const controle = container.querySelector("input")
+    const erro = container.querySelector("#contexto-erro")
+    const contador = container.querySelector("#contexto-contador")
+    const precede = (a: Element | null, b: Element | null) =>
+      Boolean(
+        a &&
+        b &&
+        (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0,
+      )
+    expect(precede(rotulo, ajuda)).toBe(true)
+    expect(precede(ajuda, controle)).toBe(true)
+    expect(precede(controle, erro)).toBe(true)
+    expect(precede(erro, contador)).toBe(true)
   })
 
   it("tipo opcoes vira fieldset com legend, virando um grupo nomeado", () => {
