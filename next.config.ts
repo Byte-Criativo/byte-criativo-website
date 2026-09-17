@@ -14,7 +14,12 @@ const contentSecurityPolicy = [
   "frame-src 'none'",
   "media-src 'self'",
   "manifest-src 'self'",
-  "upgrade-insecure-requests",
+  // Sem "upgrade-insecure-requests": o WebKit aplica essa diretiva também a
+  // http://localhost/http://127.0.0.1, derrubando todo JS/CSS/fonte no e2e
+  // do CI (projeto webkit). Em produção ela é redundante — o HSTS abaixo
+  // (max-age=63072000; includeSubDomains; preload) já força HTTPS na
+  // origem, e todas as fontes desta CSP são 'self', data: ou blob: (nenhuma
+  // origem http:). Ver R46.
 ].join("; ")
 
 const securityHeaders = [
