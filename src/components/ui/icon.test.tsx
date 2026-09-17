@@ -76,4 +76,16 @@ describe("Icon", () => {
     })
     expect(new Set(assinaturas).size).toBe(NOMES.length)
   })
+
+  it("a aba do envelope de e-mail encontra os dois cantos superiores do corpo, sem emenda (M4)", () => {
+    const { container } = render(<Icon nome="email" />)
+    const paths = [...container.querySelectorAll("path")].map((p) =>
+      p.getAttribute("d"),
+    )
+    // Corpo: M3 6h18v12H3V6Z -> cantos superiores em (3,6) e (21,6).
+    expect(paths[0]).toBe("M3 6h18v12H3V6Z")
+    // Aba: precisa começar e terminar exatamente nesses dois cantos, não
+    // 1 px abaixo deles.
+    expect(paths[1]).toBe("m3 6 9 7 9-7")
+  })
 })

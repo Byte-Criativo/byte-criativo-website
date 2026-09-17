@@ -35,10 +35,8 @@ export function RadioGroup({
           key={opcao.valor}
           className="flex min-h-(--alvo-toque) items-center gap-(--space-2) text-body text-ink"
         >
-          {/* aria-invalid é uma propriedade global do WAI-ARIA (suportada
-              por todo papel, radio incluído); a tabela do jsx-a11y ainda
-              não lista essa combinação, daí o aviso de falso positivo. */}
-          {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
+          {/* Especificação, Field › Estados, "Inválido": aria-invalid="true"
+              no controle — em opcoes, em cada Radio. */}
           <input
             type="radio"
             name={name}
