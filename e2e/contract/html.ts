@@ -18,10 +18,24 @@ export function findMetaContent(html: string, key: string): string | undefined {
 }
 
 export function jsonLdBlocks(html: string): unknown[] {
-  const blocks = [
-    ...html.matchAll(
-      /<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
-    ),
-  ]
-  return blocks.map((m) => JSON.parse(m[1]))
+  const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+  return scripts
+    .filter((m) => attribute(m[1], "type") === "application/ld+json")
+    .map((m) => JSON.parse(m[2]))
+}
+
+export function visibleText(html: string): string {
+  const withoutNonVisible = html
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<!--[\s\S]*?-->/g, " ")
+  const withoutTags = withoutNonVisible.replace(/<[^>]+>/g, " ")
+  const decoded = withoutTags
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+  return decoded.replace(/\s+/g, " ").trim()
 }

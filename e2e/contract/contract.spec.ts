@@ -1,6 +1,23 @@
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
 import { expect, test } from "@playwright/test"
-import { findLinkHref, findMetaContent, jsonLdBlocks } from "./html"
-import { LEGACY_REDIRECTS, PRESERVED_ROUTES, canonicalFor } from "./inventory"
+import {
+  findLinkHref,
+  findMetaContent,
+  jsonLdBlocks,
+  visibleText,
+} from "./html"
+import {
+  LEGACY_REDIRECTS,
+  PRESERVED_ROUTES,
+  ROUTES_WITHOUT_JSON_LD,
+  canonicalFor,
+} from "./inventory"
+
+const POMODORO_PRIVACIDADE_TEXT = readFileSync(
+  join(__dirname, "fixtures", "pomodoro-privacidade.txt"),
+  "utf-8",
+).trim()
 
 for (const route of PRESERVED_ROUTES) {
   test(`rota preservada ${route}: 200, canonical, título e descrição`, async ({
@@ -16,8 +33,12 @@ for (const route of PRESERVED_ROUTES) {
     )
     expect(findMetaContent(html, "og:image")).toBeTruthy()
     expect(findMetaContent(html, "robots") ?? "").not.toMatch(/noindex/)
-    for (const block of jsonLdBlocks(html)) {
+    const blocks = jsonLdBlocks(html)
+    for (const block of blocks) {
       expect(block).toBeTruthy()
+    }
+    if (!ROUTES_WITHOUT_JSON_LD.includes(route)) {
+      expect(blocks.length).toBeGreaterThan(0)
     }
   })
 }
@@ -31,7 +52,9 @@ for (const { from, to } of LEGACY_REDIRECTS) {
     expect([301, 308]).toContain(response.status())
     const location = response.headers()["location"]
     expect(location).toBeTruthy()
-    expect(new URL(location, baseURL).pathname).toBe(to)
+    const resolved = new URL(location, baseURL)
+    expect(resolved.origin).toBe(new URL(baseURL as string).origin)
+    expect(resolved.pathname).toBe(to)
     const destination = await request.get(to, { maxRedirects: 0 })
     expect(destination.status()).toBe(200)
   })
@@ -78,6 +101,7 @@ test("política do Pomodoro preservada", async ({ request }) => {
   expect(html).toMatch(
     /<title[^>]*>Política de Privacidade do Pomodoro \| Byte Criativo<\/title>/,
   )
+  expect(visibleText(html)).toContain(POMODORO_PRIVACIDADE_TEXT)
 })
 
 test("organização com CNPJ no JSON-LD da home", async ({ request }) => {
