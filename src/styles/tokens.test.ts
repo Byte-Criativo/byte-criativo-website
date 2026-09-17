@@ -2,7 +2,15 @@ import { readFileSync } from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { contrastRatio } from "@/lib/contrast"
-import { lightTheme, palette, requiredPairs, rooms, versoTheme } from "./tokens"
+import {
+  lightTheme,
+  palette,
+  requiredPairs,
+  resolveContrastMin,
+  resolveRoomColor,
+  rooms,
+  versoTheme,
+} from "./tokens"
 import tokensJson from "./tokens.json"
 
 const css = readFileSync(
@@ -10,6 +18,9 @@ const css = readFileSync(
   "utf8",
 )
 
+// `indexOf` pega a primeira ocorrência do seletor: o `:root` de topo precisa
+// aparecer antes do `:root` aninhado em `@media (prefers-reduced-motion)`
+// para que este helper resolva o bloco certo.
 function block(selector: string): string {
   const start = css.indexOf(`${selector} {`)
   expect(start, `bloco ${selector} ausente em globals.css`).toBeGreaterThan(-1)
@@ -36,6 +47,82 @@ function requireVar(theme: Record<string, string>, name: string): string {
 }
 
 const roomSlugs = Object.keys(rooms)
+
+describe("tokens de cor: salas conhecidas", () => {
+  it("rooms tem exatamente as 3 salas de tokens.json (nenhum it.each abaixo roda vazio)", () => {
+    expect(roomSlugs.length).toBe(3)
+    expect([...roomSlugs].sort()).toEqual(
+      ["festival-alumio", "goromax", "underground-pb"].sort(),
+    )
+  })
+})
+
+describe("tokens de cor: validação do mínimo de contraste", () => {
+  it("aceita 3 e 4,5 e devolve o mesmo valor", () => {
+    expect(resolveContrastMin("par de teste", 3)).toBe(3)
+    expect(resolveContrastMin("par de teste", 4.5)).toBe(4.5)
+  })
+
+  it("rejeita um mínimo que não seja 3 nem 4,5", () => {
+    expect(() => resolveContrastMin("par de teste", 4)).toThrow(
+      'Par "par de teste": min inválido 4 (esperado 3 ou 4,5)',
+    )
+  })
+})
+
+describe("tokens de cor: resolveRoomColor cai para o tema base da sala", () => {
+  it("usa o token da sala quando a chave existe", () => {
+    const fixture = {
+      color: {
+        primitive: { tinta: "#111111", parede: "#F4EFE7" },
+        themes: {
+          light: { "--ink": "tinta", "--bg": "parede" },
+          verso: { "--ink": "tinta", "--bg": "parede" },
+        },
+        rooms: {
+          sala: { base: "light" as const, tokens: { surface: "#F4EFE7" } },
+        },
+      },
+      pairs: [],
+    }
+
+    expect(resolveRoomColor(fixture, "sala", "surface")).toBe("#F4EFE7")
+  })
+
+  it("cai para a variável --<chave> do tema base quando a sala não publica a chave", () => {
+    const fixture = {
+      color: {
+        primitive: { tinta: "#111111", parede: "#F4EFE7" },
+        themes: {
+          light: { "--ink": "tinta", "--bg": "parede" },
+          verso: { "--ink": "tinta", "--bg": "parede" },
+        },
+        rooms: {
+          sala: { base: "light" as const, tokens: { surface: "#F4EFE7" } },
+        },
+      },
+      pairs: [],
+    }
+
+    // "ink" não existe em `sala.tokens`: cai para `--ink` do tema `light`.
+    expect(resolveRoomColor(fixture, "sala", "ink")).toBe("#111111")
+  })
+
+  it("lança um erro claro quando a sala não existe no fixture", () => {
+    const fixture = {
+      color: {
+        primitive: {},
+        themes: { light: {}, verso: {} },
+        rooms: {},
+      },
+      pairs: [],
+    }
+
+    expect(() => resolveRoomColor(fixture, "sala-inexistente", "ink")).toThrow(
+      "sala ausente em tokens.json: sala-inexistente",
+    )
+  })
+})
 
 describe("tokens de cor: contraste mínimo", () => {
   it.each(requiredPairs)("$name atende ao mínimo de contraste", (pair) => {
