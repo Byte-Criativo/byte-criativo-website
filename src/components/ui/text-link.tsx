@@ -9,16 +9,21 @@ export type TextLinkVariante = "acao" | "inline" | "navegacao"
 
 const BASE = "text-ink underline-offset-(--desloc-sublinhado)"
 
+// I1 / RC2: "o foco visível repete o feedback do hover". Cada variante tem
+// um par `focus-visible:*` idêntico ao `ponteiro:hover:*` correspondente —
+// nunca um valor diferente — porque a especificação de `navegacao` reserva
+// border.focus só para o estado "atual" (aria-current); repouso/hover/foco
+// (quando não é a página atual) usam border.decorative nos três.
 const VARIANTE: Record<TextLinkVariante, string> = {
   // Link de ação isolado: nunca usa a exceção de texto corrido do 2.5.8.
-  acao: "inline-flex min-h-(--alvo-toque) items-center gap-(--space-1) text-label underline decoration-(length:--border-w-decorative) ponteiro:hover:decoration-(length:--border-w-focus)",
+  acao: "inline-flex min-h-(--alvo-toque) items-center gap-(--space-1) text-label underline decoration-(length:--border-w-decorative) ponteiro:hover:decoration-(length:--border-w-focus) focus-visible:decoration-(length:--border-w-focus)",
   // Dentro de frase: herda tamanho e peso; sempre sublinhado (1.4.1).
   inline:
-    "underline decoration-(length:--border-w-decorative) ponteiro:hover:decoration-(length:--border-w-focus)",
+    "underline decoration-(length:--border-w-decorative) ponteiro:hover:decoration-(length:--border-w-focus) focus-visible:decoration-(length:--border-w-focus)",
   // NavLink: sem sublinhado em repouso; a página atual ganha sublinhado de
   // border.focus junto com aria-current (nunca só cor).
   navegacao:
-    "inline-flex min-h-(--alvo-min) items-center no-underline ponteiro:hover:underline ponteiro:hover:decoration-(length:--border-w-decorative) aria-[current]:underline aria-[current]:decoration-(length:--border-w-focus)",
+    "inline-flex min-h-(--alvo-min) items-center no-underline ponteiro:hover:underline ponteiro:hover:decoration-(length:--border-w-decorative) focus-visible:underline focus-visible:decoration-(length:--border-w-decorative) aria-[current]:underline aria-[current]:decoration-(length:--border-w-focus)",
 }
 
 export function textLinkClasses(

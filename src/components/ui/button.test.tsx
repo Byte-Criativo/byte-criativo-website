@@ -1,7 +1,15 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
+import type { ReactElement } from "react"
 import { describe, expect, it, vi } from "vitest"
 import { Button } from "./button"
+
+// C1: extrai o `onClick` do elemento React devolvido por Button(), chamado
+// como função plana (sem DOM), para inspecionar exatamente o que teria que
+// ser serializado se um Server Component renderizasse <Button> direto.
+function onClickDe(elemento: ReactElement): unknown {
+  return (elemento.props as { onClick?: unknown }).onClick
+}
 
 describe("Button", () => {
   it("ação na página é um button com type explícito", () => {
@@ -63,5 +71,56 @@ describe("Button", () => {
   it("hover só com ponteiro fino (RC2)", () => {
     render(<Button type="button">Falar sobre um projeto</Button>)
     expect(screen.getByRole("button").className).toContain("ponteiro:")
+  })
+
+  // C1: Button é Server Component (especificação, "Renderização"). Chamar o
+  // componente como função plana (sem `render`/DOM) inspeciona o elemento
+  // React que ele devolve — o mesmo objeto que teria que ser serializado
+  // para o payload RSC caso um Server Component o renderizasse. Antes da
+  // correção, este teste falhava: `elemento.props.onClick` era sempre uma
+  // função (o wrapper interno), mesmo sem `onClick` do chamador e com
+  // `enviando` falso.
+  it("C1: sem onClick nem enviando, não anexa handler de clique (renderiza em Server Component)", () => {
+    const elemento = Button({ type: "button", children: "Copiar e-mail" })
+    expect(onClickDe(elemento)).toBeUndefined()
+  })
+
+  it("C1: com onClick do chamador, o handler é anexado normalmente", () => {
+    const aoClicar = vi.fn()
+    const elemento = Button({
+      type: "button",
+      onClick: aoClicar,
+      children: "Copiar e-mail",
+    })
+    expect(typeof onClickDe(elemento)).toBe("function")
+  })
+
+  it("C1: enviando sem onClick ainda assim anexa handler (precisa interceptar o clique)", () => {
+    const elemento = Button({
+      type: "submit",
+      enviando: true,
+      children: "Enviar mensagem",
+    })
+    expect(typeof onClickDe(elemento)).toBe("function")
+  })
+
+  it("I1: o foco repete o mesmo feedback do hover (RC2)", () => {
+    const { rerender } = render(
+      <Button type="button">Falar sobre um projeto</Button>,
+    )
+    expect(screen.getByRole("button")).toHaveClass(
+      "focus-visible:bg-action-bg-hover",
+    )
+
+    rerender(
+      <Button type="button" variante="contorno">
+        Menu
+      </Button>,
+    )
+    const contorno = screen.getByRole("button", { name: "Menu" })
+    expect(contorno).toHaveClass("focus-visible:underline")
+    expect(contorno).toHaveClass(
+      "focus-visible:decoration-(length:--border-w-focus)",
+    )
   })
 })

@@ -23,12 +23,15 @@ const BASE =
 const VARIANTE: Record<ButtonVariante, string> = {
   // Borda transparente no primário: some no tema normal e reaparece em
   // cores forçadas, onde o fundo não é desenhado (RC10).
+  // I1 / RC2: o foco repete o mesmo feedback do hover, sem depender de
+  // ponteiro fino — por isso cada `ponteiro:hover:*` tem um par
+  // `focus-visible:*` idêntico, fora da variante `ponteiro:`.
   primario:
-    "min-h-(--space-7) border-transparent bg-action text-on-action ponteiro:hover:bg-action-bg-hover",
+    "min-h-(--space-7) border-transparent bg-action text-on-action ponteiro:hover:bg-action-bg-hover focus-visible:bg-action-bg-hover",
   // Contorno não troca de fundo no hover: o sublinhado do rótulo vale
   // também dentro do case e no bloco data-bloco="alt".
   contorno:
-    "min-h-(--alvo-toque) border-ink bg-bg text-ink ponteiro:hover:underline ponteiro:hover:decoration-(length:--border-w-focus)",
+    "min-h-(--alvo-toque) border-ink bg-bg text-ink ponteiro:hover:underline ponteiro:hover:decoration-(length:--border-w-focus) focus-visible:underline focus-visible:decoration-(length:--border-w-focus)",
 }
 
 export function buttonClasses(
@@ -82,6 +85,27 @@ export function Button(props: ButtonProps): ReactElement {
 
   const { type, enviando = false, onClick, commandfor, command } = props
 
+  // C1: Button é Server Component (especificação, "Renderização"). Anexar
+  // sempre um `onClick` — mesmo sem handler do chamador e com `enviando`
+  // falso — faz qualquer árvore puramente Server que renderize <Button>
+  // (catálogo da L5, fallback sem JS do formulário) quebrar em runtime com
+  // "Event handlers cannot be passed to Client Component props": a função
+  // fechada aqui dentro não tem como ser serializada para o payload RSC.
+  // Só existe handler de fato quando o chamador passou `onClick` ou quando
+  // `enviando` precisa interceptar o clique — nos dois casos o Button já
+  // está, por definição, dentro de uma ilha Client (não há como haver
+  // interatividade real sem uma).
+  const aoClicar: MouseEventHandler<HTMLButtonElement> | undefined =
+    onClick || enviando
+      ? (evento) => {
+          if (enviando) {
+            evento.preventDefault()
+            return
+          }
+          onClick?.(evento)
+        }
+      : undefined
+
   return (
     <button
       id={id}
@@ -92,13 +116,7 @@ export function Button(props: ButtonProps): ReactElement {
       aria-haspopup={props["aria-haspopup"]}
       commandFor={commandfor}
       command={command}
-      onClick={(evento) => {
-        if (enviando) {
-          evento.preventDefault()
-          return
-        }
-        onClick?.(evento)
-      }}
+      onClick={aoClicar}
       className={buttonClasses(variante, className)}
     >
       {children}

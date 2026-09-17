@@ -93,4 +93,41 @@ describe("TextLink", () => {
     expect(link).toHaveClass("underline")
     expect(link.className).not.toContain("text-label")
   })
+
+  // I1 / RC2: "o foco visível repete o feedback do hover". Cada variante
+  // precisa do par focus-visible: idêntico ao ponteiro:hover: existente,
+  // porque quem navega por teclado num dispositivo híbrido (touch + mouse)
+  // nunca aciona a media query pointer: fine.
+  it("I1: acao e inline repetem no foco a mesma espessura de sublinhado do hover", () => {
+    render(
+      <TextLink href="/servicos" variante="acao">
+        Ver todos os serviços
+      </TextLink>,
+    )
+    expect(screen.getByRole("link")).toHaveClass(
+      "focus-visible:decoration-(length:--border-w-focus)",
+    )
+
+    render(
+      <TextLink href="/privacidade" variante="inline">
+        política de privacidade
+      </TextLink>,
+    )
+    expect(
+      screen.getByRole("link", { name: "política de privacidade" }),
+    ).toHaveClass("focus-visible:decoration-(length:--border-w-focus)")
+  })
+
+  it("I1: navegacao repete no foco o mesmo sublinhado fino do hover (não o de aria-current)", () => {
+    render(
+      <TextLink href="/portfolio" variante="navegacao">
+        Trabalhos
+      </TextLink>,
+    )
+    const link = screen.getByRole("link", { name: "Trabalhos" })
+    expect(link).toHaveClass("focus-visible:underline")
+    expect(link).toHaveClass(
+      "focus-visible:decoration-(length:--border-w-decorative)",
+    )
+  })
 })
