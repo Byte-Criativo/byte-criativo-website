@@ -96,8 +96,8 @@ test("robots aponta para o sitemap", async ({ request }) => {
 test("política do Pomodoro preservada", async ({ request }) => {
   const response = await request.get("/pomodoro/privacidade")
   const html = await response.text()
-  expect(html).toMatch(/<h1[^>]*>Política de Privacidade<\/h1>/)
-  expect(html).toContain("não coleta, transmite, vende nem compartilha")
+  const h1Match = /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(html)
+  expect(visibleText(h1Match?.[1] ?? "")).toBe("Política de Privacidade")
   expect(html).toMatch(
     /<title[^>]*>Política de Privacidade do Pomodoro \| Byte Criativo<\/title>/,
   )

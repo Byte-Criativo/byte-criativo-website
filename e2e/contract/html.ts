@@ -28,7 +28,10 @@ export function visibleText(html: string): string {
   const withoutNonVisible = html
     .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
     .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
-    .replace(/<!--[\s\S]*?-->/g, " ")
+    // Comentários HTML viram string vazia (não espaço): o React insere
+    // <!-- --> entre nós de texto contíguos, e tratá-los como espaço
+    // introduziria um espaço que não existe na renderização visual.
+    .replace(/<!--[\s\S]*?-->/g, "")
   const withoutTags = withoutNonVisible.replace(/<[^>]+>/g, " ")
   const decoded = withoutTags
     .replace(/&amp;/g, "&")
@@ -37,5 +40,8 @@ export function visibleText(html: string): string {
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/&nbsp;/g, " ")
-  return decoded.replace(/\s+/g, " ").trim()
+  return decoded
+    .replace(/\s+/g, " ")
+    .replace(/\s+([.,;:!?])/g, "$1")
+    .trim()
 }
