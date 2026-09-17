@@ -65,6 +65,20 @@
   --focus-halo: #000000;
 }
 
+/* RC6 — o que uma sala ([data-case]) NÃO reescreve, de propósito:
+   --surface, --surface-muted, --border-decorative, --border-control,
+   --mark-rest, --accent, --accent-text e as quatro vars de mensagem
+   (--success-text, --danger-text, --warning-text, --info-text).
+   Consequência: qualquer componente que dependa dessas vars (Field, Notice,
+   Tag, IndiceSemicolon, o controle do Frente/Verso, o `;` que usa --accent)
+   nunca deve ficar dentro de um article[data-case] — ele herdaria o valor do
+   tema base (light/verso) escolhido em :root/[data-surface="verso"], não o
+   da sala. Dentro da sala só valem --bg, --ink, --ink-muted, as vars de ação
+   (--action-bg, --action-bg-hover, --action-ink), --room-easel e, para o
+   anel de foco, --focus-ring/--focus-halo (redefinidos abaixo com os
+   valores do tema base da sala, já que o foco precisa ser visível sobre o
+   fundo da sala, não sobre o fundo do tema herdado). */
+
 [data-case="underground-pb"] {
   --bg: #f4efe7;
   --ink: #111111;
@@ -73,6 +87,8 @@
   --action-bg-hover: #111111;
   --action-ink: #f4efe7;
   --room-easel: #111111;
+  --focus-ring: #000000;
+  --focus-halo: #ffffff;
 }
 
 [data-case="underground-pb"] [data-bloco="alt"] {
@@ -87,6 +103,8 @@
   --action-bg-hover: #19151c;
   --action-ink: #fff2d8;
   --room-easel: #19151c;
+  --focus-ring: #000000;
+  --focus-halo: #ffffff;
 }
 
 [data-case="festival-alumio"] [data-bloco="alt"] {
@@ -101,6 +119,8 @@
   --action-bg-hover: #eee3cb;
   --action-ink: #0d0b09;
   --room-easel: #eee3cb;
+  --focus-ring: #ffffff;
+  --focus-halo: #000000;
 }
 
 [data-case="goromax"] [data-bloco="alt"] {

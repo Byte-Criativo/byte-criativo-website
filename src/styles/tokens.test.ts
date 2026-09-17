@@ -190,6 +190,23 @@ describe("tokens de cor: sincronia das salas com o CSS", () => {
       )
     },
   )
+
+  it.each(roomSlugs)(
+    '[data-case="%s"] define --focus-ring e --focus-halo com os valores do tema base da sala',
+    (slug) => {
+      const roomEntry =
+        tokensJson.color.rooms[slug as keyof typeof tokensJson.color.rooms]
+      if (!roomEntry) throw new Error(`sala ausente em tokens.json: ${slug}`)
+      const baseTheme = roomEntry.base === "verso" ? versoTheme : lightTheme
+      const roomBlock = parseHexVars(block(`[data-case="${slug}"]`))
+      expect(roomBlock["--focus-ring"], `${slug} --focus-ring`).toBe(
+        requireVar(baseTheme, "--focus-ring").toLowerCase(),
+      )
+      expect(roomBlock["--focus-halo"], `${slug} --focus-halo`).toBe(
+        requireVar(baseTheme, "--focus-halo").toLowerCase(),
+      )
+    },
+  )
 })
 
 describe("tokens de cor: regra do foco duplo", () => {
@@ -223,17 +240,18 @@ describe("tokens de cor: regra do foco duplo", () => {
   })
 
   it.each(roomSlugs)(
-    "sala %s: anel e halo do tema base cumprem o mínimo sobre surface e surfaceAlt",
+    "sala %s: anel e halo definidos no CSS da sala cumprem o mínimo sobre surface e surfaceAlt",
     (slug) => {
-      const roomEntry =
-        tokensJson.color.rooms[slug as keyof typeof tokensJson.color.rooms]
-      if (!roomEntry) throw new Error(`sala ausente em tokens.json: ${slug}`)
-      const baseTheme = roomEntry.base === "verso" ? versoTheme : lightTheme
+      // Lê --focus-ring/--focus-halo do bloco [data-case] do CSS (não do
+      // tema base em memória): é o CSS da sala que corre em produção, e é
+      // ele que o teste de sincronia acima já garante bater com o tema
+      // base — aqui validamos o contrato de contraste sobre esses valores.
+      const roomBlock = parseHexVars(block(`[data-case="${slug}"]`))
       const roomTokens = rooms[slug]
       if (!roomTokens) throw new Error(`sala ausente: ${slug}`)
       assertDoubleFocus(
-        requireVar(baseTheme, "--focus-ring"),
-        requireVar(baseTheme, "--focus-halo"),
+        requireVar(roomBlock, "--focus-ring"),
+        requireVar(roomBlock, "--focus-halo"),
         [
           requireVar(roomTokens, "surface"),
           requireVar(roomTokens, "surfaceAlt"),
