@@ -83,6 +83,62 @@ describe("RadioGroup", () => {
     }
   })
 
+  it("cada opção leva o seu próprio value ao DOM (I4): sem isso o formulário envia 'on' para todas", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    expect(screen.getByRole("radio", { name: "Um site" })).toHaveAttribute(
+      "value",
+      "site",
+    )
+    expect(screen.getByRole("radio", { name: "Um sistema" })).toHaveAttribute(
+      "value",
+      "sistema",
+    )
+    expect(
+      screen.getByRole("radio", { name: "Ainda não sei" }),
+    ).toHaveAttribute("value", "nao-sei")
+  })
+
+  it("obrigatorio do Field marca required em cada rádio (I4)", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio).toBeRequired()
+    }
+  })
+
+  it("campo opcional não marca required em nenhum rádio (I4)", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio={false}
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio).not.toBeRequired()
+    }
+  })
+
   it("cada opção tem alvo de 44 px de altura", () => {
     render(
       <Field

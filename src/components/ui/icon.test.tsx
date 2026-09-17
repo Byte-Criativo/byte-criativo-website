@@ -48,4 +48,32 @@ describe("Icon", () => {
     expect(svg).toHaveAttribute("width", "24")
     expect(svg?.querySelectorAll("path").length).toBeGreaterThan(0)
   })
+
+  it("mais e menos têm traçados diferentes (M1): o FaqItem alterna exatamente entre os dois", () => {
+    const mais = render(<Icon nome="mais" />)
+    const menos = render(<Icon nome="menos" />)
+    const tracadosMais = [...mais.container.querySelectorAll("path")].map((p) =>
+      p.getAttribute("d"),
+    )
+    const tracadosMenos = [...menos.container.querySelectorAll("path")].map(
+      (p) => p.getAttribute("d"),
+    )
+    expect(tracadosMais).toHaveLength(2)
+    expect(tracadosMenos).toHaveLength(1)
+    expect(tracadosMais).not.toEqual(tracadosMenos)
+    // "mais" tem o traço vertical que "menos" não tem.
+    expect(tracadosMais).toContain("M12 5v14")
+  })
+
+  it("os 12 ícones têm, cada um, um conjunto de traçados único (M1)", () => {
+    const assinaturas = NOMES.map((nome) => {
+      const { container, unmount } = render(<Icon nome={nome} />)
+      const assinatura = [...container.querySelectorAll("path")]
+        .map((p) => p.getAttribute("d"))
+        .join("|")
+      unmount()
+      return assinatura
+    })
+    expect(new Set(assinaturas).size).toBe(NOMES.length)
+  })
 })
