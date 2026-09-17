@@ -28,6 +28,9 @@
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.5"
   },
+  "overrides": {
+    "postcss": "$postcss"
+  },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.61.1",

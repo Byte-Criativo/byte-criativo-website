@@ -4,6 +4,8 @@ Site institucional da Byte Criativo, desenvolvido com Next.js, React, styled-com
 
 O projeto foi organizado para ser simples de manter: os textos principais ficam centralizados em arquivos de conteúdo, os metadados de SEO ficam em um módulo próprio, os contatos ficam em uma única fonte de verdade e há testes automatizados (unitários, de integração e end-to-end) para proteger SEO, segurança, redirecionamentos e arquivos públicos.
 
+> **Em andamento:** na branch `redesign/v2` o site está sendo reescrito com Next.js App Router e Tailwind CSS (saindo de Pages Router + styled-components). Este README ainda descreve a versão anterior (Pages Router) fora das seções de Scripts, Hook de pré-commit e Testes, que já refletem o novo esqueleto.
+
 ## Sumário
 
 - [Tecnologias](#tecnologias)
@@ -86,13 +88,7 @@ Roda a versão de produção depois de um build.
 npm run lint
 ```
 
-Executa o ESLint (alias de `check-lint`).
-
-```bash
-npm run check-format
-```
-
-Verifica a formatação com Prettier sem alterar arquivos.
+Executa o ESLint.
 
 ```bash
 npm run format
@@ -101,13 +97,13 @@ npm run format
 Formata o código com Prettier.
 
 ```bash
-npm run check-lint
+npm run format:check
 ```
 
-Roda o ESLint.
+Verifica a formatação com Prettier sem alterar arquivos.
 
 ```bash
-npm run check-types
+npm run typecheck
 ```
 
 Verifica a tipagem com TypeScript (`tsc --noEmit`).
@@ -134,7 +130,7 @@ Roda o contrato HTTP (`e2e/contract/`) contra `BASE_URL` (padrão: produção, `
 npm test
 ```
 
-Executa `npm run build`, depois os testes de `tests/*.test.mjs` (Node Test Runner) e por fim `vitest run`. É o comando usado no checklist de publicação; não inclui os testes end-to-end do Playwright.
+Executa `npm run typecheck` e depois `npm run test:unit`. Não inclui build de produção nem os testes end-to-end do Playwright.
 
 ```bash
 node scripts/portfolio/capture.mjs <slug> <url...>
@@ -144,7 +140,7 @@ Gera capturas de tela (viewport e página inteira) de uma ou mais URLs, salvas e
 
 ### Hook de Pré-commit
 
-O projeto usa Husky. A cada commit, um hook roda automaticamente `check-format`, `check-lint` e `check-types`. Se algum falhar, o commit é bloqueado até a correção. O build de produção não roda no commit (a Vercel o executa no deploy).
+O projeto usa Husky. A cada commit, um hook roda automaticamente `format:check`, `lint` e `typecheck`. Se algum falhar, o commit é bloqueado até a correção. O build de produção não roda no commit (a Vercel o executa no deploy).
 
 ## Estrutura de Pastas
 
@@ -745,36 +741,25 @@ noopener noreferrer
 
 ## Testes
 
-Há quatro camadas de teste automatizado: unitários/integração com Vitest, integração de build com Node Test Runner, end-to-end com Playwright e contrato HTTP com Playwright (contra `BASE_URL`).
+Há três camadas de teste automatizado: unitários/integração com Vitest, end-to-end com Playwright (contra o servidor local) e contrato HTTP com Playwright (contra `BASE_URL`).
 
 ### `src/**/*.test.ts(x)` (Vitest)
 
-Testes unitários de componentes React e módulos de `src/lib/` (ex.: `LeadForm`, `analytics.ts`, `contact.ts`, `lead.ts`, `link-security.ts`). Rodam com:
+Testes unitários de módulos de `src/lib/` e `src/content/` (ex.: `analytics.ts`, `contact.ts`, `lead.ts`, `link-security.ts`, `pages.ts`, `services.ts`). Rodam com:
 
 ```bash
 npm run test:unit
 ```
 
-### `tests/` (Node Test Runner, contra o build de produção)
-
-- `seo.test.mjs`: idioma `pt-BR`, title, description, canonical, robots, Open Graph, Twitter Card, JSON-LD e ausência de sinais ruins (`noindex`, `nofollow`, seções antigas removidas).
-- `public-assets.test.mjs`: `robots.txt`, `sitemap.xml` e dimensões da imagem Open Graph.
-- `security.test.mjs`: headers de segurança no Next.js e proteção `noopener noreferrer` em links com `target="_blank"`.
-- `redirects.test.mjs`: redirecionamento 301 das URLs antigas de serviço.
-- `service-pages.test.mjs`: conteúdo e SEO das páginas individuais de `/servicos/[slug]`.
-- `ssr-styles.test.mjs`: estilos do styled-components presentes no HTML renderizado no servidor.
-
-Para executar:
-
 ```bash
 npm test
 ```
 
-Esse comando faz build de produção, roda os testes de `tests/` e depois `vitest run`.
+Esse comando roda `npm run typecheck` e depois `npm run test:unit`.
 
-### `e2e/` (Playwright, contra o servidor de desenvolvimento)
+### `e2e/` (Playwright, contra o servidor local)
 
-- `home.spec.ts`: navegação principal, menu mobile, abertura do FAQ e CTA de WhatsApp com proteção anti-tabnabbing.
+- `sem-rastreamento-sem-consentimento.spec.ts`: garante que a home não grava cookies nem faz requisições para hosts de rastreamento do Google sem consentimento.
 
 ```bash
 npm run test:e2e

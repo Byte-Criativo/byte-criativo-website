@@ -7,7 +7,6 @@
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 90rem;
-  --ease-museum: cubic-bezier(0.2, 0.7, 0.1, 1);
 }
 
 :root {
@@ -35,7 +34,12 @@
   --dur-fast: 150ms;
   --dur-base: 240ms;
   --dur-slow: 400ms;
+  /* --ease-museum vive só aqui (não em @theme): não é usada como utilitário
+     Tailwind hoje, só via var(--ease-museum) em CSS custom. */
   --ease-museum: cubic-bezier(0.2, 0.7, 0.1, 1);
+  /* --ease-in-out sobrescreve de propósito a curva padrão do tema do
+     Tailwind (--ease-in-out embutida) pela curva do token de motion, para
+     que o utilitário `ease-in-out` do Tailwind use a curva da marca. */
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
@@ -130,10 +134,12 @@
   --font-sans: var(--ff-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 3px;
-  box-shadow: 0 0 0 5px var(--focus-halo);
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 5px var(--focus-halo);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
