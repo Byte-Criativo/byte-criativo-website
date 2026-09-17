@@ -1,0 +1,53 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main, redesign/v2]
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:unit
+      - run: npm audit --omit=dev --audit-level=high
+  e2e:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit firefox
+      - run: npm run test:e2e
+      - name: Contrato HTTP contra o build local
+        # Remover continue-on-error ao concluir a tarefa 8.7 (todas as rotas existirem)
+        continue-on-error: true
+        run: |
+          npm run start &
+          npx wait-on http://localhost:3000
+          BASE_URL=http://localhost:3000 npm run test:contract
+  lighthouse:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx @lhci/cli@0.15.1 autorun
