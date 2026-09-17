@@ -62,28 +62,23 @@ export function TextLink({
   "data-indice-link": dataIndiceLink,
   children,
 }: TextLinkProps): ReactElement {
-  // R51: o espaço que separa o texto visível do complemento fica num nó de
-  // texto explícito (" "), fora do <VisuallyHidden>. dom-accessibility-api
-  // (usado por toHaveAccessibleName/getByRole) não junta o texto de nós
-  // adjacentes com espaço, e uma quebra de linha JSX entre dois containers
-  // de expressão também não vira espaço — sem isso o nome sai
-  // "Ver estudo de casodo Festival Alumiô", sem espaço antes do complemento.
+  // M5 / R51: o espaço que separa o texto visível do complemento é
+  // responsabilidade do próprio VisuallyHidden (prop `separador`), não
+  // deste componente montar um `{" "}` manual — ver o comentário em
+  // visually-hidden.tsx para o porquê (RC5).
   const conteudo = (
     <>
       {children}
       {complemento ? (
-        <>
-          {" "}
-          <VisuallyHidden>{complemento}</VisuallyHidden>
-        </>
+        <VisuallyHidden separador>{complemento}</VisuallyHidden>
       ) : null}
       {externo ? (
         <>
           {/* Marcador de destino, não seta decorativa (RC8). Espaço não
               separável (U+00A0) antes do glifo para ele não quebrar sozinho
               para a linha seguinte, longe da palavra anterior. */}
-          <span aria-hidden="true">{" ↗"}</span>{" "}
-          <VisuallyHidden>(abre em nova aba)</VisuallyHidden>
+          <span aria-hidden="true">{" ↗"}</span>
+          <VisuallyHidden separador>(abre em nova aba)</VisuallyHidden>
         </>
       ) : null}
     </>
