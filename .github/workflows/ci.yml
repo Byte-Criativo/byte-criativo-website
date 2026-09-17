@@ -5,9 +5,13 @@ on:
     branches: [main, redesign/v2]
 permissions:
   contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   quality:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,6 +27,7 @@ jobs:
   e2e:
     needs: quality
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,16 +37,24 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium webkit firefox
       - run: npm run test:e2e
+      - name: Upload relatório do Playwright em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
       - name: Contrato HTTP contra o build local
         # Remover continue-on-error ao concluir a tarefa 8.7 (todas as rotas existirem)
         continue-on-error: true
         run: |
           npm run start &
-          npx wait-on http://localhost:3000
+          npx --yes wait-on@9.1.0 -t 60000 http://localhost:3000
           BASE_URL=http://localhost:3000 npm run test:contract
   lighthouse:
     needs: quality
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,3 +64,10 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx @lhci/cli@0.15.1 autorun
+      - name: Upload resultados do Lighthouse em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouseci
+          path: .lighthouseci/
+          retention-days: 7

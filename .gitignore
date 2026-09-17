@@ -36,6 +36,9 @@ yarn-error.log*
 /playwright-report
 /playwright/.cache
 
+# lighthouse ci
+/.lighthouseci
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

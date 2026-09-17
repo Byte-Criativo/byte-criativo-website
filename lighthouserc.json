@@ -7,6 +7,7 @@
       "settings": { "formFactor": "mobile" }
     },
     "assert": {
+      "aggregationMethod": "median-run",
       "assertions": {
         "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
         "cumulative-layout-shift": ["error", { "maxNumericValue": 0.05 }],
