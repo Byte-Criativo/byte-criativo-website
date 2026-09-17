@@ -125,10 +125,22 @@ npm run test:e2e
 Roda os testes end-to-end com Playwright (`e2e/`). Exige um Chrome instalado; use `--channel chrome` se necessário.
 
 ```bash
+npm run test:contract
+```
+
+Roda o contrato HTTP (`e2e/contract/`) contra `BASE_URL` (padrão: produção, `https://www.bcriativo.com`). Não abre navegador; usa apenas requisições HTTP para checar rotas, redirecionamentos, headers e conteúdo preservado.
+
+```bash
 npm test
 ```
 
 Executa `npm run build`, depois os testes de `tests/*.test.mjs` (Node Test Runner) e por fim `vitest run`. É o comando usado no checklist de publicação; não inclui os testes end-to-end do Playwright.
+
+```bash
+node scripts/portfolio/capture.mjs <slug> <url...>
+```
+
+Gera capturas de tela (viewport e página inteira) de uma ou mais URLs, salvas em `docs/research/captures/<ano>-<mês>-<slug>/` junto com um `manifest.json`. Usado para registrar o estado de referências externas de portfólio.
 
 ### Hook de Pré-commit
 
@@ -211,7 +223,7 @@ Configurações e utilitários compartilhados.
 Páginas do Next.js usando Pages Router.
 
 - `_app.page.tsx`: providers, fontes (`next/font`), estilos globais e SEO padrão.
-- `_document.page.tsx`: HTML base, favicon, tag do Google e coleta de estilos do styled-components para SSR.
+- `_document.page.tsx`: HTML base, favicon e coleta de estilos do styled-components para SSR.
 - `index.page.tsx`: aponta para a home.
 - `home/`: página principal e suas seções (ver abaixo).
 - `sobre.page.tsx`, `contato.page.tsx`, `portfolio.page.tsx`: páginas de marketing renderizadas via `MarketingPage`.
@@ -733,7 +745,7 @@ noopener noreferrer
 
 ## Testes
 
-Há três camadas de teste automatizado: unitários/integração com Vitest, integração de build com Node Test Runner e end-to-end com Playwright.
+Há quatro camadas de teste automatizado: unitários/integração com Vitest, integração de build com Node Test Runner, end-to-end com Playwright e contrato HTTP com Playwright (contra `BASE_URL`).
 
 ### `src/**/*.test.ts(x)` (Vitest)
 
@@ -766,6 +778,14 @@ Esse comando faz build de produção, roda os testes de `tests/` e depois `vites
 
 ```bash
 npm run test:e2e
+```
+
+### `e2e/contract/` (Playwright, requisições HTTP contra `BASE_URL`)
+
+Contrato que protege o comportamento observável do site (rotas preservadas, redirecionamentos legados, headers de segurança, sitemap/robots e a política de privacidade do Pomodoro) independentemente da implementação interna. Roda contra `BASE_URL` (padrão: produção).
+
+```bash
+npm run test:contract
 ```
 
 ## Deploy na Vercel
