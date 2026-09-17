@@ -36,8 +36,9 @@ export const ImageAsset = z.object({
 
 // R36: as chaves de cor seguem as salas de src/styles/tokens.json
 // (surface, surfaceAlt, ink, inkMuted, accent, accent2, ctaBg, ctaInk, easel).
-// `accent2` é opcional como no brief; `easel` também é opcional porque nem
-// todo tema de case precisa de uma cor de cavalete dedicada.
+// Só `accent2` é opcional, como no brief; `easel` é obrigatório porque a Sala
+// sempre desenha o cavalete a partir de `room.easel` (globals.css fixa
+// `--room-easel` por sala) — ver R42.
 export const CaseTheme = z.object({
   surface: Hex,
   surfaceAlt: Hex,
@@ -47,7 +48,7 @@ export const CaseTheme = z.object({
   accent2: Hex.optional(),
   ctaBg: Hex,
   ctaInk: Hex,
-  easel: Hex.optional(),
+  easel: Hex,
   displayFont: z.enum(["none", "anton", "barlow-condensed"]).default("none"),
   texture: z.enum(["none", "noise", "paper", "grain"]).default("none"),
 })

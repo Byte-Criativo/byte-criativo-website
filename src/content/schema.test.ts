@@ -68,6 +68,7 @@ const valid = {
     accent2: "#B4050E",
     ctaBg: "#111111",
     ctaInk: "#F4EFE7",
+    easel: "#111111",
   },
   permissions: { cleared: true, notes: "Autorizado pelo dono em 2026-09-20" },
   seo: {
@@ -128,6 +129,23 @@ describe("CaseStudy", () => {
     const result = CaseStudy.safeParse({
       ...valid,
       theme: { ...valid.theme, ink: "branco" },
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it("exige a cor do cavalete (easel) no tema", () => {
+    const result = CaseStudy.safeParse({
+      ...valid,
+      theme: {
+        surface: valid.theme.surface,
+        surfaceAlt: valid.theme.surfaceAlt,
+        ink: valid.theme.ink,
+        inkMuted: valid.theme.inkMuted,
+        accent: valid.theme.accent,
+        accent2: valid.theme.accent2,
+        ctaBg: valid.theme.ctaBg,
+        ctaInk: valid.theme.ctaInk,
+      },
     })
     expect(result.success).toBe(false)
   })
