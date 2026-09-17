@@ -1,6 +1,6 @@
-import { CONTACT_EMAIL, WHATSAPP_DISPLAY } from "@/src/lib/contact"
-import CaseUndergroundPB from "@/src/assets/case-undergroundpb-screenshot.webp"
-import CaseFestivalAlumio from "@/src/assets/case-festival-alumio-screenshot.webp"
+import { CONTACT_EMAIL, WHATSAPP_DISPLAY } from "@/lib/contact"
+import CaseUndergroundPB from "@/assets/case-undergroundpb-screenshot.webp"
+import CaseFestivalAlumio from "@/assets/case-festival-alumio-screenshot.webp"
 import type { StaticImageData } from "next/image"
 
 export type MarketingCard = {

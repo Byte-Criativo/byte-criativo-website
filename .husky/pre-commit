@@ -1,17 +1,17 @@
 echo "🎨 Verificando formatação (Prettier)..."
-npm run check-format || {
+npm run format:check || {
   echo "💥 Formatação incorreta. Rode 'npm run format', adicione as mudanças e refaça o commit."
   exit 1
 }
 
 echo "🔍 Verificando lint (ESLint)..."
-npm run check-lint || {
+npm run lint || {
   echo "💥 ESLint encontrou problemas. Corrija-os e refaça o commit."
   exit 1
 }
 
 echo "✏️  Verificando tipos (TypeScript)..."
-npm run check-types || {
+npm run typecheck || {
   echo "💥 Erros de tipagem encontrados. Corrija-os e refaça o commit."
   exit 1
 }

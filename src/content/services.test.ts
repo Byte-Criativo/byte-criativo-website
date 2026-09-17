@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { getServicePage } from "./services"
-import { buildWhatsAppUrl, WHATSAPP_NUMBER } from "@/src/lib/contact"
-import { hasConsecutiveRepeatedWords } from "@/src/test/whatsapp-message"
+import { buildWhatsAppUrl, WHATSAPP_NUMBER } from "@/lib/contact"
+import { hasConsecutiveRepeatedWords } from "@/test/whatsapp-message"
 
 const expectedMessages: Record<string, string> = {
   "desenvolvimento-de-sites":
