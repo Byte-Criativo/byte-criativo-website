@@ -18,13 +18,13 @@ test("configura headers de seguranca para todas as rotas", async () => {
   assert.match(headers["Content-Security-Policy"], /default-src 'self'/)
   assert.match(headers["Content-Security-Policy"], /object-src 'none'/)
   assert.match(headers["Content-Security-Policy"], /frame-ancestors 'none'/)
-  assert.match(
+  assert.doesNotMatch(
     headers["Content-Security-Policy"],
-    /script-src[^;]+https:\/\/www\.googletagmanager\.com/,
+    /googletagmanager\.com/,
   )
-  assert.match(
+  assert.doesNotMatch(
     headers["Content-Security-Policy"],
-    /connect-src[^;]+https:\/\/www\.google-analytics\.com/,
+    /google-analytics\.com/,
   )
   assert.match(headers["Content-Security-Policy"], /upgrade-insecure-requests/)
   assert.equal(headers["X-Content-Type-Options"], "nosniff")
