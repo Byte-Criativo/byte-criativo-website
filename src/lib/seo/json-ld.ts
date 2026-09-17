@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL, CONTACT_PHONE_E164 } from "@/lib/contact"
 import { SITE_NAME, SITE_URL } from "./metadata"
 
 export const ORGANIZATION_ID = `${SITE_URL}/#organization`
@@ -9,8 +10,8 @@ export function organization(): Record<string, unknown> {
     name: SITE_NAME,
     url: `${SITE_URL}/`,
     logo: `${SITE_URL}/logoByte.png`,
-    email: "contato@bcriativo.com",
-    telephone: "+5583991253377",
+    email: CONTACT_EMAIL,
+    telephone: CONTACT_PHONE_E164,
     taxID: "52.652.130/0001-02",
     sameAs: [
       "https://instagram.com/bytecriativo",

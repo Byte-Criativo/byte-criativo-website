@@ -29,4 +29,39 @@ describe("buildMetadata", () => {
       buildMetadata({ title: "X", description: "Y", path: "/processo/" }),
     ).toThrow()
   })
+
+  it("recusa caminho que começa com // ou contém // (troca de host)", () => {
+    expect(() =>
+      buildMetadata({ title: "X", description: "Y", path: "//evil.example" }),
+    ).toThrow()
+    expect(() =>
+      buildMetadata({ title: "X", description: "Y", path: "/a//b" }),
+    ).toThrow()
+  })
+
+  it("usa /og-image.png como imagem padrão em Open Graph e Twitter", () => {
+    const metadata = buildMetadata({
+      title: "Processo",
+      description: "Como um projeto anda",
+      path: "/processo",
+    })
+    expect(metadata.openGraph?.images).toMatchObject([
+      { url: "/og-image.png", width: 1200, height: 630 },
+    ])
+    expect(metadata.twitter).toMatchObject({
+      images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    })
+  })
+
+  it("preenche título e descrição do Twitter", () => {
+    const metadata = buildMetadata({
+      title: "Processo",
+      description: "Como um projeto anda",
+      path: "/processo",
+    })
+    expect(metadata.twitter).toMatchObject({
+      title: "Processo",
+      description: "Como um projeto anda",
+    })
+  })
 })
