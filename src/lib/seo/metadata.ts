@@ -12,17 +12,20 @@ type MetadataInput = {
   image?: string
 }
 
+// Lista de permissão em vez de proibir "//": aceita "/" (home) ou "/" seguido
+// de um ou mais segmentos minúsculos alfanuméricos com hífen, sem barra
+// final, sem espaços/controle e sem letra maiúscula. Qualquer coisa fora
+// disso (troca de host via "//evil", espaço, tab, barra invertida,
+// maiúscula) é rejeitada.
+const CANONICAL_PATH_RE = /^\/(?:[a-z0-9-]+(?:\/[a-z0-9-]+)*)?$/
+
 export function buildMetadata({
   title,
   description,
   path,
   image,
 }: MetadataInput): Metadata {
-  if (
-    !path.startsWith("/") ||
-    (path.length > 1 && path.endsWith("/")) ||
-    path.includes("//")
-  ) {
+  if (!CANONICAL_PATH_RE.test(path)) {
     throw new Error(`Caminho inválido para canonical: ${path}`)
   }
   const resolvedImage = image ?? DEFAULT_OG_IMAGE

@@ -39,6 +39,34 @@ describe("buildMetadata", () => {
     ).toThrow()
   })
 
+  it("recusa caminho com barra invertida, tab ou letra maiúscula (lista de permissão)", () => {
+    expect(() =>
+      buildMetadata({
+        title: "X",
+        description: "Y",
+        path: "/\\evil.example",
+      }),
+    ).toThrow()
+    expect(() =>
+      buildMetadata({ title: "X", description: "Y", path: "/\tevil" }),
+    ).toThrow()
+    expect(() =>
+      buildMetadata({ title: "X", description: "Y", path: "/a\\b" }),
+    ).toThrow()
+    expect(() =>
+      buildMetadata({ title: "X", description: "Y", path: "/Processo" }),
+    ).toThrow()
+  })
+
+  it("aceita caminho com múltiplos segmentos minúsculos válidos", () => {
+    const metadata = buildMetadata({
+      title: "X",
+      description: "Y",
+      path: "/ok/valido",
+    })
+    expect(metadata.alternates?.canonical).toBe("/ok/valido")
+  })
+
   it("usa /og-image.png como imagem padrão em Open Graph e Twitter", () => {
     const metadata = buildMetadata({
       title: "Processo",
