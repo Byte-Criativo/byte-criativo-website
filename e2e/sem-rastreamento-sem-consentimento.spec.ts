@@ -29,7 +29,7 @@ test.describe("Sem rastreamento sem consentimento", () => {
     expect(foreignRequests).toEqual([])
   })
 
-  test("nao grava nenhum cookie ao carregar a home", async ({
+  test("nao grava nenhum cookie ao carregar a home (inclui _ga/_gcl do Google Analytics/Ads)", async ({
     page,
     context,
   }) => {
@@ -38,21 +38,5 @@ test.describe("Sem rastreamento sem consentimento", () => {
 
     const cookies = await context.cookies()
     expect(cookies).toEqual([])
-  })
-
-  test("caso especifico: nao grava cookies de Google Analytics/Ads ao carregar a home", async ({
-    page,
-    context,
-  }) => {
-    await page.goto("/")
-    await page.waitForLoadState("networkidle")
-
-    const cookies = await context.cookies()
-    const trackingCookies = cookies.filter(
-      (cookie) =>
-        cookie.name.startsWith("_ga") || cookie.name.startsWith("_gcl"),
-    )
-
-    expect(trackingCookies).toEqual([])
   })
 })
