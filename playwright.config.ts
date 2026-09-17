@@ -8,6 +8,7 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,
+  forbidOnly: !!process.env.CI,
   use: { baseURL: `http://localhost:${port}` },
   projects: [
     {
