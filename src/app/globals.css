@@ -127,7 +127,165 @@
   --bg: #15110d;
 }
 
+/* ---------------------------------------------------------------------
+   Escala não-cor derivada de src/styles/tokens.json (Fase 7, L1.1).
+   src/styles/tokens-escala.test.ts espelha cada valor: mudar aqui sem
+   mudar o JSON (ou o contrário) derruba a suíte.
+   --------------------------------------------------------------------- */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 112px;
+  --space-10: 160px;
+
+  --radius-none: 0;
+  --radius-tag: 2px;
+  --radius-media: 8px;
+  --radius-phone: 36px;
+
+  /* border.* dos tokens são espessuras; o sufixo -w evita colisão com as
+     cores --border-decorative e --border-control já definidas acima. */
+  --border-w-decorative: 1px;
+  --border-w-control: 1.5px;
+  --border-w-focus: 2px;
+  --border-w-easel: 3px;
+
+  --focus-width: 2px;
+  --focus-offset: 3px;
+  --focus-halo-width: 3px;
+
+  --z-base: 0;
+  --z-index: 30;
+  --z-header: 40;
+  --z-overlay: 70;
+  --z-status: 80;
+  --z-skip: 90;
+
+  --grid-container-max: 1312px;
+  --grid-margin: 20px;
+  --grid-gutter: 12px;
+  --medida-max: 68ch;
+
+  /* RC3: alvos que não têm token no JSON (24 px é o mínimo do 2.5.8 e
+     44 px é a meta de toque; 48 px vem de --space-7). */
+  --alvo-min: 24px;
+  --alvo-toque: 44px;
+
+  /* TextLink: deslocamento do sublinhado, valor fixo da estratégia sem
+     token no JSON (especificação, "Valores sem token"). */
+  --desloc-sublinhado: 5px;
+
+  /* typography.families.mono. Nenhuma webfont é carregada na Fase 7: o
+     `code` só aparece no verso dos cases e a licença/preload da IBM Plex
+     Mono é decisão da Fase 9 (orçamento de fontes, plano de qualidade
+     2.2). Até lá vale a fila de fallback do sistema. */
+  --ff-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --grid-margin: 32px;
+    --grid-gutter: 16px;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --grid-margin: 64px;
+    --grid-gutter: 24px;
+  }
+}
+
+/* RC2: hover só com ponteiro fino. Toda regra de hover dos componentes usa
+   a variante `ponteiro:`, nunca o `hover:` padrão do Tailwind (que não
+   exige pointer: fine). */
+@custom-variant ponteiro (@media (hover: hover) and (pointer: fine));
+
+/* RC9: estado de ilha só sob [data-js]; o estado sem JS é o padrão. */
+@custom-variant js (&:where(:root[data-js] *));
+@custom-variant sem-js (&:where(:root:not([data-js]) *));
+@custom-variant invoker (&:where(:root[data-invoker] *));
+@custom-variant hidratado (&:where(:root[data-hidratado] *));
+
+/* Papéis tipográficos de tokens.json como utilitários `text-<papel>`. */
+@theme {
+  --text-display: clamp(2.5rem, 1.2rem + 3.6vw, 4.25rem);
+  --text-display--line-height: 0.98;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.03em;
+
+  --text-h1: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--font-weight: 700;
+  --text-h1--letter-spacing: -0.025em;
+
+  --text-h2: clamp(2rem, 1.4rem + 2.2vw, 3.25rem);
+  --text-h2--line-height: 1.05;
+  --text-h2--font-weight: 700;
+  --text-h2--letter-spacing: -0.02em;
+
+  --text-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  --text-h3--line-height: 1.2;
+  --text-h3--font-weight: 600;
+  --text-h3--letter-spacing: -0.01em;
+
+  --text-body: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-body--line-height: 1.6;
+  --text-body--font-weight: 400;
+  --text-body--letter-spacing: 0;
+
+  --text-lede: clamp(1.125rem, 1rem + 0.4vw, 1.25rem);
+  --text-lede--line-height: 1.5;
+  --text-lede--font-weight: 400;
+  --text-lede--letter-spacing: 0;
+
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.45;
+  --text-caption--font-weight: 400;
+  --text-caption--letter-spacing: 0;
+
+  --text-label: 1rem;
+  --text-label--line-height: 1.2;
+  --text-label--font-weight: 600;
+  --text-label--letter-spacing: 0;
+
+  --text-manifesto: clamp(3.25rem, 0.8rem + 6.6vw, 7rem);
+  --text-manifesto--line-height: 0.9;
+  --text-manifesto--font-weight: 900;
+  --text-manifesto--letter-spacing: -0.04em;
+
+  --text-code: 0.875rem;
+  --text-code--line-height: 1.7;
+  --text-code--font-weight: 500;
+  --text-code--letter-spacing: 0;
+}
+
+/* RC7: o `;` é pontuação. Classe grande (>= 24 px) em --accent, pequena em
+   --accent-text; dentro de uma sala os dois passam a --ink, porque --accent
+   não tem par calculado sobre a superfície do case (RC6). */
+@layer components {
+  .semicolon {
+    color: var(--accent);
+  }
+
+  .semicolon-pequeno {
+    color: var(--accent-text);
+  }
+
+  [data-case] .semicolon,
+  [data-case] .semicolon-pequeno {
+    color: var(--ink);
+  }
+}
+
 @theme inline {
+  --font-mono: var(--ff-mono);
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
