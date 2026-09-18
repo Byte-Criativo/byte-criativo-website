@@ -33,6 +33,24 @@ describe("chave de continuação", () => {
     expect(lerEApagarDadosContinuacao("e1")).toEqual(DADOS)
   })
 
+  // LGPD / Pendência 5: o que vai para o sessionStorage é exatamente o
+  // contrato, nem um campo a mais. A prova de que o **tipo** não aceita
+  // contato é estática e vive em `continuar-conversa.tipos.ts`, compilada
+  // por `npm run typecheck`; esta aqui defende o que é de fato gravado.
+  it("grava só os seis campos do contrato, e nenhum contato", () => {
+    gravarDadosContinuacao(DADOS)
+    const bruto = sessionStorage.getItem(CHAVE_CONTINUACAO) ?? ""
+    expect(Object.keys(JSON.parse(bruto) as object).sort()).toEqual([
+      "contexto",
+      "empresa",
+      "envio",
+      "gravadoEm",
+      "nome",
+      "tipo",
+    ])
+    expect(bruto).not.toMatch(/@|\+55|mail|telefone|phone/i)
+  })
+
   it("apaga a chave mesmo quando o identificador não bate", () => {
     gravarDadosContinuacao(DADOS)
     expect(lerEApagarDadosContinuacao("outro")).toBeNull()
