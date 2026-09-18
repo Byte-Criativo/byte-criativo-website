@@ -97,7 +97,7 @@ export function MobileNav({
       <button
         type="button"
         aria-haspopup="dialog"
-        commandFor={ID_DIALOGO}
+        commandfor={ID_DIALOGO}
         command="show-modal"
         onClick={abrir}
         className={buttonClasses(
@@ -118,7 +118,7 @@ export function MobileNav({
           <span aria-hidden="true">{wordmark}</span>
           <button
             type="button"
-            commandFor={ID_DIALOGO}
+            commandfor={ID_DIALOGO}
             command="close"
             onClick={fechar}
             className={buttonClasses("contorno")}

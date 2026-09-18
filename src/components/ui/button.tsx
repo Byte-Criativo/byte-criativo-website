@@ -3,14 +3,17 @@ import Link from "next/link"
 import type { MouseEventHandler, ReactElement, ReactNode } from "react"
 import { cn } from "@/lib/cn"
 
-// Invoker Commands (commandFor/command) ainda não estão tipados pelo
-// @types/react instalado (19.2.17).
+// Invoker Commands (commandfor/command) ainda não estão tipados pelo
+// @types/react instalado (19.2.17). Os nomes vão em **minúsculas**: o React
+// 19.3 não reconhece `commandFor`, avisa em todo render ("React does not
+// recognize the `commandFor` prop… spell it as lowercase `commandfor`") e
+// grava o atributo com a grafia original no HTML do servidor.
 declare module "react" {
   // A mesclagem de declaração exige a mesma aridade genérica da interface
   // original; T não é usado no corpo, só na assinatura.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ButtonHTMLAttributes<T> {
-    commandFor?: string
+    commandfor?: string
     command?: string
   }
 }
@@ -114,7 +117,7 @@ export function Button(props: ButtonProps): ReactElement {
       // acionamento é ignorado no handler (especificação, Estados).
       aria-disabled={enviando ? true : undefined}
       aria-haspopup={props["aria-haspopup"]}
-      commandFor={commandfor}
+      commandfor={commandfor}
       command={command}
       onClick={aoClicar}
       className={buttonClasses(variante, className)}

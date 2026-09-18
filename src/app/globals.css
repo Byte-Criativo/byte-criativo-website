@@ -209,10 +209,15 @@
    exige pointer: fine). */
 @custom-variant ponteiro (@media (hover: hover) and (pointer: fine));
 
-/* RC9: estado de ilha só sob [data-js]; o estado sem JS é o padrão. */
+/* RC9: estado de ilha só sob [data-js]; o estado sem JS é o padrão.
+   `invoker` exige as DUAS marcas: o cão de guarda de 4 s (src/lib/marcador-js.ts)
+   remove só `data-js` e nunca `data-invoker`, então um seletor que olhasse só
+   para `data-invoker` deixaria, numa hidratação que falhou, o botão do menu na
+   tela e o link "Menu" do rodapé escondido — o contrário do estado de volta da
+   RC9. */
 @custom-variant js (&:where(:root[data-js] *));
 @custom-variant sem-js (&:where(:root:not([data-js]) *));
-@custom-variant invoker (&:where(:root[data-invoker] *));
+@custom-variant invoker (&:where(:root[data-js][data-invoker] *));
 @custom-variant hidratado (&:where(:root[data-hidratado] *));
 
 /* Papéis tipográficos de tokens.json como utilitários `text-<papel>`. */

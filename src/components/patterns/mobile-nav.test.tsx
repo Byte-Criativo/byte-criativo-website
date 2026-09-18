@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
+import { renderToStaticMarkup } from "react-dom/server"
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest"
 import { instalarMatchMedia, type MatchMediaFalso } from "@/test/match-media"
 import { MobileNav } from "./mobile-nav"
@@ -76,6 +77,18 @@ describe("MobileNav", () => {
     expect(botao).not.toHaveAttribute("aria-expanded")
     expect(botao).toHaveAttribute("command", "show-modal")
     expect(botao).toHaveAttribute("commandfor", "menu-principal")
+  })
+
+  // O React 19.3 não conhece os Invoker Commands: a prop em camelCase faz
+  // ele reclamar em todo render ("React does not recognize the `commandFor`
+  // prop…") e sair no HTML do servidor como `commandFor=`. O parser de HTML
+  // salva o comportamento, mas o atributo precisa ir em minúsculas.
+  it("o atributo do Invoker Command chega ao HTML do servidor em minúsculas", () => {
+    const html = renderToStaticMarkup(elemento())
+    expect(html).toContain('commandfor="menu-principal"')
+    expect(html).toContain('command="show-modal"')
+    expect(html).toContain('command="close"')
+    expect(html).not.toContain("commandFor")
   })
 
   it("o botão só aparece com data-invoker ou depois da hidratação", () => {

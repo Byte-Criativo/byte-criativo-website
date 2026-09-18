@@ -131,7 +131,11 @@ describe("globals.css: variantes customizadas", () => {
     ["ponteiro", "@media (hover: hover) and (pointer: fine)"],
     ["js", ":root[data-js] *"],
     ["sem-js", ":root:not([data-js]) *"],
-    ["invoker", ":root[data-invoker] *"],
+    // RC9: `invoker` exige as DUAS marcas. O cão de guarda de 4 s remove só
+    // `data-js` e nunca `data-invoker`; sem `[data-js]` no seletor, uma
+    // hidratação que falhou num navegador com Invoker Commands deixaria o
+    // botão do menu na tela e o link "Menu" do rodapé escondido.
+    ["invoker", ":root[data-js][data-invoker] *"],
     ["hidratado", ":root[data-hidratado] *"],
   ])("define a variante %s", (nome, alvo) => {
     const linha = css
