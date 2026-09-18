@@ -417,3 +417,23 @@
     }
   }
 }
+
+/* FrenteVerso: com JS as duas faces ocupam a mesma célula e a inativa sai
+   da árvore de acessibilidade e da ordem de Tab. O atraso de `visibility`
+   deixa a opacidade terminar antes de sumir. Sem JS nada disso vale e as
+   faces ficam empilhadas (RC9). */
+@layer components {
+  :root[data-js] [data-face] {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--dur-base) var(--ease-in-out);
+  }
+
+  :root[data-js] [data-face][data-ativo="false"] {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur-base) var(--ease-in-out),
+      visibility 0s linear var(--dur-base);
+  }
+}
