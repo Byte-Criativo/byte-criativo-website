@@ -9,6 +9,12 @@ export type ItemIndice = { id: string; rotulo: string }
  * empurra o hero e não cobre o texto (RC4). A caixa de --surface impede que
  * o glifo suma sobre as salas.
  *
+ * **Exigência de quem monta a página:** o índice precisa de um ancestral
+ * posicionado (`position: relative`, normalmente o `<main>` da home). Sem
+ * ele o invólucro absoluto se prende ao bloco contendo inicial e a coluna
+ * some do lugar. É dependência de composição, não de estilo do componente:
+ * a Fase 8 monta a página e precisa declará-la.
+ *
  * Aqui não há estado "atual": quem grava `aria-current` no link da seção
  * visível é a ilha SalaObserver, e sem JS nenhum item fica marcado.
  */

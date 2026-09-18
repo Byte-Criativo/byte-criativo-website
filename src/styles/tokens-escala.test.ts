@@ -25,6 +25,36 @@ function normalizarEspacos(s: string): string {
   return s.replace(/\s+/g, " ").trim()
 }
 
+/**
+ * Corpos balanceados de toda at-rule cujo cabeçalho é exatamente `cabecalho`.
+ * Existe para afirmar "X vive dentro de Y" sem `[\s\S]*`: um regex frouxo
+ * atravessa blocos e fica verde contra o defeito que nomeia (achado I5 do
+ * gate B, mesma família do M5 da L3).
+ */
+function corposDaAtRule(cabecalho: string): string[] {
+  const re = new RegExp(
+    `${cabecalho.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*\\{`,
+    "g",
+  )
+  const corpos: string[] = []
+  let achado: RegExpExecArray | null
+  while ((achado = re.exec(css)) !== null) {
+    const inicio = achado.index + achado[0].length - 1
+    let profundidade = 0
+    for (let i = inicio; i < css.length; i += 1) {
+      if (css[i] === "{") profundidade += 1
+      else if (css[i] === "}") {
+        profundidade -= 1
+        if (profundidade === 0) {
+          corpos.push(css.slice(inicio + 1, i))
+          break
+        }
+      }
+    }
+  }
+  return corpos
+}
+
 // R61: o invariante é o VALOR do token, não a grafia. `rgba(0,0,0,.18)` no
 // JSON e `rgba(0, 0, 0, 0.18)` depois do prettier são o mesmo valor; uma
 // comparação literal faria esta suíte e o `format:check` se excluírem.
@@ -284,19 +314,51 @@ describe("globals.css: RC4, foco não obscurecido", () => {
     expect(moldura).toMatch(/\[data-site-header\]\s*\{\s*position: static;/)
   })
 
+  // I5: o escopo ao template de case é afirmado DENTRO do corpo do
+  // @supports. Um `toContain` sobre a fatia inteira ficava verde com o
+  // prefixo apagado, porque a mesma string sobrevive no bloco de movimento
+  // reduzido — e a barra passaria a aparecer em todas as páginas.
   it("a barra de progresso só existe com suporte e só no template de case", () => {
-    expect(moldura).toContain("@supports (animation-timeline: scroll())")
-    expect(moldura).toContain(":root:has(article[data-case])")
+    const suporte = corposDaAtRule("@supports (animation-timeline: scroll())")
+    expect(suporte).toHaveLength(1)
+    expect(suporte[0]).toMatch(
+      /:root:has\(article\[data-case\]\) \.progresso-leitura \{[^}]*display: block;/,
+    )
   })
 
-  it("a barra sai com movimento reduzido", () => {
-    expect(moldura).toMatch(
-      /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.progresso-leitura[\s\S]*display: none/,
-    )
+  // I5: os dois seletores são obrigatórios — só `.progresso-leitura` perde em
+  // especificidade para a regra do @supports e a barra continuaria animando.
+  // A asserção fica presa a um corpo de declaração (`[^}]*`), senão casa
+  // atravessando blocos e fica verde contra esse defeito exato.
+  it("a barra sai com movimento reduzido, pelos dois seletores", () => {
+    const reduzido = corposDaAtRule("@media (prefers-reduced-motion: reduce)")
+    expect(
+      reduzido.some((corpo) =>
+        /\.progresso-leitura,\s*:root:has\(article\[data-case\]\) \.progresso-leitura \{[^}]*display: none;/.test(
+          corpo,
+        ),
+      ),
+      "nenhum bloco de movimento reduzido remove a barra pelos dois seletores",
+    ).toBe(true)
   })
 
   it("a barra nasce escondida fora de qualquer condição", () => {
     expect(moldura).toMatch(/\n\.progresso-leitura \{\n\s*display: none;/)
+  })
+
+  // m1: com o header `static` em janela baixa não há ancestral posicionado, e
+  // a barra absoluta caía no bloco contendo inicial — medido em Chrome real,
+  // ela ia parar no fim da primeira tela, fora do header.
+  it("em janela baixa a barra volta ao fluxo, dentro da caixa do header", () => {
+    const baixas = corposDaAtRule("@media (max-height: 30rem)")
+    expect(
+      baixas.some((corpo) =>
+        /:root:has\(article\[data-case\]\) \.progresso-leitura \{[^}]*position: static;/.test(
+          corpo,
+        ),
+      ),
+      "nenhum bloco de janela baixa devolve a barra ao fluxo",
+    ).toBe(true)
   })
 })
 
@@ -320,19 +382,56 @@ describe("globals.css: IndiceSemicolon", () => {
     expect(indice).toMatch(/\.indice-link\s*\{\s*pointer-events: auto;/)
   })
 
+  // I8/RC7: o glifo em 1,5 rem = 24 px é justamente o piso que autoriza
+  // --accent no estado atual. Abaixo disso o laranja cheio deixaria de ser
+  // permitido e a regra do item atual viraria uma violação silenciosa.
+  it("RC7: o glifo fica no piso de 24 px que autoriza --accent", () => {
+    expect(indice).toMatch(
+      /\.indice-glifo \{[^}]*color: var\(--mark-rest\);[^}]*font-size: 1\.5rem;/,
+    )
+  })
+
   it("1.4.1: o item atual muda cor E forma, nunca só cor", () => {
     expect(indice).toMatch(
       /\.indice-link\[aria-current="true"\] \.indice-glifo\s*\{\s*color: var\(--accent\);\s*transform: scale\(/,
     )
   })
 
+  // I5: a asserção do recorte fica presa ao corpo da própria `.indice-rotulo`
+  // (`[^}]*`). Com `[\s\S]*?` ela alcançava o bloco [data-rotulo="oculto"] lá
+  // embaixo e ficava verde depois de apagar o recorte — o rótulo passaria a
+  // ficar visível sempre, inclusive sem JS.
   it("RC9: o rótulo é recorte em repouso e só vira visível sob :root[data-js]", () => {
     expect(indice).toMatch(
-      /\.indice-rotulo\s*\{[\s\S]*?position: absolute;[\s\S]*?clip-path: inset\(50%\);/,
+      /\n  \.indice-rotulo \{[^}]*position: absolute;[^}]*clip-path: inset\(50%\);[^}]*\}/,
     )
     expect(indice).toMatch(
-      /:root\[data-js\] \.indice-link:hover \.indice-rotulo,\s*:root\[data-js\] \.indice-link:focus-visible \.indice-rotulo\s*\{/,
+      /:root\[data-js\] \.indice-link:focus-visible \.indice-rotulo\s*\{/,
     )
+  })
+
+  // I4 / RC2: o hover do rótulo era o único `:hover` cru da folha inteira. Em
+  // aparelho de toque a partir de 64 rem o rótulo abria no toque e ficava
+  // grudado, sem jeito de fechar.
+  it("RC2: o rótulo só abre no hover com ponteiro fino", () => {
+    const ponteiro = corposDaAtRule("@media (hover: hover) and (pointer: fine)")
+    expect(
+      ponteiro.some((corpo) =>
+        corpo.includes(":root[data-js] .indice-link:hover .indice-rotulo"),
+      ),
+      "o hover do rótulo do índice não está dentro do @media de ponteiro fino",
+    ).toBe(true)
+  })
+
+  it("RC2: nenhum :hover de globals.css vive fora do @media de ponteiro fino", () => {
+    const dentro = corposDaAtRule(
+      "@media (hover: hover) and (pointer: fine)",
+    ).join("\n")
+    const total = (css.match(/:hover/g) ?? []).length
+    expect(total, "varredura vazia: não haveria o que provar").toBeGreaterThan(
+      0,
+    )
+    expect((dentro.match(/:hover/g) ?? []).length).toBe(total)
   })
 
   it("1.4.13: o Esc devolve o rótulo ao recorte por data-rotulo", () => {
@@ -351,5 +450,22 @@ describe("globals.css: IndiceSemicolon", () => {
     expect(indice).toMatch(
       /@media \(max-height: 30rem\)\s*\{\s*\.indice-lista\s*\{\s*position: static;/,
     )
+  })
+})
+
+describe("globals.css: SiteFooter", () => {
+  // m4: o papel h3 passa de 24 px a partir de breakpoints.xl (--text-h3
+  // chega a 25,3 px em 80 rem), e aí a RC7 autoriza o laranja cheio no `;`
+  // da tagline. Abaixo disso continua --accent-text.
+  it("RC7: o `;` da tagline vira --accent a partir de breakpoints.xl", () => {
+    const xl = corposDaAtRule(`@media (min-width: ${tokens.breakpoints.xl})`)
+    expect(
+      xl.some((corpo) =>
+        /\.rodape-tagline \.semicolon-pequeno \{[^}]*color: var\(--accent\);/.test(
+          corpo,
+        ),
+      ),
+      "nenhum bloco de breakpoints.xl leva o `;` da tagline do rodapé a --accent",
+    ).toBe(true)
   })
 })

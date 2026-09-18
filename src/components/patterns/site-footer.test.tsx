@@ -58,6 +58,16 @@ describe("SiteFooter", () => {
     expect(nav).toHaveAttribute("tabindex", "-1")
   })
 
+  it("a tagline carrega o gancho de RC7 que leva o `;` a --accent em xl", () => {
+    render(<SiteFooter {...PROPS} />)
+    const tagline = screen.getByRole("heading", {
+      level: 2,
+      name: PROPS.tagline,
+    })
+    expect(tagline).toHaveClass("rodape-tagline")
+    expect(tagline.querySelector(".semicolon-pequeno")).not.toBeNull()
+  })
+
   it("cada coluna tem título h2", () => {
     render(<SiteFooter {...PROPS} />)
     for (const coluna of PROPS.colunas) {

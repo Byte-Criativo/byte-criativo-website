@@ -561,6 +561,19 @@
   }
 }
 
+/* Janela baixa: o header deixa de ser fixo e passa a `position: static`
+   (RC4), então some o ancestral posicionado que ancorava a barra. Uma barra
+   `absolute` sem ancestral posicionado cai no bloco contendo inicial — e foi
+   isso que o gate B mediu em Chrome real: em 740 × 360 ela ia para o fim da
+   primeira tela, fora do header. De volta ao fluxo ela continua dentro da
+   caixa, que é o que a especificação pede. Vem depois do @supports porque a
+   especificidade é a mesma e quem decide é a ordem. */
+@media (max-height: 30rem) {
+  :root:has(article[data-case]) .progresso-leitura {
+    position: static;
+  }
+}
+
 /* Diálogo modal (MobileNav e galeria do case): trava a rolagem da página
    sem mover o layout. O `scrollbar-gutter: stable` é o que impede o salto
    horizontal de todo o conteúdo no instante em que a barra de rolagem some
@@ -644,7 +657,11 @@ dialog::backdrop {
     white-space: nowrap;
   }
 
-  :root[data-js] .indice-link:hover .indice-rotulo,
+  /* O foco sempre revela o rótulo. As mesmas declarações valem no hover, mas
+     só com ponteiro fino (RC2): num aparelho de toque a partir de 64 rem o
+     rótulo abriria no toque e ficaria grudado, sem jeito de fechar. Por isso
+     as duas regras são separadas — a condição de mídia não cabe numa lista
+     de seletores. */
   :root[data-js] .indice-link:focus-visible .indice-rotulo {
     position: static;
     width: auto;
@@ -657,6 +674,22 @@ dialog::backdrop {
     background: var(--surface);
     color: var(--ink);
     font-size: var(--text-caption);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :root[data-js] .indice-link:hover .indice-rotulo {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+      margin-left: var(--space-2);
+      border: var(--border-w-decorative) solid var(--border-decorative);
+      padding: var(--space-1) var(--space-2);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: var(--text-caption);
+    }
   }
 
   /* Esc esconde o rótulo sem mover o foco (1.4.13). */
@@ -678,6 +711,18 @@ dialog::backdrop {
   @media (max-height: 30rem) {
     .indice-lista {
       position: static;
+    }
+  }
+}
+
+/* SiteFooter: a tagline usa o papel h3, que só passa de 24 px a partir de
+   breakpoints.xl (--text-h3 chega a 25,3 px em 80 rem). Aí, e só aí, a RC7
+   autoriza o laranja cheio no `;`; abaixo disso ele fica em --accent-text,
+   que é o par calculado para texto pequeno. */
+@layer components {
+  @media (min-width: 80rem) {
+    .rodape-tagline .semicolon-pequeno {
+      color: var(--accent);
     }
   }
 }

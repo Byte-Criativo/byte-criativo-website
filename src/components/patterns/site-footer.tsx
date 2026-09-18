@@ -50,7 +50,10 @@ export function SiteFooter({
           className="grid grid-cols-1 gap-(--space-7) md:grid-cols-2 lg:grid-cols-4"
         >
           <div className="flex flex-col gap-(--space-2)">
-            <Heading nivel={2} papel="h3" semicolon>
+            {/* A classe é o gancho da regra de RC7 em globals.css: só a
+                partir de breakpoints.xl o papel h3 passa de 24 px e o `;`
+                pode usar --accent. */}
+            <Heading nivel={2} papel="h3" semicolon className="rodape-tagline">
               {tagline}
             </Heading>
             <Text papel="caption" tom="muted">
