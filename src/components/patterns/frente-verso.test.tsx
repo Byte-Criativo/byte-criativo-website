@@ -119,4 +119,16 @@ describe("FrenteVerso", () => {
       "verso",
     )
   })
+
+  // I2 (gate B, RC10): em cores forçadas, bg-ink/text-bg somem (o fundo não
+  // é desenhado) e os dois botões ficam visualmente iguais mesmo com
+  // aria-pressed distinto. O controle precisa de um seletor estável para a
+  // regra de forced-colors em globals.css conseguir mirar só o botão
+  // pressionado.
+  it("o controle carrega o atributo que a regra de cores forçadas (RC10) usa como seletor", () => {
+    const { container } = montar()
+    expect(container.querySelector("[role=group]")).toHaveAttribute(
+      "data-controle-frente-verso",
+    )
+  })
 })

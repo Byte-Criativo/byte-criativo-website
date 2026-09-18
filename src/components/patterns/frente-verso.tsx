@@ -66,6 +66,9 @@ export function FrenteVersoControle({
     <div
       role="group"
       aria-label={`Mostrar a frente ou o verso do ${projeto}`}
+      // RC10: seletor estável para a regra de forced-colors em globals.css
+      // mirar só o botão pressionado deste controle (Highlight/HighlightText).
+      data-controle-frente-verso
       // RC9: o controle só existe com JS; sem JS as faces ficam empilhadas.
       className={cn(
         "hidden overflow-hidden rounded-(--radius-tag) border-(length:--border-w-control) border-solid border-ink js:inline-flex",

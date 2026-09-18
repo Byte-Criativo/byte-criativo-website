@@ -352,6 +352,17 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* M7 (gate B): "troca instantânea, sem deslocamento" (catálogo de
+     motion) não é só uma transição rápida — a face ativa e a inativa
+     precisam ficar na MESMA posição, sem nenhum salto de --space-3. Esta
+     regra não está em @layer: estilo fora de camada tem prioridade sobre
+     qualquer @layer normal (CSS Cascade Layers), então zera o
+     deslocamento das duas faces do FrenteVerso independente da
+     especificidade de [data-face]/[data-face][data-ativo="false"] acima. */
+  :root[data-js] [data-face] {
+    transform: translateY(0);
+  }
 }
 
 /* Sala: véu da parede no nível externo (fora de data-case, por isso --bg é
@@ -420,20 +431,42 @@
 
 /* FrenteVerso: com JS as duas faces ocupam a mesma célula e a inativa sai
    da árvore de acessibilidade e da ordem de Tab. O atraso de `visibility`
-   deixa a opacidade terminar antes de sumir. Sem JS nada disso vale e as
-   faces ficam empilhadas (RC9). */
+   deixa a opacidade terminar antes de sumir. Catálogo de motion: crossfade
+   em --ease-in-out e deslocamento de --space-3 em --ease-museum (mesma
+   curva do assentamento da Sala). Sem JS nada disso vale e as faces ficam
+   empilhadas (RC9); com movimento reduzido, o deslocamento é zerado no
+   bloco @media (prefers-reduced-motion: reduce) acima (troca instantânea,
+   sem deslocamento). */
 @layer components {
   :root[data-js] [data-face] {
     opacity: 1;
     visibility: visible;
-    transition: opacity var(--dur-base) var(--ease-in-out);
+    transform: translateY(0);
+    transition:
+      opacity var(--dur-base) var(--ease-in-out),
+      transform var(--dur-base) var(--ease-museum);
   }
 
   :root[data-js] [data-face][data-ativo="false"] {
     opacity: 0;
     visibility: hidden;
+    transform: translateY(var(--space-3));
     transition:
       opacity var(--dur-base) var(--ease-in-out),
+      transform var(--dur-base) var(--ease-museum),
       visibility 0s linear var(--dur-base);
+  }
+}
+
+/* RC10 (gate B, I2): em forced-colors, bg-ink/text-bg do botão pressionado
+   não é desenhado, e os dois botões do controle ficam visualmente iguais
+   mesmo com aria-pressed diferente. Highlight/HighlightText são as cores
+   de sistema do próprio usuário para "selecionado" — continuam distintas
+   em qualquer paleta de alto contraste. As bordas de border.control já são
+   desenhadas pelo agente de usuário nesse modo (RC1). */
+@media (forced-colors: active) {
+  [data-controle-frente-verso] button[aria-pressed="true"] {
+    background-color: Highlight;
+    color: HighlightText;
   }
 }
