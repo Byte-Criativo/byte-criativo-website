@@ -1,0 +1,155 @@
+import { render, screen, within } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest"
+import { instalarMatchMedia, type MatchMediaFalso } from "@/test/match-media"
+import { MobileNav } from "./mobile-nav"
+
+const usePathname = vi.hoisted(() => vi.fn(() => "/"))
+vi.mock("next/navigation", () => ({ usePathname }))
+
+beforeAll(() => {
+  // jsdom não implementa o top layer: basta refletir o atributo `open`. O
+  // comportamento modal de verdade (foco preso, foco devolvido ao gatilho,
+  // Esc) é do <dialog> nativo e só pode ser provado em navegador real.
+  HTMLDialogElement.prototype.showModal = function abrir() {
+    this.setAttribute("open", "")
+  }
+  HTMLDialogElement.prototype.close = function fechar() {
+    this.removeAttribute("open")
+    this.dispatchEvent(new Event("close"))
+  }
+})
+
+let midia: MatchMediaFalso | null = null
+
+afterEach(() => {
+  midia?.restaurar()
+  midia = null
+  usePathname.mockReturnValue("/")
+})
+
+// R65: o substituto de matchMedia entra aqui, explícito, com a resposta à
+// vista — nunca como stub global no vitest.setup.ts.
+function comLarguraDeCelular(): MatchMediaFalso {
+  midia = instalarMatchMedia(() => false)
+  return midia
+}
+
+const NAVEGACAO = [
+  { rotulo: "Trabalhos", href: "/portfolio", secao: "/portfolio" },
+  { rotulo: "Serviços", href: "/servicos", secao: "/servicos" },
+  { rotulo: "Processo", href: "/processo" },
+  { rotulo: "Sobre", href: "/sobre" },
+  { rotulo: "Contato", href: "/contato" },
+]
+
+function elemento() {
+  return (
+    <MobileNav
+      navegacao={NAVEGACAO}
+      whatsapp={{ rotulo: "Chamar no WhatsApp", mensagem: "Olá!" }}
+      emailHref="mailto:contato@bcriativo.com"
+      wordmark={<svg aria-hidden="true" focusable="false" />}
+    />
+  )
+}
+
+function montar() {
+  comLarguraDeCelular()
+  return render(elemento())
+}
+
+describe("MobileNav", () => {
+  it("sem JS, o link Menu leva à navegação do rodapé e some quando o botão aparece", () => {
+    montar()
+    const link = screen.getByRole("link", { name: "Menu" })
+    expect(link).toHaveAttribute("href", "#navegacao-rodape")
+    expect(link.className).toContain("invoker:hidden")
+    expect(link.className).toContain("hidratado:hidden")
+  })
+
+  it("o botão anuncia diálogo, sem aria-controls nem aria-expanded", () => {
+    montar()
+    const botao = screen.getByRole("button", { name: "Menu" })
+    expect(botao).toHaveAttribute("aria-haspopup", "dialog")
+    expect(botao).not.toHaveAttribute("aria-controls")
+    expect(botao).not.toHaveAttribute("aria-expanded")
+    expect(botao).toHaveAttribute("command", "show-modal")
+    expect(botao).toHaveAttribute("commandfor", "menu-principal")
+  })
+
+  it("o botão só aparece com data-invoker ou depois da hidratação", () => {
+    montar()
+    const classes = screen.getByRole("button", { name: "Menu" }).className
+    expect(classes).toContain("hidden")
+    expect(classes).toContain("invoker:inline-flex")
+    expect(classes).toContain("hidratado:inline-flex")
+  })
+
+  it("acionar Menu abre o diálogo nomeado Menu, com a navegação Principal e os cinco destinos", async () => {
+    montar()
+    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+
+    const dialogo = screen.getByRole("dialog", { name: "Menu" })
+    expect(dialogo).toHaveAttribute("open")
+    const nav = within(dialogo).getByRole("navigation", { name: "Principal" })
+    expect(within(nav).getAllByRole("link")).toHaveLength(5)
+    expect(
+      within(dialogo).getByRole("link", { name: "Falar sobre um projeto" }),
+    ).toBeInTheDocument()
+    expect(
+      within(dialogo).getByRole("link", {
+        name: "Chamar no WhatsApp (abre em nova aba)",
+      }),
+    ).toBeInTheDocument()
+    expect(
+      within(dialogo).getByRole("link", { name: "Escrever e-mail" }),
+    ).toBeInTheDocument()
+  })
+
+  // R67: o retorno do foco ao gatilho é comportamento nativo do <dialog> e o
+  // `close` que o jsdom exige só tira o atributo. Aqui a afirmação é só
+  // "fecha"; o foco devolvido é provado em navegador real (gate GL4A-104).
+  it("Fechar menu fecha o diálogo", async () => {
+    montar()
+    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+    await userEvent.click(screen.getByRole("button", { name: "Fechar menu" }))
+    expect(screen.getByRole("dialog", { hidden: true })).not.toHaveAttribute(
+      "open",
+    )
+  })
+
+  it("clicar em qualquer link da folha fecha o menu", async () => {
+    montar()
+    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+    const dialogo = screen.getByRole("dialog")
+    await userEvent.click(within(dialogo).getByRole("link", { name: "Sobre" }))
+    expect(dialogo).not.toHaveAttribute("open")
+  })
+
+  it("concluir uma navegação fecha o menu", async () => {
+    const { rerender } = montar()
+    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+    usePathname.mockReturnValue("/sobre")
+    rerender(elemento())
+    expect(screen.getByRole("dialog", { hidden: true })).not.toHaveAttribute(
+      "open",
+    )
+  })
+
+  it("cruzar a largura de breakpoints.lg fecha o menu", async () => {
+    const consulta = comLarguraDeCelular()
+    render(elemento())
+    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+    expect(screen.getByRole("dialog")).toHaveAttribute("open")
+
+    // A ilha precisa consultar a largura de verdade: a resposta muda e o
+    // evento `change` é disparado na mesma lista que ela assinou.
+    expect(consulta.consultas).toContain("(min-width: 64rem)")
+    consulta.responder((media) => media === "(min-width: 64rem)")
+
+    expect(screen.getByRole("dialog", { hidden: true })).not.toHaveAttribute(
+      "open",
+    )
+  })
+})

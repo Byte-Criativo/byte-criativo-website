@@ -271,3 +271,13 @@ describe("globals.css: RC4, foco não obscurecido", () => {
     expect(moldura).toMatch(/\n\.progresso-leitura \{\n\s*display: none;/)
   })
 })
+
+describe("globals.css: diálogo modal trava a rolagem sem mover o layout", () => {
+  const moldura = css.slice(css.indexOf("/* SiteHeader"))
+
+  it("html:has(dialog[open]) trava a rolagem e reserva a calha da barra", () => {
+    expect(moldura).toMatch(
+      /html:has\(dialog\[open\]\)\s*\{\s*overflow: hidden;\s*scrollbar-gutter: stable;/,
+    )
+  })
+})

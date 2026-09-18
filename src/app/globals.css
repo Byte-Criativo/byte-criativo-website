@@ -553,3 +553,12 @@
     display: none;
   }
 }
+
+/* Diálogo modal (MobileNav e galeria do case): trava a rolagem da página
+   sem mover o layout. O `scrollbar-gutter: stable` é o que impede o salto
+   horizontal de todo o conteúdo no instante em que a barra de rolagem some
+   junto com o `overflow: hidden`. */
+html:has(dialog[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
