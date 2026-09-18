@@ -652,3 +652,29 @@ html:has(dialog[open]) {
     }
   }
 }
+
+/* FaqItem: troca do sinal + / − e abertura com opacidade só onde
+   ::details-content existe. A altura NUNCA anima — animar altura mede
+   layout a cada quadro e faz o texto saltar (plano de qualidade 2.3,
+   item 8: só opacity, transform e clip-path). */
+@layer components {
+  .faq-item .faq-menos,
+  .faq-item[open] .faq-mais {
+    display: none;
+  }
+
+  .faq-item[open] .faq-menos {
+    display: block;
+  }
+}
+
+@supports selector(::details-content) {
+  .faq-item::details-content {
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-museum);
+  }
+
+  .faq-item[open]::details-content {
+    opacity: 1;
+  }
+}
