@@ -281,3 +281,47 @@ describe("globals.css: diálogo modal trava a rolagem sem mover o layout", () =>
     )
   })
 })
+
+describe("globals.css: IndiceSemicolon", () => {
+  const indice = css.slice(css.indexOf("/* IndiceSemicolon"))
+
+  it("o invólucro fica fora do fluxo e não intercepta ponteiro; só o link intercepta", () => {
+    expect(indice).toMatch(
+      /\.indice-inv\s*\{[\s\S]*?position: absolute;[\s\S]*?pointer-events: none;/,
+    )
+    expect(indice).toMatch(/\.indice-link\s*\{\s*pointer-events: auto;/)
+  })
+
+  it("1.4.1: o item atual muda cor E forma, nunca só cor", () => {
+    expect(indice).toMatch(
+      /\.indice-link\[aria-current="true"\] \.indice-glifo\s*\{\s*color: var\(--accent\);\s*transform: scale\(/,
+    )
+  })
+
+  it("RC9: o rótulo é recorte em repouso e só vira visível sob :root[data-js]", () => {
+    expect(indice).toMatch(
+      /\.indice-rotulo\s*\{[\s\S]*?position: absolute;[\s\S]*?clip-path: inset\(50%\);/,
+    )
+    expect(indice).toMatch(
+      /:root\[data-js\] \.indice-link:hover \.indice-rotulo,\s*:root\[data-js\] \.indice-link:focus-visible \.indice-rotulo\s*\{/,
+    )
+  })
+
+  it("1.4.13: o Esc devolve o rótulo ao recorte por data-rotulo", () => {
+    expect(indice).toMatch(
+      /\.indice-link\[data-rotulo="oculto"\] \.indice-rotulo\s*\{[\s\S]*?position: absolute;[\s\S]*?clip-path: inset\(50%\);/,
+    )
+  })
+
+  it("RC10: em cores forçadas o item atual usa Highlight", () => {
+    expect(indice).toMatch(
+      /@media \(forced-colors: active\)\s*\{\s*\.indice-link\[aria-current="true"\] \.indice-glifo\s*\{\s*color: Highlight;/,
+    )
+  })
+
+  it("em janela de até 30 rem a lista solta do sticky", () => {
+    expect(indice).toMatch(
+      /@media \(max-height: 30rem\)\s*\{\s*\.indice-lista\s*\{\s*position: static;/,
+    )
+  })
+})

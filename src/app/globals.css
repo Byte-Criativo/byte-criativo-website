@@ -562,3 +562,93 @@ html:has(dialog[open]) {
   overflow: hidden;
   scrollbar-gutter: stable;
 }
+
+/* IndiceSemicolon: invólucro absoluto na margem (sem ocupar fluxo), lista
+   sticky abaixo do header. Só os links recebem ponteiro. O rótulo é
+   recorte em repouso e vira visível no hover e no foco — mas só com JS,
+   porque a ilha SalaObserver é quem esconde de novo com Esc (1.4.13). */
+@layer components {
+  .indice-inv {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--grid-margin);
+    pointer-events: none;
+    z-index: var(--z-index);
+  }
+
+  .indice-lista {
+    position: sticky;
+    top: calc(var(--space-7) + var(--space-5) * 2 + var(--space-9));
+  }
+
+  .indice-link {
+    pointer-events: auto;
+  }
+
+  /* 1.5rem = 24 px: é o piso da RC7 para o `;` em --accent, por isso o
+     estado atual pode usar --accent e não --accent-text. O valor não vem
+     do JSON (não há token de tamanho fixo de 24 px para tipografia). */
+  .indice-glifo {
+    color: var(--mark-rest);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    transition:
+      color var(--dur-fast) var(--ease-museum),
+      transform var(--dur-fast) var(--ease-museum);
+  }
+
+  /* Atual: cor E forma mudam juntas, nunca só cor (1.4.1). */
+  .indice-link[aria-current="true"] .indice-glifo {
+    color: var(--accent);
+    transform: scale(1.35);
+  }
+
+  .indice-rotulo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  :root[data-js] .indice-link:hover .indice-rotulo,
+  :root[data-js] .indice-link:focus-visible .indice-rotulo {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    margin-left: var(--space-2);
+    border: var(--border-w-decorative) solid var(--border-decorative);
+    padding: var(--space-1) var(--space-2);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: var(--text-caption);
+  }
+
+  /* Esc esconde o rótulo sem mover o foco (1.4.13). */
+  :root[data-js] .indice-link[data-rotulo="oculto"] .indice-rotulo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  @media (forced-colors: active) {
+    .indice-link[aria-current="true"] .indice-glifo {
+      color: Highlight;
+    }
+  }
+
+  /* Janela baixa: a lista rola com a página em vez de grudar. */
+  @media (max-height: 30rem) {
+    .indice-lista {
+      position: static;
+    }
+  }
+}
