@@ -47,6 +47,24 @@ describe("IndiceSemicolon", () => {
     expect(link).toHaveAttribute("data-indice-link", "inicio")
   })
 
+  // A caixa opaca é o que impede o `;` de sumir quando a coluna passa por
+  // cima de uma sala com fundo escuro.
+  it("a caixa do glifo é opaca, em --surface", () => {
+    render(<IndiceSemicolon itens={ITENS} />)
+    expect(screen.getByRole("link", { name: "Início" })).toHaveClass(
+      "bg-surface",
+    )
+  })
+
+  // A coluna existe só a partir de breakpoints.lg: no celular ela ficaria
+  // sobre o conteúdo, numa margem que nem existe.
+  it("existe só a partir de breakpoints.lg", () => {
+    render(<IndiceSemicolon itens={ITENS} />)
+    const nav = screen.getByRole("navigation", { name: "Seções desta página" })
+    expect(nav).toHaveClass("hidden")
+    expect(nav).toHaveClass("lg:block")
+  })
+
   it("sem JS nenhum item é marcado como atual", () => {
     render(<IndiceSemicolon itens={ITENS} />)
     for (const link of screen.getAllByRole("link")) {

@@ -38,6 +38,24 @@ describe("SiteHeader", () => {
     ).toHaveAttribute("href", "/")
   })
 
+  // RC3: o wordmark é um alvo de toque, não só um desenho — a área precisa
+  // chegar aos 44 px mesmo com um SVG pequeno dentro.
+  it("o wordmark tem a área de toque da RC3", () => {
+    montar()
+    expect(
+      screen.getByRole("link", { name: "Byte Criativo, página inicial" }),
+    ).toHaveClass("min-h-(--alvo-toque)")
+  })
+
+  // RC4: o header é o único elemento fixo sobre o conteúdo; sem a camada ele
+  // passaria por baixo e o foco dentro dele ficaria obscurecido.
+  it("o header fica na camada de header", () => {
+    const { container } = montar()
+    expect(container.querySelector("[data-site-header]")).toHaveClass(
+      "z-(--z-header)",
+    )
+  })
+
   it("traz os quatro destinos e o CTA para /contato", () => {
     montar()
     for (const item of NAVEGACAO) {

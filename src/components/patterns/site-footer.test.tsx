@@ -90,6 +90,17 @@ describe("SiteFooter", () => {
     expect(screen.getByText("© 2026 Byte Criativo")).toBeInTheDocument()
   })
 
+  // RC3: no celular a lista do rodapé é tocada com o polegar (44 px); a
+  // partir de lg vale o mínimo de 24 px do 2.5.8, com o ponteiro.
+  it("os links do rodapé têm 44 px de alvo abaixo de lg e 24 px a partir de lg", () => {
+    render(<SiteFooter {...PROPS} />)
+    const nav = screen.getByRole("navigation", { name: "Rodapé" })
+    for (const link of within(nav).getAllByRole("link")) {
+      expect(link).toHaveClass("min-h-(--alvo-toque)")
+      expect(link).toHaveClass("lg:min-h-(--alvo-min)")
+    }
+  })
+
   it("nenhum link do rodapé é marcado como página atual", () => {
     render(<SiteFooter {...PROPS} />)
     const nav = screen.getByRole("navigation", { name: "Rodapé" })

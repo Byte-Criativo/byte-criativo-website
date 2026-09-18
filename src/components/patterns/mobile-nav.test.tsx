@@ -120,6 +120,19 @@ describe("MobileNav", () => {
     ).toBeInTheDocument()
   })
 
+  // RC3: no celular os destinos da folha são os alvos principais da página;
+  // 48 px é o piso da especificação para eles.
+  it("os links da folha têm os 48 px de alvo da RC3", async () => {
+    montar()
+    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+    const nav = within(screen.getByRole("dialog")).getByRole("navigation", {
+      name: "Principal",
+    })
+    for (const link of within(nav).getAllByRole("link")) {
+      expect(link).toHaveClass("min-h-(--space-7)")
+    }
+  })
+
   // R67: o retorno do foco ao gatilho é comportamento nativo do <dialog> e o
   // `close` que o jsdom exige só tira o atributo. Aqui a afirmação é só
   // "fecha"; o foco devolvido é provado em navegador real (gate GL4A-104).
