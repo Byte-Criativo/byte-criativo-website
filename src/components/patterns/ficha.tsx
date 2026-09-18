@@ -4,6 +4,7 @@ import { Heading } from "@/components/ui/heading"
 import { Text } from "@/components/ui/text"
 import { TextLink } from "@/components/ui/text-link"
 import { VisuallyHidden } from "@/components/ui/visually-hidden"
+import { TagList } from "./tag"
 
 export type FichaContagem = {
   atual: number
@@ -73,16 +74,7 @@ export function Ficha({
       >
         <Text medida>{frase}</Text>
 
-        <ul aria-label="Capacidades" className="flex flex-wrap gap-(--space-2)">
-          {capacidades.map((capacidade) => (
-            <li
-              key={capacidade}
-              className="rounded-(--radius-tag) border-(length:--border-w-decorative) border-solid border-border-control px-(--space-2) py-(--space-1) text-caption text-ink"
-            >
-              {capacidade}
-            </li>
-          ))}
-        </ul>
+        <TagList itens={capacidades} />
 
         <div className="flex flex-wrap items-center gap-(--space-5)">
           <TextLink
