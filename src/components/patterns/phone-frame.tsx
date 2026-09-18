@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from "react"
+import { useId, type ReactElement, type ReactNode } from "react"
 import { cn } from "@/lib/cn"
 
 export function PhoneFrame({
@@ -12,22 +12,26 @@ export function PhoneFrame({
   className?: string
   children: ReactNode
 }): ReactElement {
+  // Ver o comentário equivalente em browser-frame.tsx: RC5 proíbe
+  // aria-label sobre elemento com texto visível, então o nome do figure
+  // vem do figcaption via aria-labelledby (useId funciona em Server
+  // Component, sem precisar de contador em módulo).
+  const idLegenda = `${useId()}-legenda`
+
   return (
     <figure
       id={id}
-      // Ver o comentário equivalente em browser-frame.tsx: aria-label
-      // repete a legenda visível porque a naming rule do figure via
-      // figcaption (HTML-AAM) não tem suporte garantido, e PhoneFrame é
-      // Server Component (sem hooks para gerar id estável para
-      // aria-labelledby).
-      aria-label={legenda}
+      aria-labelledby={idLegenda}
       className={cn(
         "rounded-(--radius-phone) border-(length:--border-w-easel) border-solid border-ink bg-bg p-(--space-2)",
         className,
       )}
     >
       {children}
-      <figcaption className="px-(--space-2) pt-(--space-2) text-caption text-ink-muted">
+      <figcaption
+        id={idLegenda}
+        className="px-(--space-2) pt-(--space-2) text-caption text-ink-muted"
+      >
         {legenda}
       </figcaption>
     </figure>

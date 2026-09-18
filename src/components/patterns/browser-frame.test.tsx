@@ -22,13 +22,27 @@ function renderFrame() {
 }
 
 describe("BrowserFrame", () => {
-  it("a legenda é visível e associada pela figure", () => {
-    renderFrame()
+  it("a legenda é visível e associada pela figure via aria-labelledby (RC5: aria-label não vale sobre texto visível)", () => {
+    const { container } = renderFrame()
+    const figura = container.querySelector("figure")
+    const legendaEl = container.querySelector("figcaption")
+    // RC5: aria-label é proibido sobre elemento com texto visível — a
+    // legenda É visível, então o nome tem que vir do próprio figcaption.
+    expect(figura).not.toHaveAttribute("aria-label")
+    expect(legendaEl).not.toBeNull()
+    expect(legendaEl?.parentElement).toBe(figura)
+    expect(legendaEl?.textContent).toBe(
+      "Topo da programação em festivalalumio.com.br, capturado em 12/09/2026",
+    )
+    expect(figura).toHaveAttribute("aria-labelledby", legendaEl?.id)
+    // Se o figcaption for apagado, esta consulta por role deixa de achar
+    // nome nenhum e falha — diferente do aria-label solto, que sobrevivia
+    // à remoção do figcaption.
     expect(
       screen.getByRole("figure", {
         name: /Topo da programação em festivalalumio.com.br/,
       }),
-    ).toBeInTheDocument()
+    ).toBe(figura)
   })
 
   it("a barra é decorativa: fica fora da árvore de acessibilidade", () => {

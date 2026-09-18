@@ -19,11 +19,20 @@ function renderFrame() {
 }
 
 describe("PhoneFrame", () => {
-  it("legenda visível associada pela figure", () => {
-    renderFrame()
-    expect(
-      screen.getByRole("figure", { name: /Programação no celular/ }),
-    ).toBeInTheDocument()
+  it("legenda visível associada pela figure via aria-labelledby (RC5: aria-label não vale sobre texto visível)", () => {
+    const { container } = renderFrame()
+    const figura = container.querySelector("figure")
+    const legendaEl = container.querySelector("figcaption")
+    expect(figura).not.toHaveAttribute("aria-label")
+    expect(legendaEl).not.toBeNull()
+    expect(legendaEl?.parentElement).toBe(figura)
+    expect(legendaEl?.textContent).toBe(
+      "Programação no celular, capturada em 12/09/2026",
+    )
+    expect(figura).toHaveAttribute("aria-labelledby", legendaEl?.id)
+    expect(screen.getByRole("figure", { name: /Programação no celular/ })).toBe(
+      figura,
+    )
   })
 
   it("usa o raio de celular e o contorno do cavalete", () => {
