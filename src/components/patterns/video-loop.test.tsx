@@ -2,6 +2,7 @@ import { act, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { instalarMatchMedia, type MatchMediaFalso } from "@/test/match-media"
+import { VideoLoop } from "./video-loop"
 import { VideoLoopIlha } from "./video-loop-ilha"
 
 type Entrada = { isIntersecting: boolean; intersectionRatio: number }
@@ -172,5 +173,45 @@ describe("VideoLoop", () => {
     const botao = container.querySelector("[data-barra-video] button")
     expect(botao?.className).toContain("hidden")
     expect(botao?.className).toContain("js:inline-flex")
+  })
+
+  // A figura Server: o que o HTML do servidor entrega antes de qualquer JS.
+  describe("figura do servidor", () => {
+    function montarFigura() {
+      return render(
+        <VideoLoop
+          poster="/videos/busca.jpg"
+          fontes={[{ src: "/videos/busca.mp4", type: "video/mp4" }]}
+          descricao="O vídeo mostra a busca por banda."
+          data="Captura de setembro de 2026."
+          complemento="busca de bandas"
+          width={1280}
+          height={720}
+        />,
+      )
+    }
+
+    it("é uma figure com a descrição textual na legenda", async () => {
+      const { container } = montarFigura()
+      expect(container.querySelector("figure")).not.toBeNull()
+      const legenda = await screen.findByText(
+        "O vídeo mostra a busca por banda. Captura de setembro de 2026.",
+      )
+      expect(legenda.tagName).toBe("FIGCAPTION")
+    })
+
+    it("entrega o poster e a barra reservada, e nenhum byte de vídeo", async () => {
+      const { container } = montarFigura()
+      await screen.findByText(/O vídeo mostra a busca por banda\./)
+      const poster = container.querySelector("img")
+      expect(poster).not.toBeNull()
+      // Decorativa: a descrição do loop já está na legenda, visível.
+      expect(poster).toHaveAttribute("alt", "")
+      expect(poster?.getAttribute("src")).toContain("busca.jpg")
+      expect(container.querySelector("video")).toBeNull()
+      expect(container.querySelector("[data-barra-video]")).toHaveClass(
+        "min-h-(--alvo-toque)",
+      )
+    })
   })
 })
