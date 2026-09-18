@@ -160,6 +160,8 @@
   --focus-offset: 3px;
   --focus-halo-width: 3px;
 
+  --shadow-overlay: 0 24px 64px rgba(0, 0, 0, 0.18);
+
   --z-base: 0;
   --z-index: 30;
   --z-header: 40;
@@ -561,6 +563,28 @@
 html:has(dialog[open]) {
   overflow: hidden;
   scrollbar-gutter: stable;
+}
+
+/* O fundo do diálogo é OPACO na cor da parede/sala: nada de véu
+   semitransparente sobre o conteúdo. `Canvas` (cor de sistema) é a
+   alternativa obrigatória — `::backdrop` só herda custom properties a partir
+   do Safari 17.4, e sem ela o fundo ficaria transparente lá. A camada vem de
+   zIndex.overlay, como no painel. */
+dialog::backdrop {
+  z-index: var(--z-overlay);
+  background: var(--bg, Canvas);
+}
+
+/* GaleriaDialog: o gatilho de ampliação cobre a figura inteira sem mudar a
+   caixa dela nem remontar a imagem. `position: absolute` e `inset: 0` são
+   estruturais (a mesma posição, não um valor de espaçamento com escala
+   própria) e ficam aqui como classe de componente, pela mesma razão de
+   .campo-grupo-refluxo e de [data-site-header]. */
+@layer components {
+  .galeria-gatilho {
+    position: absolute;
+    inset: 0;
+  }
 }
 
 /* IndiceSemicolon: invólucro absoluto na margem (sem ocupar fluxo), lista

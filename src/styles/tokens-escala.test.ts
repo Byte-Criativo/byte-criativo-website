@@ -25,6 +25,22 @@ function normalizarEspacos(s: string): string {
   return s.replace(/\s+/g, " ").trim()
 }
 
+// R61: o invariante é o VALOR do token, não a grafia. `rgba(0,0,0,.18)` no
+// JSON e `rgba(0, 0, 0, 0.18)` depois do prettier são o mesmo valor; uma
+// comparação literal faria esta suíte e o `format:check` se excluírem.
+function normalizarValor(valor: string): string {
+  return valor
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/(^|[^0-9a-z.])\.(\d)/g, (_todo, antes, digito) => {
+      return `${antes}0.${digito}`
+    })
+}
+
+function valorDeclarado(nome: string): string | null {
+  return new RegExp(`${nome}\\s*:\\s*([^;]+);`).exec(css)?.[1]?.trim() ?? null
+}
+
 describe("globals.css: escala de espaço", () => {
   it.each(Object.entries(tokens.space))(
     "%s vale exatamente o valor de tokens.json",
@@ -45,6 +61,14 @@ describe("globals.css: raio, espessura de borda, camadas e foco", () => {
 
   it.each(Object.entries(tokens.zIndex))("--z-%s", (nome, valor) => {
     expect(temDeclaracao(`--z-${nome}`, valor)).toBe(true)
+  })
+
+  it("expõe shadow.overlay pelo valor, não pela grafia (R61)", () => {
+    const declarado = valorDeclarado("--shadow-overlay")
+    expect(declarado, "--shadow-overlay ausente em globals.css").not.toBeNull()
+    expect(normalizarValor(declarado ?? "")).toBe(
+      normalizarValor(tokens.shadow.overlay),
+    )
   })
 
   it("expõe focus.width, focus.offset e focus.haloWidth", () => {
