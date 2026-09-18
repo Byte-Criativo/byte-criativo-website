@@ -84,7 +84,12 @@ describe("Media", () => {
       // @ts-expect-error captura exige alt
       <Media tipo="captura" src="/a.png" width={1} height={1} sizes="1px" />
     )
+    const capturaSemSizes = (
+      // @ts-expect-error sizes é obrigatório em qualquer tipo
+      <Media tipo="captura" src="/a.png" width={1} height={1} alt="texto" />
+    )
     expect(decorativaComTexto).toBeDefined()
     expect(capturaSemAlt).toBeDefined()
+    expect(capturaSemSizes).toBeDefined()
   })
 })
