@@ -178,4 +178,23 @@ describe("MobileNav", () => {
       "open",
     )
   })
+
+  it("Tab no último elemento foca o primeiro elemento, e Shift+Tab no primeiro foca o último", async () => {
+    montar()
+    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+    const dialogo = screen.getByRole("dialog")
+    const fechar = within(dialogo).getByRole("button", { name: "Fechar menu" })
+    const ultimoLink = within(dialogo).getByRole("link", {
+      name: "Escrever e-mail",
+    })
+
+    ultimoLink.focus()
+    expect(ultimoLink).toHaveFocus()
+
+    await userEvent.keyboard("{Tab}")
+    expect(fechar).toHaveFocus()
+
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}")
+    expect(ultimoLink).toHaveFocus()
+  })
 })

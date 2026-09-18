@@ -138,7 +138,7 @@ export default function CatalogoPage() {
             <div className="flex flex-wrap items-center gap-(--space-4)">
               <Button href="/contato">Falar sobre um projeto</Button>
               <Button type="button" variante="contorno">
-                Copiar e-mail
+                Ação secundária
               </Button>
               <BotaoEnviandoDemo />
               <TextLink href="/portfolio" variante="acao">

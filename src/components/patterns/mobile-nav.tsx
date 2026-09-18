@@ -83,6 +83,32 @@ export function MobileNav({
     return () => consulta.removeEventListener("change", aoMudar)
   }, [fechar])
 
+  const aoTeclar = (evento: React.KeyboardEvent<HTMLDialogElement>) => {
+    if (evento.key !== "Tab") return
+    const elemento = dialogo.current
+    if (!elemento) return
+
+    const focaveis = elemento.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    )
+    if (focaveis.length === 0) return
+
+    const primeiro = focaveis[0]
+    const ultimo = focaveis[focaveis.length - 1]
+
+    if (evento.shiftKey) {
+      if (document.activeElement === primeiro) {
+        evento.preventDefault()
+        ultimo?.focus()
+      }
+    } else {
+      if (document.activeElement === ultimo) {
+        evento.preventDefault()
+        primeiro?.focus()
+      }
+    }
+  }
+
   return (
     <>
       {/* Gatilho sem JS: link comum para um destino visível na mesma página,
@@ -111,6 +137,7 @@ export function MobileNav({
       <dialog
         id={ID_DIALOGO}
         ref={dialogo}
+        onKeyDown={aoTeclar}
         aria-labelledby={ID_TITULO}
         className="h-full max-h-none w-full max-w-none bg-surface text-ink"
       >
