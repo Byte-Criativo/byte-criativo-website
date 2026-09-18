@@ -60,7 +60,12 @@ export function SalaObserver({
 
     for (const alvo of alvos) observador.observe(alvo)
     return () => observador.disconnect()
-  }, [salas])
+    // Chaveado pelo **conteúdo**, não pela identidade do array: uma página
+    // que escreva salas={["sala-1"]} no JSX entrega um array novo a cada
+    // render, e o efeito recomeçaria — devolvendo ao estado `parede` uma sala
+    // que já voltou a `projeto` e criando um segundo observador.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salas.join(" ")])
 
   useEffect(() => {
     if (secoes.length === 0) return
@@ -92,7 +97,10 @@ export function SalaObserver({
 
     for (const alvo of alvos) observador.observe(alvo)
     return () => observador.disconnect()
-  }, [secoes])
+    // Mesmo motivo do efeito acima: pela identidade do array, cada render
+    // trocaria o observador de seção por um novo.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [secoes.join(" ")])
 
   useEffect(() => {
     const aoTeclar = (evento: KeyboardEvent) => {

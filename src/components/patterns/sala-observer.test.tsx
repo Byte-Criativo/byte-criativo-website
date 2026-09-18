@@ -42,20 +42,24 @@ function prepararDom({ topSala = 2000, variante = "larga" } = {}): void {
     <section id="conversa"></section>
     <a href="#trabalhos" data-indice-link="trabalhos" class="indice-link"></a>
     <a href="#conversa" data-indice-link="conversa" class="indice-link"></a>
+    <button id="fora" type="button">fora do índice</button>
   `
   const sala = document.querySelector("#sala-1") as HTMLElement
   sala.getBoundingClientRect = retangulo(topSala)
 }
 
+/** A consulta exata que a ilha precisa fazer para respeitar 2.3.3. */
+const CONSULTA_MOVIMENTO = "(prefers-reduced-motion: reduce)"
+
 let midia: MatchMediaFalso
 
 // R65: o substituto de matchMedia é explícito e a resposta fica à vista.
-// Sem isso, "com movimento reduzido a sala nunca passa por parede" passaria
-// vazio contra um componente que nunca consultasse nada.
+// A comparação é pela consulta **inteira**, não por trecho: com `includes`,
+// trocar `reduce` por `no-preference` no componente — que desligaria o
+// momento orquestrado para todo mundo, porque `no-preference` casa por
+// padrão — deixaria a suíte verde.
 function movimentoReduzido(reduzido: boolean): void {
-  midia.responder((consulta) =>
-    reduzido ? consulta.includes("prefers-reduced-motion") : false,
-  )
+  midia.responder((consulta) => reduzido && consulta === CONSULTA_MOVIMENTO)
 }
 
 describe("SalaObserver", () => {
@@ -113,10 +117,34 @@ describe("SalaObserver", () => {
   it("com movimento reduzido, a sala nunca passa pelo estado parede", () => {
     movimentoReduzido(true)
     render(<SalaObserver salas={["sala-1"]} />)
+    // A consulta é conferida por igualdade: se a ilha perguntar outra coisa
+    // (por exemplo `no-preference`), a resposta acima não vale e esta linha
+    // acusa antes do estado.
+    expect(midia.consultas).toContain(CONSULTA_MOVIMENTO)
     expect(document.querySelector("#sala-1")).toHaveAttribute(
       "data-estado",
       "projeto",
     )
+  })
+
+  it("um novo render não devolve a sala já visitada ao estado parede", () => {
+    const { rerender } = render(
+      <SalaObserver salas={["sala-1"]} secoes={["trabalhos"]} />,
+    )
+    const sala = document.querySelector("#sala-1") as Element
+    ObservadorFalso.criados[0]?.callback([
+      { target: sala, isIntersecting: true, intersectionRatio: 0.9 },
+    ])
+    expect(sala).toHaveAttribute("data-estado", "projeto")
+
+    const antes = ObservadorFalso.criados.length
+    // Um array novo a cada render é o caso normal de uma página que escreve
+    // salas={["sala-1"]} no JSX: chavear o efeito pela identidade do array
+    // faria a sala voltar a `parede` e criaria um segundo observador.
+    rerender(<SalaObserver salas={["sala-1"]} secoes={["trabalhos"]} />)
+
+    expect(sala).toHaveAttribute("data-estado", "projeto")
+    expect(ObservadorFalso.criados).toHaveLength(antes)
   })
 
   it("sala já visível na hidratação nunca passa pelo estado parede", () => {
@@ -170,6 +198,27 @@ describe("SalaObserver", () => {
     await userEvent.keyboard("{Escape}")
     expect(link).toHaveAttribute("data-rotulo", "oculto")
     expect(link).toHaveFocus()
+  })
+
+  it("outra tecla não esconde o rótulo do link focado", async () => {
+    render(<SalaObserver secoes={["trabalhos"]} />)
+    const link = document.querySelector(
+      '[data-indice-link="trabalhos"]',
+    ) as HTMLElement
+    link.focus()
+    await userEvent.keyboard("{ArrowDown}")
+    expect(link).not.toHaveAttribute("data-rotulo")
+  })
+
+  it("Esc com o foco fora do índice não marca elemento nenhum", async () => {
+    render(<SalaObserver secoes={["trabalhos"]} />)
+    const fora = document.querySelector("#fora") as HTMLElement
+    fora.focus()
+    await userEvent.keyboard("{Escape}")
+    expect(fora).not.toHaveAttribute("data-rotulo")
+    expect(
+      document.querySelector('[data-indice-link="trabalhos"]'),
+    ).not.toHaveAttribute("data-rotulo")
   })
 
   it("desmontar desconecta os observadores, sem vazamento", () => {
