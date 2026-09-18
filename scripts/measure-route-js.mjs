@@ -21,7 +21,12 @@ try {
         if (type === "Script") script += e.encodedDataLength
         if (type === "Font") font += e.encodedDataLength
       })
-      await page.goto(url, { waitUntil: "networkidle" })
+      try {
+        await page.goto(url, { waitUntil: "networkidle", timeout: 5000 })
+      } catch {
+        await page.waitForLoadState("load")
+        await page.waitForTimeout(1000)
+      }
       console.log(
         `${url}\tJS ${(script / 1024).toFixed(1)} KiB\tfontes ${(font / 1024).toFixed(1)} KiB`,
       )
