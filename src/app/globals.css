@@ -470,3 +470,86 @@
     color: HighlightText;
   }
 }
+
+/* SiteHeader e RC4 (foco não obscurecido). O único elemento fixo sobre o
+   conteúdo é o header; a raiz reserva a altura dele mais --space-4. Em
+   janelas de até 30 rem (zoom de 400%, celular em paisagem, e também
+   notebooks 1366 × 768 com escala de 125–150%) o header deixa de ser fixo
+   e a reserva cai. O 30rem fica literal porque `@media` não aceita var(). */
+:root {
+  scroll-padding-top: calc(
+    var(--alvo-toque) + var(--space-3) * 2 + var(--space-4)
+  );
+}
+
+/* `position: sticky` e `top: 0` do header são estruturais — a mesma posição,
+   não um valor de espaçamento com escala própria. Ficam aqui, como classe de
+   componente (mesma decisão de .campo-grupo-refluxo), porque a guarda de
+   tokens não distingue esse zero de um `top` solto em src/components/. */
+@layer components {
+  [data-site-header] {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    scroll-padding-top: calc(
+      var(--space-7) + var(--space-5) * 2 + var(--space-4)
+    );
+  }
+}
+
+@media (max-height: 30rem) {
+  :root {
+    scroll-padding-top: var(--space-4);
+  }
+
+  [data-site-header] {
+    position: static;
+  }
+}
+
+/* Barra de progresso de leitura: sempre renderizada, invisível por padrão.
+   Só aparece com suporte a animation-timeline e só no template de estudo de
+   caso. Fica dentro da caixa do header (não soma altura) e sai com
+   movimento reduzido. */
+.progresso-leitura {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  :root:has(article[data-case]) .progresso-leitura {
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--border-w-focus);
+    background: var(--ink);
+    transform-origin: left;
+    animation: progresso-leitura linear;
+    animation-timeline: scroll();
+  }
+}
+
+@keyframes progresso-leitura {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Pendência 9 do G3: a barra sai com movimento reduzido. Os dois seletores
+   são obrigatórios — só `.progresso-leitura` perderia em especificidade
+   para `:root:has(article[data-case]) .progresso-leitura` do @supports
+   acima, e a barra continuaria animando. */
+@media (prefers-reduced-motion: reduce) {
+  .progresso-leitura,
+  :root:has(article[data-case]) .progresso-leitura {
+    display: none;
+  }
+}

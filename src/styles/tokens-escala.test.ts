@@ -237,3 +237,37 @@ describe("globals.css: momento orquestrado do FrenteVerso", () => {
     )
   })
 })
+
+describe("globals.css: RC4, foco não obscurecido", () => {
+  const moldura = css.slice(css.indexOf("/* SiteHeader"))
+
+  it("a raiz reserva a altura do header no scroll-padding-top", () => {
+    expect(css).toMatch(/scroll-padding-top:\s*calc\(/)
+  })
+
+  it("o header é fixo por padrão, pela classe de componente", () => {
+    expect(moldura).toMatch(
+      /\[data-site-header\]\s*\{\s*position: sticky;\s*top: 0;/,
+    )
+  })
+
+  it("em janela de até 30 rem o header deixa de ser fixo", () => {
+    expect(moldura).toContain("@media (max-height: 30rem)")
+    expect(moldura).toMatch(/\[data-site-header\]\s*\{\s*position: static;/)
+  })
+
+  it("a barra de progresso só existe com suporte e só no template de case", () => {
+    expect(moldura).toContain("@supports (animation-timeline: scroll())")
+    expect(moldura).toContain(":root:has(article[data-case])")
+  })
+
+  it("a barra sai com movimento reduzido", () => {
+    expect(moldura).toMatch(
+      /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.progresso-leitura[\s\S]*display: none/,
+    )
+  })
+
+  it("a barra nasce escondida fora de qualquer condição", () => {
+    expect(moldura).toMatch(/\n\.progresso-leitura \{\n\s*display: none;/)
+  })
+})

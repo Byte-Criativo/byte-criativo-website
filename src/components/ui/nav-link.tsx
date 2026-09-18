@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import type { ReactElement, ReactNode } from "react"
+import { Button } from "./button"
 import { TextLink } from "./text-link"
 
 /**
@@ -38,5 +39,27 @@ export function NavLink({
     >
       {children}
     </TextLink>
+  )
+}
+
+/**
+ * Folha Client do CTA do header. O CTA do vocabulário fixo ("Falar sobre um
+ * projeto" → /contato) continua visível na própria página de destino e, lá,
+ * é marcado como página atual (especificação 3.2.6) — o que exige saber a
+ * rota, indisponível no layout Server do App Router.
+ */
+export function CtaAtual({
+  href,
+  rotulo,
+}: {
+  href: string
+  rotulo: string
+}): ReactElement {
+  const rota = usePathname()
+
+  return (
+    <Button href={href} aria-current={rota === href ? "page" : undefined}>
+      {rotulo}
+    </Button>
   )
 }
