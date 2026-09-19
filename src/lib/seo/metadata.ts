@@ -10,6 +10,7 @@ type MetadataInput = {
   description: string
   path: string
   image?: string
+  robots?: Metadata["robots"]
 }
 
 // Lista de permissão em vez de proibir "//": aceita "/" (home) ou "/" seguido
@@ -24,6 +25,7 @@ export function buildMetadata({
   description,
   path,
   image,
+  robots,
 }: MetadataInput): Metadata {
   if (!CANONICAL_PATH_RE.test(path)) {
     throw new Error(`Caminho inválido para canonical: ${path}`)
@@ -33,6 +35,7 @@ export function buildMetadata({
   return {
     title,
     description,
+    ...(robots ? { robots } : {}),
     alternates: { canonical: path },
     openGraph: {
       url: path,

@@ -150,3 +150,321 @@ describe("CaseStudy", () => {
     expect(result.success).toBe(false)
   })
 })
+
+import {
+  FaqItemSchema,
+  NavItemSchema,
+  FooterColumnSchema,
+  SiteConfigSchema,
+  HomePageSchema,
+  ServiceDetailPageSchema,
+  ServiceHubSchema,
+  ProcessoPageSchema,
+  SobrePageSchema,
+  ContatoPageSchema,
+  ObrigadoPageSchema,
+  PrivacidadePageSchema,
+} from "./schema"
+import { siteConfigRaw } from "./site"
+import { homePageRaw } from "./home"
+import { serviceHubRaw, servicePagesRaw } from "./services"
+import {
+  processoPageRaw,
+  sobrePageRaw,
+  contatoPageRaw,
+  obrigadoPageRaw,
+  privacidadePageRaw,
+} from "./pages"
+import { faqItemsRaw } from "./faq"
+
+describe("FaqItemSchema", () => {
+  it("aceita item válido", () => {
+    const valid = {
+      question: "Como funciona?",
+      answer: "Funciona assim e assado.",
+    }
+    expect(FaqItemSchema.safeParse(valid).success).toBe(true)
+  })
+
+  it("aceita item com id opcional", () => {
+    const validWithId = {
+      id: 1,
+      question: "Como funciona?",
+      answer: "Funciona assim e assado.",
+    }
+    expect(FaqItemSchema.safeParse(validWithId).success).toBe(true)
+  })
+
+  it("recusa pergunta muito curta", () => {
+    expect(
+      FaqItemSchema.safeParse({ question: "Oi", answer: "Resposta longa" })
+        .success,
+    ).toBe(false)
+  })
+
+  it("recusa resposta muito curta", () => {
+    expect(
+      FaqItemSchema.safeParse({ question: "Qual o prazo?", answer: "Oi" })
+        .success,
+    ).toBe(false)
+  })
+
+  it("valida todos os itens em faqItemsRaw", () => {
+    for (const item of faqItemsRaw) {
+      expect(FaqItemSchema.safeParse(item).success).toBe(true)
+    }
+  })
+})
+
+describe("SiteConfigSchema", () => {
+  it("aceita a configuração real de siteConfigRaw", () => {
+    expect(SiteConfigSchema.safeParse(siteConfigRaw).success).toBe(true)
+  })
+
+  it("recusa CNPJ em formato inválido", () => {
+    const invalid = {
+      ...siteConfigRaw,
+      taxId: "12345678000199",
+    }
+    expect(SiteConfigSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa e-mail de contato inválido", () => {
+    const invalid = {
+      ...siteConfigRaw,
+      contact: {
+        ...siteConfigRaw.contact,
+        email: "nao-e-email",
+      },
+    }
+    expect(SiteConfigSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa colunas de rodapé insuficientes", () => {
+    const invalid = {
+      ...siteConfigRaw,
+      footer: {
+        ...siteConfigRaw.footer,
+        columns: siteConfigRaw.footer.columns.slice(0, 2),
+      },
+    }
+    expect(SiteConfigSchema.safeParse(invalid).success).toBe(false)
+  })
+})
+
+describe("HomePageSchema", () => {
+  it("aceita os dados da home de homePageRaw", () => {
+    expect(HomePageSchema.safeParse(homePageRaw).success).toBe(true)
+  })
+
+  it("recusa formaDePensar com quantidade incorreta de princípios", () => {
+    const invalid = {
+      ...homePageRaw,
+      formaDePensar: {
+        ...homePageRaw.formaDePensar,
+        principles: homePageRaw.formaDePensar.principles.slice(0, 2),
+      },
+    }
+    expect(HomePageSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa comoAnda sem exatamente 5 passos", () => {
+    const invalid = {
+      ...homePageRaw,
+      comoAnda: {
+        ...homePageRaw.comoAnda,
+        steps: homePageRaw.comoAnda.steps.slice(0, 4),
+      },
+    }
+    expect(HomePageSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa oQueFazemos sem exatamente 4 situações", () => {
+    const invalid = {
+      ...homePageRaw,
+      oQueFazemos: {
+        ...homePageRaw.oQueFazemos,
+        situations: homePageRaw.oQueFazemos.situations.slice(0, 3),
+      },
+    }
+    expect(HomePageSchema.safeParse(invalid).success).toBe(false)
+  })
+})
+
+describe("ServiceDetailPageSchema", () => {
+  it("valida todas as 7 páginas de serviço reais em servicePagesRaw", () => {
+    expect(servicePagesRaw).toHaveLength(7)
+    for (const service of servicePagesRaw) {
+      const result = ServiceDetailPageSchema.safeParse(service)
+      expect(result.success).toBe(true)
+    }
+  })
+
+  it("recusa slug não pertencente aos 7 preservados", () => {
+    const invalid = {
+      ...servicePagesRaw[0],
+      slug: "consultoria-avulsa",
+    }
+    expect(ServiceDetailPageSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa serviço sem faqs", () => {
+    const invalid = {
+      ...servicePagesRaw[0],
+      faqs: [],
+    }
+    expect(ServiceDetailPageSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa mensagem de WhatsApp muito curta", () => {
+    const invalid = {
+      ...servicePagesRaw[0],
+      whatsappMessage: "Oi",
+    }
+    expect(ServiceDetailPageSchema.safeParse(invalid).success).toBe(false)
+  })
+})
+
+describe("ServiceHubSchema", () => {
+  it("aceita o hub real de serviceHubRaw", () => {
+    expect(ServiceHubSchema.safeParse(serviceHubRaw).success).toBe(true)
+  })
+
+  it("recusa hub com menos de 4 situações", () => {
+    const invalid = {
+      ...serviceHubRaw,
+      situacoes: serviceHubRaw.situacoes.slice(0, 3),
+    }
+    expect(ServiceHubSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa hub com quantidade diferente de 3 capacidades", () => {
+    const invalid = {
+      ...serviceHubRaw,
+      capacidades: serviceHubRaw.capacidades.slice(0, 2),
+    }
+    expect(ServiceHubSchema.safeParse(invalid).success).toBe(false)
+  })
+})
+
+describe("ProcessoPageSchema", () => {
+  it("aceita a página real de processoPageRaw", () => {
+    expect(ProcessoPageSchema.safeParse(processoPageRaw).success).toBe(true)
+  })
+
+  it("recusa processo com número de etapas diferente de 5", () => {
+    const invalid = {
+      ...processoPageRaw,
+      etapas: processoPageRaw.etapas.slice(0, 4),
+    }
+    expect(ProcessoPageSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa processo com menos de 3 dúvidas", () => {
+    const invalid = {
+      ...processoPageRaw,
+      duvidas: processoPageRaw.duvidas.slice(0, 2),
+    }
+    expect(ProcessoPageSchema.safeParse(invalid).success).toBe(false)
+  })
+})
+
+describe("SobrePageSchema", () => {
+  it("aceita a página real de sobrePageRaw", () => {
+    expect(SobrePageSchema.safeParse(sobrePageRaw).success).toBe(true)
+  })
+
+  it("recusa sobre com número de princípios diferente de 3", () => {
+    const invalid = {
+      ...sobrePageRaw,
+      principios: sobrePageRaw.principios.slice(0, 2),
+    }
+    expect(SobrePageSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa sobre com CNPJ em formato incorreto", () => {
+    const invalid = {
+      ...sobrePageRaw,
+      empresa: {
+        ...sobrePageRaw.empresa,
+        cnpj: "123",
+      },
+    }
+    expect(SobrePageSchema.safeParse(invalid).success).toBe(false)
+  })
+})
+
+describe("ContatoPageSchema", () => {
+  it("aceita a página real de contatoPageRaw", () => {
+    expect(ContatoPageSchema.safeParse(contatoPageRaw).success).toBe(true)
+  })
+
+  it("recusa contato com e-mail inválido nos caminhos diretos", () => {
+    const invalid = {
+      ...contatoPageRaw,
+      caminhos: {
+        ...contatoPageRaw.caminhos,
+        direto: {
+          ...contatoPageRaw.caminhos.direto,
+          email: {
+            ...contatoPageRaw.caminhos.direto.email,
+            address: "invalido",
+          },
+        },
+      },
+    }
+    expect(ContatoPageSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa contato com menos de 3 opções de tipo de projeto", () => {
+    const invalid = {
+      ...contatoPageRaw,
+      projectTypeOptions: contatoPageRaw.projectTypeOptions.slice(0, 2),
+    }
+    expect(ContatoPageSchema.safeParse(invalid).success).toBe(false)
+  })
+})
+
+describe("ObrigadoPageSchema", () => {
+  it("aceita a página real de obrigadoPageRaw", () => {
+    expect(ObrigadoPageSchema.safeParse(obrigadoPageRaw).success).toBe(true)
+  })
+
+  it("recusa obrigado sem passos de próximos passos completos (exige 3)", () => {
+    const invalid = {
+      ...obrigadoPageRaw,
+      proximosPassos: {
+        ...obrigadoPageRaw.proximosPassos,
+        steps: obrigadoPageRaw.proximosPassos.steps.slice(0, 2),
+      },
+    }
+    expect(ObrigadoPageSchema.safeParse(invalid).success).toBe(false)
+  })
+})
+
+describe("PrivacidadePageSchema", () => {
+  it("aceita a página real de privacidadePageRaw", () => {
+    expect(PrivacidadePageSchema.safeParse(privacidadePageRaw).success).toBe(
+      true,
+    )
+  })
+
+  it("recusa privacidade com menos de 5 seções", () => {
+    const invalid = {
+      ...privacidadePageRaw,
+      sections: privacidadePageRaw.sections.slice(0, 4),
+    }
+    expect(PrivacidadePageSchema.safeParse(invalid).success).toBe(false)
+  })
+
+  it("recusa privacidade com e-mail inválido no responsável", () => {
+    const invalid = {
+      ...privacidadePageRaw,
+      responsavel: {
+        ...privacidadePageRaw.responsavel,
+        email: "invalido",
+      },
+    }
+    expect(PrivacidadePageSchema.safeParse(invalid).success).toBe(false)
+  })
+})

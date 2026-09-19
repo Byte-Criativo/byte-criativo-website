@@ -92,4 +92,14 @@ describe("buildMetadata", () => {
       description: "Como um projeto anda",
     })
   })
+
+  it("permite configurar robots customizado (ex: noindex na rota obrigado)", () => {
+    const metadata = buildMetadata({
+      title: "Obrigado",
+      description: "Mensagem recebida com sucesso.",
+      path: "/contato/obrigado",
+      robots: { index: false, follow: false },
+    })
+    expect(metadata.robots).toEqual({ index: false, follow: false })
+  })
 })
