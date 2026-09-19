@@ -28,8 +28,6 @@ jobs:
     needs: quality
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      CONTRACT_GREEN: "headers de segurança|rota inexistente"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,12 +41,8 @@ jobs:
         run: |
           npm run start &
           npx --yes wait-on@9.1.0 -t 60000 http://localhost:3000
-      - name: Contrato HTTP — asserções que já devem passar
-        run: BASE_URL=http://localhost:3000 npx playwright test -c playwright.contract.config.ts -g "$CONTRACT_GREEN"
-      - name: Contrato HTTP — rotas ainda não implementadas
-        # Remover continue-on-error ao concluir a tarefa 8.7 (todas as rotas existirem)
-        continue-on-error: true
-        run: BASE_URL=http://localhost:3000 npx playwright test -c playwright.contract.config.ts --grep-invert "$CONTRACT_GREEN"
+      - name: Contrato HTTP — todas as rotas preservadas (bloqueante)
+        run: BASE_URL=http://localhost:3000 npx playwright test -c playwright.contract.config.ts
       - name: Upload relatório do Playwright em caso de falha
         if: failure()
         uses: actions/upload-artifact@v4
