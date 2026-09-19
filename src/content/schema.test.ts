@@ -216,6 +216,24 @@ describe("FaqItemSchema", () => {
   })
 })
 
+describe("NavItemSchema e FooterColumnSchema", () => {
+  it("valida NavItem com label e href", () => {
+    expect(
+      NavItemSchema.safeParse({ label: "Trabalhos", href: "/portfolio" })
+        .success,
+    ).toBe(true)
+  })
+
+  it("valida FooterColumn com title e links", () => {
+    expect(
+      FooterColumnSchema.safeParse({
+        title: "Trabalhos",
+        links: [{ label: "Underground PB", href: "/portfolio/underground-pb" }],
+      }).success,
+    ).toBe(true)
+  })
+})
+
 describe("SiteConfigSchema", () => {
   it("aceita a configuração real de siteConfigRaw", () => {
     expect(SiteConfigSchema.safeParse(siteConfigRaw).success).toBe(true)

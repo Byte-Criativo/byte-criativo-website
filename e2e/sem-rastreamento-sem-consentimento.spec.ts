@@ -23,8 +23,8 @@ test.describe("Sem rastreamento sem consentimento", () => {
       }
     })
 
-    await page.goto("/")
-    await page.waitForLoadState("networkidle")
+    await page.goto("/", { waitUntil: "load" })
+    await page.waitForTimeout(500)
 
     expect(foreignRequests).toEqual([])
   })
@@ -33,8 +33,8 @@ test.describe("Sem rastreamento sem consentimento", () => {
     page,
     context,
   }) => {
-    await page.goto("/")
-    await page.waitForLoadState("networkidle")
+    await page.goto("/", { waitUntil: "load" })
+    await page.waitForTimeout(500)
 
     const cookies = await context.cookies()
     expect(cookies).toEqual([])

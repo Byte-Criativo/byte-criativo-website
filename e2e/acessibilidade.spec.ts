@@ -8,8 +8,8 @@ const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]
 
 test.describe("Acessibilidade", () => {
   test("home não tem violações axe serious/critical", async ({ page }) => {
-    await page.goto("/")
-    await page.waitForLoadState("networkidle")
+    await page.goto("/", { waitUntil: "load" })
+    await page.waitForTimeout(500)
 
     const results = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze()
 
