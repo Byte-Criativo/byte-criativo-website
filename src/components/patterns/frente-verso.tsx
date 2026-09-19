@@ -7,7 +7,6 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react"
-import { cn } from "@/lib/cn"
 
 type Face = "frente" | "verso"
 
@@ -55,6 +54,14 @@ const FACES: ReadonlyArray<{ valor: Face; rotulo: string }> = [
   { valor: "verso", rotulo: "Verso" },
 ]
 
+const CLASSE_CONTROLE =
+  "hidden overflow-hidden rounded-(--radius-tag) border-(length:--border-w-control) border-solid border-ink js:inline-flex"
+const CLASSE_BOTAO =
+  "min-h-(--space-7) min-w-(--space-8) px-(--space-3) text-label transition-colors duration-(--dur-fast) focus-visible:relative"
+const CLASSE_ATIVO = "bg-ink text-bg"
+const CLASSE_INATIVO =
+  "bg-surface text-ink focus-visible:bg-surface-muted ponteiro:hover:bg-surface-muted"
+
 export function FrenteVersoControle({
   className,
 }: {
@@ -66,14 +73,10 @@ export function FrenteVersoControle({
     <div
       role="group"
       aria-label={`Mostrar a frente ou o verso do ${projeto}`}
-      // RC10: seletor estável para a regra de forced-colors em globals.css
-      // mirar só o botão pressionado deste controle (Highlight/HighlightText).
       data-controle-frente-verso
-      // RC9: o controle só existe com JS; sem JS as faces ficam empilhadas.
-      className={cn(
-        "hidden overflow-hidden rounded-(--radius-tag) border-(length:--border-w-control) border-solid border-ink js:inline-flex",
-        className,
-      )}
+      className={
+        className ? `${CLASSE_CONTROLE} ${className}` : CLASSE_CONTROLE
+      }
     >
       {FACES.map(({ valor, rotulo }, indice) => (
         <button
@@ -81,16 +84,7 @@ export function FrenteVersoControle({
           type="button"
           aria-pressed={face === valor}
           onClick={() => trocar(valor)}
-          className={cn(
-            "min-h-(--space-7) min-w-(--space-8) px-(--space-3) text-label transition-colors duration-(--dur-fast) focus-visible:relative",
-            indice === 1 &&
-              "border-l-(length:--border-w-control) border-solid border-ink",
-            face === valor
-              ? "bg-ink text-bg"
-              : // RC2: o foco visível repete o feedback do hover — o par
-                // focus-visible: é obrigatório ao lado de todo ponteiro:hover:.
-                "bg-surface text-ink focus-visible:bg-surface-muted ponteiro:hover:bg-surface-muted",
-          )}
+          className={`${CLASSE_BOTAO}${indice === 1 ? "border-l-(length:--border-w-control) border-solid border-ink" : ""} ${face === valor ? CLASSE_ATIVO : CLASSE_INATIVO}`}
         >
           {rotulo}
         </button>
@@ -111,7 +105,11 @@ export function FrenteVersoFaces({
   const { face } = useFrenteVerso()
 
   return (
-    <div className={cn("grid gap-(--space-5)", className)}>
+    <div
+      className={
+        className ? `grid gap-(--space-5) ${className}` : "grid gap-(--space-5)"
+      }
+    >
       <div
         data-face="frente"
         data-ativo={face === "frente"}

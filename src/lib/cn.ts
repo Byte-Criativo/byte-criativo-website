@@ -1,6 +1,20 @@
 import { clsx, type ClassValue } from "clsx"
 import { extendTailwindMerge } from "tailwind-merge"
-import tokens from "@/styles/tokens.json"
+// Papéis tipográficos definidos em tokens.json. Mantidos aqui como constante
+// estática para não empacotar os 24 KB de tokens.json nos bundles de cliente.
+// O teste src/lib/cn.test.ts garante sincronia com tokens.json.
+export const TYPOGRAPHY_ROLES = [
+  "display",
+  "h1",
+  "h2",
+  "h3",
+  "body",
+  "lede",
+  "caption",
+  "label",
+  "manifesto",
+  "code",
+] as const
 
 // Sem esta extensão, o tailwind-merge de fábrica não reconhece os papéis
 // tipográficos de tokens.json (`text-h1`, `text-body`...) como uma escala de
@@ -13,7 +27,7 @@ import tokens from "@/styles/tokens.json"
 const twMergeCustom = extendTailwindMerge({
   extend: {
     theme: {
-      text: Object.keys(tokens.typography.roles),
+      text: [...TYPOGRAPHY_ROLES],
     },
   },
 })

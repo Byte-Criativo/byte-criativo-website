@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest"
-import { cn } from "./cn"
+import tokens from "@/styles/tokens.json"
+import { cn, TYPOGRAPHY_ROLES } from "./cn"
 
 describe("cn", () => {
+  it("TYPOGRAPHY_ROLES espelha exatamente as chaves de tokens.json", () => {
+    expect([...TYPOGRAPHY_ROLES]).toEqual(Object.keys(tokens.typography.roles))
+  })
+
   it("junta classes e ignora falsy", () => {
     expect(cn("a", false, undefined, "b")).toBe("a b")
   })
