@@ -593,6 +593,27 @@ export const ObrigadoPageSchema = z.strictObject({
 })
 export type ObrigadoPage = z.infer<typeof ObrigadoPageSchema>
 
+// Portfolio Hub Schema (copy v1, seção 2.1; as salas vêm de home.salas.items)
+export const PortfolioPageSchema = z.strictObject({
+  seo: z.strictObject({
+    title: z.string().min(2),
+    seoTitle: z.string().min(2),
+    description: z.string().min(10),
+  }),
+  h1: z.string().min(2),
+  intro: z.array(z.string().min(10)).min(1),
+  ctaFinal: z.strictObject({
+    h2: z.string().min(2),
+    text: z.string().min(10),
+    ctaPrimary: NavItemSchema,
+    ctaSecondary: z.strictObject({
+      label: z.string().min(2),
+      whatsappMessage: z.string().min(10),
+    }),
+  }),
+})
+export type PortfolioPage = z.infer<typeof PortfolioPageSchema>
+
 // Privacidade Page Schema (port de docs/content/2026-09-privacidade-rascunho.md)
 export const PrivacidadeSubsectionSchema = z.strictObject({
   id: z.string().min(1),

@@ -46,6 +46,7 @@ import {
   contatoPage,
   obrigadoPage,
   privacidadePage,
+  portfolioPage,
 } from "./pages"
 import {
   ProcessoPageSchema,
@@ -53,6 +54,7 @@ import {
   ContatoPageSchema,
   ObrigadoPageSchema,
   PrivacidadePageSchema,
+  PortfolioPageSchema,
 } from "./schema"
 
 describe("Páginas institucionais (Processo, Sobre, Contato, Obrigado, Privacidade)", () => {
@@ -179,6 +181,29 @@ describe("Páginas institucionais (Processo, Sobre, Contato, Obrigado, Privacida
       expect(sectionIds).toContain("compartilhamento")
       expect(sectionIds).toContain("direitos")
       expect(sectionIds).toContain("seguranca")
+    })
+  })
+
+  describe("portfolioPage", () => {
+    it("passa na validação do PortfolioPageSchema", () => {
+      expect(PortfolioPageSchema.safeParse(portfolioPage).success).toBe(true)
+    })
+
+    it("usa a versão publicável da introdução, sem mencionar a Goromax (D12)", () => {
+      expect(portfolioPage.intro.length).toBeGreaterThanOrEqual(2)
+      const introCompleta = portfolioPage.intro.join(" ")
+      expect(introCompleta).not.toContain("banda")
+      expect(introCompleta).toContain("festival no Centro Histórico")
+      expect(introCompleta).toContain("plataforma da música independente")
+    })
+
+    it("aponta o CTA final para /contato com origem portfolio", () => {
+      expect(portfolioPage.ctaFinal.ctaPrimary.href).toBe(
+        "/contato?origem=portfolio",
+      )
+      expect(portfolioPage.ctaFinal.ctaSecondary.whatsappMessage).toBe(
+        "Olá! Vi os trabalhos da Byte Criativo e quero falar sobre um projeto.",
+      )
     })
   })
 })

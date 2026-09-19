@@ -20,11 +20,18 @@ import { HomeConversa } from "./_components/home-conversa"
 const home = getHomePage()
 const site = getSiteConfig()
 
-export const metadata: Metadata = buildMetadata({
-  title: "Byte Criativo | Design e engenharia de software",
-  description: home.hero.apoio,
-  path: "/",
-})
+// O resolvedor de metadata do Next converte o canonical da rota raiz para a
+// origem SEM barra final ("https://www.bcriativo.com"), mas o contrato de
+// rotas preservadas exige "https://www.bcriativo.com/". Por isso a home
+// omite o canonical da metadata e emite o <link> manualmente no componente.
+export const metadata: Metadata = {
+  ...buildMetadata({
+    title: "Byte Criativo | Design e engenharia de software",
+    description: home.hero.apoio,
+    path: "/",
+  }),
+  alternates: undefined,
+}
 
 const ITENS_INDICE = [
   { id: "hero", rotulo: "Início" },
@@ -48,6 +55,7 @@ export default function HomePage() {
 
   return (
     <div className="relative">
+      <link rel="canonical" href="https://www.bcriativo.com/" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdGraph) }}

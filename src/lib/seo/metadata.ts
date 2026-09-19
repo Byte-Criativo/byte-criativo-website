@@ -33,7 +33,9 @@ export function buildMetadata({
   const resolvedImage = image ?? DEFAULT_OG_IMAGE
   const images = [{ url: resolvedImage, width: 1200, height: 630 }]
   return {
-    title,
+    // `absolute` porque os seoTitle da copy v1 já trazem "| Byte Criativo";
+    // sem isso o template "%s | Byte Criativo" do layout raiz duplica o sufixo.
+    title: { absolute: title },
     description,
     ...(robots ? { robots } : {}),
     alternates: { canonical: path },

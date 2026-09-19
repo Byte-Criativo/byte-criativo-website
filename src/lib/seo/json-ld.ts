@@ -37,14 +37,16 @@ export function webPage({
   name,
   description,
   path,
+  type = "WebPage",
 }: {
   name: string
   description: string
   path: string
+  type?: "WebPage" | "AboutPage" | "ContactPage" | "CollectionPage"
 }): Record<string, unknown> {
   const url = path === "/" ? `${SITE_URL}/` : `${SITE_URL}${path}`
   return {
-    "@type": "WebPage",
+    "@type": type,
     "@id": `${url}#webpage`,
     url,
     name,
@@ -52,6 +54,42 @@ export function webPage({
     isPartOf: { "@id": WEBSITE_ID },
     about: { "@id": ORGANIZATION_ID },
     inLanguage: "pt-BR",
+  }
+}
+
+export function collectionPageJsonLd({
+  name,
+  description,
+  path,
+  items,
+}: {
+  name: string
+  description: string
+  path: string
+  items: Array<{ name: string; path: string }>
+}): Record<string, unknown> {
+  const url = `${SITE_URL}${path}`
+  return {
+    "@type": "CollectionPage",
+    "@id": `${url}#webpage`,
+    url,
+    name,
+    description,
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORGANIZATION_ID },
+    inLanguage: "pt-BR",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "CreativeWork",
+          name: item.name,
+          url: `${SITE_URL}${item.path}`,
+        },
+      })),
+    },
   }
 }
 

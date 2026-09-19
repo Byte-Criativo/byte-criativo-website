@@ -4,6 +4,7 @@ import {
   WEBSITE_ID,
   breadcrumbsJsonLd,
   buildJsonLdGraph,
+  collectionPageJsonLd,
   faqPageJsonLd,
   organization,
   serializeJsonLd,
@@ -95,6 +96,64 @@ describe("json-ld", () => {
     const graph = buildJsonLdGraph([organization(), webSite()])
     expect(graph["@context"]).toBe("https://schema.org")
     expect(Array.isArray(graph["@graph"])).toBe(true)
+  })
+
+  it("webPage aceita tipo especializado (AboutPage, ContactPage)", () => {
+    const sobre = webPage({
+      name: "Sobre",
+      description: "Quem conduz a Byte Criativo.",
+      path: "/sobre",
+      type: "AboutPage",
+    })
+    expect(sobre["@type"]).toBe("AboutPage")
+    expect(sobre["@id"]).toBe("https://www.bcriativo.com/sobre#webpage")
+
+    const contato = webPage({
+      name: "Contato",
+      description: "Fale com a Byte Criativo.",
+      path: "/contato",
+      type: "ContactPage",
+    })
+    expect(contato["@type"]).toBe("ContactPage")
+  })
+
+  it("collectionPageJsonLd gera CollectionPage com ItemList de CreativeWork", () => {
+    const colecao = collectionPageJsonLd({
+      name: "Trabalhos",
+      description: "Estudos de caso publicados.",
+      path: "/portfolio",
+      items: [
+        { name: "Underground PB", path: "/portfolio/underground-pb" },
+        { name: "Festival Alumiô", path: "/portfolio/festival-alumio" },
+      ],
+    })
+    expect(colecao["@type"]).toBe("CollectionPage")
+    expect(colecao["@id"]).toBe("https://www.bcriativo.com/portfolio#webpage")
+    expect(colecao["isPartOf"]).toEqual({ "@id": WEBSITE_ID })
+    expect(colecao["about"]).toEqual({ "@id": ORGANIZATION_ID })
+
+    const lista = colecao["mainEntity"] as Record<string, unknown>
+    expect(lista["@type"]).toBe("ItemList")
+    expect(lista["itemListElement"]).toEqual([
+      {
+        "@type": "ListItem",
+        position: 1,
+        item: {
+          "@type": "CreativeWork",
+          name: "Underground PB",
+          url: "https://www.bcriativo.com/portfolio/underground-pb",
+        },
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        item: {
+          "@type": "CreativeWork",
+          name: "Festival Alumiô",
+          url: "https://www.bcriativo.com/portfolio/festival-alumio",
+        },
+      },
+    ])
   })
 
   it("serialização escapa < para evitar fechar a tag script", () => {

@@ -10,6 +10,7 @@ import {
   getContatoPage,
   getObrigadoPage,
   getPrivacidadePage,
+  getPortfolioPage,
   getFaqItems,
 } from "./index"
 
@@ -81,6 +82,13 @@ describe("Content Loaders (src/content/index.ts)", () => {
     const privacidade = getPrivacidadePage()
     expect(privacidade.responsavel.name).toBe("Byte Criativo")
     expect(privacidade.sections.length).toBeGreaterThanOrEqual(5)
+  })
+
+  it("getPortfolioPage() retorna o hub de trabalhos com intro e banda final", () => {
+    const portfolio = getPortfolioPage()
+    expect(portfolio.h1).toContain("identidade")
+    expect(portfolio.intro.length).toBeGreaterThanOrEqual(2)
+    expect(portfolio.ctaFinal.ctaPrimary.href).toBe("/contato?origem=portfolio")
   })
 
   it("getFaqItems() retorna perguntas e respostas frequentes", () => {

@@ -10,6 +10,7 @@ import {
   ContatoPageSchema,
   ObrigadoPageSchema,
   PrivacidadePageSchema,
+  PortfolioPageSchema,
   FaqItemSchema,
   type SiteConfig,
   type HomePage,
@@ -20,6 +21,7 @@ import {
   type ContatoPage,
   type ObrigadoPage,
   type PrivacidadePage,
+  type PortfolioPage,
   type FaqItem,
 } from "./schema"
 import { siteConfigRaw } from "./site"
@@ -31,6 +33,7 @@ import {
   contatoPageRaw,
   obrigadoPageRaw,
   privacidadePageRaw,
+  portfolioPageRaw,
 } from "./pages"
 import { faqItemsRaw } from "./faq"
 
@@ -74,6 +77,10 @@ export function getObrigadoPage(): ObrigadoPage {
 
 export function getPrivacidadePage(): PrivacidadePage {
   return PrivacidadePageSchema.parse(privacidadePageRaw)
+}
+
+export function getPortfolioPage(): PortfolioPage {
+  return PortfolioPageSchema.parse(portfolioPageRaw)
 }
 
 export function getFaqItems(): FaqItem[] {

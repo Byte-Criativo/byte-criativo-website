@@ -9,7 +9,7 @@ describe("buildMetadata", () => {
         "Como um projeto anda na Byte Criativo, do diagnóstico ao lançamento.",
       path: "/processo",
     })
-    expect(metadata.title).toBe("Processo")
+    expect(metadata.title).toEqual({ absolute: "Processo" })
     expect(metadata.alternates?.canonical).toBe("/processo")
     expect(metadata.openGraph).toMatchObject({
       url: "/processo",
@@ -19,6 +19,18 @@ describe("buildMetadata", () => {
       type: "website",
     })
     expect(metadata.twitter).toMatchObject({ card: "summary_large_image" })
+  })
+
+  it("emite canonical absoluto com barra final na home (contrato preservado)", () => {
+    const metadata = buildMetadata({
+      title: "Byte Criativo",
+      description: "Design e engenharia de software.",
+      path: "/",
+    })
+    // O resolvedor de metadata do Next remove a barra final da rota raiz;
+    // por isso a home omite o canonical da metadata e emite o <link>
+    // manualmente no componente (ver src/app/(site)/page.tsx).
+    expect(metadata.alternates?.canonical).toBe("/")
   })
 
   it("recusa caminho sem barra inicial ou com barra final", () => {

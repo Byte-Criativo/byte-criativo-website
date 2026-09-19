@@ -7,7 +7,7 @@ const serviceHub = getServiceHub()
 
 describe("Hub de Serviços (/servicos)", () => {
   it("exporta metadata com seoTitle, description e canonical /servicos", () => {
-    expect(metadata.title).toBe(serviceHub.intro.seoTitle)
+    expect(metadata.title).toEqual({ absolute: serviceHub.intro.seoTitle })
     expect(metadata.description).toBe(serviceHub.intro.description)
     expect(metadata.alternates?.canonical).toBe("/servicos")
   })

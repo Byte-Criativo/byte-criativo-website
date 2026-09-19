@@ -32,7 +32,7 @@ describe("ServiceDetailPage - SSG & Metadata", () => {
       params: Promise.resolve({ slug: "desenvolvimento-de-sites" }),
     })
     const service = getServiceBySlug("desenvolvimento-de-sites")!
-    expect(meta.title).toBe(service.seoTitle)
+    expect(meta.title).toEqual({ absolute: service.seoTitle })
     expect(meta.description).toBe(service.description)
     expect(meta.alternates?.canonical).toBe(
       "/servicos/desenvolvimento-de-sites",

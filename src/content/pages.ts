@@ -4,11 +4,13 @@ import {
   ContatoPageSchema,
   ObrigadoPageSchema,
   PrivacidadePageSchema,
+  PortfolioPageSchema,
   type ProcessoPage,
   type SobrePage,
   type ContatoPage,
   type ObrigadoPage,
   type PrivacidadePage,
+  type PortfolioPage,
 } from "./schema"
 import { CONTACT_EMAIL, WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/lib/contact"
 import CaseUndergroundPB from "@/assets/case-undergroundpb-screenshot.webp"
@@ -571,6 +573,41 @@ export const privacidadePageRaw = {
 
 export const privacidadePage: PrivacidadePage =
   PrivacidadePageSchema.parse(privacidadePageRaw)
+
+// ============================================================================
+// Portfolio Hub Data (copy v1, seção 2.1 — versão publicável sem a Goromax,
+// D12 pendente; as salas são as de home.salas.items)
+// ============================================================================
+
+export const portfolioPageRaw = {
+  seo: {
+    title: "Trabalhos",
+    seoTitle: "Trabalhos: portfólio de sites e plataformas | Byte Criativo",
+    description:
+      "Estudos de caso de projetos no ar: o contexto, o que cada um precisava e as decisões de design e de código por trás de cada tela.",
+  },
+  h1: "Cada projeto com a própria identidade;",
+  intro: [
+    "Os trabalhos publicados nasceram na cena cultural da Paraíba: um festival no Centro Histórico e uma plataforma da música independente. Cada um tinha muita informação para organizar, gente de verdade usando e uma identidade que não podia se perder na tela.",
+    "Em cada estudo você vê o contexto, o que precisava funcionar e as decisões de design e de código.",
+  ],
+  ctaFinal: {
+    h2: "Seu negócio não tem nada a ver com música?",
+    text: "O desafio costuma ser parecido: muita coisa para mostrar, pouca atenção disponível e uma marca que precisa ser reconhecida.",
+    ctaPrimary: {
+      label: "Falar sobre um projeto",
+      href: "/contato?origem=portfolio",
+    },
+    ctaSecondary: {
+      label: "Chamar no WhatsApp",
+      whatsappMessage:
+        "Olá! Vi os trabalhos da Byte Criativo e quero falar sobre um projeto.",
+    },
+  },
+}
+
+export const portfolioPage: PortfolioPage =
+  PortfolioPageSchema.parse(portfolioPageRaw)
 
 // ============================================================================
 // Exports legados preservados para compatibilidade retroativa
