@@ -47,7 +47,7 @@ test("os dois cases publicados abrem com créditos, galeria e navegação", asyn
   await underground.click()
   await expect(page).toHaveURL(/\/portfolio\/underground-pb$/)
   await expect(
-    page.getByText("identidade visual e site e software"),
+    page.getByText("identidade visual · criação do site e software"),
   ).toBeVisible()
   await expect(page.locator("[data-galeria-item]")).toHaveCount(4)
   await page

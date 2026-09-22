@@ -26,7 +26,7 @@ export const caseStudiesRaw = [
     liveUrl: "https://www.undergroundpb.com.br/",
     liveCheckedAt: "2026-09-16",
     role: {
-      disciplines: ["identidade visual", "site e software"],
+      disciplines: ["identidade visual", "criação do site e software"],
       evidence: [
         {
           kind: "owner-statement",
@@ -223,7 +223,7 @@ export const caseStudiesRaw = [
     role: {
       // O dono confirmou apenas o site, sem atribuir identidade, ilustrações
       // ou conteúdo à Byte.
-      disciplines: ["site"],
+      disciplines: ["criação do site"],
       evidence: [
         {
           kind: "owner-statement",

@@ -138,7 +138,7 @@ export default async function CasePage({ params }: PageProps) {
             { termo: "Tipo", descricao: estudo.projectType },
             {
               termo: "Atuação da Byte",
-              descricao: estudo.role.disciplines.join(" e "),
+              descricao: estudo.role.disciplines.join(" · "),
             },
             { termo: "Plataformas", descricao: "Web" },
             {
