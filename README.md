@@ -31,8 +31,8 @@ npm install
 npm run dev
 ```
 
-O formulário mostra um caminho alternativo de contato enquanto o envio por
-e-mail não estiver configurado. Para testar o envio localmente, copie
+O formulário envia pelo Resend quando as variáveis estão configuradas e
+oferece WhatsApp se o provedor falhar. Para testar o envio localmente, copie
 `.env.example` para `.env.local` e preencha `RESEND_API_KEY`,
 `LEAD_EMAIL_FROM` (remetente de domínio verificado no Resend),
 `LEAD_EMAIL_TO` (caixa privada monitorada), `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
@@ -41,7 +41,18 @@ configurado apenas no ambiente; o e-mail público do site e o `Reply-To` do
 visitante permanecem independentes. Nunca registre a chave ou o endereço
 privado no repositório. Sem as chaves de e-mail e do desafio, a Server Action
 não envia leads e mantém o caminho alternativo por WhatsApp. O desafio exige
-JavaScript; sem ele, a pessoa recebe a opção de contato direto.
+JavaScript; sem ele, a pessoa recebe a opção de contato direto. Os tokens
+Turnstile são validados no servidor antes de chamar o Resend.
+
+Em Production e Preview, `RESEND_API_KEY`, `LEAD_EMAIL_FROM`,
+`LEAD_EMAIL_TO` e `TURNSTILE_SECRET_KEY` são variáveis do tipo **Secret** na
+Vercel. `NEXT_PUBLIC_TURNSTILE_SITE_KEY` é **Config**, pois o widget precisa
+expor essa chave pública no navegador. O domínio `bcriativo.com` está
+verificado no Resend Free para envio. A caixa pública
+`contato@bcriativo.com` recebe pelo MX raiz do Resend; as mensagens aparecem
+na aba **Emails → Receiving** da conta Resend e não são encaminhadas
+automaticamente ao destinatário privado dos leads. O MX do subdomínio
+`send.bcriativo.com` atende apenas o retorno do envio e deve ser mantido.
 
 O Next sobe na porta 3000 por padrão; se estiver ocupada, use
 `PORT=<porta> npm run dev`. Para e2e, `PW_CHANNEL=chrome` usa o Google
@@ -93,23 +104,21 @@ deste repositório, no diretório de trabalho do projeto. O `docs/` deste
 repositório inclui os registros das capturas atuais em
 `scripts/portfolio/` e artefatos históricos do site anterior em `docs/`.
 
-## Preparação para produção
+## Operação em produção
 
-1. Conferir as páginas publicadas dos dois cases em desktop e celular,
-   incluindo a galeria, créditos e links externos.
-2. Verificar o domínio remetente no Resend Free e configurar
-   `RESEND_API_KEY`, `LEAD_EMAIL_FROM` e `LEAD_EMAIL_TO` como secrets em
-   Production e Preview na Vercel.
-3. Criar um widget Cloudflare Turnstile Free para os hosts de produção e
-   prévia e configurar `NEXT_PUBLIC_TURNSTILE_SITE_KEY` e
-   `TURNSTILE_SECRET_KEY` nos mesmos ambientes. A validação do token acontece
-   no servidor antes de qualquer envio.
-4. Conferir a regra de rate limiting da Vercel para `POST /contato`: por IP,
-   cinco requisições a cada dez minutos, resposta 429. O honeypot e o carimbo
-   são apenas camadas adicionais.
-5. Após novo deploy, fazer um envio real com JavaScript, conferir a chegada
-   na caixa monitorada e testar o fallback por WhatsApp, inclusive sem
-   JavaScript. Só então promover a branch para `main`.
+- O projeto Vercel usa Node.js 24.x, como `.nvmrc`, `package.json` e CI.
+- O widget Turnstile Free atende `bcriativo.com`, `www.bcriativo.com` e a URL
+  estável de Preview da branch `redesign/v2`. Se um host mudar, atualize a
+  lista no Cloudflare antes de testar o formulário.
+- A regra WAF da Vercel limita `POST /contato` a cinco requisições por IP a
+  cada dez minutos, com resposta 429. Honeypot e carimbo de tempo são
+  camadas adicionais.
+- Ao trocar qualquer secret, gere novo deploy nos ambientes afetados e faça
+  um envio real. Confira sucesso, conteúdo e `Reply-To` na caixa privada.
+  A opção WhatsApp permanece disponível em falhas e sem JavaScript.
+- Monitore a caixa pública separadamente em **Resend → Emails → Receiving**.
+  Uma mensagem enviada ao endereço público não aparece automaticamente na
+  caixa privada configurada em `LEAD_EMAIL_TO`.
 
 ## CI
 
