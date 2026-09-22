@@ -2,7 +2,7 @@ name: ci
 on:
   pull_request:
   push:
-    branches: [main, redesign/v2]
+    branches: [main]
 permissions:
   contents: read
 concurrency:

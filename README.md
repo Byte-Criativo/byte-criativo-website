@@ -116,6 +116,5 @@ repositório inclui os registros das capturas atuais em
 `.github/workflows/ci.yml` roda três jobs: `quality` (format, lint,
 typecheck, testes unitários, `npm audit`), `e2e` (Playwright contra build
 local + contrato HTTP) e `lighthouse` (LHCI). Disparam em qualquer pull
-request e em pushes para `main` e `redesign/v2` (não em pushes para outras
-branches). O hook de pré-commit (`.husky/pre-commit`) roda `format:check`,
+request e em pushes para `main`. O hook de pré-commit (`.husky/pre-commit`) roda `format:check`,
 `lint` e `typecheck` antes de cada commit.

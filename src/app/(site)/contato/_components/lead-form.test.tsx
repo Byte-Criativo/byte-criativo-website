@@ -116,13 +116,25 @@ describe("LeadForm (ilha)", () => {
   })
 
   it("renderiza o desafio de segurança com a chave pública e mantém o fallback sem JavaScript", () => {
-    const { container } = render(
+    const renderizar = vi.fn().mockReturnValue("widget-teste")
+    const remover = vi.fn()
+    const janela = window as Window & { turnstile?: unknown }
+    janela.turnstile = { render: renderizar, reset: vi.fn(), remove: remover }
+    const { container, unmount } = render(
       <LeadForm contato={contato} turnstileSiteKey="sitekey-teste" />,
     )
-    const desafio = container.querySelector(".cf-turnstile")
+    const desafio = container.querySelector('div[data-sitekey="sitekey-teste"]')
     expect(desafio).toHaveAttribute("data-sitekey", "sitekey-teste")
-    expect(desafio).toHaveAttribute("data-action", "lead_form")
+    expect(renderizar).toHaveBeenCalledWith(desafio, {
+      sitekey: "sitekey-teste",
+      action: "lead_form",
+      theme: "auto",
+      size: "flexible",
+    })
     expect(container.querySelector("noscript")).not.toBeNull()
+    unmount()
+    expect(remover).toHaveBeenCalledWith("widget-teste")
+    delete janela.turnstile
   })
 
   it("validação síncrona: erros por campo, resumo com foco e action nem é chamada", async () => {

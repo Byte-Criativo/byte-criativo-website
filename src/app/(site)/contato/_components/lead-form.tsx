@@ -36,6 +36,19 @@ import {
   type ErrosLead,
 } from "@/lib/lead-form-shared"
 import { validarLeadNoCliente } from "@/lib/lead-form-client"
+
+type TurnstileApi = {
+  render: (
+    container: HTMLElement,
+    options: { sitekey: string; action: string; theme: string; size: string },
+  ) => string
+  reset: (widgetId: string) => void
+  remove: (widgetId: string) => void
+}
+
+function turnstileApi(): TurnstileApi | undefined {
+  return (window as Window & { turnstile?: TurnstileApi }).turnstile
+}
 import type { ContatoPage } from "@/content/schema"
 import { submitLead } from "../actions"
 
@@ -142,9 +155,53 @@ export function LeadForm({
   const formRef = useRef<HTMLFormElement>(null)
   const resumoRef = useRef<HTMLDivElement>(null)
   const envioRef = useRef<HTMLInputElement>(null)
+  const turnstileContainerRef = useRef<HTMLDivElement>(null)
+  const turnstileWidgetRef = useRef<string | null>(null)
   const ultimoEnvio = useRef<{ dados: string; envio: string } | null>(null)
   const jaLeuParams = useRef(false)
   const tamanhoContextoRef = useRef(valores.contexto.length)
+
+  useEffect(() => {
+    if (!turnstileSiteKey) return
+    let ativo = true
+    const renderizar = () => {
+      const api = turnstileApi()
+      const container = turnstileContainerRef.current
+      if (!ativo || !api || !container || turnstileWidgetRef.current) return
+      try {
+        turnstileWidgetRef.current = api.render(container, {
+          sitekey: turnstileSiteKey,
+          action: "lead_form",
+          theme: "auto",
+          size: "flexible",
+        })
+      } catch {
+        // Configuração inválida mantém o contato direto como alternativa.
+      }
+    }
+
+    let script = document.querySelector<HTMLScriptElement>(
+      "script[data-byte-turnstile]",
+    )
+    if (!script && !turnstileApi()) {
+      script = document.createElement("script")
+      script.src =
+        "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+      script.async = true
+      script.dataset.byteTurnstile = ""
+      document.head.appendChild(script)
+    }
+    script?.addEventListener("load", renderizar)
+    renderizar()
+
+    return () => {
+      ativo = false
+      script?.removeEventListener("load", renderizar)
+      const id = turnstileWidgetRef.current
+      if (id) turnstileApi()?.remove(id)
+      turnstileWidgetRef.current = null
+    }
+  }, [turnstileSiteKey])
 
   const rotuloDoTipo = useCallback(
     (valor: string): string =>
@@ -194,9 +251,8 @@ export function LeadForm({
     apagarDadosContinuacao()
     // O token do Turnstile é de uso único. Depois de resposta da action,
     // inclusive falha de envio, a próxima tentativa precisa de outro token.
-    const turnstile = (window as Window & { turnstile?: { reset: () => void } })
-      .turnstile
-    turnstile?.reset()
+    const widgetId = turnstileWidgetRef.current
+    if (widgetId) turnstileApi()?.reset(widgetId)
     if (estado.status !== "erro") return
     const campos = ORDEM_CAMPOS.filter((campo) => estado.erros[campo])
     if (campos.length === 1 && campos[0]) {
@@ -529,13 +585,7 @@ export function LeadForm({
           <Text papel="caption" tom="muted">
             Confirme a verificação de segurança antes de enviar.
           </Text>
-          <div
-            className="cf-turnstile"
-            data-sitekey={turnstileSiteKey}
-            data-action="lead_form"
-            data-theme="auto"
-            data-size="flexible"
-          />
+          <div ref={turnstileContainerRef} data-sitekey={turnstileSiteKey} />
         </div>
       ) : (
         <Text papel="caption" tom="muted">

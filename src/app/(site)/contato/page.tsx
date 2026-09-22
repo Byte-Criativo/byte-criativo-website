@@ -86,12 +86,6 @@ export default function ContatoPage() {
               contato={contato}
               turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
             />
-            {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
-              <script
-                src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-                defer
-              />
-            ) : null}
           </div>
           <div className="flex flex-col gap-(--space-5) lg:col-span-4 lg:col-start-9">
             <Heading nivel={2}>{contato.caminhos.direto.h2}</Heading>
