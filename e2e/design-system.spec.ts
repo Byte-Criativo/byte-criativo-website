@@ -42,7 +42,18 @@ test.describe("Catálogo de componentes", () => {
     await page.getByRole("button", { name: "Menu" }).click()
     await expect(page.getByRole("dialog")).toBeVisible()
 
-    const graves = await violacoesGraves(page)
+    // A página do catálogo já é auditada nas duas resoluções acima. Aqui,
+    // a mudança de estado relevante é o diálogo do menu: limitar o axe a ele
+    // evita reprocessar todo o catálogo no Firefox, sem perder a cobertura
+    // dos controles e links que aparecem ao abrir o menu.
+    const resultados = await new AxeBuilder({ page })
+      .include("dialog")
+      .withTags(AXE_TAGS)
+      .analyze()
+    const graves = resultados.violations.filter(
+      (violacao) =>
+        violacao.impact === "serious" || violacao.impact === "critical",
+    )
     expect(
       graves.map(
         (v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`,
