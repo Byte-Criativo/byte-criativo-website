@@ -70,6 +70,12 @@ describe("dados dos estudos de caso", () => {
       expect(estudo.media.gallery.length).toBeGreaterThanOrEqual(3)
     }
   })
+
+  it("as galerias em revisão já apontam para capturas distintas e presentes", () => {
+    for (const estudo of caseStudies) {
+      expect(publishedMediaIssues(estudo)).toEqual([])
+    }
+  })
 })
 
 describe("guarda de mídia de case publicado", () => {
@@ -77,6 +83,8 @@ describe("guarda de mídia de case publicado", () => {
   function casePublicadoCom(srcs: string[]): CaseStudyData {
     const imagens = srcs.map((src, indice) => ({
       src,
+      width: 1440,
+      height: 900,
       alt: `Captura ${indice + 1} do case de teste`,
       capturedAt: "2026-09-16",
       sourceUrl: "https://www.undergroundpb.com.br/",
@@ -108,13 +116,13 @@ describe("guarda de mídia de case publicado", () => {
 
   it("flagra arquivo inexistente em public/ num case publicado", () => {
     const estudo = casePublicadoCom([
-      "/cases/underground-pb/home-1440.avif",
+      "/cases/underground-pb/inexistente.avif",
       "/og-image.png",
       "/logoByte.png",
     ])
     const problemas = publishedMediaIssues(estudo)
     expect(problemas).toEqual([
-      "arquivo ausente em public/: /cases/underground-pb/home-1440.avif",
+      "arquivo ausente em public/: /cases/underground-pb/inexistente.avif",
     ])
   })
 

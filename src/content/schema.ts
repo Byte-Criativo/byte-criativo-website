@@ -25,6 +25,8 @@ export const Evidence = z.discriminatedUnion("kind", [
 
 export const ImageAsset = z.object({
   src: z.string().min(1),
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
   alt: z.string(),
   caption: z.string().optional(),
   capturedAt: IsoDate,

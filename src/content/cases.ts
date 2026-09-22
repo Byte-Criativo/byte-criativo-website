@@ -138,43 +138,59 @@ export const caseStudiesRaw = [
     ],
     services: ["sistemas-web-sob-medida"],
     media: {
-      // Lacuna: a única captura real disponível no repositório é a primeira
-      // dobra (a mesma que home.ts já referencia). Os arquivos-mestre da
-      // ficha §6 (1440 DPR 2, 390 DPR 3, internas) ainda não foram produzidos
-      // e as capturas existentes estão fora do Git até D2. A galeria mínima
-      // repete a captura disponível até a produção dos derivados.
+      // Capturas reais do estado do site em 2026-09-22. Originais e seleção:
+      // scripts/portfolio/underground-pb.md. A autorização de uso dos
+      // elementos de terceiros permanece na revisão D5.
       cover: {
         src: "/cases/underground-pb/home-1440.avif",
-        alt: "Página inicial do Underground PB, com a agenda da cena independente da Paraíba em destaque",
-        caption: "Home do Underground PB, capturada em 2026-09-16",
-        capturedAt: "2026-09-16",
+        width: 1440,
+        height: 900,
+        alt: "Página inicial do Underground PB, com um show em destaque e acesso à agenda",
+        caption: "Home do Underground PB, capturada em 2026-09-22",
+        capturedAt: "2026-09-22",
         sourceUrl: "https://www.undergroundpb.com.br/",
-        containsThirdParty: ["arte", "conteudo-usuario"],
+        containsThirdParty: ["arte", "foto", "conteudo-usuario"],
       },
       gallery: [
         {
           src: "/cases/underground-pb/home-1440.avif",
-          alt: "Página inicial do Underground PB, com a agenda da cena independente da Paraíba em destaque",
-          caption: "Home do Underground PB, capturada em 2026-09-16",
-          capturedAt: "2026-09-16",
+          width: 1440,
+          height: 900,
+          alt: "Página inicial do Underground PB, com um show em destaque e acesso à agenda",
+          caption: "Home do Underground PB, capturada em 2026-09-22",
+          capturedAt: "2026-09-22",
           sourceUrl: "https://www.undergroundpb.com.br/",
-          containsThirdParty: ["arte", "conteudo-usuario"],
+          containsThirdParty: ["arte", "foto", "conteudo-usuario"],
         },
         {
-          src: "/cases/underground-pb/home-1440.avif",
-          alt: "Página inicial do Underground PB, com a agenda da cena independente da Paraíba em destaque",
-          caption: "Home do Underground PB, capturada em 2026-09-16",
-          capturedAt: "2026-09-16",
-          sourceUrl: "https://www.undergroundpb.com.br/",
-          containsThirdParty: ["arte", "conteudo-usuario"],
+          src: "/cases/underground-pb/agenda-1440.avif",
+          width: 1440,
+          height: 900,
+          alt: "Agenda de shows do Underground PB com busca, filtro de cidade e eventos em cartões",
+          caption: "Agenda de shows, capturada em 2026-09-22",
+          capturedAt: "2026-09-22",
+          sourceUrl: "https://www.undergroundpb.com.br/agenda/",
+          containsThirdParty: ["arte", "foto", "conteudo-usuario"],
         },
         {
-          src: "/cases/underground-pb/home-1440.avif",
-          alt: "Página inicial do Underground PB, com a agenda da cena independente da Paraíba em destaque",
-          caption: "Home do Underground PB, capturada em 2026-09-16",
-          capturedAt: "2026-09-16",
-          sourceUrl: "https://www.undergroundpb.com.br/",
-          containsThirdParty: ["arte", "conteudo-usuario"],
+          src: "/cases/underground-pb/palcos-1440.avif",
+          width: 1440,
+          height: 900,
+          alt: "Página de palcos do Underground PB com filtros, lista de espaços e mapa",
+          caption: "Palcos da Paraíba no desktop, capturados em 2026-09-22",
+          capturedAt: "2026-09-22",
+          sourceUrl: "https://www.undergroundpb.com.br/palcos/",
+          containsThirdParty: ["conteudo-usuario"],
+        },
+        {
+          src: "/cases/underground-pb/palcos-390.avif",
+          width: 390,
+          height: 844,
+          alt: "Página de palcos do Underground PB no celular, com mapa e lista de espaços",
+          caption: "Palcos da Paraíba no celular, capturados em 2026-09-22",
+          capturedAt: "2026-09-22",
+          sourceUrl: "https://www.undergroundpb.com.br/palcos/",
+          containsThirdParty: ["conteudo-usuario"],
         },
       ],
     },
@@ -201,7 +217,7 @@ export const caseStudiesRaw = [
       description:
         "Estudo de caso da plataforma cultural Underground PB: diretório de bandas, agenda, mapa de palcos e memória da cena independente da Paraíba.",
     },
-    updatedAt: "2026-09-19",
+    updatedAt: "2026-09-22",
   },
   {
     slug: "festival-alumio",
@@ -314,42 +330,60 @@ export const caseStudiesRaw = [
     ],
     services: ["desenvolvimento-de-sites"],
     media: {
-      // Lacuna: igual ao underground-pb — só há a captura da primeira dobra
-      // (a mesma que home.ts referencia). As 16 capturas de
-      // docs/research/captures/2026-09-alumio/ estão fora do Git até D2 e os
-      // derivados AVIF da ficha §6 ainda não foram produzidos.
+      // Capturas reais do estado do site em 2026-09-16. Originais e seleção:
+      // scripts/portfolio/festival-alumio.md. A autorização de uso dos
+      // elementos de terceiros permanece na revisão D5.
       cover: {
         src: "/cases/festival-alumio/home-1440.avif",
+        width: 1440,
+        height: 900,
         alt: "Página inicial do Festival Alumiô 2026, com ilustração colorida do Centro Histórico e as datas do festival",
         caption: "Home do Festival Alumiô 2026, capturada em 2026-09-16",
         capturedAt: "2026-09-16",
         sourceUrl: "https://www.festivalalumio.com.br/",
-        containsThirdParty: ["arte", "marca", "foto"],
+        containsThirdParty: ["arte", "marca"],
       },
       gallery: [
         {
           src: "/cases/festival-alumio/home-1440.avif",
+          width: 1440,
+          height: 900,
           alt: "Página inicial do Festival Alumiô 2026, com ilustração colorida do Centro Histórico e as datas do festival",
           caption: "Home do Festival Alumiô 2026, capturada em 2026-09-16",
           capturedAt: "2026-09-16",
           sourceUrl: "https://www.festivalalumio.com.br/",
-          containsThirdParty: ["arte", "marca", "foto"],
+          containsThirdParty: ["arte", "marca"],
         },
         {
-          src: "/cases/festival-alumio/home-1440.avif",
-          alt: "Página inicial do Festival Alumiô 2026, com ilustração colorida do Centro Histórico e as datas do festival",
-          caption: "Home do Festival Alumiô 2026, capturada em 2026-09-16",
+          src: "/cases/festival-alumio/programacao-1440.avif",
+          width: 1440,
+          height: 900,
+          alt: "Página de programação do Festival Alumiô, com filtros por dia, artista e palco",
+          caption:
+            "Filtros da programação em desktop, capturados em 2026-09-16",
           capturedAt: "2026-09-16",
-          sourceUrl: "https://www.festivalalumio.com.br/",
-          containsThirdParty: ["arte", "marca", "foto"],
+          sourceUrl: "https://www.festivalalumio.com.br/programacao",
+          containsThirdParty: ["arte", "marca"],
         },
         {
-          src: "/cases/festival-alumio/home-1440.avif",
-          alt: "Página inicial do Festival Alumiô 2026, com ilustração colorida do Centro Histórico e as datas do festival",
-          caption: "Home do Festival Alumiô 2026, capturada em 2026-09-16",
+          src: "/cases/festival-alumio/circuito-1440.avif",
+          width: 1440,
+          height: 900,
+          alt: "Página do circuito do Festival Alumiô, com ilustrações do Centro Histórico",
+          caption: "Apresentação do circuito, capturada em 2026-09-16",
           capturedAt: "2026-09-16",
-          sourceUrl: "https://www.festivalalumio.com.br/",
-          containsThirdParty: ["arte", "marca", "foto"],
+          sourceUrl: "https://www.festivalalumio.com.br/circuito",
+          containsThirdParty: ["arte", "marca"],
+        },
+        {
+          src: "/cases/festival-alumio/programacao-390.avif",
+          width: 390,
+          height: 844,
+          alt: "Programação do Festival Alumiô no celular, com opções de dia e busca por artista",
+          caption: "Programação no celular, capturada em 2026-09-16",
+          capturedAt: "2026-09-16",
+          sourceUrl: "https://www.festivalalumio.com.br/programacao",
+          containsThirdParty: ["arte", "marca"],
         },
       ],
     },
@@ -376,7 +410,7 @@ export const caseStudiesRaw = [
       description:
         "Estudo de caso do site do Alumiô Festival 2026: programação filtrável, favoritos no aparelho sem cadastro, circuito e memória fotográfica.",
     },
-    updatedAt: "2026-09-19",
+    updatedAt: "2026-09-22",
   },
 ]
 

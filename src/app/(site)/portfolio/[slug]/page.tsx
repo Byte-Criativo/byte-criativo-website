@@ -21,12 +21,6 @@ import { NavegacaoTrabalhos } from "@/components/patterns/navegacao-trabalhos"
 import { BrowserFrame } from "@/components/patterns/browser-frame"
 import { Media } from "@/components/patterns/media"
 
-// Dimensões dos arquivos-mestre previstos na estratégia de captura
-// (fichas §6): 1440×900. Os derivados AVIF ainda não existem em public/ —
-// ver o comentário de mídia em src/content/cases.ts.
-const MEDIA_LARGURA = 1440
-const MEDIA_ALTURA = 900
-
 type PageProps = {
   params: Promise<{ slug: string }>
 }
@@ -49,14 +43,15 @@ export async function generateMetadata({
     return {}
   }
 
-  // PENDÊNCIA pré-D5 (especificação 5.6): a OG de /portfolio/[slug] deve ser
-  // gerada por case no build ("Por case, gerada no build"), a partir da
-  // captura aprovada — hoje buildMetadata cai na imagem padrão. Implementar
-  // junto com a produção dos arquivos-mestre de mídia, antes da publicação.
   return buildMetadata({
     title: estudo.seo.title,
     description: estudo.seo.description,
     path: `/portfolio/${estudo.slug}`,
+    image: estudo.media.cover.src,
+    imageSize: {
+      width: estudo.media.cover.width,
+      height: estudo.media.cover.height,
+    },
   })
 }
 
@@ -133,8 +128,8 @@ export default async function CasePage({ params }: PageProps) {
                 tipo="captura"
                 src={estudo.media.cover.src}
                 alt={estudo.media.cover.alt}
-                width={MEDIA_LARGURA}
-                height={MEDIA_ALTURA}
+                width={estudo.media.cover.width}
+                height={estudo.media.cover.height}
                 sizes="(min-width: 64rem) 58vw, 100vw"
                 prioridade
               />
@@ -226,9 +221,14 @@ export default async function CasePage({ params }: PageProps) {
                   tipo="captura"
                   src={imagem.src}
                   alt={imagem.alt}
-                  width={MEDIA_LARGURA}
-                  height={MEDIA_ALTURA}
+                  width={imagem.width}
+                  height={imagem.height}
                   sizes="(min-width: 64rem) 80vw, 100vw"
+                  className={
+                    imagem.width < imagem.height
+                      ? "mx-auto max-w-96"
+                      : undefined
+                  }
                 />
               ),
             }))}
@@ -243,9 +243,14 @@ export default async function CasePage({ params }: PageProps) {
                   tipo="captura"
                   src={imagem.src}
                   alt={imagem.alt}
-                  width={MEDIA_LARGURA}
-                  height={MEDIA_ALTURA}
+                  width={imagem.width}
+                  height={imagem.height}
                   sizes="(min-width: 64rem) 58vw, 100vw"
+                  className={
+                    imagem.width < imagem.height
+                      ? "mx-auto max-w-96"
+                      : undefined
+                  }
                 />
                 <figcaption className="pt-(--space-2) text-caption text-ink-muted">
                   {imagem.caption ?? imagem.alt}

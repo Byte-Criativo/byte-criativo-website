@@ -10,6 +10,7 @@ type MetadataInput = {
   description: string
   path: string
   image?: string
+  imageSize?: { width: number; height: number }
   robots?: Metadata["robots"]
 }
 
@@ -25,13 +26,20 @@ export function buildMetadata({
   description,
   path,
   image,
+  imageSize,
   robots,
 }: MetadataInput): Metadata {
   if (!CANONICAL_PATH_RE.test(path)) {
     throw new Error(`Caminho inválido para canonical: ${path}`)
   }
   const resolvedImage = image ?? DEFAULT_OG_IMAGE
-  const images = [{ url: resolvedImage, width: 1200, height: 630 }]
+  const images = [
+    {
+      url: resolvedImage,
+      width: imageSize?.width ?? 1200,
+      height: imageSize?.height ?? 630,
+    },
+  ]
   return {
     // `absolute` porque os seoTitle da copy v1 já trazem "| Byte Criativo";
     // sem isso o template "%s | Byte Criativo" do layout raiz duplica o sufixo.

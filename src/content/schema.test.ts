@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest"
 import { CaseStudy } from "./schema"
 
 const image = {
+  width: 1440,
+  height: 900,
   src: "/cases/underground-pb/home-1440.avif",
   alt: "Página inicial do Underground PB com o evento do dia em destaque",
   capturedAt: "2026-09-16",

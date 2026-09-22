@@ -15,6 +15,8 @@ import CasePage, {
 const { casePublicado, caseEmRevisao } = vi.hoisted(() => {
   const imagem = {
     src: "/cases/case-teste/home-1440.avif",
+    width: 1440,
+    height: 900,
     alt: "Página inicial do Case Teste em destaque",
     caption: "Home do Case Teste, capturada em 2026-09-16",
     capturedAt: "2026-09-16",
@@ -65,7 +67,19 @@ const { casePublicado, caseEmRevisao } = vi.hoisted(() => {
       },
     ],
     services: ["desenvolvimento-de-sites"],
-    media: { cover: imagem, gallery: [imagem, imagem, imagem] },
+    media: {
+      cover: imagem,
+      gallery: [
+        imagem,
+        imagem,
+        {
+          ...imagem,
+          src: "/cases/case-teste/mobile-390.avif",
+          width: 390,
+          height: 844,
+        },
+      ],
+    },
     theme: {
       surface: "#F4EFE7",
       surfaceAlt: "#EEE7DC",
@@ -133,6 +147,13 @@ describe("CasePage - SSG & Metadata", () => {
     expect(meta.title).toEqual({ absolute: casePublicado.seo.title })
     expect(meta.description).toBe(casePublicado.seo.description)
     expect(meta.alternates?.canonical).toBe("/portfolio/case-teste")
+    expect(meta.openGraph?.images).toEqual([
+      {
+        url: casePublicado.media.cover.src,
+        width: casePublicado.media.cover.width,
+        height: casePublicado.media.cover.height,
+      },
+    ])
   })
 
   it("generateMetadata retorna objeto vazio para slug inexistente ou em review", async () => {
@@ -201,6 +222,9 @@ describe("CasePage - Renderização", () => {
     // Galeria: 3 figuras com gatilho de ampliação (GaleriaDialog)
     const figuras = container.querySelectorAll("[data-galeria-item]")
     expect(figuras).toHaveLength(3)
+    const imagemMobile = figuras[2]?.querySelector("img")
+    expect(imagemMobile).toHaveAttribute("width", "390")
+    expect(imagemMobile).toHaveAttribute("height", "844")
 
     // Navegação entre trabalhos: sem outro publicado, sobra "Ver todos"
     expect(
