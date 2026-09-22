@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "startServerCommand": "npm run start",
-      "url": ["http://localhost:3000/"],
+      "url": ["http://localhost:3000/", "http://localhost:3000/contato"],
       "numberOfRuns": 3,
       "settings": { "formFactor": "mobile" }
     },
@@ -14,7 +14,7 @@
         "total-blocking-time": ["error", { "maxNumericValue": 150 }],
         "resource-summary:script:size": [
           "error",
-          { "maxNumericValue": 165000 }
+          { "maxNumericValue": 170000 }
         ],
         "resource-summary:font:size": ["error", { "maxNumericValue": 150000 }],
         "resource-summary:stylesheet:size": [

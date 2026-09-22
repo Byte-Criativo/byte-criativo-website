@@ -30,14 +30,13 @@ import {
   type DadosContinuacao,
 } from "@/lib/continuar-conversa"
 import {
-  errosPorCampo,
   ESTADO_INICIAL_LEAD,
   extrairValoresLead,
   LIMITE_CONTEXTO_FORM,
-  leadSchema,
   TIPOS_PROJETO,
   type ErrosLead,
-} from "@/lib/lead-form"
+} from "@/lib/lead-form-shared"
+import { validarLeadNoCliente } from "@/lib/lead-form-client"
 import type { ContatoPage } from "@/content/schema"
 import { submitLead } from "../actions"
 
@@ -103,7 +102,7 @@ function PreSelecao({
 /**
  * Ilha do formulário de lead (variante `completa`, copy v1 seção 7 e
  * especificação de componentes › LeadForm). A Server Action é a fonte de
- * verdade; a mesma regra do esquema Zod roda de forma síncrona no `submit`
+ * verdade; as mesmas regras rodam de forma síncrona no `submit`
  * para responder no mesmo quadro da ação da pessoa. Funciona sem JS: o
  * POST vai à action pelo permalink `/contato` e a resposta volta com
  * mensagens, resumo e valores.
@@ -210,13 +209,13 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
       const valor = new FormData(form).get(campo)
       return typeof valor === "string" ? valor : null
     })
-    const resultado = leadSchema.safeParse(valoresAtuais)
+    const resultado = validarLeadNoCliente(valoresAtuais)
 
-    if (!resultado.success) {
+    if (Object.keys(resultado.erros).length > 0) {
       // Erro de validação com JS: a Server Action nem é chamada.
       evento.preventDefault()
       apagarDadosContinuacao()
-      setErrosCliente(errosPorCampo(resultado.error))
+      setErrosCliente(resultado.erros)
       setTentativasInvalidas((total) => total + 1)
       return
     }
@@ -231,10 +230,10 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
     gravarDadosContinuacao({
       envio,
       gravadoEm: Date.now(),
-      nome: resultado.data.nome,
-      ...(resultado.data.empresa ? { empresa: resultado.data.empresa } : {}),
-      tipo: rotuloDoTipo(resultado.data.tipo),
-      contexto: resultado.data.contexto,
+      nome: resultado.dados.nome,
+      ...(resultado.dados.empresa ? { empresa: resultado.dados.empresa } : {}),
+      tipo: rotuloDoTipo(resultado.dados.tipo),
+      contexto: resultado.dados.contexto,
     })
   }
 
@@ -256,8 +255,7 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
           )
           return typeof valor === "string" ? valor : null
         })
-        const resultado = leadSchema.safeParse(valoresAtuais)
-        const novos = resultado.success ? {} : errosPorCampo(resultado.error)
+        const novos = validarLeadNoCliente(valoresAtuais).erros
         const mensagem = novos[campo as keyof ErrosLead]
         const copia = { ...anteriores }
         if (mensagem) {

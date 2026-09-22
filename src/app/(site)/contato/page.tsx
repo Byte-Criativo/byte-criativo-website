@@ -131,7 +131,7 @@ export default function ContatoPage() {
                 >
                   <span
                     aria-hidden="true"
-                    className="font-mono text-caption font-bold text-accent select-none"
+                    className="font-mono text-caption font-bold text-ink select-none"
                   >
                     {String(step.number).padStart(2, "0")}
                   </span>
