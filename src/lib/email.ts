@@ -35,6 +35,8 @@ export type LeadParaEmail = {
   tipoRotulo: string
   /** Valor do campo oculto `origem` (utm/página de entrada), se houver. */
   origem?: string
+  /** UUID do envio com JS; mantém retries do mesmo lead idempotentes. */
+  envio?: string
 }
 
 function montarCorpo({ dados, tipoRotulo, origem }: LeadParaEmail): string {
@@ -82,15 +84,18 @@ export async function sendLeadEmail(lead: LeadParaEmail): Promise<void> {
   const resend = new Resend(apiKey)
 
   const { error } = await comTimeout(
-    resend.emails.send({
-      from: process.env.LEAD_EMAIL_FROM ?? REMETENTE_PADRAO,
-      to: process.env.LEAD_EMAIL_TO ?? CONTACT_EMAIL,
-      subject: `Novo contato pelo site: ${lead.tipoRotulo}`,
-      text: montarCorpo(lead),
-      // Reply-to do lead (arquitetura 5.7): só existe quando o lead deixou
-      // um e-mail; no canal WhatsApp não há endereço para responder.
-      ...(lead.dados.canal === "email" ? { replyTo: lead.dados.email } : {}),
-    }),
+    resend.emails.send(
+      {
+        from: process.env.LEAD_EMAIL_FROM ?? REMETENTE_PADRAO,
+        to: process.env.LEAD_EMAIL_TO ?? CONTACT_EMAIL,
+        subject: `Novo contato pelo site: ${lead.tipoRotulo}`,
+        text: montarCorpo(lead),
+        // Reply-to do lead (arquitetura 5.7): só existe quando o lead deixou
+        // um e-mail; no canal WhatsApp não há endereço para responder.
+        ...(lead.dados.canal === "email" ? { replyTo: lead.dados.email } : {}),
+      },
+      lead.envio ? { idempotencyKey: `lead/${lead.envio}` } : undefined,
+    ),
   )
 
   if (error) {

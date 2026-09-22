@@ -24,9 +24,12 @@ test.describe("Layout do site (landmarks e acessibilidade)", () => {
 
   test("skip link ganha foco com Tab e aponta para #conteudo", async ({
     page,
+    browserName,
   }) => {
     await page.goto("/")
-    await page.keyboard.press("Tab")
+    // O WebKit no macOS usa Option+Tab para incluir links na navegação
+    // por teclado quando Full Keyboard Access está desligado.
+    await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab")
 
     const skipLink = page.getByRole("link", {
       name: "Pular para o conteúdo",

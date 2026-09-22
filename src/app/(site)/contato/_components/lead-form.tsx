@@ -137,6 +137,7 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
   const formRef = useRef<HTMLFormElement>(null)
   const resumoRef = useRef<HTMLDivElement>(null)
   const envioRef = useRef<HTMLInputElement>(null)
+  const ultimoEnvio = useRef<{ dados: string; envio: string } | null>(null)
   const jaLeuParams = useRef(false)
   const tamanhoContextoRef = useRef(valores.contexto.length)
 
@@ -222,10 +223,16 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
 
     setErrosCliente({})
 
-    // Identificador de envio aleatório e não pessoal + gravação da chave
-    // de continuação (especificação, WhatsAppLink › Passagem de dados).
-    // E-mail e telefone nunca são gravados.
-    const envio = crypto.randomUUID()
+    // Um retry após timeout mantém a chave se a carga do e-mail é idêntica.
+    // Qualquer mudança nos dados ou na origem cria uma operação nova.
+    // A impressão digital fica só em memória, nunca no sessionStorage.
+    const dados = JSON.stringify([resultado.dados, origem])
+    const envio =
+      ultimoEnvio.current?.dados === dados
+        ? ultimoEnvio.current.envio
+        : crypto.randomUUID()
+    ultimoEnvio.current = { dados, envio }
+    // A chave de continuação (sem e-mail e telefone) usa o mesmo UUID.
     if (envioRef.current) envioRef.current.value = envio
     gravarDadosContinuacao({
       envio,

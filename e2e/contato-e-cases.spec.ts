@@ -36,19 +36,33 @@ test("o formulário mostra erros de validação e oferece WhatsApp se o e-mail f
   ).toBeVisible()
 })
 
-test("cases ainda em revisão não são publicados", async ({ page }) => {
-  const resposta = await page.goto("/portfolio/underground-pb")
-  expect(resposta?.status()).toBe(404)
+test("os dois cases publicados abrem com créditos, galeria e navegação", async ({
+  page,
+}) => {
+  await page.goto("/portfolio")
+  const underground = page.getByRole("link", {
+    name: "Ver estudo de caso do Underground PB",
+  })
+  await expect(underground).toBeVisible()
+  await underground.click()
+  await expect(page).toHaveURL(/\/portfolio\/underground-pb$/)
   await expect(
-    page.getByRole("heading", {
-      name: "Essa página não existe ou mudou de lugar.",
-    }),
+    page.getByText("identidade visual e site e software"),
   ).toBeVisible()
+  await expect(page.locator("[data-galeria-item]")).toHaveCount(4)
+  await page
+    .getByRole("button", { name: /Ampliar imagem:/ })
+    .first()
+    .click()
+  await expect(page.getByRole("dialog")).toBeVisible()
+  await page.getByRole("dialog").getByRole("button", { name: "Fechar" }).click()
 
-  await page.goto("/")
+  await page.goto("/portfolio/festival-alumio")
+  await expect(page.getByText("Atuação da Byte")).toBeVisible()
+  await expect(page.locator("[data-galeria-item]")).toHaveCount(4)
   await expect(
-    page.getByRole("contentinfo").getByRole("link", { name: "Underground PB" }),
-  ).toHaveCount(0)
+    page.getByRole("link", { name: "Ver todos os trabalhos" }),
+  ).toBeVisible()
 })
 
 test.describe("formulário sem JavaScript", () => {

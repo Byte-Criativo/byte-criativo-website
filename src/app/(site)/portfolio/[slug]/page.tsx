@@ -26,8 +26,7 @@ type PageProps = {
 }
 
 export function generateStaticParams() {
-  // Só cases publicados viram página estática. Hoje nenhum (gate D5), então
-  // a rota existe mas não gera páginas até a assinatura do dono.
+  // Só cases publicados viram páginas estáticas.
   return getPublishedCases().map((estudo) => ({ slug: estudo.slug }))
 }
 
@@ -137,6 +136,10 @@ export default async function CasePage({ params }: PageProps) {
           }
           fichaTecnica={[
             { termo: "Tipo", descricao: estudo.projectType },
+            {
+              termo: "Atuação da Byte",
+              descricao: estudo.role.disciplines.join(" e "),
+            },
             { termo: "Plataformas", descricao: "Web" },
             {
               termo: "Tecnologias",
@@ -147,7 +150,7 @@ export default async function CasePage({ params }: PageProps) {
         />
 
         <EditorialLayout className="pt-(--space-8)">
-          <Heading nivel={2}>O que o projeto precisava</Heading>
+          <Heading nivel={2}>O que o site reúne</Heading>
           <ul className="flex flex-col gap-(--space-3)">
             {estudo.needs.map((necessidade) => (
               <li
@@ -162,7 +165,7 @@ export default async function CasePage({ params }: PageProps) {
             ))}
           </ul>
 
-          <Heading nivel={2}>Decisões de UX</Heading>
+          <Heading nivel={2}>Como a experiência funciona</Heading>
           {estudo.uxDecisions.map((decisao) => (
             <section key={decisao.title} aria-label={decisao.title}>
               <Heading nivel={3}>{decisao.title}</Heading>
@@ -185,7 +188,7 @@ export default async function CasePage({ params }: PageProps) {
             ))}
           </ul>
 
-          <Heading nivel={2}>O que se observa no ar</Heading>
+          <Heading nivel={2}>Retrato do site na data da verificação</Heading>
           <dl className="flex flex-col gap-(--space-3)">
             {estudo.observableResults.map((fato) => (
               <div key={fato.label}>
@@ -237,7 +240,7 @@ export default async function CasePage({ params }: PageProps) {
               <figure
                 key={`galeria-${indice + 1}`}
                 data-galeria-item={`galeria-${indice + 1}`}
-                className="relative"
+                className="relative md:col-span-8 lg:col-span-10"
               >
                 <Media
                   tipo="captura"

@@ -26,7 +26,7 @@ export const homePageRaw = {
           "Busca e filtros",
           "Mapa de palcos",
           "Contas com moderação",
-          "Instalável como app no celular",
+          "Navegação em celular",
         ],
         image: {
           src: "/cases/underground-pb/home-1440.avif",
@@ -36,8 +36,8 @@ export const homePageRaw = {
         caseStudyUrl: "/portfolio/underground-pb",
         verso: {
           needs: {
-            title: "O que o projeto precisava",
-            text: "Reunir num lugar confiável bandas, shows, palcos, lançamentos, notícias e memória. Aceitar contribuições do público sem perder a curadoria. Funcionar bem no celular e falar a língua da cena.",
+            title: "O que o site reúne",
+            text: "Bandas, shows, palcos, lançamentos, notícias e memória numa plataforma com envios sujeitos à curadoria e navegação em celular.",
           },
           inProduction: {
             title: "O que está no ar",
@@ -47,7 +47,7 @@ export const homePageRaw = {
               "Mapa de palcos com filtros por região e gênero",
               "Memória da cena por décadas e mural",
               "Contas de representantes de bandas, com moderação",
-              "Tema claro e escuro; instalável como app no celular (PWA)",
+              "Tema claro e escuro; manifest e service worker",
             ],
           },
           tech: "htmx e MapLibre",
@@ -73,8 +73,8 @@ export const homePageRaw = {
         caseStudyUrl: "/portfolio/festival-alumio",
         verso: {
           needs: {
-            title: "O que o projeto precisava",
-            text: "Três dias de festival gratuito em vários palcos e casas do Centro Histórico. O público precisava descobrir o que ver, onde e quando, e montar o próprio roteiro sem criar conta.",
+            title: "O que o site apresenta",
+            text: "Três dias de festival gratuito em vários palcos e casas do Centro Histórico, com programação e favoritos no próprio aparelho, sem cadastro.",
           },
           inProduction: {
             title: "O que está no ar",
@@ -83,7 +83,7 @@ export const homePageRaw = {
               '"Minha programação": favoritos salvos no próprio aparelho, sem cadastro',
               "Circuito com os pontos do festival",
               "Memória com galeria ampliável e acessível",
-              "Fonte e data de atualização em cada informação",
+              "Fonte em cada apresentação e data de atualização da agenda",
             ],
           },
           tech: "Next.js",
@@ -108,19 +108,19 @@ export const homePageRaw = {
         title: "Diagnóstico antes do código",
         text: "Antes de qualquer tela vem o contexto: o que você vende, para quem e como a operação funciona hoje. Disso sai um escopo escrito.",
         whereAppears:
-          "no verso do Underground PB, que começa pelo que a plataforma precisava reunir antes de virar interface.",
+          "na etapa de diagnóstico, antes da definição de escopo e das telas.",
       },
       {
         title: "Design e engenharia na mesma mesa",
         text: "Quem desenha a interface é quem programa. A decisão visual já nasce sabendo como vai funcionar, e nada se perde num repasse. Quando o projeto pede outra especialidade, parceiros entram sob a mesma condução.",
         whereAppears:
-          "no Festival Alumiô, favoritos salvos no aparelho, sem cadastro, são ao mesmo tempo uma decisão de interface e de código.",
+          "na revisão conjunta de interface e implementação, sem repasse entre equipes.",
       },
       {
         title: "Feito para durar e evoluir",
         text: "Desempenho, busca, acessibilidade e segurança entram na estrutura desde o início, e não no fim. A entrega fecha uma etapa; o projeto continua.",
         whereAppears:
-          "no Underground PB, que funciona como aplicativo no celular (PWA) e tem tema claro e escuro.",
+          "nas verificações de desempenho, acessibilidade e segurança de cada entrega.",
       },
     ],
     contrastPhrases: [
@@ -334,13 +334,13 @@ export const featuredCase = {
     "Página inicial do Underground PB, com destaque para shows e a cena independente da Paraíba",
   tags: ["Plataforma cultural", "Agenda & bandas", "Conteúdo editorial"],
   problem:
-    "A cena alternativa paraibana precisava de um espaço próprio para reunir artistas, eventos, notícias e memória em uma experiência fácil de explorar.",
+    "O site reúne artistas, eventos, notícias e memória da cena alternativa paraibana.",
   solution:
-    "Criamos uma plataforma cultural com catálogo de bandas, agenda de shows, conteúdo editorial, playlist integrada, cadastro de artistas e recursos de participação da comunidade.",
+    "A plataforma apresenta catálogo de bandas, agenda de shows, conteúdo editorial, playlist integrada, cadastro de artistas e recursos de participação da comunidade.",
   result:
     "Bandas, shows, lançamentos, palcos e histórias da cena reunidos em um mesmo espaço, com caminhos para explorar e contribuir com o acervo.",
   description:
-    "Desenvolvido por nós, o Underground PB reúne a cena alternativa e independente da Paraíba em uma plataforma viva: catálogo de bandas, agenda de shows, notícias, memória da cena, playlist integrada, cadastro de artistas e contribuição para manter o projeto ativo. Um produto cultural pensado para descoberta, participação e fortalecimento da comunidade underground paraibana.",
+    "O Underground PB reúne a cena alternativa e independente da Paraíba em uma plataforma cultural: catálogo de bandas, agenda de shows, notícias, memória da cena, playlist integrada, cadastro de artistas e contribuição para manter o conteúdo ativo.",
   href: "https://www.undergroundpb.com.br/",
   linkLabel: "Acessar site",
 } as const

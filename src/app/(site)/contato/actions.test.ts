@@ -126,14 +126,17 @@ describe("submitLead", () => {
     const lead = sendLeadEmail.mock.calls[0]?.[0] as {
       dados: { nome: string; canal: string }
       tipoRotulo: string
+      envio: string
     }
     expect(lead.dados.nome).toBe("Ana")
     expect(lead.tipoRotulo).toBe("Site ou landing page")
+    expect(lead.envio).toBe(envio)
   })
 
   it("sucesso sem identificador (sem JS) redireciona só com o canal", async () => {
     await expect(enviar(VALIDO)).rejects.toThrow("NEXT_REDIRECT")
     expect(redirecionar).toHaveBeenCalledWith("/contato/obrigado?canal=email")
+    expect(sendLeadEmail.mock.calls[0]?.[0]).not.toHaveProperty("envio")
   })
 
   it("sucesso pelo canal WhatsApp ecoa canal=whatsapp no redirect", async () => {
@@ -172,6 +175,14 @@ describe("submitLead", () => {
       enviar({ ...VALIDO, envio: `não é uuid ${"x".repeat(500)}` }),
     ).rejects.toThrow("NEXT_REDIRECT")
     expect(redirecionar).toHaveBeenCalledWith("/contato/obrigado?canal=email")
+    expect(sendLeadEmail.mock.calls[0]?.[0]).not.toHaveProperty("envio")
+  })
+
+  it("rejeita identificador com aparência de UUID mas versão incorreta", async () => {
+    await expect(
+      enviar({ ...VALIDO, envio: "3f6f1c2a-7b8d-1e5f-9a0b-1c2d3e4f5a6b" }),
+    ).rejects.toThrow("NEXT_REDIRECT")
+    expect(sendLeadEmail.mock.calls[0]?.[0]).not.toHaveProperty("envio")
   })
 
   it("whatsapp e e-mail longos demais são inválidos; empresa é truncada", async () => {

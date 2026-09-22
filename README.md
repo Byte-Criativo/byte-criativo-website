@@ -4,13 +4,12 @@ Site institucional da Byte Criativo.
 
 ## Estado atual
 
-A branch `redesign/v2` é uma reescrita completa em Next.js App Router,
-saindo do antigo Pages Router + styled-components. Hoje só existe o
-esqueleto: layout raiz (`src/app/layout.tsx`), layout do grupo `(site)`
-com skip link e landmark `<main>`, uma home mínima
-(`src/app/(site)/page.tsx`) e a página de 404 (`src/app/not-found.tsx`).
-As páginas de conteúdo (Sobre, Serviços, Portfólio, Contato) chegam na
-Fase 8.
+A branch `redesign/v2` contém a reescrita em Next.js App Router, saindo
+do antigo Pages Router + styled-components. Home, Sobre, Serviços,
+Processo, Portfólio, Contato e Privacidade já estão implementados. Os
+estudos de caso do Underground PB e Festival Alumiô têm capturas reais e
+escopo confirmado em `docs/case-approvals.md`. Links para estudos aparecem
+somente quando o respectivo case está publicado.
 
 ## Stack
 
@@ -31,6 +30,12 @@ Requer Node 24.x (ver `.nvmrc`).
 npm install
 npm run dev
 ```
+
+O formulário mostra um caminho alternativo de contato enquanto o envio por
+e-mail não estiver configurado. Para testar o envio localmente, copie
+`.env.example` para `.env.local` e preencha `RESEND_API_KEY`,
+`LEAD_EMAIL_FROM` (remetente de domínio verificado no Resend) e
+`LEAD_EMAIL_TO` (caixa monitorada). Nunca registre a chave no repositório.
 
 O Next sobe na porta 3000 por padrão; se estiver ocupada, use
 `PORT=<porta> npm run dev`. Para e2e, `PW_CHANNEL=chrome` usa o Google
@@ -79,9 +84,23 @@ Os tokens de cor, tipografia, espaçamento e movimento vivem em
 documentos de design (estratégia visual, arquitetura técnica, arquitetura
 de informação, conteúdo dos casos) que originaram esses tokens ficam fora
 deste repositório, no diretório de trabalho do projeto. O `docs/` deste
-repositório ainda guarda artefatos do site antigo
-(`docs/byte-criativo-growth-todo.md`, `docs/superpowers/**`), mantidos até
-a decisão D2 sobre onde vivem os documentos de design da reescrita.
+repositório inclui os registros das capturas atuais em
+`scripts/portfolio/` e artefatos históricos do site anterior em `docs/`.
+
+## Preparação para produção
+
+1. Conferir as páginas publicadas dos dois cases em desktop e celular,
+   incluindo a galeria, créditos e links externos.
+2. Verificar o domínio remetente no Resend e configurar
+   `RESEND_API_KEY`, `LEAD_EMAIL_FROM` e `LEAD_EMAIL_TO` no ambiente de
+   produção. As mesmas variáveis em Preview permitem um teste isolado.
+3. Antes de ativar o envio público, ligar uma defesa de bot e limite de
+   requisições na borda: o honeypot e o carimbo atuais são contornáveis, e
+   a verificação de bot em `src/app/(site)/contato/actions.ts` ainda é um
+   ponto de integração sem provedor.
+4. Fazer um envio real com JavaScript e outro sem JavaScript, conferir a
+   chegada na caixa monitorada e exercitar o fallback em caso de falha.
+   Só então promover a branch para `main`.
 
 ## CI
 

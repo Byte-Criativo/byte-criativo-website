@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getAllServices, getServiceBySlug } from "@/content"
+import { getAllServices, getPublishedCases, getServiceBySlug } from "@/content"
 import { buildMetadata } from "@/lib/seo/metadata"
 import {
   organization,
@@ -56,6 +56,10 @@ export default async function ServiceDetailPage({ params }: PageProps) {
   if (!service) {
     notFound()
   }
+
+  const casePublicado = getPublishedCases().some(
+    (estudo) => estudo.slug === service.ondeFoiAplicado.caseSlug,
+  )
 
   const relacionados = service.servicosRelacionados
     .map((relSlug) => getServiceBySlug(relSlug))
@@ -200,12 +204,13 @@ export default async function ServiceDetailPage({ params }: PageProps) {
         <Container className="grid grid-cols-1 gap-(--grid-gutter) lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Heading nivel={2} id="onde-foi-aplicado-titulo">
-              Onde foi aplicado
+              Exemplo em uso
             </Heading>
           </div>
           <div className="flex flex-col gap-(--space-4) lg:col-span-6 lg:col-start-7">
             <Text medida>{service.ondeFoiAplicado.description}</Text>
-            {service.ondeFoiAplicado.linkHref &&
+            {casePublicado &&
+            service.ondeFoiAplicado.linkHref &&
             service.ondeFoiAplicado.linkText ? (
               <div>
                 <TextLink

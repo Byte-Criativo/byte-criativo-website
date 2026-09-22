@@ -48,6 +48,7 @@ export function MobileNav({
   rodapeNavId?: string
 }): ReactElement {
   const dialogo = useRef<HTMLDialogElement>(null)
+  const gatilho = useRef<HTMLButtonElement>(null)
   const rota = usePathname()
 
   // Os dois manipuladores conferem `open` antes de agir, e é isso que os
@@ -121,6 +122,7 @@ export function MobileNav({
       </a>
 
       <button
+        ref={gatilho}
         type="button"
         aria-haspopup="dialog"
         commandfor={ID_DIALOGO}
@@ -137,6 +139,7 @@ export function MobileNav({
       <dialog
         id={ID_DIALOGO}
         ref={dialogo}
+        onClose={() => gatilho.current?.focus()}
         onKeyDown={aoTeclar}
         aria-labelledby={ID_TITULO}
         className="h-full max-h-none w-full max-w-none bg-surface text-ink"

@@ -44,7 +44,7 @@ const ITENS_INDICE = [
 
 export default function HomePage() {
   // O link "Ver estudo de caso" das salas só aparece para cases publicados
-  // (gate D5); enquanto isso as salas ficam só com o link do site ao vivo.
+  // As salas de cases em revisão continuam com o link do site ao vivo.
   const publicados = new Set(getPublishedCases().map((estudo) => estudo.slug))
   const hrefEstudoDeCaso = (
     sala: (typeof home.salas.items)[number],
@@ -97,7 +97,10 @@ export default function HomePage() {
         }
       />
       <HomeFormaDePensar formaDePensar={home.formaDePensar} />
-      <HomeOQueFazemos oQueFazemos={home.oQueFazemos} />
+      <HomeOQueFazemos
+        oQueFazemos={home.oQueFazemos}
+        casesPublicados={publicados}
+      />
       <HomeComoAnda comoAnda={home.comoAnda} />
       <HomeConversa conversa={home.conversa} site={site} />
     </div>

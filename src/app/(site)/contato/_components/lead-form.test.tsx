@@ -9,6 +9,7 @@ const { busca, acao } = vi.hoisted(() => ({
   acao: {
     chamadas: 0,
     ultimoFormData: null as FormData | null,
+    envios: [] as string[],
     impl: async (): Promise<unknown> => ({
       status: "inicial",
       erros: {},
@@ -34,6 +35,7 @@ vi.mock("../actions", () => ({
   submitLead: (_prev: unknown, formData: FormData) => {
     acao.chamadas += 1
     acao.ultimoFormData = formData
+    acao.envios.push(String(formData.get("envio")))
     return acao.impl()
   },
 }))
@@ -73,6 +75,7 @@ describe("LeadForm (ilha)", () => {
   beforeEach(() => {
     busca.valor = ""
     acao.chamadas = 0
+    acao.envios = []
     sessionStorage.clear()
     acao.impl = async () => ({
       status: "inicial",
@@ -285,6 +288,28 @@ describe("LeadForm (ilha)", () => {
     await user.click(screen.getByRole("button", { name: "Enviar mensagem" }))
     await waitFor(() => expect(acao.chamadas).toBe(2))
     expect(Number(acao.ultimoFormData?.get("carimbo"))).toBeGreaterThan(0)
+    expect(acao.envios[1]).toBe(acao.envios[0])
+  })
+
+  it("cria outra chave quando os dados mudam depois de um fallback", async () => {
+    acao.impl = async () => ({
+      status: "fallback",
+      erros: {},
+      valores: VALORES_SERVIDOR,
+    })
+    const user = userEvent.setup()
+    render(<LeadForm contato={contato} />)
+    await preencherValido(user)
+    await user.click(screen.getByRole("button", { name: "Enviar mensagem" }))
+    await screen.findByText("A mensagem não foi enviada.")
+
+    const email = screen.getByLabelText("Seu e-mail (obrigatório)")
+    await user.clear(email)
+    await user.type(email, "nova@exemplo.com")
+    await user.click(screen.getByRole("button", { name: "Enviar mensagem" }))
+    await waitFor(() => expect(acao.chamadas).toBe(2))
+    expect(acao.envios[0]).toMatch(/^[0-9a-f-]{36}$/)
+    expect(acao.envios[1]).not.toBe(acao.envios[0])
   })
 
   it("durante o envio o status anuncia Enviando… e o botão continua focável", async () => {

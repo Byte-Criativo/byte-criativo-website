@@ -42,17 +42,24 @@ describe("dados dos estudos de caso", () => {
     }
   })
 
-  it("todo case fica em review com permissions.cleared: false (gate D5)", () => {
+  it("os dois cases confirmados estão publicados com autorização registrada", () => {
     for (const estudo of caseStudies) {
-      expect(estudo.status).toBe("review")
-      expect(estudo.permissions.cleared).toBe(false)
-      expect(estudo.permissions.notes).toContain("D5")
+      expect(estudo.status).toBe("published")
+      expect(estudo.permissions.cleared).toBe(true)
+      expect(estudo.permissions.notes).toContain("2026-09-22")
+      expect(estudo.role.evidence).toContainEqual(
+        expect.objectContaining({ kind: "owner-statement" }),
+      )
     }
   })
 
   it("nenhum case pode ser publicado sem permissions.cleared (publish gate)", () => {
     for (const estudo of caseStudies) {
-      const publicado = { ...estudo, status: "published" }
+      const publicado = {
+        ...estudo,
+        status: "published",
+        permissions: { cleared: false, notes: "" },
+      }
       expect(CaseStudy.safeParse(publicado).success).toBe(false)
     }
   })
@@ -71,7 +78,7 @@ describe("dados dos estudos de caso", () => {
     }
   })
 
-  it("as galerias em revisão já apontam para capturas distintas e presentes", () => {
+  it("as galerias publicadas apontam para capturas distintas e presentes", () => {
     for (const estudo of caseStudies) {
       expect(publishedMediaIssues(estudo)).toEqual([])
     }
@@ -98,7 +105,7 @@ describe("guarda de mídia de case publicado", () => {
     return resultado
   }
 
-  it("nenhum case publicado real tem problema de mídia (hoje: vacuamente, nenhum publicado)", () => {
+  it("nenhum case publicado real tem problema de mídia", () => {
     for (const estudo of getPublishedCases()) {
       expect(publishedMediaIssues(estudo)).toEqual([])
     }
@@ -146,9 +153,15 @@ describe("loaders de cases", () => {
     ])
   })
 
-  it("getPublishedCases fica vazio enquanto o gate D5 não fecha", () => {
-    expect(getPublishedCases()).toEqual([])
-    expect(publishedCaseEntries).toEqual([])
+  it("getPublishedCases e as entradas do sitemap contêm os dois cases", () => {
+    expect(getPublishedCases().map((estudo) => estudo.slug)).toEqual([
+      "underground-pb",
+      "festival-alumio",
+    ])
+    expect(publishedCaseEntries.map((estudo) => estudo.slug)).toEqual([
+      "underground-pb",
+      "festival-alumio",
+    ])
   })
 
   it("getCaseBySlug encontra o case e devolve undefined para slug desconhecido", () => {

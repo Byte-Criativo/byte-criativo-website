@@ -5,6 +5,7 @@ test.describe("Catálogo: foco no diálogo", () => {
 
   test("o menu prende o foco, fecha com Esc e devolve o foco ao gatilho", async ({
     page,
+    browserName,
   }) => {
     await page.goto("/design-system")
     const gatilho = page.getByRole("button", { name: "Menu" })
@@ -18,7 +19,9 @@ test.describe("Catálogo: foco no diálogo", () => {
 
     // Tab circula dentro do diálogo: nunca alcança o conteúdo de trás.
     for (let passo = 0; passo < 12; passo += 1) {
-      await page.keyboard.press("Tab")
+      // O WebKit no macOS usa Option+Tab para incluir links na navegação
+      // por teclado quando Full Keyboard Access está desligado.
+      await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab")
       const dentro = await page.evaluate(
         () => document.activeElement?.closest("dialog") !== null,
       )

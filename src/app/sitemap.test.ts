@@ -39,7 +39,7 @@ describe("sitemap", () => {
   })
 
   it("só cases publicados entram no sitemap", () => {
-    // Hoje nenhum case está publicado (gate D5): nenhuma rota /portfolio/[slug].
+    // Apenas cases publicados entram no sitemap.
     const urls = sitemap().map((entry) => entry.url)
     const urlsDeCase = urls.filter(
       (url) =>

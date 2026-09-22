@@ -5,7 +5,7 @@ import ServiceDetailPage, {
   generateMetadata,
   dynamicParams,
 } from "./page"
-import { getAllServices, getServiceBySlug } from "@/content"
+import { getAllServices, getPublishedCases, getServiceBySlug } from "@/content"
 
 describe("ServiceDetailPage - SSG & Metadata", () => {
   it("dynamicParams é false para forçar SSG estrito", () => {
@@ -123,14 +123,19 @@ describe("ServiceDetailPage - Renderização", () => {
       expect(screen.getByText(item)).toBeInTheDocument()
     }
 
-    // Seção "Onde foi aplicado"
+    // Exemplo em uso
     expect(
-      screen.getByRole("heading", { level: 2, name: "Onde foi aplicado" }),
+      screen.getByRole("heading", { level: 2, name: "Exemplo em uso" }),
     ).toBeInTheDocument()
     expect(
       screen.getByText(service.ondeFoiAplicado.description),
     ).toBeInTheDocument()
-    if (service.ondeFoiAplicado.linkText) {
+    if (
+      service.ondeFoiAplicado.linkText &&
+      getPublishedCases().some(
+        (estudo) => estudo.slug === service.ondeFoiAplicado.caseSlug,
+      )
+    ) {
       expect(
         screen.getByRole("link", {
           name: service.ondeFoiAplicado.linkText,

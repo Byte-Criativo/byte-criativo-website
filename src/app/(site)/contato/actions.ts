@@ -43,11 +43,11 @@ async function verificarBot(): Promise<boolean> {
 const LIMITE_ORIGEM = 200
 
 /**
- * O identificador de envio é ecoado na URL do redirect: só valores com
- * formato de identificador (UUID gerado pela ilha) são aceitos — qualquer
- * outra coisa é descartada para não inflar o header Location.
+ * O identificador de envio é ecoado no redirect e usado como chave de
+ * idempotência no Resend. Aceita apenas UUID v4 gerado pela ilha.
  */
-const FORMATO_ENVIO = /^[0-9a-f-]{1,64}$/i
+const FORMATO_ENVIO =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 /**
  * Sucesso genérico, sem avisar o robô nem enviar nada (copy v1, 13.2).
@@ -128,6 +128,7 @@ export async function submitLead(
       dados,
       tipoRotulo,
       ...(origem !== "" ? { origem } : {}),
+      ...(envio !== "" ? { envio } : {}),
     })
   } catch {
     after(() => {

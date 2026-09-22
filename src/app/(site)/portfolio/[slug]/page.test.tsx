@@ -7,7 +7,7 @@ import CasePage, {
   dynamicParams,
 } from "./page"
 
-// Double/fixture: nenhum case real está "published" (gate D5), então a
+// Double/fixture: isola a renderização da página dos cases reais, então a
 // renderização da rota é testada com um case de mentira. A validação do
 // double pelo schema fica no primeiro teste; os loaders reais são cobertos
 // em src/content/cases.test.ts. A fixture mora em vi.hoisted porque a

@@ -10,8 +10,8 @@ vi.mock("next/navigation", () => ({ usePathname }))
 
 beforeAll(() => {
   // jsdom não implementa o top layer: basta refletir o atributo `open`. O
-  // comportamento modal de verdade (foco preso, foco devolvido ao gatilho,
-  // Esc) é do <dialog> nativo e só pode ser provado em navegador real.
+  // comportamento modal de verdade (foco preso e Esc) só pode ser provado
+  // em navegador real; o retorno ao gatilho usa o evento `close`.
   HTMLDialogElement.prototype.showModal = function abrir() {
     this.setAttribute("open", "")
   }
@@ -133,16 +133,16 @@ describe("MobileNav", () => {
     }
   })
 
-  // R67: o retorno do foco ao gatilho é comportamento nativo do <dialog> e o
-  // `close` que o jsdom exige só tira o atributo. Aqui a afirmação é só
-  // "fecha"; o foco devolvido é provado em navegador real (gate GL4A-104).
+  // O evento `close` também devolve o foco ao gatilho, inclusive no WebKit.
   it("Fechar menu fecha o diálogo", async () => {
     montar()
-    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+    const gatilho = screen.getByRole("button", { name: "Menu" })
+    await userEvent.click(gatilho)
     await userEvent.click(screen.getByRole("button", { name: "Fechar menu" }))
     expect(screen.getByRole("dialog", { hidden: true })).not.toHaveAttribute(
       "open",
     )
+    expect(gatilho).toHaveFocus()
   })
 
   it("clicar em qualquer link da folha fecha o menu", async () => {

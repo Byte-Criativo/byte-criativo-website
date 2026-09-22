@@ -343,7 +343,7 @@ export const servicePagesRaw = [
     ],
     ondeFoiAplicado: {
       description:
-        "Underground PB: contas de representantes de bandas, comentários moderados, busca, filtros, mapa de palcos e instalação como app (observado em 16/09/2026).",
+        "Underground PB: contas de representantes de bandas, comentários moderados, busca, filtros, mapa de palcos, manifest e service worker (observado em 16/09/2026).",
       caseSlug: "underground-pb",
       linkText: "Ver estudo de caso do Underground PB",
       linkHref: "/portfolio/underground-pb",

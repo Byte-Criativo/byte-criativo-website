@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getServiceHub, getSiteConfig } from "@/content"
+import { getPublishedCases, getServiceHub, getSiteConfig } from "@/content"
 import { buildMetadata } from "@/lib/seo/metadata"
 import {
   buildJsonLdGraph,
@@ -30,6 +30,9 @@ export const metadata: Metadata = buildMetadata({
 })
 
 export default function ServicosPage() {
+  const casesPublicados = new Set(
+    getPublishedCases().map((estudo) => estudo.slug),
+  )
   const jsonLdGraph = buildJsonLdGraph([
     organization(),
     webSite(),
@@ -152,7 +155,8 @@ export default function ServicosPage() {
                 ))}
               </ul>
 
-              {capacidade.relatedCase ? (
+              {capacidade.relatedCase &&
+              casesPublicados.has(capacidade.relatedCase.slug) ? (
                 <div>
                   <TextLink
                     href={`/portfolio/${capacidade.relatedCase.slug}`}

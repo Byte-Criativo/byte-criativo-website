@@ -51,6 +51,7 @@ describe("sendLeadEmail", () => {
   it("envia texto puro com os dados do lead, assunto pelo tipo e reply-to do lead", async () => {
     await sendLeadEmail(LEAD)
     expect(enviar).toHaveBeenCalledTimes(1)
+    expect(enviar.mock.calls[0]?.[1]).toBeUndefined()
     const carga = enviar.mock.calls[0]?.[0] as Record<string, unknown>
     expect(carga.to).toBe(CONTACT_EMAIL)
     expect(carga.subject).toBe("Novo contato pelo site: Site ou landing page")
@@ -70,6 +71,20 @@ describe("sendLeadEmail", () => {
     }
     // Texto puro, sem HTML montado a partir dos dados do lead.
     expect(corpo).not.toMatch(/<[a-z]+>/i)
+  })
+
+  it("usa o UUID do envio como chave de idempotência para retries", async () => {
+    const lead = {
+      ...LEAD,
+      envio: "3f6f1c2a-7b8d-4e5f-9a0b-1c2d3e4f5a6b",
+    }
+    await sendLeadEmail(lead)
+    await sendLeadEmail(lead)
+    expect(enviar).toHaveBeenCalledTimes(2)
+    expect(enviar.mock.calls[0]?.[1]).toEqual({
+      idempotencyKey: `lead/${lead.envio}`,
+    })
+    expect(enviar.mock.calls[1]?.[1]).toEqual(enviar.mock.calls[0]?.[1])
   })
 
   it("no canal WhatsApp o corpo leva o número e não há reply-to", async () => {

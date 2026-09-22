@@ -72,7 +72,7 @@ export const processoPageRaw = {
       yourParticipation:
         "Acompanhar, testar e enviar os textos, imagens e acessos que forem seus.",
       whereAppears:
-        "O Underground PB funciona como app no celular (PWA), com página própria para quando a conexão cai (observado em 16/09/2026).",
+        "O Underground PB tem manifest e service worker ativos, com página própria para quando a conexão cai (observado em 16/09/2026).",
     },
     {
       number: 5,
@@ -82,7 +82,7 @@ export const processoPageRaw = {
       yourParticipation:
         "Aprovar a publicação e apontar o que observar depois.",
       whereAppears:
-        "No Festival Alumiô, cada informação traz fonte e data de atualização (observado em 16/09/2026).",
+        "No Festival Alumiô, cada apresentação mostra a fonte; a agenda informa a data de atualização (observado em 16/09/2026).",
     },
   ],
   diagnostico: {

@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import ServicosPage, { metadata } from "./page"
-import { getServiceHub } from "@/content"
+import { getPublishedCases, getServiceHub } from "@/content"
 
 const serviceHub = getServiceHub()
 
@@ -139,7 +139,12 @@ describe("Hub de Serviços (/servicos)", () => {
         expect(within(secao).getByText(service.description)).toBeInTheDocument()
       }
 
-      if (capacidade.relatedCase) {
+      if (
+        capacidade.relatedCase &&
+        getPublishedCases().some(
+          (estudo) => estudo.slug === capacidade.relatedCase?.slug,
+        )
+      ) {
         const linkCase = within(secao).getByRole("link", {
           name: capacidade.relatedCase.linkText,
         })

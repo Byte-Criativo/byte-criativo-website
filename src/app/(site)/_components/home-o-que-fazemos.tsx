@@ -8,17 +8,24 @@ import type { HomePage } from "@/content/schema"
 
 export function HomeOQueFazemos({
   oQueFazemos,
+  casesPublicados,
 }: {
   oQueFazemos: HomePage["oQueFazemos"]
+  casesPublicados: ReadonlySet<string>
 }): ReactElement {
   const itensSituacao = oQueFazemos.situations.map((sit, idx) => ({
     id: `situacao-${idx + 1}`,
     situacao: sit.title,
     frase: sit.phrase,
-    links: sit.links.map((link) => ({
-      rotulo: link.label,
-      href: link.href,
-    })),
+    links: sit.links
+      .filter((link) => {
+        if (!link.href.startsWith("/portfolio/")) return true
+        return casesPublicados.has(link.href.slice("/portfolio/".length))
+      })
+      .map((link) => ({
+        rotulo: link.label,
+        href: link.href,
+      })),
   }))
 
   return (
