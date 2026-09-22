@@ -166,21 +166,75 @@ describe("Páginas institucionais (Processo, Sobre, Contato, Obrigado, Privacida
       )
     })
 
-    it("possui dados de controlador e resumo de conformidade LGPD", () => {
-      expect(privacidadePage.responsavel.name).toBe("Byte Criativo")
-      expect(privacidadePage.responsavel.cnpj).toBe("52.652.130/0001-02")
-      expect(privacidadePage.resumo.length).toBeGreaterThanOrEqual(5)
+    it("identifica o controlador na seção 1 e o resumo LGPD na seção 2", () => {
+      const [secaoControlador, secaoResumo] = privacidadePage.sections
+      expect(JSON.stringify(secaoControlador)).toContain("52.652.130/0001-02")
+      expect(JSON.stringify(secaoControlador)).toContain("Byte Criativo")
+      const resumo = secaoResumo?.blocks?.find((b) => b.type === "list")
+      expect(resumo?.type).toBe("list")
+      if (resumo?.type === "list") {
+        expect(resumo.items).toHaveLength(6)
+      }
     })
 
-    it("possui seções detalhadas cobrindo bases legais, direitos e segurança", () => {
-      expect(privacidadePage.sections.length).toBeGreaterThanOrEqual(8)
+    it("não carrega anotações internas do rascunho (PENDENTE) nas seções", () => {
+      const texto = JSON.stringify(privacidadePage.sections)
+      expect(texto).not.toContain("PENDENTE")
+      expect(texto).not.toContain("Proposta da arquitetura técnica")
+      expect(texto).not.toContain("Não documentado")
+      expect(texto).not.toContain("a definir")
+      expect(texto).not.toContain("Confirmar para o site novo")
+    })
+
+    it("possui as 15 seções do rascunho, numeradas de 1 a 15", () => {
+      expect(privacidadePage.sections).toHaveLength(15)
+      expect(privacidadePage.sections.map((s) => s.number)).toEqual(
+        Array.from({ length: 15 }, (_, i) => String(i + 1)),
+      )
       const sectionIds = privacidadePage.sections.map((s) => s.id)
-      expect(sectionIds).toContain("quem-e-responsavel")
-      expect(sectionIds).toContain("quais-dados-sao-tratados")
-      expect(sectionIds).toContain("cookies-e-armazenamento")
-      expect(sectionIds).toContain("compartilhamento")
-      expect(sectionIds).toContain("direitos")
-      expect(sectionIds).toContain("seguranca")
+      expect(sectionIds).toEqual([
+        "quem-e-responsavel",
+        "resumo",
+        "quais-dados-sao-tratados",
+        "cookies-e-armazenamento",
+        "compartilhamento",
+        "transferencia-internacional",
+        "retencao",
+        "direitos",
+        "seguranca",
+        "canal-de-privacidade",
+        "criancas-e-adolescentes",
+        "links-para-outros-sites",
+        "aplicativo-pomodoro",
+        "mudancas-nesta-politica",
+        "anpd",
+      ])
+    })
+
+    it("cobre as subseções 3.1 a 3.9 na seção de dados tratados", () => {
+      const dados = privacidadePage.sections.find(
+        (s) => s.id === "quais-dados-sao-tratados",
+      )
+      expect(dados?.subsections).toHaveLength(9)
+      expect(dados?.subsections?.map((sub) => sub.number)).toEqual(
+        Array.from({ length: 9 }, (_, i) => `3.${i + 1}`),
+      )
+    })
+
+    it("porta as tabelas das seções 5 e 14 com linhas completas", () => {
+      const comTabela = privacidadePage.sections.filter((section) =>
+        section.blocks?.some((bloco) => bloco.type === "table"),
+      )
+      expect(comTabela.map((s) => s.number)).toEqual(["5", "14"])
+      for (const section of comTabela) {
+        for (const bloco of section.blocks ?? []) {
+          if (bloco.type !== "table") continue
+          expect(bloco.caption.length).toBeGreaterThan(0)
+          for (const linha of bloco.rows) {
+            expect(linha).toHaveLength(bloco.columns.length)
+          }
+        }
+      }
     })
   })
 

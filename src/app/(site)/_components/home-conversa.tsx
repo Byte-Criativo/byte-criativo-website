@@ -7,6 +7,18 @@ import { Text } from "@/components/ui/text"
 import { Stack } from "@/components/ui/stack"
 import type { HomePage, SiteConfig } from "@/content/schema"
 
+const LINK_PRIVACIDADE = "política de privacidade"
+
+function dividirAviso(formNotice: string): [string, string] {
+  const partes = formNotice.split(LINK_PRIVACIDADE)
+  if (partes.length !== 2) {
+    throw new Error(
+      `HomeConversa: conversa.formNotice precisa conter o trecho "${LINK_PRIVACIDADE}" exatamente uma vez; recebeu: "${formNotice}"`,
+    )
+  }
+  return [partes[0]!, partes[1]!]
+}
+
 export function HomeConversa({
   conversa,
   site,
@@ -14,6 +26,7 @@ export function HomeConversa({
   conversa: HomePage["conversa"]
   site: SiteConfig
 }): ReactElement {
+  const [antesDoLink, depoisDoLink] = dividirAviso(conversa.formNotice)
   return (
     <ConversaBand
       id="conversa"
@@ -62,11 +75,11 @@ export function HomeConversa({
           </div>
 
           <Text papel="caption" tom="muted">
-            {conversa.formNotice}{" "}
+            {antesDoLink}
             <TextLink href="/privacidade" variante="inline">
-              política de privacidade
+              {LINK_PRIVACIDADE}
             </TextLink>
-            .
+            {depoisDoLink}
           </Text>
         </Stack>
       }

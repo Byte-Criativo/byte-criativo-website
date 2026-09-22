@@ -18,7 +18,7 @@ import { Breadcrumbs } from "@/components/patterns/breadcrumbs"
 import { WhatsAppLink } from "@/components/patterns/whatsapp-link"
 import { CopyEmail } from "@/components/patterns/copy-email"
 import { FaqItem } from "@/components/patterns/faq-item"
-import { ContatoForm } from "./_components/contato-form"
+import { LeadForm } from "./_components/lead-form"
 
 const contato = getContatoPage()
 
@@ -82,7 +82,7 @@ export default function ContatoPage() {
         <Container className="grid grid-cols-1 gap-(--space-8) lg:grid-cols-12 lg:gap-(--grid-gutter)">
           <div className="flex flex-col gap-(--space-6) lg:col-span-7">
             <Heading nivel={2}>{contato.caminhos.formulario.h2}</Heading>
-            <ContatoForm contato={contato} />
+            <LeadForm contato={contato} />
           </div>
           <div className="flex flex-col gap-(--space-5) lg:col-span-4 lg:col-start-9">
             <Heading nivel={2}>{contato.caminhos.direto.h2}</Heading>

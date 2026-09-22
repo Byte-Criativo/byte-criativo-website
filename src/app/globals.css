@@ -302,6 +302,19 @@
   .campo-grupo-refluxo {
     min-width: 0;
   }
+
+  /* LeadForm (Fase 10): o campo de contato segue o canal marcado, só com
+     CSS (`:has()` sobre o Radio), sem JS. Navegador sem suporte a `:has()`
+     ignora a regra inteira e os dois campos ficam visíveis — o fallback
+     previsto na especificação (o servidor exige só o campo do canal).
+     Controle com display:none sai da validação de restrição do navegador
+     ("barred from constraint validation"), então o `required` do campo
+     oculto não barra o envio sem JS. */
+  .lead-form:has([name="canal"][value="whatsapp"]:checked) [data-campo="email"],
+  .lead-form:has([name="canal"][value="email"]:checked)
+    [data-campo="whatsapp"] {
+    display: none;
+  }
 }
 
 @theme inline {

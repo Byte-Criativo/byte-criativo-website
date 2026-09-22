@@ -16,6 +16,10 @@ export type FichaContagem = {
  * Legenda de museu do trabalho exposto. Sempre na parede, fora da sala e
  * fora de `article[data-case]` (RC6): a Ficha usa `--ink-muted`, contorno
  * de capacidade e Tag, que não têm par calculado sobre a superfície.
+ *
+ * `estudoDeCasoHref` é opcional de propósito: a página de case só existe
+ * depois do gate D5 (status "published"), então quem monta a Ficha omite o
+ * link enquanto o estudo de caso 404aria.
  */
 export function Ficha({
   id,
@@ -37,7 +41,7 @@ export function Ficha({
   nivel: 2 | 3
   frase: string
   capacidades: string[]
-  estudoDeCasoHref: string
+  estudoDeCasoHref?: string
   projetoNoArHref?: string
   controle?: ReactNode
   sala: ReactNode
@@ -77,13 +81,15 @@ export function Ficha({
         <TagList itens={capacidades} />
 
         <div className="flex flex-wrap items-center gap-(--space-5)">
-          <TextLink
-            href={estudoDeCasoHref}
-            variante="acao"
-            complemento={`do ${nome}`}
-          >
-            Ver estudo de caso
-          </TextLink>
+          {estudoDeCasoHref ? (
+            <TextLink
+              href={estudoDeCasoHref}
+              variante="acao"
+              complemento={`do ${nome}`}
+            >
+              Ver estudo de caso
+            </TextLink>
+          ) : null}
           {projetoNoArHref ? (
             <TextLink
               href={projetoNoArHref}

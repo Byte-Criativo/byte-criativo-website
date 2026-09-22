@@ -18,9 +18,13 @@ import CaseUndergroundPB from "@/assets/case-undergroundpb-screenshot.webp"
 export function HomeHero({
   hero,
   salaItem,
+  estudoDeCasoHref,
 }: {
   hero: HomePage["hero"]
   salaItem: HomePage["salas"]["items"][number]
+  // Só vem preenchido quando o case está publicado (gate D5); sem ele a
+  // Ficha omite o link "Ver estudo de caso", que 404aria.
+  estudoDeCasoHref?: string
 }): ReactElement {
   return (
     <section
@@ -58,7 +62,7 @@ export function HomeHero({
                 nivel={2}
                 frase={salaItem.phrase}
                 capacidades={salaItem.capabilities}
-                estudoDeCasoHref={salaItem.caseStudyUrl}
+                estudoDeCasoHref={estudoDeCasoHref}
                 projetoNoArHref={salaItem.liveUrl}
                 contagem={{
                   atual: 1,

@@ -9,7 +9,7 @@ import {
   SiteFooter,
   type ColunaRodape,
 } from "@/components/patterns/site-footer"
-import { getSiteConfig } from "@/content"
+import { getPublishedCases, getSiteConfig } from "@/content"
 
 const WORDMARK = (
   <span aria-hidden="true" className="text-label">
@@ -19,6 +19,9 @@ const WORDMARK = (
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
   const site = getSiteConfig()
+  const casesPublicados = new Set(
+    getPublishedCases().map((estudo) => `/portfolio/${estudo.slug}`),
+  )
 
   const navegacaoHeader: ItemNavegacao[] = site.navigation.main.map((item) => ({
     rotulo: item.label,
@@ -38,10 +41,16 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
     .filter((col) => "links" in col && Array.isArray(col.links))
     .map((col) => ({
       titulo: col.title,
-      itens: (col.links ?? []).map((link) => ({
-        rotulo: link.label,
-        href: link.href,
-      })),
+      itens: (col.links ?? [])
+        .filter(
+          (link) =>
+            !link.href.startsWith("/portfolio/") ||
+            casesPublicados.has(link.href),
+        )
+        .map((link) => ({
+          rotulo: link.label,
+          href: link.href,
+        })),
     }))
 
   return (

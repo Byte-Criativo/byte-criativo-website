@@ -106,6 +106,9 @@ export function TextLink({
     <Link
       id={id}
       href={href as Route}
+      prefetch={
+        href === "/contato" || href.startsWith("/contato?") ? false : undefined
+      }
       aria-current={ariaCurrent}
       data-indice-link={dataIndiceLink}
       className={classes}

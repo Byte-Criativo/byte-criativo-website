@@ -16,8 +16,11 @@ import CaseFestivalAlumio from "@/assets/case-festival-alumio-screenshot.webp"
 
 export function HomeSalas({
   salas,
+  estudoDeCasoHref,
 }: {
   salas: HomePage["salas"]
+  // Href do estudo de caso da segunda sala, só quando publicado (gate D5).
+  estudoDeCasoHref?: string
 }): ReactElement {
   const salaAlumio = salas.items[1]
 
@@ -41,7 +44,7 @@ export function HomeSalas({
             nivel={2}
             frase={salaAlumio.phrase}
             capacidades={salaAlumio.capabilities}
-            estudoDeCasoHref={salaAlumio.caseStudyUrl}
+            estudoDeCasoHref={estudoDeCasoHref}
             projetoNoArHref={salaAlumio.liveUrl}
             contagem={{
               atual: 2,

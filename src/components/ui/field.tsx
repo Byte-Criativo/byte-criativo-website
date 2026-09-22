@@ -96,6 +96,11 @@ export function Field({
 
   return (
     <Caixa
+      // No tipo "opcoes" o id vai para o <fieldset>: é o alvo das âncoras
+      // do resumo de erros do LeadForm (#tipo, #canal, #prazo) — sem ele o
+      // link não teria destino no HTML sem JS (nos campos de texto o alvo
+      // é o próprio controle, que já recebe o id).
+      id={tipo === "opcoes" ? id : undefined}
       className={cn(
         // Um <fieldset> com display:flex vira, por definição do próprio
         // HTML, uma caixa anônima de conteúdo que exclui a legend: o `gap`

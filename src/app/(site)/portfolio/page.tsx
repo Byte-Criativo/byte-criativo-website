@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getHomePage, getPortfolioPage } from "@/content"
+import { getHomePage, getPortfolioPage, getPublishedCases } from "@/content"
 import { buildMetadata } from "@/lib/seo/metadata"
 import {
   buildJsonLdGraph,
@@ -50,6 +50,10 @@ export const metadata: Metadata = buildMetadata({
 })
 
 export default function PortfolioPage() {
+  // Estudos de caso só existem depois do gate D5 (status "published"). O
+  // link "Ver estudo de caso" e as entradas do ItemList aparecem só para
+  // cases publicados; as salas continuam visíveis com o link do site ao vivo.
+  const publicados = new Set(getPublishedCases().map((estudo) => estudo.slug))
   const jsonLdGraph = buildJsonLdGraph([
     organization(),
     webSite(),
@@ -57,10 +61,12 @@ export default function PortfolioPage() {
       name: portfolio.seo.seoTitle,
       description: portfolio.seo.description,
       path: "/portfolio",
-      items: salas.items.map((sala) => ({
-        name: sala.name,
-        path: sala.caseStudyUrl,
-      })),
+      items: salas.items
+        .filter((sala) => publicados.has(sala.slug))
+        .map((sala) => ({
+          name: sala.name,
+          path: sala.caseStudyUrl,
+        })),
     }),
     breadcrumbsJsonLd([
       { name: "Início", path: "/" },
@@ -116,7 +122,9 @@ export default function PortfolioPage() {
                 nivel={2}
                 frase={sala.phrase}
                 capacidades={sala.capabilities}
-                estudoDeCasoHref={sala.caseStudyUrl}
+                estudoDeCasoHref={
+                  publicados.has(sala.slug) ? sala.caseStudyUrl : undefined
+                }
                 projetoNoArHref={sala.liveUrl}
                 contagem={{ atual: indice + 1, total: salas.items.length }}
                 controle={<FrenteVersoControle />}

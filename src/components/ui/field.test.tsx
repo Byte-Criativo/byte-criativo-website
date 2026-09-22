@@ -164,6 +164,26 @@ describe("Field", () => {
     ).toBeInTheDocument()
   })
 
+  it("tipo opcoes recebe o id no fieldset: alvo das âncoras do resumo de erros", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {() => <input type="radio" name="tipo" value="site" />}
+      </Field>,
+    )
+    // Sem o id aqui, os links #tipo/#canal/#prazo do resumo do LeadForm
+    // não teriam destino no HTML sem JS.
+    expect(
+      screen.getByRole("group", {
+        name: "O que você quer construir? (obrigatório)",
+      }),
+    ).toHaveAttribute("id", "tipo")
+  })
+
   it("no grupo de opções, o espaçamento entre ajuda/controle/erro vive num wrapper irmão da legend, não no gap do fieldset (M2)", () => {
     const { container } = render(
       <Field

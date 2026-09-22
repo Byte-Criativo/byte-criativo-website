@@ -80,7 +80,7 @@ describe("Content Loaders (src/content/index.ts)", () => {
 
   it("getPrivacidadePage() retorna termos da política de privacidade", () => {
     const privacidade = getPrivacidadePage()
-    expect(privacidade.responsavel.name).toBe("Byte Criativo")
+    expect(privacidade.title).toContain("privacidade")
     expect(privacidade.sections.length).toBeGreaterThanOrEqual(5)
   })
 

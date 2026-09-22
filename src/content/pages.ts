@@ -410,6 +410,32 @@ export const obrigadoPage: ObrigadoPage =
 // Privacidade Page Data (Port de docs/content/2026-09-privacidade-rascunho.md)
 // ============================================================================
 
+// A data de publicação está PENDENTE no rascunho (aguarda dono e revisão
+// jurídica): revisar na publicação efetiva. Fonte única — alimenta
+// `lastUpdated` e a linha da versão 1.0 no histórico da seção 14.
+const PRIVACIDADE_ULTIMA_ATUALIZACAO = "2026-09-16"
+
+const MESES_POR_EXTENSO = [
+  "janeiro",
+  "fevereiro",
+  "março",
+  "abril",
+  "maio",
+  "junho",
+  "julho",
+  "agosto",
+  "setembro",
+  "outubro",
+  "novembro",
+  "dezembro",
+] as const
+
+export function formatarDataPorExtenso(iso: string): string {
+  const [ano, mes, dia] = iso.split("-").map(Number)
+  const nomeMes = MESES_POR_EXTENSO[(mes ?? 1) - 1] ?? ""
+  return `${dia} de ${nomeMes} de ${ano}`
+}
+
 export const privacidadePageRaw = {
   seo: {
     title: "Política de privacidade",
@@ -418,105 +444,200 @@ export const privacidadePageRaw = {
       "Como a Byte Criativo trata os dados de quem visita o site ou envia uma mensagem: finalidades, bases legais, retenção, operadores e os seus direitos.",
   },
   title: "Política de privacidade do site da Byte Criativo",
-  lastUpdated: "2026-09-16",
-  responsavel: {
-    name: "Byte Criativo",
-    cnpj: "52.652.130/0001-02",
-    email: CONTACT_EMAIL,
-    text: "Esta política explica como a Byte Criativo trata os dados pessoais de quem visita o site www.bcriativo.com ou entra em contato por ele. A Byte Criativo é a controladora desses dados, nos termos da Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018, a LGPD).",
-  },
-  resumo: [
-    "O site não usa cookies de publicidade nem de medição de audiência.",
-    "A medição de audiência é agregada e não identifica você.",
-    "Os dados do formulário servem para responder ao seu pedido e nunca vão para ferramentas de medição.",
-    'Quando você toca em "Chamar no WhatsApp", a conversa passa a acontecer no WhatsApp, sob as regras do WhatsApp.',
-    "Você pode pedir acesso, correção ou eliminação dos seus dados pelo canal de privacidade.",
-    "A Byte Criativo não vende dados pessoais.",
-  ],
+  lastUpdated: PRIVACIDADE_ULTIMA_ATUALIZACAO,
   sections: [
     {
       id: "quem-e-responsavel",
       number: "1",
       title: "Quem é responsável pelos seus dados",
-      content: [
-        "Esta política explica como a Byte Criativo trata os dados pessoais de quem visita o site www.bcriativo.com ou entra em contato por ele. A Byte Criativo é a controladora desses dados, nos termos da Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018, a LGPD).",
-        "Nome: Byte Criativo",
-        "CNPJ: 52.652.130/0001-02",
-        "E-mail: contato@bcriativo.com",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "Esta política explica como a Byte Criativo trata os dados pessoais de quem visita o site www.bcriativo.com ou entra em contato por ele. A Byte Criativo é a controladora desses dados, nos termos da Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018, a LGPD).",
+        },
+        {
+          type: "list",
+          items: [
+            "Nome: Byte Criativo",
+            "CNPJ: 52.652.130/0001-02",
+            "E-mail: contato@bcriativo.com",
+          ],
+        },
       ],
     },
     {
       id: "resumo",
       number: "2",
       title: "Resumo",
-      content: [
-        "O site não usa cookies de publicidade nem de medição de audiência.",
-        "A medição de audiência é agregada e não identifica você.",
-        "Os dados do formulário servem para responder ao seu pedido e nunca vão para ferramentas de medição.",
-        'Quando você toca em "Chamar no WhatsApp", a conversa passa a acontecer no WhatsApp, sob as regras do WhatsApp.',
-        "Você pode pedir acesso, correção ou eliminação dos seus dados pelo canal de privacidade.",
-        "A Byte Criativo não vende dados pessoais.",
+      blocks: [
+        {
+          type: "list",
+          items: [
+            "O site não usa cookies de publicidade nem de medição de audiência.",
+            "A medição de audiência é agregada e não identifica você.",
+            "Os dados do formulário servem para responder ao seu pedido e nunca vão para ferramentas de medição.",
+            'Quando você toca em "Chamar no WhatsApp", a conversa passa a acontecer no WhatsApp, sob as regras do WhatsApp.',
+            "Você pode pedir acesso, correção ou eliminação dos seus dados pelo canal da seção 10.",
+            "A Byte Criativo não vende dados pessoais.",
+          ],
+        },
       ],
     },
     {
       id: "quais-dados-sao-tratados",
       number: "3",
       title: "Quais dados são tratados, para quê e com qual base legal",
-      content:
-        "Tratamos dados pessoais apenas nas hipóteses previstas na LGPD e para finalidades legítimas e informadas nesta política.",
       subsections: [
         {
           id: "navegacao-e-seguranca",
           number: "3.1",
           title: "Navegação e segurança do site",
-          content: [
-            "Dados: endereço IP, tipo de navegador e de dispositivo, data e hora do acesso, página acessada, página de origem e registros técnicos gerados pela hospedagem.",
-            "Para quê: entregar as páginas, manter o site seguro, limitar tentativas repetidas de envio e investigar erros.",
-            "Base legal: legítimo interesse (art. 7º, IX, da LGPD).",
-            "Cuidado adicional: os registros técnicos do site não guardam o conteúdo do formulário nem o endereço IP completo junto com o pedido de contato.",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Dados: endereço IP, tipo de navegador e de dispositivo, data e hora do acesso, página acessada, página de origem e registros técnicos gerados pela hospedagem.",
+                "Para quê: entregar as páginas, manter o site seguro, limitar tentativas repetidas de envio e investigar erros.",
+                "Base legal: legítimo interesse (art. 7º, IX, da LGPD).",
+                "Cuidado adicional: os registros técnicos do site não guardam o conteúdo do formulário nem o endereço IP completo junto com o pedido de contato.",
+              ],
+            },
           ],
         },
         {
           id: "medicao-de-audiencia",
           number: "3.2",
           title: "Medição de audiência, sem cookies",
-          content: [
-            "Dados: página visitada, página de origem, país, tipo de dispositivo, sistema operacional e navegador; eventos de uso sem dado pessoal; métricas de desempenho.",
-            "Como: sem cookies e sem identificador guardado no seu navegador. Os dados são vistos só de forma agregada.",
-            "Para quê: entender quais páginas são úteis, medir o desempenho do site e melhorá-lo.",
-            "Base legal: legítimo interesse (art. 7º, IX), com transparência e direito de oposição.",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                'Dados: página visitada, página de origem, país, tipo de dispositivo, sistema operacional e navegador; eventos de uso sem dado pessoal, como o clique em "Chamar no WhatsApp" ou a abertura de uma pergunta frequente; métricas de desempenho, como o tempo de carregamento das páginas.',
+                'Como: sem cookies e sem identificador guardado no seu navegador. Os dados são vistos só de forma agregada, por exemplo "quantas visitas a página de serviços recebeu na semana".',
+                "Para quê: entender quais páginas são úteis, medir o desempenho do site e melhorá-lo.",
+                "Base legal: legítimo interesse (art. 7º, IX), com transparência e direito de oposição.",
+                "Como se opor: escreva para o canal da seção 10.",
+              ],
+            },
           ],
         },
         {
           id: "formulario-de-contato",
           number: "3.3",
           title: "Formulário de contato",
-          content: [
-            "Dados que você informa: nome; tipo de projeto; o contexto que você escrever; canal preferido; número de WhatsApp ou e-mail, conforme o canal; e, se quiser, empresa, marca ou projeto e prazo.",
-            "Para quê: responder ao seu pedido, entender o projeto e, se fizer sentido, preparar uma proposta.",
-            "Base legal: procedimentos preliminares relacionados a contrato, a pedido do titular (art. 7º, V).",
-            "Nunca: nome, e-mail, telefone ou texto do formulário são enviados a ferramentas de medição de audiência.",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Dados que você informa: nome; tipo de projeto; o contexto que você escrever; canal preferido; número de WhatsApp ou e-mail, conforme o canal; e, se quiser, empresa, marca ou projeto e prazo.",
+                "Dados sobre a origem da visita, enviados junto: página por onde você entrou no site, página de onde enviou, site de origem (só o domínio) e parâmetros de campanha do link, quando existirem. Essas informações ficam guardadas no armazenamento de sessão do navegador até você fechar a aba e só saem dele se você enviar o formulário.",
+                "O que o formulário não pede: CPF, endereço ou dados sensíveis. Evite escrever no campo de contexto dados sensíveis ou dados de outras pessoas.",
+                "Para quê: responder ao seu pedido, entender o projeto e, se fizer sentido, preparar uma proposta.",
+                "Base legal: procedimentos preliminares relacionados a contrato, a pedido do titular (art. 7º, V).",
+                "Acompanhamento da conversa: a Byte Criativo pode voltar a falar com você sobre o mesmo pedido, com base em legítimo interesse (art. 7º, IX). Basta dizer que não quer mais contato para esse acompanhamento parar.",
+                "Para onde vão os dados: o formulário envia os dados por e-mail para a caixa da Byte Criativo. O site não mantém um banco de dados com esses envios.",
+                "Nunca: nome, e-mail, telefone ou texto do formulário são enviados a ferramentas de medição de audiência.",
+              ],
+            },
+          ],
+        },
+        {
+          id: "email-de-confirmacao",
+          number: "3.4",
+          title: "E-mail de confirmação",
+          blocks: [
+            {
+              type: "paragraph",
+              text: "Se você escolher continuar por e-mail, o site pode enviar uma confirmação automática para o endereço informado, com uma cópia do que você escreveu. Esse e-mail não é propaganda e não inscreve você em nenhuma lista.",
+            },
+            {
+              type: "list",
+              items: [
+                "Base legal: procedimentos preliminares relacionados a contrato, a pedido do titular (art. 7º, V).",
+              ],
+            },
+          ],
+        },
+        {
+          id: "protecao-contra-envios-automaticos",
+          number: "3.5",
+          title: "Proteção contra envios automáticos",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Dados: sinais técnicos do navegador e da requisição avaliados no momento do envio, inclusive o endereço IP. O formulário também tem um campo invisível e um tempo mínimo de preenchimento, que não coletam dado pessoal.",
+                "Para quê: impedir spam, envios por robôs e abuso do formulário.",
+                "Base legal: legítimo interesse (art. 7º, IX), para a segurança do site e a prevenção de fraude.",
+              ],
+            },
           ],
         },
         {
           id: "whatsapp",
           number: "3.6",
           title: "WhatsApp",
-          content: [
-            'Os botões "Chamar no WhatsApp" abrem o WhatsApp com uma mensagem pronta. Nas páginas do site, essa mensagem não contém dados seus.',
-            "A partir do momento em que você abre o WhatsApp, os dados da conversa passam a ser tratados também pelo WhatsApp, empresa do grupo Meta, conforme a política de privacidade do próprio WhatsApp.",
-            "Base legal: procedimentos preliminares relacionados a contrato, a pedido do titular (art. 7º, V).",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                'Os botões "Chamar no WhatsApp" abrem o WhatsApp com uma mensagem pronta. Nas páginas do site, essa mensagem não contém dados seus.',
+                "Depois do envio do formulário, o botão pode montar a mensagem com o que você escreveu. Essa mensagem só é gerada quando você toca no botão, e só é enviada se você confirmar o envio dentro do WhatsApp.",
+                "A partir do momento em que você abre o WhatsApp, os dados da conversa, como o seu número, nome de perfil e mensagens, passam a ser tratados também pelo WhatsApp, empresa do grupo Meta, conforme a política de privacidade do próprio WhatsApp.",
+                "A Byte Criativo usa a conversa para responder ao seu pedido.",
+                "Base legal (para o tratamento feito pela Byte Criativo): procedimentos preliminares relacionados a contrato, a pedido do titular (art. 7º, V).",
+              ],
+            },
+          ],
+        },
+        {
+          id: "email-direto",
+          number: "3.7",
+          title: "E-mail direto",
+          blocks: [
+            {
+              type: "paragraph",
+              text: "Se você escrever para contato@bcriativo.com, o seu endereço e o conteúdo da mensagem são usados para responder.",
+            },
+            {
+              type: "list",
+              items: [
+                "Base legal: procedimentos preliminares relacionados a contrato, a pedido do titular (art. 7º, V).",
+              ],
+            },
+          ],
+        },
+        {
+          id: "se-voce-contratar",
+          number: "3.8",
+          title: "Se você contratar a Byte Criativo",
+          blocks: [
+            {
+              type: "paragraph",
+              text: "Os dados de contato de quem contrata são usados para executar o contrato, e dados fiscais são guardados para cumprir obrigações legais.",
+            },
+            {
+              type: "list",
+              items: [
+                "Bases legais: execução de contrato (art. 7º, V) e cumprimento de obrigação legal ou regulatória (art. 7º, II).",
+              ],
+            },
           ],
         },
         {
           id: "o-que-o-site-nao-faz",
           number: "3.9",
           title: "O que o site não faz",
-          content: [
-            "Não usa cookies de publicidade, remarketing nem pixels de redes sociais.",
-            "Não envia dados do formulário para ferramentas de medição.",
-            "Não toma decisões automatizadas sobre você.",
-            "Não vende nem aluga dados pessoais.",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Não usa cookies de publicidade, remarketing nem pixels de redes sociais.",
+                "Não envia dados do formulário para ferramentas de medição.",
+                "Não toma decisões automatizadas sobre você.",
+                "Não vende nem aluga dados pessoais.",
+              ],
+            },
           ],
         },
       ],
@@ -525,47 +646,213 @@ export const privacidadePageRaw = {
       id: "cookies-e-armazenamento",
       number: "4",
       title: "Cookies e armazenamento no navegador",
-      content: [
-        "Cookies de publicidade e de medição: o site não usa.",
-        "Armazenamento de sessão: a origem da visita fica no armazenamento de sessão do navegador até você fechar a aba, só para acompanhar o formulário se você enviar.",
-        "Conteúdo de outros sites: vídeos ou players de outros serviços só carregam depois que você clica, com aviso prévio.",
+      blocks: [
+        {
+          type: "list",
+          items: [
+            "Cookies de publicidade e de medição: o site não usa.",
+            "Armazenamento de sessão: a origem da visita (seção 3.3) fica no armazenamento de sessão do navegador até você fechar a aba, só para acompanhar o formulário se você enviar.",
+            "Conteúdo de outros sites: vídeos ou players de outros serviços só carregam depois que você clica, com aviso de que o serviço pode gravar cookies a partir desse momento.",
+          ],
+        },
       ],
     },
     {
       id: "compartilhamento",
       number: "5",
       title: "Com quem os dados são compartilhados",
-      content: [
-        "A Byte Criativo usa fornecedores para hospedar o site, medir a audiência, enviar e-mails e proteger o formulário. Eles tratam os dados em nome da Byte Criativo, só para essas finalidades.",
-        "Hospedagem e entrega do site: Vercel.",
-        "Medição agregada sem cookies: Vercel Web Analytics e Speed Insights.",
-        "WhatsApp: quando você inicia uma conversa.",
-        "Autoridades: quando a lei ou ordem judicial exigir.",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "A Byte Criativo usa fornecedores para hospedar o site, medir a audiência, enviar e-mails e proteger o formulário. Eles tratam os dados em nome da Byte Criativo, só para essas finalidades.",
+        },
+        // O rascunho (PENDENTE da seção 5) manda publicar só categorias, sem
+        // nomes de fornecedores, até cada um ser confirmado com contrato.
+        {
+          type: "table",
+          caption: "Finalidades de tratamento realizadas por operadores",
+          columns: ["Finalidade"],
+          rows: [
+            ["Hospedagem e entrega do site, registros técnicos"],
+            ["Medição de audiência sem cookies e desempenho"],
+            ["Envio do formulário por e-mail e e-mail de confirmação"],
+            ["Verificação contra robôs e limite de tentativas"],
+            ["Caixa de e-mail"],
+          ],
+        },
+        {
+          type: "list",
+          title: "Outros casos de compartilhamento:",
+          items: [
+            "WhatsApp: quando você inicia uma conversa, conforme a seção 3.6.",
+            "Parceiros de projeto: se você contratar um projeto que envolva parceiros, eles só recebem os dados necessários para a parte deles, e você sabe disso antes.",
+            "Autoridades: quando a lei ou uma ordem judicial exigir.",
+          ],
+        },
+      ],
+    },
+    {
+      id: "transferencia-internacional",
+      number: "6",
+      title: "Transferência internacional de dados",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "Alguns fornecedores podem armazenar ou processar dados fora do Brasil, por exemplo nos Estados Unidos. Essas transferências seguem o art. 33 da LGPD e a regulamentação da Autoridade Nacional de Proteção de Dados (ANPD).",
+        },
+      ],
+    },
+    {
+      id: "retencao",
+      number: "7",
+      title: "Por quanto tempo os dados ficam guardados",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "Os dados ficam guardados só pelo tempo necessário para a finalidade de cada tratamento ou pelo prazo exigido por lei. Depois disso, são eliminados ou anonimizados.",
+        },
+        // Os prazos reais de retenção estão PENDENTES no rascunho (dono e
+        // jurídico): a tabela de prazos volta quando forem decididos.
       ],
     },
     {
       id: "direitos",
       number: "8",
       title: "Seus direitos",
-      content: [
-        "A LGPD (art. 18) garante a você, sem custo, o direito de pedir confirmação da existência de tratamento, acesso, correção, anonimização, bloqueio ou eliminação de dados desnecessários, portabilidade, eliminação e revogação de consentimento.",
-        'Para exercer seus direitos, escreva para contato@bcriativo.com com o assunto "Privacidade".',
+      blocks: [
+        {
+          type: "paragraph",
+          text: "A LGPD (art. 18) garante a você, sem custo, o direito de pedir à Byte Criativo:",
+        },
+        {
+          type: "list",
+          ordered: true,
+          items: [
+            "confirmação de que existe tratamento dos seus dados;",
+            "acesso aos dados;",
+            "correção de dados incompletos, inexatos ou desatualizados;",
+            "anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desconformidade com a lei;",
+            "portabilidade dos dados a outro fornecedor de serviço ou produto, conforme a regulamentação da ANPD;",
+            "eliminação dos dados tratados com o seu consentimento, salvo as exceções da lei;",
+            "informação sobre com quem os dados foram compartilhados;",
+            "informação sobre a possibilidade de não dar consentimento e sobre as consequências da negativa;",
+            "revogação do consentimento.",
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "Você também pode se opor a um tratamento feito com base em legítimo interesse, como a medição de audiência, se ele não cumprir a lei (art. 18, § 2º), e pode apresentar reclamação à ANPD (art. 18, § 1º).",
+        },
+        {
+          type: "paragraph",
+          text: "Como pedir: escreva para o canal da seção 10. Para proteger os seus dados, pode ser pedida uma confirmação de identidade antes da resposta. A confirmação de que existe tratamento e o acesso aos dados podem vir de forma simplificada, na hora. Também podem vir por declaração clara e completa, em até 15 dias a partir do pedido (art. 19).",
+        },
       ],
     },
     {
       id: "seguranca",
       number: "9",
       title: "Segurança",
-      content: [
-        "A Byte Criativo adota medidas técnicas e administrativas para proteger os dados, entre elas conexão criptografada (HTTPS) em todo o site, validação no servidor e acesso restrito às contas.",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "A Byte Criativo adota medidas técnicas e administrativas para proteger os dados (art. 46), entre elas:",
+        },
+        {
+          type: "list",
+          items: [
+            "conexão criptografada (HTTPS) em todo o site;",
+            "validação dos dados do formulário no servidor;",
+            "acesso restrito às caixas de e-mail e às contas de fornecedores;",
+            "registros técnicos sem o conteúdo do formulário;",
+            "mensagem de WhatsApp com os seus dados gerada só quando você toca no botão, e nunca deixada no código da página.",
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "Nenhum sistema é totalmente imune a falhas. Um incidente de segurança que possa gerar risco ou dano relevante é comunicado à ANPD e às pessoas afetadas (art. 48 da LGPD).",
+        },
       ],
     },
     {
       id: "canal-de-privacidade",
       number: "10",
-      title: "Canal de privacidade",
-      content: [
-        'Para exercer seus direitos ou tirar dúvidas sobre esta política, escreva para contato@bcriativo.com com o assunto "Privacidade".',
+      title: "Canal de privacidade e encarregado",
+      // O conteúdo sobre encarregado está PENDENTE no rascunho (enquadramento
+      // como agente de pequeno porte pode dispensar a indicação): aguarda
+      // decisão do dono e revisão jurídica. O título segue o rascunho.
+      blocks: [
+        {
+          type: "paragraph",
+          text: 'Para exercer seus direitos ou tirar dúvidas sobre esta política, escreva para contato@bcriativo.com com o assunto "Privacidade".',
+        },
+      ],
+    },
+    {
+      id: "criancas-e-adolescentes",
+      number: "11",
+      title: "Crianças e adolescentes",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "O site é voltado a empresas, profissionais e projetos, e não é direcionado a crianças e adolescentes. Se você tem menos de 18 anos, não envie dados pelo formulário.",
+        },
+      ],
+    },
+    {
+      id: "links-para-outros-sites",
+      number: "12",
+      title: "Links para outros sites",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "O site tem links para sites de projetos do portfólio, para o WhatsApp, o Instagram e o LinkedIn. Ao abrir esses links, vale a política de privacidade de cada um deles.",
+        },
+      ],
+    },
+    {
+      id: "aplicativo-pomodoro",
+      number: "13",
+      title: "Aplicativo Pomodoro",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "O aplicativo Pomodoro para macOS tem política de privacidade própria, em www.bcriativo.com/pomodoro/privacidade. Esta política não se aplica ao aplicativo.",
+        },
+      ],
+    },
+    {
+      id: "mudancas-nesta-politica",
+      number: "14",
+      title: "Mudanças nesta política",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "Quando esta política mudar, a data de atualização no topo muda e a mudança fica registrada no histórico abaixo.",
+        },
+        {
+          type: "table",
+          caption: "Histórico de mudanças desta política",
+          columns: ["Versão", "Data", "O que mudou"],
+          rows: [
+            [
+              "1.0",
+              formatarDataPorExtenso(PRIVACIDADE_ULTIMA_ATUALIZACAO),
+              "Primeira versão publicada",
+            ],
+          ],
+        },
+      ],
+    },
+    {
+      id: "anpd",
+      number: "15",
+      title: "Autoridade Nacional de Proteção de Dados",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "Se você entender que os seus dados foram tratados em desacordo com a LGPD, pode apresentar reclamação à ANPD, pelo site gov.br/anpd.",
+        },
       ],
     },
   ],

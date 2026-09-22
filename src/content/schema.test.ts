@@ -475,13 +475,25 @@ describe("PrivacidadePageSchema", () => {
     expect(PrivacidadePageSchema.safeParse(invalid).success).toBe(false)
   })
 
-  it("recusa privacidade com e-mail inválido no responsável", () => {
+  it("recusa tabela com linha de tamanho diferente das colunas", () => {
     const invalid = {
       ...privacidadePageRaw,
-      responsavel: {
-        ...privacidadePageRaw.responsavel,
-        email: "invalido",
-      },
+      sections: [
+        ...privacidadePageRaw.sections.slice(0, 4),
+        {
+          id: "secao-extra",
+          number: "5",
+          title: "Seção extra",
+          blocks: [
+            {
+              type: "table",
+              caption: "Tabela inválida",
+              columns: ["Versão", "Data", "O que mudou"],
+              rows: [["1.0", "16 de setembro de 2026"]],
+            },
+          ],
+        },
+      ],
     }
     expect(PrivacidadePageSchema.safeParse(invalid).success).toBe(false)
   })

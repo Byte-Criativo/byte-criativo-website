@@ -78,6 +78,11 @@ export function Button(props: ButtonProps): ReactElement {
       <Link
         id={id}
         href={props.href as Route}
+        prefetch={
+          props.href === "/contato" || props.href.startsWith("/contato?")
+            ? false
+            : undefined
+        }
         aria-current={props["aria-current"]}
         className={buttonClasses(variante, className)}
       >

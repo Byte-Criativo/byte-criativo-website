@@ -36,6 +36,18 @@ describe("Ficha", () => {
     ).toBeInTheDocument()
   })
 
+  it("sem estudoDeCasoHref, omite o link de estudo de caso e mantém o do site ao vivo", () => {
+    render(<Ficha {...BASE} estudoDeCasoHref={undefined} />)
+    expect(
+      screen.queryByRole("link", { name: /Ver estudo de caso/ }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole("link", {
+        name: "Ver projeto no ar do Festival Alumiô (abre em nova aba)",
+      }),
+    ).toBeInTheDocument()
+  })
+
   it("a cabeça vem antes da sala e o corpo depois", () => {
     const { container } = render(
       <Ficha {...BASE} controle={<button type="button">Frente</button>} />,

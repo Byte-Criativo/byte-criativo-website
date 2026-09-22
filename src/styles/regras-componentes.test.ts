@@ -168,3 +168,40 @@ describe("globals.css: gatilho da galeria", () => {
     expect(valorDe(casa, "inset")).toBe("0")
   })
 })
+
+describe("globals.css: LeadForm, campo de contato pelo canal", () => {
+  // O jsdom não aplica folha de estilo: sem esta checagem, a revelação por
+  // `:has()` (e o fallback dos dois campos visíveis) não teria dono.
+  const escondeEmail = (seletor: string) => {
+    const normalizado = semEspacos(seletor)
+    return (
+      normalizado.includes(
+        '.lead-form:has([name="canal"][value="whatsapp"]:checked)',
+      ) && normalizado.includes('[data-campo="email"]')
+    )
+  }
+  const escondeWhatsapp = (seletor: string) => {
+    const normalizado = semEspacos(seletor)
+    return (
+      normalizado.includes(
+        '.lead-form:has([name="canal"][value="email"]:checked)',
+      ) && normalizado.includes('[data-campo="whatsapp"]')
+    )
+  }
+
+  it("o campo de e-mail some quando o canal marcado é WhatsApp, e vice-versa", () => {
+    expect(regrasPara(escondeEmail).length).toBeGreaterThan(0)
+    expect(valorDe(escondeEmail, "display")).toBe("none")
+    expect(regrasPara(escondeWhatsapp).length).toBeGreaterThan(0)
+    expect(valorDe(escondeWhatsapp, "display")).toBe("none")
+  })
+
+  it("sem canal marcado nenhum dos dois campos some (fallback sem :has())", () => {
+    const algumaRegraTocaOsCampos = regrasPara(
+      (seletor) =>
+        semEspacos(seletor).includes("[data-campo=") &&
+        !semEspacos(seletor).includes(":has("),
+    )
+    expect(algumaRegraTocaOsCampos).toHaveLength(0)
+  })
+})

@@ -136,6 +136,30 @@ export function faqPageJsonLd(
   }
 }
 
+export function creativeWorkJsonLd({
+  name,
+  description,
+  path,
+  liveUrl,
+}: {
+  name: string
+  description: string
+  path: string
+  liveUrl?: string
+}): Record<string, unknown> {
+  const url = `${SITE_URL}${path}`
+  return {
+    "@type": "CreativeWork",
+    "@id": `${url}#creativework`,
+    name,
+    description,
+    url,
+    ...(liveUrl ? { sameAs: liveUrl } : {}),
+    creator: { "@id": ORGANIZATION_ID },
+    inLanguage: "pt-BR",
+  }
+}
+
 export function breadcrumbsJsonLd(
   items: Array<{ name: string; path: string }>,
 ): Record<string, unknown> {

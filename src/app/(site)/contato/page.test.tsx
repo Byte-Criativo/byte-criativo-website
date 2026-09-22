@@ -1,11 +1,41 @@
 import { render, screen, within } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import ContatoPage, { metadata } from "./page"
 import { getContatoPage } from "@/content"
+
+const { busca } = vi.hoisted(() => ({ busca: { valor: "" } }))
+
+// A ilha LeadForm lê `?tipo=`/`?origem=` num filho mínimo com Suspense.
+vi.mock("next/navigation", () => ({
+  useSearchParams: () => new URLSearchParams(busca.valor),
+}))
+
+// A página é exercida de verdade; a action fica de fora (testada em
+// actions.test.ts) para o render não tocar provedor nem redirect.
+vi.mock("./actions", () => ({
+  submitLead: async () => ({
+    status: "inicial" as const,
+    erros: {},
+    valores: {
+      nome: "",
+      tipo: "",
+      contexto: "",
+      canal: "",
+      whatsapp: "",
+      email: "",
+      empresa: "",
+      prazo: "",
+    },
+  }),
+}))
 
 const contato = getContatoPage()
 
 describe("Página Contato (/contato)", () => {
+  beforeEach(() => {
+    busca.valor = ""
+  })
+
   it("exporta metadata com seoTitle, description e canonical /contato", () => {
     expect(metadata.title).toEqual({ absolute: contato.seo.seoTitle })
     expect(metadata.description).toBe(contato.seo.description)

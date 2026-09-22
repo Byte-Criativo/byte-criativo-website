@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getHomePage, getSiteConfig } from "@/content"
+import { getHomePage, getPublishedCases, getSiteConfig } from "@/content"
 import { buildMetadata } from "@/lib/seo/metadata"
 import {
   buildJsonLdGraph,
@@ -43,6 +43,14 @@ const ITENS_INDICE = [
 ]
 
 export default function HomePage() {
+  // O link "Ver estudo de caso" das salas só aparece para cases publicados
+  // (gate D5); enquanto isso as salas ficam só com o link do site ao vivo.
+  const publicados = new Set(getPublishedCases().map((estudo) => estudo.slug))
+  const hrefEstudoDeCaso = (
+    sala: (typeof home.salas.items)[number],
+  ): string | undefined =>
+    publicados.has(sala.slug) ? sala.caseStudyUrl : undefined
+
   const jsonLdGraph = buildJsonLdGraph([
     organization(),
     webSite(),
@@ -74,9 +82,20 @@ export default function HomePage() {
       <IndiceSemicolon itens={ITENS_INDICE} />
 
       {home.salas.items[0] ? (
-        <HomeHero hero={home.hero} salaItem={home.salas.items[0]} />
+        <HomeHero
+          hero={home.hero}
+          salaItem={home.salas.items[0]}
+          estudoDeCasoHref={hrefEstudoDeCaso(home.salas.items[0])}
+        />
       ) : null}
-      <HomeSalas salas={home.salas} />
+      <HomeSalas
+        salas={home.salas}
+        estudoDeCasoHref={
+          home.salas.items[1]
+            ? hrefEstudoDeCaso(home.salas.items[1])
+            : undefined
+        }
+      />
       <HomeFormaDePensar formaDePensar={home.formaDePensar} />
       <HomeOQueFazemos oQueFazemos={home.oQueFazemos} />
       <HomeComoAnda comoAnda={home.comoAnda} />

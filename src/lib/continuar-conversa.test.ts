@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest"
 import {
   apagarDadosContinuacao,
   CHAVE_CONTINUACAO,
+  cortarContexto,
   gravarDadosContinuacao,
   lerEApagarDadosContinuacao,
   LIMITE_CONTEXTO,
@@ -75,10 +76,42 @@ describe("chave de continuação", () => {
     expect(sessionStorage.getItem(CHAVE_CONTINUACAO)).toBeNull()
   })
 
-  it("corta o contexto no limite da copy v1", () => {
+  it("corta o contexto no limite da copy v1, com (continua)", () => {
+    // Sem frase completa antes do limite: corte seco em 500 + " (continua)".
     gravarDadosContinuacao({ ...DADOS, contexto: "x".repeat(900) })
     const lido = lerEApagarDadosContinuacao("e1")
-    expect(lido?.contexto).toHaveLength(LIMITE_CONTEXTO)
+    expect(lido?.contexto).toBe(`${"x".repeat(LIMITE_CONTEXTO)} (continua)`)
+  })
+
+  it("o corte sai no fim da última frase completa antes do limite (copy §14)", () => {
+    const frase = "Primeira frase do contexto. "
+    const contexto = frase.repeat(30) + "Frase que passa do limite"
+    const cortado = cortarContexto(contexto)
+    // 17 frases completas cabem antes do limite; a 18ª fica de fora.
+    const completas = frase.repeat(17).trimEnd()
+    expect(cortado).toBe(`${completas} (continua)`)
+    expect(completas.endsWith(".")).toBe(true)
+  })
+
+  it("o corte é idempotente: gravar e montar não cortam duas vezes", () => {
+    const contexto = "Uma frase. ".repeat(100)
+    gravarDadosContinuacao({ ...DADOS, contexto })
+    const lido = lerEApagarDadosContinuacao("e1")
+    expect(lido).not.toBeNull()
+    // A mensagem montada aplica o mesmo corte da gravação (fonte única).
+    expect(montarMensagemContinuacao(lido!)).toContain(
+      `Contexto: ${lido!.contexto}`,
+    )
+    expect(lido!.contexto.match(/\(continua\)/g)).toHaveLength(1)
+  })
+
+  it("a mensagem montada corta o contexto mesmo sem passar pela gravação", () => {
+    const mensagem = montarMensagemContinuacao({
+      ...DADOS,
+      contexto: "x".repeat(900),
+    })
+    expect(mensagem).toContain("(continua)")
+    expect(mensagem).not.toContain("x".repeat(501))
   })
 
   it("apagarDadosContinuacao limpa em qualquer caminho sem sucesso", () => {

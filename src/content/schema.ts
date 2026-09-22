@@ -615,20 +615,53 @@ export const PortfolioPageSchema = z.strictObject({
 export type PortfolioPage = z.infer<typeof PortfolioPageSchema>
 
 // Privacidade Page Schema (port de docs/content/2026-09-privacidade-rascunho.md)
+export const PrivacidadeBlockSchema = z.discriminatedUnion("type", [
+  z.strictObject({
+    type: z.literal("paragraph"),
+    text: z.string().min(1),
+  }),
+  z.strictObject({
+    type: z.literal("list"),
+    title: z.string().min(1).optional(),
+    ordered: z.boolean().default(false),
+    items: z.array(z.string().min(1)).min(1),
+  }),
+  z
+    .strictObject({
+      type: z.literal("table"),
+      caption: z.string().min(1),
+      columns: z.array(z.string().min(1)).min(1),
+      rows: z.array(z.array(z.string().min(1)).min(1)).min(1),
+    })
+    .refine(
+      (table) => table.rows.every((row) => row.length === table.columns.length),
+      { message: "Cada linha da tabela deve ter uma célula por coluna" },
+    ),
+])
+export type PrivacidadeBlock = z.infer<typeof PrivacidadeBlockSchema>
+
 export const PrivacidadeSubsectionSchema = z.strictObject({
   id: z.string().min(1),
   number: z.string().min(1),
   title: z.string().min(1),
-  content: z.array(z.string().min(1)).or(z.string().min(1)),
+  blocks: z.array(PrivacidadeBlockSchema).min(1),
 })
 
-export const PrivacidadeSectionSchema = z.strictObject({
-  id: z.string().min(1),
-  number: z.string().min(1),
-  title: z.string().min(1),
-  content: z.array(z.string().min(1)).or(z.string().min(1)),
-  subsections: z.array(PrivacidadeSubsectionSchema).optional(),
-})
+export const PrivacidadeSectionSchema = z
+  .strictObject({
+    id: z.string().min(1),
+    number: z.string().min(1),
+    title: z.string().min(1),
+    blocks: z.array(PrivacidadeBlockSchema).min(1).optional(),
+    subsections: z.array(PrivacidadeSubsectionSchema).min(1).optional(),
+  })
+  .refine(
+    (section) =>
+      section.blocks !== undefined || section.subsections !== undefined,
+    {
+      message: "Seção precisa de blocos de conteúdo ou de subseções",
+    },
+  )
 
 export const PrivacidadePageSchema = z.strictObject({
   seo: z.strictObject({
@@ -638,13 +671,6 @@ export const PrivacidadePageSchema = z.strictObject({
   }),
   title: z.string().min(2),
   lastUpdated: z.string().min(4),
-  responsavel: z.strictObject({
-    name: z.string().min(2),
-    cnpj: z.string().regex(/^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/),
-    email: z.string().email(),
-    text: z.string().min(10),
-  }),
-  resumo: z.array(z.string().min(5)).min(3),
   sections: z.array(PrivacidadeSectionSchema).min(5),
 })
 export type PrivacidadePage = z.infer<typeof PrivacidadePageSchema>

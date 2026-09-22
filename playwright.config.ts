@@ -25,6 +25,8 @@ export default defineConfig({
   webServer: {
     command: `npm run build && npm run start -- -p ${port}`,
     url: `http://localhost:${port}`,
+    // O E2E do formulário exercita a falha do provedor sem enviar leads reais.
+    env: { RESEND_API_KEY: "" },
     reuseExistingServer: !process.env.CI,
     timeout: 240_000,
   },

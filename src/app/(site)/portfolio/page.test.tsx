@@ -1,10 +1,26 @@
 import { render, screen, within } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import PortfolioPage, { metadata } from "./page"
 import { getHomePage, getPortfolioPage } from "@/content"
 
+// Estado mutável do mock: quais slugs o loader getPublishedCases devolve.
+// O hub só lê `.slug` dos cases publicados, então o double é mínimo.
+const estado = vi.hoisted(() => ({ slugsPublicados: [] as string[] }))
+
+vi.mock("@/content", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/content")>()
+  return {
+    ...actual,
+    getPublishedCases: () => estado.slugsPublicados.map((slug) => ({ slug })),
+  }
+})
+
 const portfolio = getPortfolioPage()
 const salas = getHomePage().salas
+
+beforeEach(() => {
+  estado.slugsPublicados = []
+})
 
 describe("Hub de Trabalhos (/portfolio)", () => {
   it("exporta metadata com seoTitle, description e canonical /portfolio", () => {
@@ -24,18 +40,6 @@ describe("Hub de Trabalhos (/portfolio)", () => {
     expect(tipos).toContain("WebSite")
     expect(tipos).toContain("CollectionPage")
     expect(tipos).toContain("BreadcrumbList")
-
-    const colecao = json["@graph"].find(
-      (item: Record<string, unknown>) => item["@type"] === "CollectionPage",
-    )
-    const lista = colecao.mainEntity
-    expect(lista["@type"]).toBe("ItemList")
-    expect(lista.itemListElement).toHaveLength(salas.items.length)
-    expect(lista.itemListElement[0].item).toEqual({
-      "@type": "CreativeWork",
-      name: salas.items[0]?.name,
-      url: `https://www.bcriativo.com${salas.items[0]?.caseStudyUrl}`,
-    })
   })
 
   it("renderiza breadcrumbs com Início e Trabalhos como página atual", () => {
@@ -62,7 +66,7 @@ describe("Hub de Trabalhos (/portfolio)", () => {
     }
   })
 
-  it("renderiza uma sala por trabalho publicado, com legenda e ações", () => {
+  it("renderiza uma sala por trabalho, com legenda e link do site ao vivo", () => {
     render(<PortfolioPage />)
     const secao = screen.getByRole("region", { name: "Trabalhos publicados" })
 
@@ -78,11 +82,6 @@ describe("Hub de Trabalhos (/portfolio)", () => {
       for (const capacidade of sala.capabilities) {
         expect(within(artigo).getByText(capacidade)).toBeInTheDocument()
       }
-
-      const estudo = within(artigo).getByRole("link", {
-        name: `Ver estudo de caso do ${sala.name}`,
-      })
-      expect(estudo).toHaveAttribute("href", sala.caseStudyUrl)
 
       const noAr = within(artigo).getByRole("link", {
         name: `Ver projeto no ar do ${sala.name} (abre em nova aba)`,
@@ -109,5 +108,75 @@ describe("Hub de Trabalhos (/portfolio)", () => {
       "href",
       expect.stringContaining("https://wa.me/"),
     )
+  })
+})
+
+describe("Hub de Trabalhos — gate D5 (estudos de caso)", () => {
+  it("sem cases publicados, nenhuma sala mostra link de estudo de caso e o ItemList fica vazio", () => {
+    estado.slugsPublicados = []
+    const { container } = render(<PortfolioPage />)
+
+    const secao = screen.getByRole("region", { name: "Trabalhos publicados" })
+    expect(
+      within(secao).queryByRole("link", { name: /Ver estudo de caso/ }),
+    ).not.toBeInTheDocument()
+
+    const script = container.querySelector('script[type="application/ld+json"]')
+    const json = JSON.parse(script?.textContent ?? "{}")
+    const colecao = json["@graph"].find(
+      (item: Record<string, unknown>) => item["@type"] === "CollectionPage",
+    )
+    expect(colecao.mainEntity["@type"]).toBe("ItemList")
+    expect(colecao.mainEntity.itemListElement).toHaveLength(0)
+  })
+
+  it("com um case publicado, só a sala dele mostra o link e o ItemList anuncia só ele", () => {
+    estado.slugsPublicados = ["underground-pb"]
+    const { container } = render(<PortfolioPage />)
+
+    const secao = screen.getByRole("region", { name: "Trabalhos publicados" })
+    const salaPublicada = salas.items.find((s) => s.slug === "underground-pb")!
+    const salaEmRevisao = salas.items.find((s) => s.slug !== "underground-pb")!
+
+    const artigoPublicado = within(secao).getByRole("article", {
+      name: salaPublicada.name,
+    })
+    expect(
+      within(artigoPublicado).getByRole("link", {
+        name: `Ver estudo de caso do ${salaPublicada.name}`,
+      }),
+    ).toHaveAttribute("href", salaPublicada.caseStudyUrl)
+
+    const artigoEmRevisao = within(secao).getByRole("article", {
+      name: salaEmRevisao.name,
+    })
+    expect(
+      within(artigoEmRevisao).queryByRole("link", {
+        name: /Ver estudo de caso/,
+      }),
+    ).not.toBeInTheDocument()
+    // A sala em revisão continua com o link do site ao vivo.
+    expect(
+      within(artigoEmRevisao).getByRole("link", {
+        name: `Ver projeto no ar do ${salaEmRevisao.name} (abre em nova aba)`,
+      }),
+    ).toHaveAttribute("href", salaEmRevisao.liveUrl)
+
+    const script = container.querySelector('script[type="application/ld+json"]')
+    const json = JSON.parse(script?.textContent ?? "{}")
+    const colecao = json["@graph"].find(
+      (item: Record<string, unknown>) => item["@type"] === "CollectionPage",
+    )
+    expect(colecao.mainEntity.itemListElement).toEqual([
+      {
+        "@type": "ListItem",
+        position: 1,
+        item: {
+          "@type": "CreativeWork",
+          name: salaPublicada.name,
+          url: `https://www.bcriativo.com${salaPublicada.caseStudyUrl}`,
+        },
+      },
+    ])
   })
 })

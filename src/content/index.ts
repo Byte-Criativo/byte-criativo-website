@@ -23,6 +23,7 @@ import {
   type PrivacidadePage,
   type PortfolioPage,
   type FaqItem,
+  type CaseStudyData,
 } from "./schema"
 import { siteConfigRaw } from "./site"
 import { homePageRaw } from "./home"
@@ -36,6 +37,7 @@ import {
   portfolioPageRaw,
 } from "./pages"
 import { faqItemsRaw } from "./faq"
+import { caseStudies } from "./cases"
 
 export function getSiteConfig(): SiteConfig {
   return SiteConfigSchema.parse(siteConfigRaw)
@@ -85,4 +87,18 @@ export function getPortfolioPage(): PortfolioPage {
 
 export function getFaqItems(): FaqItem[] {
   return z.array(FaqItemSchema).parse(faqItemsRaw)
+}
+
+// Os dados já chegam validados de ./cases (parse no módulo); aqui ficam só
+// a ordenação por `order` e o filtro de publicação.
+export function getAllCases(): CaseStudyData[] {
+  return [...caseStudies].sort((a, b) => a.order - b.order)
+}
+
+export function getPublishedCases(): CaseStudyData[] {
+  return getAllCases().filter((estudo) => estudo.status === "published")
+}
+
+export function getCaseBySlug(slug: string): CaseStudyData | undefined {
+  return caseStudies.find((estudo) => estudo.slug === slug)
 }

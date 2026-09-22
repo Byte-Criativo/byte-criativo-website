@@ -5,6 +5,7 @@ import {
   breadcrumbsJsonLd,
   buildJsonLdGraph,
   collectionPageJsonLd,
+  creativeWorkJsonLd,
   faqPageJsonLd,
   organization,
   serializeJsonLd,
@@ -154,6 +155,36 @@ describe("json-ld", () => {
         },
       },
     ])
+  })
+
+  it("creativeWorkJsonLd cria nó CreativeWork com creator da organização", () => {
+    const obra = creativeWorkJsonLd({
+      name: "Festival Alumiô: a programação do festival na mão de quem vai",
+      description: "Site do Alumiô Festival 2026.",
+      path: "/portfolio/festival-alumio",
+      liveUrl: "https://www.festivalalumio.com.br/",
+    })
+    expect(obra["@type"]).toBe("CreativeWork")
+    expect(obra["@id"]).toBe(
+      "https://www.bcriativo.com/portfolio/festival-alumio#creativework",
+    )
+    expect(obra["url"]).toBe(
+      "https://www.bcriativo.com/portfolio/festival-alumio",
+    )
+    expect(obra["name"]).toContain("Festival Alumiô")
+    expect(obra["creator"]).toEqual({ "@id": ORGANIZATION_ID })
+    expect(obra["sameAs"]).toBe("https://www.festivalalumio.com.br/")
+    expect(obra["inLanguage"]).toBe("pt-BR")
+  })
+
+  it("creativeWorkJsonLd omite sameAs quando liveUrl não é informada", () => {
+    const obra = creativeWorkJsonLd({
+      name: "Case sem site ao vivo",
+      description: "Descrição.",
+      path: "/portfolio/case-teste",
+    })
+    expect(obra).not.toHaveProperty("sameAs")
+    expect(obra["creator"]).toEqual({ "@id": ORGANIZATION_ID })
   })
 
   it("serialização escapa < para evitar fechar a tag script", () => {
