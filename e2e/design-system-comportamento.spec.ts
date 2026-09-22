@@ -34,6 +34,10 @@ test.describe("Catálogo: foco no diálogo", () => {
     await page.goto("/design-system")
     for (let passo = 0; passo < 25; passo += 1) {
       await page.keyboard.press("Tab")
+      // O WebKit headless pode deixar o elemento focado fora da viewport
+      // após vários Tabs. Este teste verifica a cobertura pelo header.
+      const foco = page.locator(":focus")
+      if ((await foco.count()) > 0) await foco.scrollIntoViewIfNeeded()
       const visivel = await page.evaluate(() => {
         const ativo = document.activeElement
         if (!ativo || ativo === document.body) return true

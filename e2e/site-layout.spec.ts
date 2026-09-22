@@ -8,7 +8,8 @@ test.describe("Layout do site (landmarks e acessibilidade)", () => {
     const banner = page.getByRole("banner")
     await expect(banner).toBeVisible()
 
-    const navPrincipal = banner.getByRole("navigation", { name: "Principal" })
+    // No celular a navegação desktop existe no HTML, mas fica oculta por CSS.
+    const navPrincipal = banner.locator('nav[aria-label="Principal"]').first()
     await expect(navPrincipal).toBeAttached()
 
     const main = page.locator("main#conteudo")
