@@ -42,6 +42,9 @@ yarn-error.log*
 /playwright-report
 /playwright/.cache
 
+# originais de captura; somente derivados aprovados entram em public/cases
+/docs/research/captures/
+
 # lighthouse ci
 /.lighthouseci
 

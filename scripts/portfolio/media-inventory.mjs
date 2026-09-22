@@ -1,4 +1,4 @@
-// Inventário local das fontes visuais dos cases. Não copia nem publica mídia.
+// Inventário local das fontes e dos derivados visuais dos cases.
 // Uso: node scripts/portfolio/media-inventory.mjs [raiz-com-capturas]
 // Ex.: node scripts/portfolio/media-inventory.mjs /caminho/para/byte-criativo-website
 import { createHash } from "node:crypto"
@@ -14,8 +14,20 @@ const cases = [
     liveUrl: "https://www.undergroundpb.com.br/",
     trackedCover: "src/assets/case-undergroundpb-screenshot.webp",
     captureDir: "docs/research/captures/2026-09-underground-pb",
-    expected: ["home-1440.png", "home-390.png"],
-    plannedPublicCover: "public/cases/underground-pb/home-1440.avif",
+    expected: [
+      "home-1440.png",
+      "home-390.png",
+      "agenda-1440.png",
+      "agenda-390.png",
+      "palcos-1440.png",
+      "palcos-390.png",
+    ],
+    publicMedia: [
+      "home-1440.avif",
+      "agenda-1440.avif",
+      "palcos-1440.avif",
+      "palcos-390.avif",
+    ],
   },
   {
     slug: "festival-alumio",
@@ -32,7 +44,12 @@ const cases = [
       "memoria-1440.png",
       "memoria-390.png",
     ],
-    plannedPublicCover: "public/cases/festival-alumio/home-1440.avif",
+    publicMedia: [
+      "home-1440.avif",
+      "programacao-1440.avif",
+      "circuito-1440.avif",
+      "programacao-390.avif",
+    ],
   },
 ]
 
@@ -95,10 +112,12 @@ async function fileRecord(root, relativePath) {
 const inventory = []
 for (const entry of cases) {
   const manifestPath = path.join(entry.captureDir, "manifest.json")
+  const localManifest = await fileRecord(projectRoot, manifestPath)
+  const captureRoot = localManifest.exists ? projectRoot : sourceRoot
   let manifest = []
   try {
     manifest = JSON.parse(
-      await readFile(path.join(sourceRoot, manifestPath), "utf8"),
+      await readFile(path.join(captureRoot, manifestPath), "utf8"),
     )
     if (!Array.isArray(manifest))
       throw new Error(`${manifestPath} não é uma lista`)
@@ -109,7 +128,7 @@ for (const entry of cases) {
   const captures = await Promise.all(
     entry.expected.map(async (file) => {
       const record = await fileRecord(
-        sourceRoot,
+        captureRoot,
         path.join(entry.captureDir, file),
       )
       const metadata = manifest.find((item) => item.file === file)
@@ -130,9 +149,14 @@ for (const entry of cases) {
     liveUrl: entry.liveUrl,
     rightsGate: "D5 pendente; manter os cases em review",
     trackedCover: await fileRecord(projectRoot, entry.trackedCover),
-    captureManifest: await fileRecord(sourceRoot, manifestPath),
+    captureRoot,
+    captureManifest: await fileRecord(captureRoot, manifestPath),
     captures,
-    plannedPublicCover: await fileRecord(projectRoot, entry.plannedPublicCover),
+    publicMedia: await Promise.all(
+      entry.publicMedia.map((file) =>
+        fileRecord(projectRoot, path.join("public/cases", entry.slug, file)),
+      ),
+    ),
   })
 }
 

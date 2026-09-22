@@ -1,7 +1,7 @@
 // scripts/portfolio/capture.mjs
 // Uso: node scripts/portfolio/capture.mjs <slug> <url> [<url>...]
 //
-// CASE_CAPTURE_CONSENT=accept|reject escolhe a ação quando há banner.
+// CASE_CAPTURE_CONSENT=accept|reject|necessary-only escolhe a ação no banner.
 // Sem escolha explícita, a captura falha se detectar um banner conhecido.
 // Para cada URL x viewport, salva uma captura de viewport e uma de página
 // inteira (sufixo "-full"), rolando a página até o fim antes da captura
@@ -41,12 +41,18 @@ const consentSelectors = {
     "#onetrust-accept-btn-handler",
   ],
   reject: ['button:has-text("Rejeitar")', 'button:has-text("Recusar")'],
+  "necessary-only": [
+    'button:has-text("Apenas necessários")',
+    'button:has-text("Apenas necessarios")',
+  ],
 }
 
 async function dismissConsentBanner(page) {
   const choice = process.env.CASE_CAPTURE_CONSENT
-  if (choice && !["accept", "reject"].includes(choice)) {
-    throw new Error("CASE_CAPTURE_CONSENT deve ser accept ou reject")
+  if (choice && !["accept", "reject", "necessary-only"].includes(choice)) {
+    throw new Error(
+      "CASE_CAPTURE_CONSENT deve ser accept, reject ou necessary-only",
+    )
   }
   const visible = []
   for (const [action, selectors] of Object.entries(consentSelectors)) {
@@ -65,7 +71,7 @@ async function dismissConsentBanner(page) {
   if (visible.length === 0) return "none"
   if (!choice) {
     throw new Error(
-      "Banner de consentimento detectado; defina CASE_CAPTURE_CONSENT=accept|reject após decisão editorial D5",
+      "Banner de consentimento detectado; defina CASE_CAPTURE_CONSENT=accept|reject|necessary-only",
     )
   }
   for (const { action, selector } of visible) {
@@ -77,6 +83,14 @@ async function dismissConsentBanner(page) {
     return choice
   }
   throw new Error(`Banner detectado, mas não há controle para ${choice}`)
+}
+
+async function dismissOptionalNotices(page) {
+  // Aviso de contas do Underground PB: não é consentimento e cobre a home.
+  const close = page.locator("[data-announcement-close]").first()
+  if (!(await close.isVisible().catch(() => false))) return []
+  await close.click()
+  return ["accounts-announcement"]
 }
 
 async function scrollToBottomInSteps(page) {
@@ -129,6 +143,7 @@ try {
         await page.evaluate(() => document.fonts.ready)
         await page.waitForTimeout(1500)
         const consentAction = await dismissConsentBanner(page)
+        const dismissedNotices = await dismissOptionalNotices(page)
 
         const pagePath = new URL(url).pathname.replace(/\/$/, "") || "/home"
         const base = pagePath.slice(1).replace(/\//g, "_")
@@ -144,6 +159,7 @@ try {
           capturedAt: new Date().toISOString(),
           fullPage: false,
           consentAction,
+          dismissedNotices,
         })
 
         await scrollToBottomInSteps(page)
@@ -167,6 +183,7 @@ try {
           capturedAt: new Date().toISOString(),
           fullPage: true,
           consentAction,
+          dismissedNotices,
         })
       } catch (error) {
         failures.push({
