@@ -34,11 +34,14 @@ npm run dev
 O formulário mostra um caminho alternativo de contato enquanto o envio por
 e-mail não estiver configurado. Para testar o envio localmente, copie
 `.env.example` para `.env.local` e preencha `RESEND_API_KEY`,
-`LEAD_EMAIL_FROM` (remetente de domínio verificado no Resend) e
-`LEAD_EMAIL_TO` (caixa privada monitorada). O destinatário dos leads é
+`LEAD_EMAIL_FROM` (remetente de domínio verificado no Resend),
+`LEAD_EMAIL_TO` (caixa privada monitorada), `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+e `TURNSTILE_SECRET_KEY` (widget Cloudflare Turnstile). O destinatário dos leads é
 configurado apenas no ambiente; o e-mail público do site e o `Reply-To` do
 visitante permanecem independentes. Nunca registre a chave ou o endereço
-privado no repositório.
+privado no repositório. Sem as chaves de e-mail e do desafio, a Server Action
+não envia leads e mantém o caminho alternativo por WhatsApp. O desafio exige
+JavaScript; sem ele, a pessoa recebe a opção de contato direto.
 
 O Next sobe na porta 3000 por padrão; se estiver ocupada, use
 `PORT=<porta> npm run dev`. Para e2e, `PW_CHANNEL=chrome` usa o Google
@@ -94,16 +97,19 @@ repositório inclui os registros das capturas atuais em
 
 1. Conferir as páginas publicadas dos dois cases em desktop e celular,
    incluindo a galeria, créditos e links externos.
-2. Verificar o domínio remetente no Resend e configurar
-   `RESEND_API_KEY`, `LEAD_EMAIL_FROM` e `LEAD_EMAIL_TO` no ambiente de
-   produção. As mesmas variáveis em Preview permitem um teste isolado.
-3. Antes de ativar o envio público, ligar uma defesa de bot e limite de
-   requisições na borda: o honeypot e o carimbo atuais são contornáveis, e
-   a verificação de bot em `src/app/(site)/contato/actions.ts` ainda é um
-   ponto de integração sem provedor.
-4. Fazer um envio real com JavaScript e outro sem JavaScript, conferir a
-   chegada na caixa monitorada e exercitar o fallback em caso de falha.
-   Só então promover a branch para `main`.
+2. Verificar o domínio remetente no Resend Free e configurar
+   `RESEND_API_KEY`, `LEAD_EMAIL_FROM` e `LEAD_EMAIL_TO` como secrets em
+   Production e Preview na Vercel.
+3. Criar um widget Cloudflare Turnstile Free para os hosts de produção e
+   prévia e configurar `NEXT_PUBLIC_TURNSTILE_SITE_KEY` e
+   `TURNSTILE_SECRET_KEY` nos mesmos ambientes. A validação do token acontece
+   no servidor antes de qualquer envio.
+4. Conferir a regra de rate limiting da Vercel para `POST /contato`: por IP,
+   cinco requisições a cada dez minutos, resposta 429. O honeypot e o carimbo
+   são apenas camadas adicionais.
+5. Após novo deploy, fazer um envio real com JavaScript, conferir a chegada
+   na caixa monitorada e testar o fallback por WhatsApp, inclusive sem
+   JavaScript. Só então promover a branch para `main`.
 
 ## CI
 

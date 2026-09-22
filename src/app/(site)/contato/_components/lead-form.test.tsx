@@ -115,6 +115,16 @@ describe("LeadForm (ilha)", () => {
     ).not.toBeNull()
   })
 
+  it("renderiza o desafio de segurança com a chave pública e mantém o fallback sem JavaScript", () => {
+    const { container } = render(
+      <LeadForm contato={contato} turnstileSiteKey="sitekey-teste" />,
+    )
+    const desafio = container.querySelector(".cf-turnstile")
+    expect(desafio).toHaveAttribute("data-sitekey", "sitekey-teste")
+    expect(desafio).toHaveAttribute("data-action", "lead_form")
+    expect(container.querySelector("noscript")).not.toBeNull()
+  })
+
   it("validação síncrona: erros por campo, resumo com foco e action nem é chamada", async () => {
     const user = userEvent.setup()
     render(<LeadForm contato={contato} />)

@@ -3,7 +3,7 @@
     "collect": {
       "startServerCommand": "npm run start",
       "url": ["http://localhost:3000/", "http://localhost:3000/contato"],
-      "numberOfRuns": 3,
+      "numberOfRuns": 5,
       "settings": { "formFactor": "mobile" }
     },
     "assert": {

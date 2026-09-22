@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={sans.variable}>
+    <html lang="pt-BR" className={sans.variable} suppressHydrationWarning>
       <head>
         {/* RC9: antes da primeira pintura, para o estado com JS não dar
             salto de layout. */}

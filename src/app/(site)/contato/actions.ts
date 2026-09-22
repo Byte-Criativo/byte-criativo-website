@@ -5,6 +5,7 @@ import { redirect } from "next/navigation"
 import { after } from "next/server"
 import { getContatoPage } from "@/content"
 import { sendLeadEmail } from "@/lib/email"
+import { verificarTurnstile } from "@/lib/turnstile"
 import {
   CANAIS,
   errosPorCampo,
@@ -15,7 +16,7 @@ import {
 
 /**
  * Server Action do formulário de lead (arquitetura técnica 5.7), na ordem
- * da especificação: bot → honeypot/carimbo → validação Zod → envio do
+ * da especificação: honeypot/carimbo → validação Zod → Turnstile → envio do
  * e-mail → fallback com WhatsApp → log sem dados pessoais → redirect.
  *
  * Tratada como endpoint público (5.8): nada do que chega é confiável, o
@@ -29,15 +30,6 @@ import {
  * sem JS nunca é bloqueado por ela.
  */
 const ENVIO_MINIMO_MS = 3_000
-
-/**
- * Verificação de robô invisível (3.3.8). A integração com o BotID da Vercel
- * está pendente (risco 3 da arquitetura técnica: licença e termos a
- * confirmar); até lá, a função existe para o ponto de encaixe não mudar.
- */
-async function verificarBot(): Promise<boolean> {
-  return false
-}
 
 /** Máximo do campo oculto `origem`, que entra no corpo do e-mail. */
 const LIMITE_ORIGEM = 200
@@ -56,7 +48,7 @@ const FORMATO_ENVIO =
  * obrigado cairia no estado degradado de acesso direto).
  */
 function sucessoGenerico(
-  motivo: "bot" | "honeypot" | "rapido",
+  motivo: "honeypot" | "rapido",
   formData: FormData,
 ): never {
   // A spec registra só a contagem dos envios descartados pelo honeypot
@@ -82,12 +74,7 @@ export async function submitLead(
   _estadoAnterior: LeadFormState,
   formData: FormData,
 ): Promise<LeadFormState> {
-  // 1. Verificação de robô.
-  if (await verificarBot()) {
-    sucessoGenerico("bot", formData)
-  }
-
-  // 2. Honeypot preenchido ou envio rápido demais.
+  // 1. Honeypot preenchido ou envio rápido demais.
   if (textoDoCampo(formData, "verificacao").trim() !== "") {
     sucessoGenerico("honeypot", formData)
   }
@@ -100,7 +87,7 @@ export async function submitLead(
     sucessoGenerico("rapido", formData)
   }
 
-  // 3. Valação Zod: erros por campo, valores preservados.
+  // 2. Validação Zod: erros por campo, valores preservados.
   const valores = extrairLeadDoFormData(formData)
   const resultado = leadSchema.safeParse(valores)
   if (!resultado.success) {
@@ -112,6 +99,14 @@ export async function submitLead(
   }
   const dados = resultado.data
 
+  // 3. Validação obrigatória no servidor. Tokens são de uso único; qualquer
+  // falha mantém os dados para uma nova tentativa ou contato por WhatsApp.
+  if (
+    !(await verificarTurnstile(textoDoCampo(formData, "cf-turnstile-response")))
+  ) {
+    return { status: "fallback", erros: {}, valores }
+  }
+
   const tipoRotulo =
     getContatoPage().projectTypeOptions.find(
       (opcao) => opcao.value === dados.tipo,
@@ -121,7 +116,7 @@ export async function submitLead(
   const envioBruto = textoDoCampo(formData, "envio").trim()
   const envio = FORMATO_ENVIO.test(envioBruto) ? envioBruto : ""
 
-  // 4 e 5. Envio; falha do provedor vira o estado "fallback" (a ilha mostra
+  // 4. Envio; falha do provedor vira o estado "fallback" (a ilha mostra
   // o Notice com o botão de WhatsApp montado só no clique).
   try {
     await sendLeadEmail({

@@ -1,13 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { ESTADO_INICIAL_LEAD, ERRO_LEAD } from "@/lib/lead-form"
 
-const { sendLeadEmail, redirecionar, deposis } = vi.hoisted(() => ({
-  sendLeadEmail: vi.fn(),
-  redirecionar: vi.fn(),
-  deposis: vi.fn(),
-}))
+const { sendLeadEmail, verificarTurnstile, redirecionar, deposis } = vi.hoisted(
+  () => ({
+    sendLeadEmail: vi.fn(),
+    verificarTurnstile: vi.fn(),
+    redirecionar: vi.fn(),
+    deposis: vi.fn(),
+  }),
+)
 
 vi.mock("@/lib/email", () => ({ sendLeadEmail }))
+vi.mock("@/lib/turnstile", () => ({ verificarTurnstile }))
 
 vi.mock("next/navigation", () => ({
   redirect: (url: string) => {
@@ -38,6 +42,7 @@ const VALIDO: Record<string, string> = {
   carimbo: String(Date.now() - 60_000),
   origem: "",
   envio: "",
+  "cf-turnstile-response": "token-valido",
 }
 
 function formDataDe(campos: Record<string, string>): FormData {
@@ -57,6 +62,8 @@ describe("submitLead", () => {
     redirecionar.mockReset()
     deposis.mockReset()
     sendLeadEmail.mockResolvedValue(undefined)
+    verificarTurnstile.mockReset()
+    verificarTurnstile.mockResolvedValue(true)
     vi.spyOn(console, "info").mockImplementation(() => {})
     vi.spyOn(console, "error").mockImplementation(() => {})
   })
@@ -103,6 +110,16 @@ describe("submitLead", () => {
     )
     expect(sendLeadEmail).toHaveBeenCalledTimes(1)
     expect(redirecionar).toHaveBeenCalledWith("/contato/obrigado?canal=email")
+  })
+
+  it("não envia com desafio ausente ou inválido e preserva os dados", async () => {
+    verificarTurnstile.mockResolvedValue(false)
+    const estado = await enviar({ ...VALIDO, "cf-turnstile-response": "" })
+    expect(verificarTurnstile).toHaveBeenCalledWith("")
+    expect(estado.status).toBe("fallback")
+    expect(estado.valores.contexto).toBe(VALIDO.contexto)
+    expect(sendLeadEmail).not.toHaveBeenCalled()
+    expect(redirecionar).not.toHaveBeenCalled()
   })
 
   it("erros de validação voltam por campo, com valores preservados e sem envio", async () => {

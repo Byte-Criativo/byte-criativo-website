@@ -7,7 +7,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type FocusEvent,
   type FormEvent,
   type MouseEvent,
   type ReactElement,
@@ -107,7 +106,13 @@ function PreSelecao({
  * POST vai à action pelo permalink `/contato` e a resposta volta com
  * mensagens, resumo e valores.
  */
-export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
+export function LeadForm({
+  contato,
+  turnstileSiteKey,
+}: {
+  contato: ContatoPage
+  turnstileSiteKey?: string
+}): ReactElement {
   const formulario = contato.caminhos.formulario
   const [antesDoLink, depoisDoLink] =
     formulario.privacyNotice.split(LINK_PRIVACIDADE)
@@ -187,6 +192,11 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
   useEffect(() => {
     if (estado.status === "inicial") return
     apagarDadosContinuacao()
+    // O token do Turnstile é de uso único. Depois de resposta da action,
+    // inclusive falha de envio, a próxima tentativa precisa de outro token.
+    const turnstile = (window as Window & { turnstile?: { reset: () => void } })
+      .turnstile
+    turnstile?.reset()
     if (estado.status !== "erro") return
     const campos = ORDEM_CAMPOS.filter((campo) => estado.erros[campo])
     if (campos.length === 1 && campos[0]) {
@@ -195,7 +205,7 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
       resumoRef.current?.focus()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [estado.status])
+  }, [estado])
 
   const aoEnviar = (evento: FormEvent<HTMLFormElement>) => {
     // Segundo envio enquanto o primeiro está pendente (Enter num Input não
@@ -244,35 +254,30 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
     })
   }
 
-  // Depois do primeiro envio, cada campo com erro revalida ao sair dele e
-  // perde o erro quando corrigido (especificação, LeadForm › Estados).
-  const aoSairDoCampo = (evento: FocusEvent<HTMLFormElement>) => {
+  // Depois do primeiro envio, revalida o campo ao editá-lo. O blur do campo
+  // anterior ocorre entre pointerdown e click no próximo rádio; atualizar o
+  // React nesse intervalo pode fazer o Firefox perder a seleção.
+  const aoEditarCampo = (evento: FormEvent<HTMLFormElement>) => {
     const campo = (evento.target as HTMLElement).getAttribute("name")
     if (!campo) return
-    // O blur acontece antes do click no próximo controle. Atualizar o DOM
-    // nesse intervalo substitui o rádio que a pessoa acabou de apontar.
-    requestAnimationFrame(() =>
-      setErrosCliente((anteriores) => {
-        if (!anteriores[campo as keyof ErrosLead] || !formRef.current) {
-          return anteriores
-        }
-        const valoresAtuais = extrairValoresLead((nome) => {
-          const valor = new FormData(formRef.current as HTMLFormElement).get(
-            nome,
-          )
-          return typeof valor === "string" ? valor : null
-        })
-        const novos = validarLeadNoCliente(valoresAtuais).erros
-        const mensagem = novos[campo as keyof ErrosLead]
-        const copia = { ...anteriores }
-        if (mensagem) {
-          copia[campo as keyof ErrosLead] = mensagem
-        } else {
-          delete copia[campo as keyof ErrosLead]
-        }
-        return copia
-      }),
-    )
+    setErrosCliente((anteriores) => {
+      if (!anteriores[campo as keyof ErrosLead] || !formRef.current) {
+        return anteriores
+      }
+      const valoresAtuais = extrairValoresLead((nome) => {
+        const valor = new FormData(formRef.current as HTMLFormElement).get(nome)
+        return typeof valor === "string" ? valor : null
+      })
+      const novos = validarLeadNoCliente(valoresAtuais).erros
+      const mensagem = novos[campo as keyof ErrosLead]
+      const copia = { ...anteriores }
+      if (mensagem) {
+        copia[campo as keyof ErrosLead] = mensagem
+      } else {
+        delete copia[campo as keyof ErrosLead]
+      }
+      return copia
+    })
   }
 
   const aoDigitarContexto = (evento: FormEvent<HTMLTextAreaElement>) => {
@@ -314,7 +319,7 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
       action={formAction}
       noValidate
       onSubmit={aoEnviar}
-      onBlur={aoSairDoCampo}
+      onInput={aoEditarCampo}
       className="lead-form flex flex-col gap-(--space-6)"
     >
       <Text medida>{formulario.text}</Text>
@@ -518,6 +523,32 @@ export function LeadForm({ contato }: { contato: ContatoPage }): ReactElement {
       />
       <input type="hidden" name="origem" value={origem} readOnly />
       <input type="hidden" name="envio" ref={envioRef} defaultValue="" />
+
+      {turnstileSiteKey ? (
+        <div className="flex flex-col gap-(--space-2)">
+          <Text papel="caption" tom="muted">
+            Confirme a verificação de segurança antes de enviar.
+          </Text>
+          <div
+            className="cf-turnstile"
+            data-sitekey={turnstileSiteKey}
+            data-action="lead_form"
+            data-theme="auto"
+            data-size="flexible"
+          />
+        </div>
+      ) : (
+        <Text papel="caption" tom="muted">
+          O envio do formulário está temporariamente indisponível. Fale conosco
+          pelo WhatsApp.
+        </Text>
+      )}
+      <noscript>
+        <p>
+          O formulário precisa de JavaScript para a verificação de segurança.
+          Você pode falar conosco pelo WhatsApp nesta página.
+        </p>
+      </noscript>
 
       <Text papel="caption" tom="muted">
         {antesDoLink}

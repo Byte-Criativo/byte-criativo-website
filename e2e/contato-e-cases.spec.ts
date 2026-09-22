@@ -13,7 +13,11 @@ test("o formulário mostra erros de validação e oferece WhatsApp se o e-mail f
   await formulario
     .getByRole("textbox", { name: /Seu nome/ })
     .fill("Pessoa Teste")
+  await expect(formulario.getByText("Faltou o seu nome.")).toBeHidden()
   await formulario.getByRole("radio", { name: "Site ou landing page" }).check()
+  await expect(
+    formulario.getByRole("radio", { name: "Site ou landing page" }),
+  ).toBeChecked()
   await formulario
     .getByRole("textbox", { name: /Conte um pouco do contexto/ })
     .fill("Quero criar um site para apresentar meus serviços.")

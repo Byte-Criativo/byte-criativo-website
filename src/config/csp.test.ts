@@ -29,6 +29,19 @@ describe("Content-Security-Policy (next.config.ts)", () => {
     expect(csp).toContain("frame-ancestors 'none'")
   })
 
+  it("permite somente a origem do Turnstile em script, conexão e frame", async () => {
+    const csp = await getContentSecurityPolicy()
+    expect(csp).toContain(
+      "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+    )
+    expect(csp).toContain(
+      "connect-src 'self' https://challenges.cloudflare.com",
+    )
+    expect(
+      csp.split("; ").find((directive) => directive.startsWith("frame-src ")),
+    ).toBe("frame-src https://challenges.cloudflare.com")
+  })
+
   it("não tem upgrade-insecure-requests (R46: quebra o WebKit em http://localhost/http://127.0.0.1 no e2e do CI)", async () => {
     const csp = await getContentSecurityPolicy()
     expect(csp).not.toContain("upgrade-insecure-requests")
