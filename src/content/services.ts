@@ -13,8 +13,8 @@ export const serviceHubRaw = {
     seoTitle: "Desenvolvimento de sites, sistemas e design | Byte Criativo",
     description:
       "Sites, landing pages, sistemas web, automações, UI/UX, design de produto e copywriting, com design e engenharia decididos juntos desde o diagnóstico.",
-    h1: "Sites, sistemas e design decididos na mesma mesa;",
-    lede: "A Byte Criativo desenha e programa sites, plataformas e sistemas sob medida. Os serviços estão separados abaixo para facilitar a busca. Na prática, um projeto costuma cruzar mais de um, e quem conduz é a mesma pessoa.",
+    h1: "Sites, sistemas e soluções digitais a partir da sua necessidade;",
+    lede: "Você não precisa escolher uma tecnologia ou saber o nome do serviço. Comece pelo que quer apresentar, organizar ou lançar. A solução é definida a partir desse contexto.",
     anchorLinks: [
       { label: "Sites e experiências", href: "#sites-e-experiencias" },
       { label: "Sistemas e produtos", href: "#sistemas-e-produtos" },
@@ -28,7 +28,7 @@ export const serviceHubRaw = {
       targetLabel: "Ir para Sites e experiências",
     },
     {
-      situation: "A operação cabe em planilhas e grupos de WhatsApp.",
+      situation: "A operação precisa de um fluxo mais organizado.",
       targetAnchor: "#sistemas-e-produtos",
       targetLabel: "Ir para Sistemas e produtos",
     },
@@ -39,7 +39,7 @@ export const serviceHubRaw = {
       targetLabel: "Ir para Sites e experiências",
     },
     {
-      situation: "A ideia é boa, mas não está claro o que construir primeiro.",
+      situation: "A ideia ainda precisa ganhar uma primeira versão.",
       targetAnchor: "#design",
       targetLabel: "Ir para Design",
     },
@@ -74,7 +74,7 @@ export const serviceHubRaw = {
     {
       id: "sistemas-e-produtos",
       title: "Sistemas e produtos",
-      text: "Para a operação que não cabe mais em planilha e para produtos com contas, regras e fluxos próprios.",
+      text: "Para organizar informações, etapas e regras próprias de uma operação ou produto.",
       services: [
         {
           slug: "sistemas-web-sob-medida" as const,
@@ -87,7 +87,7 @@ export const serviceHubRaw = {
           slug: "automacao-e-integracoes" as const,
           title: "Automação e integrações",
           description:
-            "As ferramentas que você já usa conversando entre si, sem copiar e colar.",
+            "Conexões entre ferramentas para tratar tarefas repetitivas, conforme as possibilidades de cada sistema.",
           href: "/servicos/automacao-e-integracoes",
         },
       ],
@@ -128,7 +128,7 @@ export const serviceHubRaw = {
   ],
   evolucaoContinua: {
     h2: "Evolução contínua",
-    text: "A entrega fecha uma etapa, não o projeto. Depois do lançamento, o trabalho pode seguir com ajustes, novas páginas, melhorias de desempenho e novas funcionalidades, com a prioridade definida junto com você. Projetos que já estão no ar, feitos por outras pessoas, também podem ser avaliados para melhorias.",
+    text: "A entrega fecha uma etapa. Ajustes, novas páginas, manutenção e funcionalidades futuras podem ser avaliados conforme a necessidade e o que for contratado. Projetos existentes também podem ser avaliados antes de qualquer proposta de intervenção.",
     cta: {
       label: "Ver como um projeto anda depois da entrega",
       href: "/processo",
@@ -136,9 +136,9 @@ export const serviceHubRaw = {
   },
   ctaFinal: {
     h2: "Não sabe por onde começar? Conte o contexto.",
-    text: 'No formulário, marque "Ainda não sei". Definir o escopo é a primeira parte do trabalho.',
+    text: 'No formulário, marque "Ainda não sei". Uma ideia inicial ou um exemplo da rotina já ajudam a começar.',
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Conversar sobre um projeto",
       href: "/contato?tipo=ainda-nao-sei&origem=servicos",
     },
     ctaSecondary: {
@@ -154,27 +154,27 @@ export const serviceHubData: ServiceHub = ServiceHubSchema.parse(serviceHubRaw)
 export const servicePagesRaw = [
   {
     slug: "desenvolvimento-de-sites" as const,
-    title: "Desenvolvimento de sites profissionais",
-    seoTitle: "Criação de sites profissionais sob medida | Byte Criativo",
+    title: "Desenvolvimento de sites para apresentar seu negócio",
+    seoTitle: "Desenvolvimento de sites sob medida | Byte Criativo",
     eyebrow: "Sites de empresa e de marca",
     description:
-      "Sites de empresa e de marca desenhados e programados pela mesma pessoa: estrutura, texto, interface e código pensados juntos, rápidos no celular.",
+      "Criamos sites sob medida com design e desenvolvimento integrados para apresentar seu negócio, explicar sua oferta e facilitar o contato.",
     promise:
-      "Sites de empresa e de marca que explicam o que você faz antes da primeira reunião. Estrutura, texto, interface e código são decididos juntos, por quem desenha e programa.",
+      "Seu site precisa ajudar alguém que ainda não conhece a empresa a entender o que você oferece, reconhecer a qualidade do trabalho e encontrar como conversar.",
     whatsappMessage:
       "Olá! Vi a página de sites da Byte Criativo e quero conversar sobre um site para o meu negócio.",
     quandoFazSentido: [
       "O site não mostra o que a empresa virou, ou ainda apresenta a oferta de alguns anos atrás.",
-      "A empresa vive de indicação e precisa de um site que explique o serviço sem você presente.",
+      "Você precisa explicar uma oferta que exige mais do que uma lista de serviços.",
       "O serviço é complexo e precisa ser entendido em poucos minutos.",
       "A marca tem identidade forte, mas o site parece um tema qualquer.",
     ],
     oQueRecebe: [
       "Estrutura de páginas e caminho de navegação definidos a partir do que você vende e para quem.",
       "Interface com a identidade da marca, desenhada para o celular desde o início.",
-      "Site implementado e publicado, com títulos, descrições, dados estruturados e sitemap.",
+      "Design e desenvolvimento das páginas definidas no escopo, com títulos, descrições e estrutura técnica para indexação.",
       "Quando já existe um site: mapa das páginas atuais e redirecionamentos, para não perder o que já aparece na busca.",
-      "Base técnica pronta para receber novas páginas sem refazer o que existe.",
+      "Preparação para publicação conforme hospedagem e acessos combinados.",
     ],
     ondeFoiAplicado: {
       description:
@@ -187,7 +187,7 @@ export const servicePagesRaw = [
       "Antes da interface, o que o visitante precisa entender e fazer em cada página.",
       "Texto e layout evoluem juntos, para a página não depender de texto provisório.",
       "Desenvolvimento num endereço de teste que você acompanha.",
-      "Publicação com revisão de desempenho, acessibilidade e busca.",
+      "Conferência das páginas e preparação para a publicação combinada.",
     ],
     faqs: [
       {
@@ -204,7 +204,7 @@ export const servicePagesRaw = [
       {
         question: "A Byte Criativo faz só o layout?",
         answer:
-          "Dá para contratar só o design. Mas o ponto forte está em fazer as duas coisas: quem desenha é quem programa, e nada se perde entre o desenho e o código.",
+          "Dá para contratar só o design. Quando design e desenvolvimento entram no mesmo projeto, as decisões de interface e construção são tratadas juntas.",
       },
       {
         question: "Quanto custa um site?",
@@ -479,18 +479,18 @@ export const servicePagesRaw = [
   },
   {
     slug: "ui-ux-design" as const,
-    title: "UI/UX design para sites e sistemas",
+    title: "Design de interfaces para sites e sistemas",
     seoTitle: "UI/UX design para sites e sistemas | Byte Criativo",
     eyebrow: "Interfaces desenhadas por quem programa",
     description:
-      "UI/UX design feito por quem também programa: fluxo, interface e texto decididos junto com o código, para quem usa entender, decidir e agir sem ajuda.",
+      "Projetamos interfaces para sites e sistemas: organização das informações, navegação e telas pensadas para quem precisa usar o seu produto.",
     promise:
-      "Na Byte Criativo, design não é acabamento: é o jeito como um produto mostra o próprio valor. Quem desenha a interface também escreve o código, então cada decisão visual já nasce sabendo como vai funcionar.",
+      "Do primeiro acesso a uma tarefa recorrente, cada tela precisa mostrar o que importa e tornar o próximo passo compreensível. O design conecta essa organização à identidade do seu negócio.",
     whatsappMessage:
       "Olá! Vi a página de UI/UX da Byte Criativo e quero conversar sobre a interface de um produto.",
     quandoFazSentido: [
       "Muita gente chega à página e não entende o que fazer.",
-      "A equipe evita usar um sistema interno, ou usa errado.",
+      "As pessoas precisam de ajuda para encontrar informações ou concluir tarefas.",
       "Uma ideia precisa sair do documento e virar tela navegável.",
     ],
     oQueRecebe: [
@@ -501,7 +501,7 @@ export const servicePagesRaw = [
     ],
     ondeFoiAplicado: {
       description:
-        "Festival Alumiô: filtros de programação com contagem acessível para leitores de tela e favoritos sem cadastro. Underground PB: busca, filtros e mapa de palcos.",
+        "O Festival Alumiô credita à Byte a construção do site, que reúne programação, circuito e memória. Observe a navegação implementada entre essas áreas; os créditos das peças visuais permanecem com seus respectivos autores.",
       caseSlug: "festival-alumio",
       linkText: "Ver estudo de caso do Festival Alumiô",
       linkHref: "/portfolio/festival-alumio",
@@ -510,7 +510,7 @@ export const servicePagesRaw = [
       "Levantar quem usa, o que precisa fazer e onde trava hoje.",
       "Organizar a jornada e as telas prioritárias.",
       "Desenhar e validar com você em ciclos curtos.",
-      "Implementar, ou preparar a implementação, com acessibilidade conferida.",
+      "Implementar, ou preparar a implementação, conforme o escopo contratado.",
     ],
     faqs: [
       {
@@ -521,7 +521,7 @@ export const servicePagesRaw = [
       {
         question: "A Byte Criativo também desenvolve depois do design?",
         answer:
-          "Sim, e esse é o caminho recomendado: a mesma pessoa que desenhou implementa, e a interface chega ao ar como foi aprovada.",
+          "O desenvolvimento pode fazer parte do mesmo projeto. A proposta deixa claras as entregas de design e de implementação.",
       },
       {
         question: "O que é UI e o que é UX?",
@@ -559,13 +559,13 @@ export const servicePagesRaw = [
   },
   {
     slug: "design-de-produto" as const,
-    title: "Design de produto digital: do problema à primeira versão",
-    seoTitle: "Design de produto digital: escopo e MVP | Byte Criativo",
+    title: "Design de produto digital para definir a primeira versão",
+    seoTitle: "Design de produto digital | Byte Criativo",
     eyebrow: "Do problema à primeira versão",
     description:
-      "Design de produto para definir o que construir primeiro: problema, público, prioridades e o escopo da primeira versão (MVP), antes de investir em código.",
+      "Ajudamos a organizar ideias de produtos digitais, definir jornadas e priorizar o que construir na primeira versão, antes de ampliar o escopo.",
     promise:
-      "Antes de construir tudo, a menor versão que prova a ideia. Design de produto organiza problema, público e prioridades num escopo que dá para construir e que aguenta a segunda versão.",
+      "Uma plataforma pode ter muitas possibilidades. Definir quem vai usá-la, qual tarefa precisa atender e o que pode ficar para depois torna a decisão de construir mais concreta.",
     whatsappMessage:
       "Olá! Vi a página de design de produto da Byte Criativo e quero ajuda para definir o que construir primeiro.",
     quandoFazSentido: [
@@ -588,7 +588,7 @@ export const servicePagesRaw = [
     },
     comoConduzimos: [
       "Imersão no contexto e em quem vai usar.",
-      "Hipóteses e objetivos: o que precisa ser verdade para a ideia funcionar.",
+      "Organização de hipóteses, usuários e objetivos do produto.",
       "Definição da primeira versão e do que fica para depois.",
       "Plano de execução em etapas.",
     ],
@@ -606,7 +606,7 @@ export const servicePagesRaw = [
       {
         question: "O que é MVP?",
         answer:
-          "É a sigla em inglês para a primeira versão viável de um produto. É a menor versão que pessoas reais já conseguem usar e que ensina o que construir em seguida.",
+          "É a sigla em inglês para a primeira versão viável de um produto. Ela ajuda a delimitar o que construir primeiro, mas não comprova por si só a aceitação comercial da ideia.",
       },
     ],
     servicosRelacionados: [
@@ -649,7 +649,7 @@ export const servicePagesRaw = [
       "Olá! Vi a página de textos para web da Byte Criativo e quero conversar sobre os textos do meu site.",
     quandoFazSentido: [
       "O site explica pouco e a venda depende demais de reunião.",
-      "A landing page recebe visitas, mas quase ninguém age.",
+      "Uma landing page precisa tornar a oferta e o próximo passo mais claros.",
       "O produto digital deixa quem usa em dúvida sobre o próximo passo.",
     ],
     oQueRecebe: [
@@ -689,7 +689,7 @@ export const servicePagesRaw = [
     ],
     bestFor: [
       "O site explica pouco e a venda depende demais de reunião.",
-      "A landing page recebe visitas, mas quase ninguém age.",
+      "Uma landing page precisa tornar a oferta e o próximo passo mais claros.",
       "O produto digital deixa quem usa em dúvida sobre o próximo passo.",
     ],
     outcomes: [

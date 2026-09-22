@@ -247,7 +247,7 @@ describe("Páginas institucionais (Processo, Sobre, Contato, Obrigado, Privacida
       expect(portfolioPage.intro.length).toBeGreaterThanOrEqual(2)
       const introCompleta = portfolioPage.intro.join(" ")
       expect(introCompleta).not.toContain("banda")
-      expect(introCompleta).toContain("festival no Centro Histórico")
+      expect(introCompleta).toContain("site de festival")
       expect(introCompleta).toContain("plataforma da música independente")
     })
 

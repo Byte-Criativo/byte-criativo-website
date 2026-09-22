@@ -59,7 +59,9 @@ describe("Hub de Trabalhos (/portfolio)", () => {
     render(<PortfolioPage />)
     const h1s = screen.getAllByRole("heading", { level: 1 })
     expect(h1s).toHaveLength(1)
-    expect(h1s[0]).toHaveTextContent("Cada projeto com a própria identidade;")
+    expect(h1s[0]).toHaveTextContent(
+      "Veja como diferentes necessidades ganham forma na web;",
+    )
 
     for (const paragrafo of portfolio.intro) {
       expect(screen.getByText(paragrafo)).toBeInTheDocument()

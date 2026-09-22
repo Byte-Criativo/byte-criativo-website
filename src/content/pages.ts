@@ -28,22 +28,22 @@ export const processoPageRaw = {
     description:
       "Como um projeto anda na Byte Criativo: conversa, diagnóstico e escopo, desenho, construção e lançamento, com o que você recebe e decide em cada etapa.",
   },
-  h1: "Como um projeto anda por aqui;",
-  lede: "Antes de desenhar, vem o entendimento do que precisa acontecer. Antes de programar, escopo, prazo e investimento ficam fechados com você. O que você aprova é o que vai ao ar.",
+  h1: "Da primeira conversa à entrega, você participa das decisões;",
+  lede: "Você começa contando o que deseja realizar. O projeto ganha definição à medida que entendemos a necessidade, combinamos o escopo e construímos as entregas aprovadas.",
   ondeSeCruzam: {
     h2: "Onde design, produto e engenharia se cruzam",
-    text: "Aqui as etapas não passam de mão em mão. Quem faz o diagnóstico desenha as telas e escreve o código, então uma decisão tomada na primeira conversa chega inteira ao que vai ao ar. O desenho já considera como vai ser construído, e o código respeita o que foi desenhado.",
+    text: "Design e desenvolvimento são tratados na mesma condução. A organização das informações, a navegação e o que cada tela precisa permitir são decididos em conjunto, com validações previstas no projeto.",
   },
   etapas: [
     {
       number: 1,
       title: "Conversa inicial",
       whatHappens:
-        "Você conta o contexto e responde perguntas até ficar claro o que está em jogo.",
+        "Você conta o que quer realizar, o que existe hoje e quais restrições já conhece.",
       youReceive:
-        "Uma resposta honesta sobre se faz sentido seguir e qual seria o caminho. Se um template ou uma ferramenta pronta resolver, isso é dito.",
+        "Uma conversa para entender a necessidade e avaliar se existe um próximo passo de trabalho em conjunto.",
       yourParticipation:
-        "Contar o que existe hoje, o que precisa mudar e se há uma data importante.",
+        "Contar o que existe hoje, o que precisa mudar e se há uma data importante. Uma ideia inicial já ajuda.",
     },
     {
       number: 2,
@@ -77,8 +77,10 @@ export const processoPageRaw = {
     {
       number: 5,
       title: "Lançamento e evolução",
-      whatHappens: "Publicação, medição do que importa e ajustes.",
-      youReceive: "Documentação essencial e uma lista priorizada de melhorias.",
+      whatHappens:
+        "Conferência e publicação das entregas previstas. Melhorias posteriores são avaliadas conforme a necessidade.",
+      youReceive:
+        "As orientações, acessos e entregas previstos no escopo contratado.",
       yourParticipation:
         "Aprovar a publicação e apontar o que observar depois.",
       whereAppears:
@@ -112,11 +114,11 @@ export const processoPageRaw = {
   },
   parceiros: {
     h2: "Parceiros e responsabilidade",
-    text: "Uma pessoa conduz design e engenharia do começo ao fim. Quando o projeto pede outra especialidade ou mais mãos num prazo apertado, entram parceiros sob a mesma condução. Você continua falando com a mesma pessoa, e a responsabilidade pelo projeto continua com a Byte Criativo.",
+    text: "Uma pessoa conduz design e desenvolvimento ao longo do projeto. Quando é necessária outra especialidade ou mais mãos, parceiros podem entrar sob a mesma condução. A forma de trabalho e as responsabilidades ficam claras na proposta.",
   },
   depoisDaEntrega: {
     h2: "Depois da entrega",
-    text: "A entrega fecha uma etapa, não o projeto. Depois do lançamento, o trabalho pode seguir: medir, corrigir e evoluir, com a prioridade definida junto com você.",
+    text: "A entrega fecha uma etapa. Manutenção, novas funcionalidades e outras evoluções podem ser avaliadas depois, conforme a necessidade e o que for contratado.",
   },
   duvidas: [
     {
@@ -137,14 +139,14 @@ export const processoPageRaw = {
     {
       question: "O que acontece depois da entrega?",
       answer:
-        "A entrega fecha uma etapa, e o projeto pode continuar com ajustes e novas funcionalidades, sempre com escopo e investimento combinados antes.",
+        "A entrega segue o escopo contratado. Ajustes, manutenção e novas funcionalidades podem ser avaliados depois, com condições definidas antes de iniciar uma nova etapa.",
     },
   ],
   ctaFinal: {
     h2: "Não precisa chegar com tudo definido;",
     text: "Organizar o contexto em escopo é a primeira parte do trabalho.",
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Conversar sobre um projeto",
       href: "/contato?origem=processo",
     },
     ctaSecondary: {
@@ -165,7 +167,7 @@ export const processoPage: ProcessoPage =
 export const sobrePageRaw = {
   seo: {
     title: "Sobre a Byte Criativo",
-    seoTitle: "Sobre: quem desenha é quem programa | Byte Criativo",
+    seoTitle: "Sobre a Byte: design e desenvolvimento | Byte Criativo",
     description:
       "A Byte Criativo é conduzida por quem desenha e programa cada projeto, com parceiros sob demanda. Conheça o modelo de trabalho, os princípios e a empresa.",
   },
@@ -173,18 +175,18 @@ export const sobrePageRaw = {
   lede: "A Byte Criativo é um estúdio de design e engenharia de software. Uma pessoa conduz cada projeto, da primeira conversa ao que vai ao ar, e parceiros entram quando o projeto pede outra especialidade.",
   quemConduz: {
     h2: "Quem conduz",
-    text: "Trabalhar assim é uma escolha. A conversa, o desenho e o código ficam com a mesma pessoa. Assim, nada se perde entre entender o problema e construir a solução. Quando um projeto pede mais (fotografia, ilustração, uma especialidade técnica, mais mãos num prazo apertado), entram parceiros sob a mesma condução.",
+    text: "Trabalhar assim é uma escolha. A conversa, o desenho e o código ficam sob a mesma condução. Quando um projeto pede outra especialidade, parceiros podem entrar conforme a necessidade, com as responsabilidades esclarecidas na proposta.",
   },
   trajetoria: {
     h2: "Por que a Byte trabalha assim",
     manifestoParagraphs: [
       "Muita empresa chega pedindo um site. Quase sempre precisa de mais: ser encontrada, entendida e escolhida, e ter uma operação que continue funcionando no dia seguinte ao lançamento.",
       "Por isso, na Byte Criativo, design e engenharia começam juntos. A forma de uma página decide o que alguém entende e se confia o bastante para seguir. O código decide se essa página abre rápido, aparece na busca e aguenta o uso real.",
-      "Quando cada decisão fica com alguém diferente, sempre há tradução, e alguma coisa se perde nela. Aqui, quem desenha é quem programa.",
+      "Aqui, quem desenha também programa. Isso permite tratar decisões de interface e construção no mesmo projeto.",
       "Antes do código vem o contexto: o que você vende, para quem, como a operação funciona hoje e o que precisa mudar. Disso sai um escopo com etapas, prazo e investimento. Você acompanha as decisões e sabe por que cada uma foi tomada.",
       "Nenhum projeto sai de um modelo pronto. Um festival no Centro Histórico, uma plataforma da cena musical e o site de uma banda pediram linguagens, estruturas e tecnologias diferentes.",
       "Design não é acabamento. É o jeito como um produto mostra o próprio valor para quem chega pela primeira vez.",
-      "A entrega fecha uma etapa, não o projeto. Depois do lançamento, o trabalho segue: medir, corrigir, evoluir.",
+      "A entrega fecha uma etapa. Depois do lançamento, manutenção e novas evoluções são avaliadas conforme a necessidade e o que for contratado.",
       "Cada decisão fechada; o projeto, sempre em aberto.",
     ],
     cta: {
@@ -227,7 +229,7 @@ export const sobrePageRaw = {
   ctaFinal: {
     h2: "Conte o que você quer construir;",
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Conversar sobre um projeto",
       href: "/contato?origem=sobre",
     },
     ctaSecondary: {
@@ -247,16 +249,17 @@ export const sobrePage: SobrePage = SobrePageSchema.parse(sobrePageRaw)
 export const contatoPageRaw = {
   seo: {
     title: "Contato",
-    seoTitle: "Contato: orçamento de site ou sistema | Byte Criativo",
+    seoTitle: "Contato: converse sobre seu projeto | Byte Criativo",
     description:
-      "Conte o que você quer construir: site, plataforma, sistema ou automação. Quem responde é quem conduz o projeto. Use o formulário, o WhatsApp ou o e-mail.",
+      "Conte o que você quer apresentar, organizar ou lançar. Você pode começar por uma ideia, um problema de operação ou um projeto que precisa evoluir.",
   },
-  h1: "Conte o que você quer construir;",
-  apoio: "Quem responde é quem conduz o projeto.",
+  h1: "Conte o que você quer realizar;",
+  apoio:
+    "Você não precisa saber a tecnologia nem chegar com uma especificação pronta. A conversa inicial serve para entender o contexto e avaliar o próximo passo.",
   caminhos: {
     formulario: {
       h2: "Pelo formulário",
-      text: 'Algumas linhas bastam. Os campos com "(obrigatório)" são os únicos necessários.',
+      text: 'Algumas linhas bastam. Os campos com "(obrigatório)" são os únicos necessários. Não envie senhas, documentos ou informações confidenciais.',
       privacyNotice:
         "Seus dados são usados só para responder sobre o seu projeto. Leia a política de privacidade.",
       buttonLabel: "Enviar mensagem",
@@ -297,12 +300,13 @@ export const contatoPageRaw = {
         number: 1,
         title: "Resposta.",
         description:
-          "Quem conduz o projeto lê a sua mensagem e responde pelo canal que você escolheu.",
+          "A mensagem é recebida pelo canal que você escolheu. A resposta considera o contexto que você enviou.",
       },
       {
         number: 2,
         title: "Conversa inicial.",
-        description: "Perguntas para entender o contexto e o que está em jogo.",
+        description:
+          "Perguntas para entender a necessidade, a prioridade e o contexto atual.",
       },
       {
         number: 3,
@@ -333,9 +337,9 @@ export const contatoPageRaw = {
         "Uma pessoa desenha e programa cada projeto, e é ela quem responde esta mensagem. Quando o projeto pede outra especialidade ou mais mãos, entram parceiros sob a mesma condução.",
     },
     {
-      question: "Atende em qualquer cidade?",
+      question: "Como funciona o atendimento à distância?",
       answer:
-        "Sim. O processo funciona à distância: conversas por vídeo, aprovações por link e o projeto num endereço de teste.",
+        "A conversa pode começar por mensagem. Quando necessário, definimos com você os canais de acompanhamento e as validações do projeto. Você não precisa marcar uma reunião antes de explicar a necessidade.",
     },
   ],
 }
@@ -873,16 +877,16 @@ export const portfolioPageRaw = {
     description:
       "Estudos de caso de projetos no ar: o contexto, o que cada um precisava e as decisões de design e de código por trás de cada tela.",
   },
-  h1: "Cada projeto com a própria identidade;",
+  h1: "Veja como diferentes necessidades ganham forma na web;",
   intro: [
-    "Os trabalhos publicados nasceram na cena cultural da Paraíba: um festival no Centro Histórico e uma plataforma da música independente. Cada um tinha muita informação para organizar, gente de verdade usando e uma identidade que não podia se perder na tela.",
-    "Em cada estudo você vê o contexto, o que precisava funcionar e as decisões de design e de código.",
+    "Os trabalhos publicados incluem uma plataforma da música independente e um site de festival. Em cada um, informações, caminhos de navegação e funções foram organizados para necessidades concretas.",
+    "Explore o contexto, as entregas observáveis e os créditos de cada projeto. Uma entrega publicada não é, por si só, prova de resultado comercial.",
   ],
   ctaFinal: {
-    h2: "Seu negócio não tem nada a ver com música?",
-    text: "O desafio costuma ser parecido: muita coisa para mostrar, pouca atenção disponível e uma marca que precisa ser reconhecida.",
+    h2: "Seu projeto também precisa organizar informações ou conectar pessoas?",
+    text: "Conte quem vai usar e o que essa pessoa precisa encontrar ou fazer. Não é preciso chegar com as telas ou funcionalidades definidas.",
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Conversar sobre um projeto",
       href: "/contato?origem=portfolio",
     },
     ctaSecondary: {

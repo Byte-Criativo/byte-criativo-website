@@ -44,7 +44,9 @@ describe("Página Processo (/processo)", () => {
     render(<ProcessoPage />)
     const h1s = screen.getAllByRole("heading", { level: 1 })
     expect(h1s).toHaveLength(1)
-    expect(h1s[0]).toHaveTextContent("Como um projeto anda por aqui;")
+    expect(h1s[0]).toHaveTextContent(
+      "Da primeira conversa à entrega, você participa das decisões;",
+    )
     expect(screen.getByText(processo.lede)).toBeInTheDocument()
   })
 

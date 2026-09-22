@@ -12,7 +12,7 @@ export const siteConfigRaw = {
   name: "Byte Criativo",
   tagline: "Design e engenharia na mesma frase;",
   description:
-    "A Byte Criativo projeta e constrói sites, plataformas e sistemas sob medida. Design e engenharia decididos juntos desde o diagnóstico.",
+    "Sites e sistemas web sob medida, com design e desenvolvimento pensados juntos. Conte o que deseja apresentar, organizar ou lançar com a Byte Criativo.",
   taxId: "52.652.130/0001-02",
   contact: {
     email: CONTACT_EMAIL,
@@ -41,7 +41,7 @@ export const siteConfigRaw = {
       { label: "Contato", href: "/contato" },
     ],
     primaryCta: {
-      label: "Falar sobre um projeto",
+      label: "Conversar sobre um projeto",
       href: "/contato",
     },
   },
