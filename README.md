@@ -35,7 +35,10 @@ O formulário mostra um caminho alternativo de contato enquanto o envio por
 e-mail não estiver configurado. Para testar o envio localmente, copie
 `.env.example` para `.env.local` e preencha `RESEND_API_KEY`,
 `LEAD_EMAIL_FROM` (remetente de domínio verificado no Resend) e
-`LEAD_EMAIL_TO` (caixa monitorada). Nunca registre a chave no repositório.
+`LEAD_EMAIL_TO` (caixa privada monitorada). O destinatário dos leads é
+configurado apenas no ambiente; o e-mail público do site e o `Reply-To` do
+visitante permanecem independentes. Nunca registre a chave ou o endereço
+privado no repositório.
 
 O Next sobe na porta 3000 por padrão; se estiver ocupada, use
 `PORT=<porta> npm run dev`. Para e2e, `PW_CHANNEL=chrome` usa o Google

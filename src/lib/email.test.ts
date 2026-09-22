@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { CONTACT_EMAIL } from "./contact"
 import type { LeadParaEmail } from "./email"
 
 const { enviar, Resend } = vi.hoisted(() => ({
@@ -29,6 +28,7 @@ const LEAD: LeadParaEmail = {
 describe("sendLeadEmail", () => {
   beforeEach(() => {
     vi.stubEnv("RESEND_API_KEY", "re_teste")
+    vi.stubEnv("LEAD_EMAIL_TO", "equipe@exemplo.com")
     enviar.mockReset()
     Resend.mockReset()
     Resend.mockImplementation(function () {
@@ -48,12 +48,20 @@ describe("sendLeadEmail", () => {
     expect(Resend).not.toHaveBeenCalled()
   })
 
+  it("sem LEAD_EMAIL_TO falha de forma tratada, sem construir o cliente", async () => {
+    vi.stubEnv("LEAD_EMAIL_TO", "  ")
+    await expect(sendLeadEmail(LEAD)).rejects.toThrow(
+      "LEAD_EMAIL_TO não configurado",
+    )
+    expect(Resend).not.toHaveBeenCalled()
+  })
+
   it("envia texto puro com os dados do lead, assunto pelo tipo e reply-to do lead", async () => {
     await sendLeadEmail(LEAD)
     expect(enviar).toHaveBeenCalledTimes(1)
     expect(enviar.mock.calls[0]?.[1]).toBeUndefined()
     const carga = enviar.mock.calls[0]?.[0] as Record<string, unknown>
-    expect(carga.to).toBe(CONTACT_EMAIL)
+    expect(carga.to).toBe("equipe@exemplo.com")
     expect(carga.subject).toBe("Novo contato pelo site: Site ou landing page")
     expect(carga.replyTo).toBe("ana@exemplo.com")
     const corpo = carga.text as string
@@ -71,6 +79,14 @@ describe("sendLeadEmail", () => {
     }
     // Texto puro, sem HTML montado a partir dos dados do lead.
     expect(corpo).not.toMatch(/<[a-z]+>/i)
+  })
+
+  it("remove espaços extras do destinatário configurado", async () => {
+    vi.stubEnv("LEAD_EMAIL_TO", " equipe@exemplo.com ")
+    await sendLeadEmail(LEAD)
+    const carga = enviar.mock.calls[0]?.[0] as Record<string, unknown>
+    expect(carga.to).toBe("equipe@exemplo.com")
+    expect(carga.replyTo).toBe("ana@exemplo.com")
   })
 
   it("usa o UUID do envio como chave de idempotência para retries", async () => {

@@ -1,7 +1,6 @@
 import "server-only"
 
 import { Resend } from "resend"
-import { CONTACT_EMAIL } from "./contact"
 import type { LeadDados } from "./lead-form"
 
 /**
@@ -15,7 +14,8 @@ import type { LeadDados } from "./lead-form"
  *   build nem testes.
  * - `LEAD_EMAIL_FROM`: remetente verificado no Resend (padrão abaixo serve
  *   para desenvolvimento com o domínio de testes do provedor).
- * - `LEAD_EMAIL_TO`: caixa que recebe o lead (padrão: e-mail de contato).
+ * - `LEAD_EMAIL_TO`: caixa privada que recebe o lead. Obrigatória para
+ *   envio real; não altera o endereço público de contato.
  */
 
 export const EMAIL_TIMEOUT_MS = 10_000
@@ -78,6 +78,10 @@ export async function sendLeadEmail(lead: LeadParaEmail): Promise<void> {
   if (!apiKey) {
     throw new LeadEmailError("RESEND_API_KEY não configurada")
   }
+  const destinatario = process.env.LEAD_EMAIL_TO?.trim()
+  if (!destinatario) {
+    throw new LeadEmailError("LEAD_EMAIL_TO não configurado")
+  }
 
   // Instância criada por envio, nunca no topo do módulo: importar este
   // arquivo sem a env (build, testes) não pode falhar.
@@ -87,7 +91,7 @@ export async function sendLeadEmail(lead: LeadParaEmail): Promise<void> {
     resend.emails.send(
       {
         from: process.env.LEAD_EMAIL_FROM ?? REMETENTE_PADRAO,
-        to: process.env.LEAD_EMAIL_TO ?? CONTACT_EMAIL,
+        to: destinatario,
         subject: `Novo contato pelo site: ${lead.tipoRotulo}`,
         text: montarCorpo(lead),
         // Reply-to do lead (arquitetura 5.7): só existe quando o lead deixou
