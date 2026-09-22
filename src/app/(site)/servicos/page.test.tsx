@@ -46,7 +46,7 @@ describe("Hub de Serviços (/servicos)", () => {
     render(<ServicosPage />)
     const h1 = screen.getByRole("heading", { level: 1 })
     expect(h1).toHaveTextContent(
-      "Sites, sistemas e design decididos na mesma mesa;",
+      "Sites, sistemas e soluções digitais a partir da sua necessidade;",
     )
 
     const semicolonSpan = h1.querySelector(".semicolon")

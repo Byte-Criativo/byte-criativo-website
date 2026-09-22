@@ -78,7 +78,7 @@ describe("Página Contato (/contato)", () => {
     render(<ContatoPage />)
     const h1s = screen.getAllByRole("heading", { level: 1 })
     expect(h1s).toHaveLength(1)
-    expect(h1s[0]).toHaveTextContent("Conte o que você quer construir;")
+    expect(h1s[0]).toHaveTextContent("Conte o que você quer realizar;")
     expect(screen.getByText(contato.apoio)).toBeInTheDocument()
   })
 
