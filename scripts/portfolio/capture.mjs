@@ -1,6 +1,8 @@
 // scripts/portfolio/capture.mjs
 // Uso: node scripts/portfolio/capture.mjs <slug> <url> [<url>...]
 //
+// CASE_CAPTURE_CONSENT=accept|reject|necessary-only escolhe a ação no banner.
+// Sem escolha explícita, a captura falha se detectar um banner conhecido.
 // Para cada URL x viewport, salva uma captura de viewport e uma de página
 // inteira (sufixo "-full"), rolando a página até o fim antes da captura
 // full-page para disparar imagens com lazy-load.
@@ -28,33 +30,67 @@ const viewports = [
   { name: "390", width: 390, height: 844, dpr: 3, isMobile: true },
 ]
 
-// Seletores comuns de botões de banners de cookie/consentimento. Nenhum
-// banner foi encontrado no site do Alumiô durante o reconhecimento, mas o
-// dismiss fica aqui para não perder a captura caso um apareça (ex.: por
-// geolocalização ou A/B test). isVisible() não espera, então checar todos
-// os seletores é praticamente instantâneo quando não há banner.
-const consentSelectors = [
-  'button:has-text("Aceitar")',
-  'button:has-text("Aceito")',
-  'button:has-text("Concordo")',
-  'button:has-text("Rejeitar")',
-  'button:has-text("Recusar")',
-  'button:has-text("Fechar")',
-  '[aria-label="Fechar"]',
-  "#onetrust-accept-btn-handler",
-]
+// Seletores comuns de banners de consentimento. A escolha precisa ser
+// explícita, pois altera o estado registrado na captura. isVisible() não
+// espera, então checar os seletores é rápido quando não há banner.
+const consentSelectors = {
+  accept: [
+    'button:has-text("Aceitar")',
+    'button:has-text("Aceito")',
+    'button:has-text("Concordo")',
+    "#onetrust-accept-btn-handler",
+  ],
+  reject: ['button:has-text("Rejeitar")', 'button:has-text("Recusar")'],
+  "necessary-only": [
+    'button:has-text("Apenas necessários")',
+    'button:has-text("Apenas necessarios")',
+  ],
+}
 
 async function dismissConsentBanner(page) {
-  for (const selector of consentSelectors) {
-    const button = page.locator(selector).first()
-    if (await button.isVisible().catch(() => false)) {
-      await button.click({ timeout: 1000 }).catch(() => {})
-      console.log(`  banner de consentimento fechado via "${selector}"`)
-      await page.waitForTimeout(300)
-      return true
+  const choice = process.env.CASE_CAPTURE_CONSENT
+  if (choice && !["accept", "reject", "necessary-only"].includes(choice)) {
+    throw new Error(
+      "CASE_CAPTURE_CONSENT deve ser accept, reject ou necessary-only",
+    )
+  }
+  const visible = []
+  for (const [action, selectors] of Object.entries(consentSelectors)) {
+    for (const selector of selectors) {
+      if (
+        await page
+          .locator(selector)
+          .first()
+          .isVisible()
+          .catch(() => false)
+      ) {
+        visible.push({ action, selector })
+      }
     }
   }
-  return false
+  if (visible.length === 0) return "none"
+  if (!choice) {
+    throw new Error(
+      "Banner de consentimento detectado; defina CASE_CAPTURE_CONSENT=accept|reject|necessary-only",
+    )
+  }
+  for (const { action, selector } of visible) {
+    if (action !== choice) continue
+    const button = page.locator(selector).first()
+    await button.click({ timeout: 1000 })
+    console.log(`  banner de consentimento: ${choice} via "${selector}"`)
+    await page.waitForTimeout(300)
+    return choice
+  }
+  throw new Error(`Banner detectado, mas não há controle para ${choice}`)
+}
+
+async function dismissOptionalNotices(page) {
+  // Aviso de contas do Underground PB: não é consentimento e cobre a home.
+  const close = page.locator("[data-announcement-close]").first()
+  if (!(await close.isVisible().catch(() => false))) return []
+  await close.click()
+  return ["accounts-announcement"]
 }
 
 async function scrollToBottomInSteps(page) {
@@ -106,7 +142,8 @@ try {
         await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 })
         await page.evaluate(() => document.fonts.ready)
         await page.waitForTimeout(1500)
-        await dismissConsentBanner(page)
+        const consentAction = await dismissConsentBanner(page)
+        const dismissedNotices = await dismissOptionalNotices(page)
 
         const pagePath = new URL(url).pathname.replace(/\/$/, "") || "/home"
         const base = pagePath.slice(1).replace(/\//g, "_")
@@ -121,6 +158,8 @@ try {
           theme: "light",
           capturedAt: new Date().toISOString(),
           fullPage: false,
+          consentAction,
+          dismissedNotices,
         })
 
         await scrollToBottomInSteps(page)
@@ -143,6 +182,8 @@ try {
           theme: "light",
           capturedAt: new Date().toISOString(),
           fullPage: true,
+          consentAction,
+          dismissedNotices,
         })
       } catch (error) {
         failures.push({

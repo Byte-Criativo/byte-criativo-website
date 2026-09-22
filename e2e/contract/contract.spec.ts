@@ -52,7 +52,7 @@ for (const { from, to } of LEGACY_REDIRECTS) {
     expect([301, 308]).toContain(response.status())
     const location = response.headers()["location"]
     expect(location).toBeTruthy()
-    const resolved = new URL(location, baseURL)
+    const resolved = new URL(location!, baseURL)
     expect(resolved.origin).toBe(new URL(baseURL as string).origin)
     expect(resolved.pathname).toBe(to)
     const destination = await request.get(to, { maxRedirects: 0 })
@@ -75,7 +75,7 @@ test("sitemap lista as rotas preservadas e todas respondem 200", async ({
   const response = await request.get("/sitemap.xml")
   expect(response.status()).toBe(200)
   const xml = await response.text()
-  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1] ?? "")
   for (const route of PRESERVED_ROUTES) {
     expect(locs).toContain(canonicalFor(route))
   }

@@ -1,10 +1,10 @@
-import { questionsAndAnswers } from "@/src/content/faq"
+import { questionsAndAnswers } from "@/content/faq"
 import {
   CONTACT_EMAIL,
   CONTACT_PHONE_E164,
   INSTAGRAM_URL,
   LINKEDIN_URL,
-} from "@/src/lib/contact"
+} from "@/lib/contact"
 
 export const SITE_URL = "https://www.bcriativo.com"
 export const HOME_URL = `${SITE_URL}/`

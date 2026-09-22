@@ -1,44 +1,42 @@
 import { test, expect } from "@playwright/test"
 
-const TRACKING_HOST_SUFFIXES = [
-  "googletagmanager.com",
-  "google-analytics.com",
-  "doubleclick.net",
-  "googleadservices.com",
-]
+// Lista de permissão explícita de hosts de terceiros aceitos ao carregar a
+// home sem consentimento prévio. Vazia por enquanto: o critério é negar
+// tudo que não seja o próprio host, não listar hosts de rastreamento
+// conhecidos (uma lista de bloqueio sempre fica incompleta).
+const ALLOWED_THIRD_PARTY_HOSTS: string[] = []
 
 test.describe("Sem rastreamento sem consentimento", () => {
-  test("nao grava cookies de Google Analytics/Ads ao carregar a home", async ({
+  test("toda requisição ao carregar a home é para o host do baseURL (lista de permissão vazia)", async ({
     page,
-    context,
+    baseURL,
   }) => {
-    await page.goto("/")
-    await page.waitForLoadState("networkidle")
-
-    const cookies = await context.cookies()
-    const trackingCookies = cookies.filter(
-      (cookie) =>
-        cookie.name.startsWith("_ga") || cookie.name.startsWith("_gcl"),
-    )
-
-    expect(trackingCookies).toEqual([])
-  })
-
-  test("nao faz requisicoes para hosts de rastreamento do Google ao carregar a home", async ({
-    page,
-  }) => {
-    const trackingRequests: string[] = []
+    if (!baseURL)
+      throw new Error("baseURL não configurada em playwright.config.ts")
+    const expectedHost = new URL(baseURL).hostname
+    const foreignRequests: string[] = []
 
     page.on("request", (request) => {
       const host = new URL(request.url()).hostname
-      if (TRACKING_HOST_SUFFIXES.some((suffix) => host.endsWith(suffix))) {
-        trackingRequests.push(request.url())
+      if (host !== expectedHost && !ALLOWED_THIRD_PARTY_HOSTS.includes(host)) {
+        foreignRequests.push(request.url())
       }
     })
 
-    await page.goto("/")
-    await page.waitForLoadState("networkidle")
+    await page.goto("/", { waitUntil: "load" })
+    await page.waitForTimeout(500)
 
-    expect(trackingRequests).toEqual([])
+    expect(foreignRequests).toEqual([])
+  })
+
+  test("nao grava nenhum cookie ao carregar a home (inclui _ga/_gcl do Google Analytics/Ads)", async ({
+    page,
+    context,
+  }) => {
+    await page.goto("/", { waitUntil: "load" })
+    await page.waitForTimeout(500)
+
+    const cookies = await context.cookies()
+    expect(cookies).toEqual([])
   })
 })

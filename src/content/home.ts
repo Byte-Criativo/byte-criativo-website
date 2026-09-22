@@ -1,3 +1,298 @@
+import { HomePageSchema, type HomePage } from "./schema"
+
+export const homePageRaw = {
+  hero: {
+    h1: "Quem desenha o seu site também escreve o código;",
+    apoio:
+      "A Byte Criativo projeta e constrói sites, plataformas e sistemas sob medida. Design e engenharia são decididos juntos desde o diagnóstico, e você fala direto com quem faz.",
+    ctaPrimary: {
+      label: "Falar sobre um projeto",
+      href: "/contato",
+    },
+    ctaSecondary: {
+      label: "Ver trabalhos",
+      href: "/portfolio",
+    },
+  },
+  salas: {
+    items: [
+      {
+        slug: "underground-pb",
+        name: "Underground PB",
+        type: "Plataforma cultural",
+        phrase:
+          "A cena independente da Paraíba em um só lugar: bandas, agenda, palcos, lançamentos e memória, aberta à comunidade com curadoria.",
+        capabilities: [
+          "Busca e filtros",
+          "Mapa de palcos",
+          "Contas com moderação",
+          "Navegação em celular",
+        ],
+        image: {
+          src: "/cases/underground-pb/home-1440.avif",
+          alt: "Página inicial do Underground PB, com a agenda da cena independente da Paraíba em destaque",
+        },
+        liveUrl: "https://www.undergroundpb.com.br/",
+        caseStudyUrl: "/portfolio/underground-pb",
+        verso: {
+          needs: {
+            title: "O que o site reúne",
+            text: "Bandas, shows, palcos, lançamentos, notícias e memória numa plataforma com envios sujeitos à curadoria e navegação em celular.",
+          },
+          inProduction: {
+            title: "O que está no ar",
+            items: [
+              "Diretório de bandas com busca e filtros",
+              "Agenda com acervo de shows",
+              "Mapa de palcos com filtros por região e gênero",
+              "Memória da cena por décadas e mural",
+              "Contas de representantes de bandas, com moderação",
+              "Tema claro e escuro; manifest e service worker",
+            ],
+          },
+          tech: "htmx e MapLibre",
+        },
+      },
+      {
+        slug: "festival-alumio",
+        name: "Festival Alumiô",
+        type: "Site de festival",
+        phrase:
+          "A programação na mão, com a cor do Centro Histórico de João Pessoa: apresentações filtráveis, favoritos sem cadastro, circuito e memória.",
+        capabilities: [
+          "Programação filtrável",
+          "Favoritos salvos no aparelho",
+          "Circuito",
+          "Memória visual",
+        ],
+        image: {
+          src: "/cases/festival-alumio/home-1440.avif",
+          alt: "Página inicial do Festival Alumiô 2026, com ilustração colorida do Centro Histórico e as datas do festival",
+        },
+        liveUrl: "https://www.festivalalumio.com.br/",
+        caseStudyUrl: "/portfolio/festival-alumio",
+        verso: {
+          needs: {
+            title: "O que o site apresenta",
+            text: "Três dias de festival gratuito em vários palcos e casas do Centro Histórico, com programação e favoritos no próprio aparelho, sem cadastro.",
+          },
+          inProduction: {
+            title: "O que está no ar",
+            items: [
+              "Programação filtrável por dia, artista e palco, com a contagem de resultados anunciada para leitores de tela",
+              '"Minha programação": favoritos salvos no próprio aparelho, sem cadastro',
+              "Circuito com os pontos do festival",
+              "Memória com galeria ampliável e acessível",
+              "Fonte em cada apresentação e data de atualização da agenda",
+            ],
+          },
+          tech: "Next.js",
+        },
+      },
+    ],
+    footerLink: {
+      label: "Ver todos os trabalhos",
+      href: "/portfolio",
+    },
+    bridgeText: "Por trás de cada um, a mesma forma de pensar.",
+  },
+  formaDePensar: {
+    h2: "Design não é acabamento;",
+    lede: "É o jeito como um produto mostra o próprio valor para quem chega pela primeira vez.",
+    typographicBlock: "pensar; desenhar; construir; evoluir;",
+    accessibleTypographicBlock: "Pensar, desenhar, construir, evoluir.",
+    manifesto:
+      "Muitas vezes o site é a primeira conversa entre alguém e o seu negócio. Por isso, na Byte Criativo, quem desenha é quem programa, e o contexto vem antes do código. O escopo fica claro antes de começar e o trabalho continua depois da entrega. Cada decisão fechada; o projeto, sempre em aberto.",
+    principles: [
+      {
+        title: "Diagnóstico antes do código",
+        text: "Antes de qualquer tela vem o contexto: o que você vende, para quem e como a operação funciona hoje. Disso sai um escopo escrito.",
+        whereAppears:
+          "na etapa de diagnóstico, antes da definição de escopo e das telas.",
+      },
+      {
+        title: "Design e engenharia na mesma mesa",
+        text: "Quem desenha a interface é quem programa. A decisão visual já nasce sabendo como vai funcionar, e nada se perde num repasse. Quando o projeto pede outra especialidade, parceiros entram sob a mesma condução.",
+        whereAppears:
+          "na revisão conjunta de interface e implementação, sem repasse entre equipes.",
+      },
+      {
+        title: "Feito para durar e evoluir",
+        text: "Desempenho, busca, acessibilidade e segurança entram na estrutura desde o início, e não no fim. A entrega fecha uma etapa; o projeto continua.",
+        whereAppears:
+          "nas verificações de desempenho, acessibilidade e segurança de cada entrega.",
+      },
+    ],
+    contrastPhrases: [
+      "Sem repasse entre atendimento, designer e programador.",
+      "Nenhum projeto sai de um modelo pronto.",
+    ],
+    cta: {
+      label: "Ver o processo completo",
+      href: "/processo",
+    },
+    bridgeText: "Do jeito de pensar para o que a Byte faz.",
+  },
+  oQueFazemos: {
+    h2: "O que a Byte Criativo faz, e para quem",
+    situations: [
+      {
+        title: "O site não acompanha o que a empresa virou.",
+        phrase:
+          "Um site que apresenta a empresa de hoje e explica o que ela faz antes da primeira reunião.",
+        links: [
+          {
+            label: "Desenvolvimento de sites",
+            href: "/servicos/desenvolvimento-de-sites",
+          },
+          { label: "Landing pages", href: "/servicos/landing-pages" },
+          {
+            label: "Copywriting para web",
+            href: "/servicos/copywriting-para-web",
+          },
+          {
+            label: "Ver estudo de caso do Festival Alumiô",
+            href: "/portfolio/festival-alumio",
+          },
+        ],
+      },
+      {
+        title: "A operação cabe em cinco planilhas e um grupo de WhatsApp.",
+        phrase:
+          "Uma ferramenta feita para o seu processo, começando pelo trecho da operação que mais trava.",
+        links: [
+          {
+            label: "Sistemas web sob medida",
+            href: "/servicos/sistemas-web-sob-medida",
+          },
+          {
+            label: "Automação e integrações",
+            href: "/servicos/automacao-e-integracoes",
+          },
+          {
+            label: "Ver estudo de caso do Underground PB",
+            href: "/portfolio/underground-pb",
+          },
+        ],
+      },
+      {
+        title:
+          "O evento, a banda ou o projeto cultural precisa de uma casa própria.",
+        phrase:
+          "Programação, material de divulgação e memória num lugar com a cara do projeto.",
+        links: [
+          {
+            label: "Desenvolvimento de sites",
+            href: "/servicos/desenvolvimento-de-sites",
+          },
+          { label: "Ver todos os trabalhos", href: "/portfolio" },
+        ],
+      },
+      {
+        title: "A ideia é boa, mas não está claro o que construir primeiro.",
+        phrase: "Antes de construir tudo, a menor versão que prova a ideia.",
+        links: [
+          { label: "Design de produto", href: "/servicos/design-de-produto" },
+          { label: "UI/UX design", href: "/servicos/ui-ux-design" },
+        ],
+      },
+    ],
+    footerNote:
+      "Não sabe por onde começar? Definir o escopo é a primeira parte do trabalho.",
+    cta: {
+      label: "Ver todos os serviços",
+      href: "/servicos",
+    },
+    bridgeText: "Seja qual for o caminho, você sabe como o projeto anda.",
+  },
+  comoAnda: {
+    h2: "Como um projeto anda por aqui",
+    lede: "Você sabe o que acontece, o que recebe e quando decide.",
+    steps: [
+      {
+        number: 1,
+        title: "Conversa inicial.",
+        description:
+          "Você conta o contexto e responde algumas perguntas sobre o que está em jogo.",
+        youReceive:
+          "uma resposta honesta sobre se faz sentido seguir e qual seria o caminho.",
+      },
+      {
+        number: 2,
+        title: "Diagnóstico e escopo.",
+        description:
+          "Objetivo, público, o que já existe e o que é essencial na primeira entrega.",
+        youReceive:
+          "proposta escrita com escopo, etapas, prazo, investimento, riscos e o que fica de fora.",
+      },
+      {
+        number: 3,
+        title: "Desenho.",
+        description:
+          "Estrutura, texto e interface evoluem juntos, com validações curtas.",
+        youReceive: "as telas principais para aprovar antes do código.",
+      },
+      {
+        number: 4,
+        title: "Construção.",
+        description:
+          "Quem desenhou programa. Você acompanha num endereço de teste desde cedo.",
+        youReceive:
+          "acesso ao endereço de teste para ver o projeto tomar forma.",
+      },
+      {
+        number: 5,
+        title: "Lançamento e evolução.",
+        description: "Publicação, medição do que importa e ajustes.",
+        youReceive:
+          "documentação essencial e uma lista priorizada de melhorias.",
+      },
+    ],
+    note: "Não precisa chegar com tudo definido.",
+    cta: {
+      label: "Ver o processo completo",
+      href: "/processo",
+    },
+    bridgeText: "E quem conduz tudo isso?",
+  },
+  conversa: {
+    h2: "Conte o que você quer construir;",
+    text: "Algumas linhas bastam. A resposta vem de quem conduz o projeto, com perguntas e um caminho possível. Sem compromisso e sem proposta genérica.",
+    whoConducts:
+      "A Byte Criativo é um estúdio de design e engenharia de software conduzido por uma pessoa. Ela desenha e programa cada projeto, da primeira conversa ao que vai ao ar. Quando um projeto pede outra especialidade ou mais mãos, entram parceiros sob a mesma condução.",
+    commitments: [
+      {
+        title: "Quem desenha, programa.",
+        howToCheck:
+          "desde a primeira conversa, você fala com quem vai desenhar e programar o projeto.",
+      },
+      {
+        title: "Escopo escrito antes do código.",
+        howToCheck:
+          "a proposta traz entregáveis, etapas, prazo, investimento e o que fica de fora.",
+      },
+    ],
+    formNotice:
+      "Seus dados são usados só para responder sobre o seu projeto. Leia a política de privacidade.",
+    submitLabel: "Enviar mensagem",
+    whatsappCtaLabel: "Chamar no WhatsApp",
+    microcopy: [
+      "Não precisa ter tudo definido.",
+      "Proposta com escopo, prazo e investimento antes de começar.",
+    ],
+    fullFormLink: {
+      label: "Prefere dar mais detalhes? Use o formulário completo",
+      href: "/contato",
+    },
+  },
+}
+
+export const homePageData: HomePage = HomePageSchema.parse(homePageRaw)
+
+// ----------------------------------------------------------------------------
+// Exports legados preservados para compatibilidade
+// ----------------------------------------------------------------------------
+
 export const sectionIds = {
   cases: "cases",
   services: "services",
@@ -7,49 +302,19 @@ export const sectionIds = {
 } as const
 
 export const navigationItems = [
-  {
-    label: "Início",
-    href: "/",
-  },
-  {
-    label: "Sobre",
-    href: "/sobre",
-  },
-  {
-    label: "Serviços",
-    href: "/servicos",
-  },
-  {
-    label: "Portfólio",
-    href: "/portfolio",
-  },
-  {
-    label: "Contato",
-    href: "/contato",
-  },
+  { label: "Início", href: "/" },
+  { label: "Sobre", href: "/sobre" },
+  { label: "Serviços", href: "/servicos" },
+  { label: "Portfólio", href: "/portfolio" },
+  { label: "Contato", href: "/contato" },
 ] as const
 
 export const footerNavigationItems = [
-  {
-    label: "INÍCIO",
-    href: "/",
-  },
-  {
-    label: "SOBRE",
-    href: "/sobre",
-  },
-  {
-    label: "SERVIÇOS",
-    href: "/servicos",
-  },
-  {
-    label: "PORTFÓLIO",
-    href: "/portfolio",
-  },
-  {
-    label: "CONTATO",
-    href: "/contato",
-  },
+  { label: "INÍCIO", href: "/" },
+  { label: "SOBRE", href: "/sobre" },
+  { label: "SERVIÇOS", href: "/servicos" },
+  { label: "PORTFÓLIO", href: "/portfolio" },
+  { label: "CONTATO", href: "/contato" },
 ] as const
 
 export const heroContent = {
@@ -69,13 +334,13 @@ export const featuredCase = {
     "Página inicial do Underground PB, com destaque para shows e a cena independente da Paraíba",
   tags: ["Plataforma cultural", "Agenda & bandas", "Conteúdo editorial"],
   problem:
-    "A cena alternativa paraibana precisava de um espaço próprio para reunir artistas, eventos, notícias e memória em uma experiência fácil de explorar.",
+    "O site reúne artistas, eventos, notícias e memória da cena alternativa paraibana.",
   solution:
-    "Criamos uma plataforma cultural com catálogo de bandas, agenda de shows, conteúdo editorial, playlist integrada, cadastro de artistas e recursos de participação da comunidade.",
+    "A plataforma apresenta catálogo de bandas, agenda de shows, conteúdo editorial, playlist integrada, cadastro de artistas e recursos de participação da comunidade.",
   result:
     "Bandas, shows, lançamentos, palcos e histórias da cena reunidos em um mesmo espaço, com caminhos para explorar e contribuir com o acervo.",
   description:
-    "Desenvolvido por nós, o Underground PB reúne a cena alternativa e independente da Paraíba em uma plataforma viva: catálogo de bandas, agenda de shows, notícias, memória da cena, playlist integrada, cadastro de artistas e contribuição para manter o projeto ativo. Um produto cultural pensado para descoberta, participação e fortalecimento da comunidade underground paraibana.",
+    "O Underground PB reúne a cena alternativa e independente da Paraíba em uma plataforma cultural: catálogo de bandas, agenda de shows, notícias, memória da cena, playlist integrada, cadastro de artistas e contribuição para manter o conteúdo ativo.",
   href: "https://www.undergroundpb.com.br/",
   linkLabel: "Acessar site",
 } as const

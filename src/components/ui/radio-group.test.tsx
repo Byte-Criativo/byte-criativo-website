@@ -1,0 +1,162 @@
+import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import { describe, expect, it } from "vitest"
+import { Field } from "./field"
+import { RadioGroup } from "./radio-group"
+
+const OPCOES = [
+  { valor: "site", rotulo: "Um site" },
+  { valor: "sistema", rotulo: "Um sistema" },
+  { valor: "nao-sei", rotulo: "Ainda não sei" },
+]
+
+describe("RadioGroup", () => {
+  it("cada opção é um rádio nomeado pelo label que o envolve", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    expect(screen.getByRole("radio", { name: "Um site" })).toBeInTheDocument()
+    expect(screen.getAllByRole("radio")).toHaveLength(3)
+  })
+
+  it("todas as opções compartilham o name, que é o que faz as setas andarem", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio).toHaveAttribute("name", "tipo")
+    }
+  })
+
+  it("marcar uma opção desmarca a anterior", async () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {(aria) => (
+          <RadioGroup
+            name="tipo"
+            opcoes={OPCOES}
+            defaultValue="site"
+            aria={aria}
+          />
+        )}
+      </Field>,
+    )
+    await userEvent.click(screen.getByRole("radio", { name: "Um sistema" }))
+    expect(screen.getByRole("radio", { name: "Um sistema" })).toBeChecked()
+    expect(screen.getByRole("radio", { name: "Um site" })).not.toBeChecked()
+  })
+
+  it("com erro, o grupo é inválido e cada rádio anuncia a mensagem", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+        erro="Escolha uma opção."
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    const grupo = screen.getByRole("radiogroup", {
+      name: "O que você quer construir? (obrigatório)",
+    })
+    expect(grupo).toHaveAttribute("aria-invalid", "true")
+    expect(grupo).toHaveAttribute("aria-describedby", "tipo-erro")
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio).not.toHaveAttribute("aria-invalid")
+      expect(radio).toHaveAttribute("aria-describedby", "tipo-erro")
+    }
+  })
+
+  it("cada opção leva o seu próprio value ao DOM (I4): sem isso o formulário envia 'on' para todas", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    expect(screen.getByRole("radio", { name: "Um site" })).toHaveAttribute(
+      "value",
+      "site",
+    )
+    expect(screen.getByRole("radio", { name: "Um sistema" })).toHaveAttribute(
+      "value",
+      "sistema",
+    )
+    expect(
+      screen.getByRole("radio", { name: "Ainda não sei" }),
+    ).toHaveAttribute("value", "nao-sei")
+  })
+
+  it("obrigatorio do Field marca required em cada rádio (I4)", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio).toBeRequired()
+    }
+  })
+
+  it("campo opcional não marca required em nenhum rádio (I4)", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio={false}
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio).not.toBeRequired()
+    }
+  })
+
+  it("cada opção tem alvo de 44 px de altura", () => {
+    render(
+      <Field
+        id="tipo"
+        label="O que você quer construir?"
+        obrigatorio
+        tipo="opcoes"
+      >
+        {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
+      </Field>,
+    )
+    expect(
+      screen.getByRole("radio", { name: "Um site" }).closest("label"),
+    ).toHaveClass("min-h-(--alvo-toque)")
+  })
+})

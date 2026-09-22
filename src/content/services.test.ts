@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { getServicePage } from "./services"
-import { buildWhatsAppUrl, WHATSAPP_NUMBER } from "@/src/lib/contact"
-import { hasConsecutiveRepeatedWords } from "@/src/test/whatsapp-message"
+import { buildWhatsAppUrl, WHATSAPP_NUMBER } from "@/lib/contact"
+import { hasConsecutiveRepeatedWords } from "@/test/whatsapp-message"
 
 const expectedMessages: Record<string, string> = {
   "desenvolvimento-de-sites":
@@ -51,4 +51,98 @@ describe("servicePages whatsappMessage", () => {
       })
     })
   }
+})
+
+import { servicePages, serviceHubData } from "./services"
+import { ServiceDetailPageSchema, ServiceHubSchema } from "./schema"
+
+describe("servicePages data structure", () => {
+  it("contém exatamente os 7 serviços preservados", () => {
+    expect(servicePages).toHaveLength(7)
+    const slugs = servicePages.map((s) => s.slug)
+    expect(slugs).toEqual([
+      "desenvolvimento-de-sites",
+      "landing-pages",
+      "sistemas-web-sob-medida",
+      "automacao-e-integracoes",
+      "ui-ux-design",
+      "design-de-produto",
+      "copywriting-para-web",
+    ])
+  })
+
+  for (const service of servicePages) {
+    describe(`validando serviço: ${service.slug}`, () => {
+      it("passa na validação do ServiceDetailPageSchema", () => {
+        expect(ServiceDetailPageSchema.safeParse(service).success).toBe(true)
+      })
+
+      it("possui todos os blocos de conteúdo da copy v1", () => {
+        expect(service.title.length).toBeGreaterThanOrEqual(5)
+        expect(service.seoTitle.length).toBeGreaterThanOrEqual(5)
+        expect(service.description.length).toBeGreaterThanOrEqual(20)
+        expect(service.eyebrow.length).toBeGreaterThanOrEqual(3)
+        expect(service.promise.length).toBeGreaterThanOrEqual(10)
+        expect(service.quandoFazSentido.length).toBeGreaterThanOrEqual(2)
+        expect(service.oQueRecebe.length).toBeGreaterThanOrEqual(2)
+        expect(
+          service.ondeFoiAplicado.description.length,
+        ).toBeGreaterThanOrEqual(10)
+        expect(service.comoConduzimos.length).toBeGreaterThanOrEqual(2)
+        expect(service.faqs.length).toBeGreaterThanOrEqual(2)
+        expect(service.servicosRelacionados.length).toBeGreaterThanOrEqual(1)
+      })
+
+      it("tem serviços relacionados que apontam apenas para outros serviços válidos", () => {
+        for (const related of service.servicosRelacionados) {
+          expect(servicePages.some((s) => s.slug === related)).toBe(true)
+          expect(related).not.toBe(service.slug)
+        }
+      })
+    })
+  }
+})
+
+describe("serviceHubData structure", () => {
+  it("passa na validação do ServiceHubSchema", () => {
+    expect(ServiceHubSchema.safeParse(serviceHubData).success).toBe(true)
+  })
+
+  it("possui exatamente 4 situações mapeadas para as capacidades", () => {
+    expect(serviceHubData.situacoes).toHaveLength(4)
+    for (const situacao of serviceHubData.situacoes) {
+      expect(situacao.situation.length).toBeGreaterThanOrEqual(10)
+      expect(situacao.targetAnchor.startsWith("#")).toBe(true)
+      expect(situacao.targetLabel.length).toBeGreaterThanOrEqual(5)
+    }
+  })
+
+  it("possui exatamente 3 capacidades cobrindo os 7 serviços", () => {
+    expect(serviceHubData.capacidades).toHaveLength(3)
+    const capacityIds = serviceHubData.capacidades.map((c) => c.id)
+    expect(capacityIds).toEqual([
+      "sites-e-experiencias",
+      "sistemas-e-produtos",
+      "design",
+    ])
+
+    const allServicesInHub = serviceHubData.capacidades.flatMap((c) =>
+      c.services.map((s) => s.slug),
+    )
+    expect(allServicesInHub).toHaveLength(7)
+    for (const service of servicePages) {
+      expect(allServicesInHub).toContain(service.slug)
+    }
+  })
+
+  it("possui seção de evolução contínua e CTA final válidos", () => {
+    expect(serviceHubData.evolucaoContinua.h2.length).toBeGreaterThanOrEqual(3)
+    expect(serviceHubData.evolucaoContinua.text.length).toBeGreaterThanOrEqual(
+      20,
+    )
+    expect(serviceHubData.ctaFinal.ctaPrimary.href).toContain("/contato")
+    expect(serviceHubData.ctaFinal.ctaSecondary.whatsappMessage).toContain(
+      "Byte Criativo",
+    )
+  })
 })

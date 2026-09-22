@@ -1,0 +1,767 @@
+@import "tailwindcss";
+
+@theme {
+  --color-*: initial;
+  --breakpoint-sm: 30rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 90rem;
+}
+
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #ededea;
+  --ink: #000000;
+  --ink-muted: #595959;
+  --border-decorative: #d6d6d2;
+  --border-control: #8a8a8a;
+  --mark-rest: #8a8a8a;
+  --accent: #f65606;
+  --accent-text: #b83f00;
+  --action-bg: #000000;
+  --action-ink: #ffffff;
+  --action-bg-hover: #1f1f1f;
+  --success-text: #1b7a43;
+  --danger-text: #b3261e;
+  --warning-text: #8a5a00;
+  --info-text: #0b5cad;
+  --focus-ring: #000000;
+  --focus-halo: #ffffff;
+
+  --dur-instant: 0ms;
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-slow: 400ms;
+  /* --ease-museum vive só aqui (não em @theme): não é usada como utilitário
+     Tailwind hoje, só via var(--ease-museum) em CSS custom. */
+  --ease-museum: cubic-bezier(0.2, 0.7, 0.1, 1);
+  /* --ease-in-out sobrescreve de propósito a curva padrão do tema do
+     Tailwind (--ease-in-out embutida) pela curva do token de motion, para
+     que o utilitário `ease-in-out` do Tailwind use a curva da marca. */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+[data-surface="verso"] {
+  --bg: #141414;
+  --surface: #141414;
+  --surface-muted: #1f1f1f;
+  --ink: #f2f0eb;
+  --ink-muted: #a6a6a6;
+  --border-decorative: #40403f;
+  --border-control: #a6a6a6;
+  --mark-rest: #a6a6a6;
+  --accent: #f65606;
+  --accent-text: #ff7a3d;
+  --action-bg: #f2f0eb;
+  --action-ink: #000000;
+  --action-bg-hover: #ffffff;
+  --success-text: #28b764;
+  --danger-text: #e9837d;
+  --warning-text: #dc9000;
+  --info-text: #53a4f4;
+  --focus-ring: #ffffff;
+  --focus-halo: #000000;
+}
+
+/* RC6 — o que uma sala ([data-case]) NÃO reescreve, de propósito:
+   --surface, --surface-muted, --border-decorative, --border-control,
+   --mark-rest, --accent, --accent-text e as quatro vars de mensagem
+   (--success-text, --danger-text, --warning-text, --info-text).
+   Consequência: qualquer componente que dependa dessas vars (Field, Notice,
+   Tag, IndiceSemicolon, o controle do Frente/Verso, o `;` que usa --accent)
+   nunca deve ficar dentro de um article[data-case] — ele herdaria o valor do
+   tema base (light/verso) escolhido em :root/[data-surface="verso"], não o
+   da sala. Dentro da sala só valem --bg, --ink, --ink-muted, as vars de ação
+   (--action-bg, --action-bg-hover, --action-ink), --room-easel e, para o
+   anel de foco, --focus-ring/--focus-halo (redefinidos abaixo com os
+   valores do tema base da sala, já que o foco precisa ser visível sobre o
+   fundo da sala, não sobre o fundo do tema herdado). */
+
+[data-case="underground-pb"] {
+  --bg: #f4efe7;
+  --ink: #111111;
+  --ink-muted: #59544d;
+  --action-bg: #111111;
+  --action-bg-hover: #111111;
+  --action-ink: #f4efe7;
+  --room-easel: #111111;
+  --focus-ring: #000000;
+  --focus-halo: #ffffff;
+}
+
+[data-case="underground-pb"] [data-bloco="alt"] {
+  --bg: #eee7dc;
+}
+
+[data-case="festival-alumio"] {
+  --bg: #ff7614;
+  --ink: #19151c;
+  --ink-muted: #3b352f;
+  --action-bg: #19151c;
+  --action-bg-hover: #19151c;
+  --action-ink: #fff2d8;
+  --room-easel: #19151c;
+  --focus-ring: #000000;
+  --focus-halo: #ffffff;
+}
+
+[data-case="festival-alumio"] [data-bloco="alt"] {
+  --bg: #fff2d8;
+}
+
+[data-case="goromax"] {
+  --bg: #090806;
+  --ink: #eee3cb;
+  --ink-muted: #c2b49b;
+  --action-bg: #eee3cb;
+  --action-bg-hover: #eee3cb;
+  --action-ink: #0d0b09;
+  --room-easel: #eee3cb;
+  --focus-ring: #ffffff;
+  --focus-halo: #000000;
+}
+
+[data-case="goromax"] [data-bloco="alt"] {
+  --bg: #15110d;
+}
+
+/* ---------------------------------------------------------------------
+   Escala não-cor derivada de src/styles/tokens.json (Fase 7, L1.1).
+   src/styles/tokens-escala.test.ts espelha cada valor: mudar aqui sem
+   mudar o JSON (ou o contrário) derruba a suíte.
+   --------------------------------------------------------------------- */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 112px;
+  --space-10: 160px;
+
+  --radius-none: 0;
+  --radius-tag: 2px;
+  --radius-media: 8px;
+  --radius-phone: 36px;
+
+  /* border.* dos tokens são espessuras; o sufixo -w evita colisão com as
+     cores --border-decorative e --border-control já definidas acima. */
+  --border-w-decorative: 1px;
+  --border-w-control: 1.5px;
+  --border-w-focus: 2px;
+  --border-w-easel: 3px;
+
+  --focus-width: 2px;
+  --focus-offset: 3px;
+  --focus-halo-width: 3px;
+
+  --shadow-overlay: 0 24px 64px rgba(0, 0, 0, 0.18);
+
+  --z-base: 0;
+  --z-index: 30;
+  --z-header: 40;
+  --z-overlay: 70;
+  --z-status: 80;
+  --z-skip: 90;
+
+  --grid-container-max: 1312px;
+  --grid-margin: 20px;
+  --grid-gutter: 12px;
+  --medida-max: 68ch;
+
+  /* RC3: alvos que não têm token no JSON (24 px é o mínimo do 2.5.8 e
+     44 px é a meta de toque; 48 px vem de --space-7). */
+  --alvo-min: 24px;
+  --alvo-toque: 44px;
+
+  /* TextLink: deslocamento do sublinhado, valor fixo da estratégia sem
+     token no JSON (especificação, "Valores sem token"). */
+  --desloc-sublinhado: 5px;
+
+  /* typography.families.mono. Nenhuma webfont é carregada na Fase 7: o
+     `code` só aparece no verso dos cases e a licença/preload da IBM Plex
+     Mono é decisão da Fase 9 (orçamento de fontes, plano de qualidade
+     2.2). Até lá vale a fila de fallback do sistema. */
+  --ff-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --grid-margin: 32px;
+    --grid-gutter: 16px;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --grid-margin: 64px;
+    --grid-gutter: 24px;
+  }
+}
+
+/* RC2: hover só com ponteiro fino. Toda regra de hover dos componentes usa
+   a variante `ponteiro:`, nunca o `hover:` padrão do Tailwind (que não
+   exige pointer: fine). */
+@custom-variant ponteiro (@media (hover: hover) and (pointer: fine));
+
+/* RC9: estado de ilha só sob [data-js]; o estado sem JS é o padrão.
+   `invoker` exige as DUAS marcas: o cão de guarda de 4 s (src/lib/marcador-js.ts)
+   remove só `data-js` e nunca `data-invoker`, então um seletor que olhasse só
+   para `data-invoker` deixaria, numa hidratação que falhou, o botão do menu na
+   tela e o link "Menu" do rodapé escondido — o contrário do estado de volta da
+   RC9. */
+@custom-variant js (&:where(:root[data-js] *));
+@custom-variant sem-js (&:where(:root:not([data-js]) *));
+@custom-variant invoker (&:where(:root[data-js][data-invoker] *));
+@custom-variant hidratado (&:where(:root[data-hidratado] *));
+
+/* Papéis tipográficos de tokens.json como utilitários `text-<papel>`. */
+@theme {
+  --text-display: clamp(2.5rem, 1.2rem + 3.6vw, 4.25rem);
+  --text-display--line-height: 0.98;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.03em;
+
+  --text-h1: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--font-weight: 700;
+  --text-h1--letter-spacing: -0.025em;
+
+  --text-h2: clamp(2rem, 1.4rem + 2.2vw, 3.25rem);
+  --text-h2--line-height: 1.05;
+  --text-h2--font-weight: 700;
+  --text-h2--letter-spacing: -0.02em;
+
+  --text-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  --text-h3--line-height: 1.2;
+  --text-h3--font-weight: 600;
+  --text-h3--letter-spacing: -0.01em;
+
+  --text-body: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-body--line-height: 1.6;
+  --text-body--font-weight: 400;
+  --text-body--letter-spacing: 0;
+
+  --text-lede: clamp(1.125rem, 1rem + 0.4vw, 1.25rem);
+  --text-lede--line-height: 1.5;
+  --text-lede--font-weight: 400;
+  --text-lede--letter-spacing: 0;
+
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.45;
+  --text-caption--font-weight: 400;
+  --text-caption--letter-spacing: 0;
+
+  --text-label: 1rem;
+  --text-label--line-height: 1.2;
+  --text-label--font-weight: 600;
+  --text-label--letter-spacing: 0;
+
+  --text-manifesto: clamp(3.25rem, 0.8rem + 6.6vw, 7rem);
+  --text-manifesto--line-height: 0.9;
+  --text-manifesto--font-weight: 900;
+  --text-manifesto--letter-spacing: -0.04em;
+
+  --text-code: 0.875rem;
+  --text-code--line-height: 1.7;
+  --text-code--font-weight: 500;
+  --text-code--letter-spacing: 0;
+}
+
+/* RC7: o `;` é pontuação. Classe grande (>= 24 px) em --accent, pequena em
+   --accent-text; dentro de uma sala os dois passam a --ink, porque --accent
+   não tem par calculado sobre a superfície do case (RC6). */
+@layer components {
+  .semicolon {
+    color: var(--accent);
+  }
+
+  .semicolon-pequeno {
+    color: var(--accent-text);
+  }
+
+  [data-case] .semicolon,
+  [data-case] .semicolon-pequeno {
+    color: var(--ink);
+  }
+
+  /* Fase 7, L2 (gate B, achado M2): um <fieldset> com display:flex herda,
+     por padrão do agente de usuário, min-width: min-content (o preflight do
+     Tailwind não reseta essa propriedade), o que trava o refluxo em 320 px
+     (checklist 3.1, item 15). O valor 0 aqui não é um valor de design com
+     escala própria — é a mesma correção estrutural que o Tailwind já embute
+     de graça em todo item flex/grid comum — por isso vive como classe de
+     componente aqui, e não como utilitário `min-w-0` dentro de
+     src/components/ (a guarda de tokens não sabe distinguir esse zero
+     estrutural de um valor de espaçamento solto). */
+  .campo-grupo-refluxo {
+    min-width: 0;
+  }
+
+  /* LeadForm (Fase 10): o campo de contato segue o canal marcado, só com
+     CSS (`:has()` sobre o Radio), sem JS. Navegador sem suporte a `:has()`
+     ignora a regra inteira e os dois campos ficam visíveis — o fallback
+     previsto na especificação (o servidor exige só o campo do canal).
+     Controle com display:none sai da validação de restrição do navegador
+     ("barred from constraint validation"), então o `required` do campo
+     oculto não barra o envio sem JS. */
+  .lead-form:has([name="canal"][value="whatsapp"]:checked) [data-campo="email"],
+  .lead-form:has([name="canal"][value="email"]:checked)
+    [data-campo="whatsapp"] {
+    display: none;
+  }
+}
+
+@theme inline {
+  --font-mono: var(--ff-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-border-decorative: var(--border-decorative);
+  --color-border-control: var(--border-control);
+  --color-mark-rest: var(--mark-rest);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-action-bg: var(--action-bg);
+  --color-action-ink: var(--action-ink);
+  --color-action-bg-hover: var(--action-bg-hover);
+  --color-success-text: var(--success-text);
+  --color-danger-text: var(--danger-text);
+  --color-warning-text: var(--warning-text);
+  --color-info-text: var(--info-text);
+  --color-focus-ring: var(--focus-ring);
+  --color-focus-halo: var(--focus-halo);
+
+  --color-action: var(--action-bg);
+  --color-on-action: var(--action-ink);
+
+  --font-sans: var(--ff-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  /* RC1, M2: os três números do foco duplo vêm de --focus-width,
+     --focus-offset e --focus-halo-width (L1.1, tokens.json focus.*), não de
+     valores soltos — a mesma largura/deslocamento/halo definidos uma única
+     vez e conferidos contra o JSON em src/styles/tokens-escala.test.ts. */
+  :focus-visible {
+    outline: var(--focus-width) solid var(--focus-ring);
+    outline-offset: var(--focus-offset);
+    box-shadow: 0 0 0 var(--focus-halo-width) var(--focus-halo);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 0ms;
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* M7 (gate B): "troca instantânea, sem deslocamento" (catálogo de
+     motion) não é só uma transição rápida — a face ativa e a inativa
+     precisam ficar na MESMA posição, sem nenhum salto de --space-3. Esta
+     regra não está em @layer: estilo fora de camada tem prioridade sobre
+     qualquer @layer normal (CSS Cascade Layers), então zera o
+     deslocamento das duas faces do FrenteVerso independente da
+     especificidade de [data-face]/[data-face][data-ativo="false"] acima. */
+  :root[data-js] [data-face] {
+    transform: translateY(0);
+  }
+}
+
+/* Sala: véu da parede no nível externo (fora de data-case, por isso --bg é
+   a cor da parede) entre a superfície e a obra. Só opacity e transform
+   animam (plano de qualidade 2.3, item 8): nenhuma cor é interpolada. */
+@layer components {
+  .sala::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity var(--dur-slow) var(--ease-museum);
+  }
+
+  .sala[data-estado="parede"]::before {
+    opacity: 1;
+  }
+
+  /* position: relative sem z-index: posiciona o cavalete sem criar
+     contexto de empilhamento. */
+  .sala-superficie {
+    position: relative;
+  }
+
+  .sala-obra {
+    position: relative;
+    z-index: 2;
+    transform: translateY(0);
+    transition: transform var(--dur-slow) var(--ease-museum);
+  }
+
+  .sala[data-estado="parede"] .sala-obra {
+    transform: translateY(var(--space-3));
+  }
+
+  /* Cavalete: duas linhas desenhadas com border num elemento vazio, para
+     continuarem visíveis em cores forçadas. */
+  .sala-cavalete {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 62%;
+    height: var(--space-7);
+    transform: translateX(-50%);
+    border-top: var(--border-w-easel) solid var(--room-easel);
+  }
+
+  .sala-cavalete::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: var(--border-w-easel) solid var(--room-easel);
+  }
+
+  @media (min-width: 64rem) {
+    .sala-cavalete {
+      height: var(--space-8);
+    }
+  }
+}
+
+/* FrenteVerso: com JS as duas faces ocupam a mesma célula e a inativa sai
+   da árvore de acessibilidade e da ordem de Tab. O atraso de `visibility`
+   deixa a opacidade terminar antes de sumir. Catálogo de motion: crossfade
+   em --ease-in-out e deslocamento de --space-3 em --ease-museum (mesma
+   curva do assentamento da Sala). Sem JS nada disso vale e as faces ficam
+   empilhadas (RC9); com movimento reduzido, o deslocamento é zerado no
+   bloco @media (prefers-reduced-motion: reduce) acima (troca instantânea,
+   sem deslocamento). */
+@layer components {
+  :root[data-js] [data-face] {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+      opacity var(--dur-base) var(--ease-in-out),
+      transform var(--dur-base) var(--ease-museum);
+  }
+
+  :root[data-js] [data-face][data-ativo="false"] {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(var(--space-3));
+    transition:
+      opacity var(--dur-base) var(--ease-in-out),
+      transform var(--dur-base) var(--ease-museum),
+      visibility 0s linear var(--dur-base);
+  }
+}
+
+/* RC10 (gate B, I2): em forced-colors, bg-ink/text-bg do botão pressionado
+   não é desenhado, e os dois botões do controle ficam visualmente iguais
+   mesmo com aria-pressed diferente. Highlight/HighlightText são as cores
+   de sistema do próprio usuário para "selecionado" — continuam distintas
+   em qualquer paleta de alto contraste. As bordas de border.control já são
+   desenhadas pelo agente de usuário nesse modo (RC1). */
+@media (forced-colors: active) {
+  [data-controle-frente-verso] button[aria-pressed="true"] {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}
+
+/* SiteHeader e RC4 (foco não obscurecido). O único elemento fixo sobre o
+   conteúdo é o header; a raiz reserva a altura dele mais --space-4. Em
+   janelas de até 30 rem (zoom de 400%, celular em paisagem, e também
+   notebooks 1366 × 768 com escala de 125–150%) o header deixa de ser fixo
+   e a reserva cai. O 30rem fica literal porque `@media` não aceita var(). */
+:root {
+  scroll-padding-top: calc(
+    var(--alvo-toque) + var(--space-3) * 2 + var(--space-4)
+  );
+}
+
+/* `position: sticky` e `top: 0` do header são estruturais — a mesma posição,
+   não um valor de espaçamento com escala própria. Ficam aqui, como classe de
+   componente (mesma decisão de .campo-grupo-refluxo), porque a guarda de
+   tokens não distingue esse zero de um `top` solto em src/components/. */
+@layer components {
+  [data-site-header] {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    scroll-padding-top: calc(
+      var(--space-7) + var(--space-5) * 2 + var(--space-4)
+    );
+  }
+}
+
+@media (max-height: 30rem) {
+  :root {
+    scroll-padding-top: var(--space-4);
+  }
+
+  [data-site-header] {
+    position: static;
+  }
+}
+
+/* Barra de progresso de leitura: sempre renderizada, invisível por padrão.
+   Só aparece com suporte a animation-timeline e só no template de estudo de
+   caso. Fica dentro da caixa do header (não soma altura) e sai com
+   movimento reduzido. */
+.progresso-leitura {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  :root:has(article[data-case]) .progresso-leitura {
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--border-w-focus);
+    background: var(--ink);
+    transform-origin: left;
+    animation: progresso-leitura linear;
+    animation-timeline: scroll();
+  }
+}
+
+@keyframes progresso-leitura {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Pendência 9 do G3: a barra sai com movimento reduzido. Os dois seletores
+   são obrigatórios — só `.progresso-leitura` perderia em especificidade
+   para `:root:has(article[data-case]) .progresso-leitura` do @supports
+   acima, e a barra continuaria animando. */
+@media (prefers-reduced-motion: reduce) {
+  .progresso-leitura,
+  :root:has(article[data-case]) .progresso-leitura {
+    display: none;
+  }
+}
+
+/* Janela baixa: o header deixa de ser fixo e passa a `position: static`
+   (RC4), então some o ancestral posicionado que ancorava a barra. Uma barra
+   `absolute` sem ancestral posicionado cai no bloco contendo inicial — e foi
+   isso que o gate B mediu em Chrome real: em 740 × 360 ela ia para o fim da
+   primeira tela, fora do header. De volta ao fluxo ela continua dentro da
+   caixa, que é o que a especificação pede. Vem depois do @supports porque a
+   especificidade é a mesma e quem decide é a ordem. */
+@media (max-height: 30rem) {
+  :root:has(article[data-case]) .progresso-leitura {
+    position: static;
+  }
+}
+
+/* Diálogo modal (MobileNav e galeria do case): trava a rolagem da página
+   sem mover o layout. O `scrollbar-gutter: stable` é o que impede o salto
+   horizontal de todo o conteúdo no instante em que a barra de rolagem some
+   junto com o `overflow: hidden`. */
+html:has(dialog[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* O fundo do diálogo é OPACO na cor da parede/sala: nada de véu
+   semitransparente sobre o conteúdo. `Canvas` (cor de sistema) é a
+   alternativa obrigatória — `::backdrop` só herda custom properties a partir
+   do Safari 17.4, e sem ela o fundo ficaria transparente lá. A camada vem de
+   zIndex.overlay, como no painel. */
+dialog::backdrop {
+  z-index: var(--z-overlay);
+  background: var(--bg, Canvas);
+}
+
+/* GaleriaDialog: o gatilho de ampliação cobre a figura inteira sem mudar a
+   caixa dela nem remontar a imagem. `position: absolute` e `inset: 0` são
+   estruturais (a mesma posição, não um valor de espaçamento com escala
+   própria) e ficam aqui como classe de componente, pela mesma razão de
+   .campo-grupo-refluxo e de [data-site-header]. */
+@layer components {
+  .galeria-gatilho {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+/* IndiceSemicolon: invólucro absoluto na margem (sem ocupar fluxo), lista
+   sticky abaixo do header. Só os links recebem ponteiro. O rótulo é
+   recorte em repouso e vira visível no hover e no foco — mas só com JS,
+   porque a ilha SalaObserver é quem esconde de novo com Esc (1.4.13). */
+@layer components {
+  .indice-inv {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--grid-margin);
+    pointer-events: none;
+    z-index: var(--z-index);
+  }
+
+  .indice-lista {
+    position: sticky;
+    top: calc(var(--space-7) + var(--space-5) * 2 + var(--space-9));
+  }
+
+  .indice-link {
+    pointer-events: auto;
+  }
+
+  /* 1.5rem = 24 px: é o piso da RC7 para o `;` em --accent, por isso o
+     estado atual pode usar --accent e não --accent-text. O valor não vem
+     do JSON (não há token de tamanho fixo de 24 px para tipografia). */
+  .indice-glifo {
+    color: var(--mark-rest);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    transition:
+      color var(--dur-fast) var(--ease-museum),
+      transform var(--dur-fast) var(--ease-museum);
+  }
+
+  /* Atual: cor E forma mudam juntas, nunca só cor (1.4.1). */
+  .indice-link[aria-current="true"] .indice-glifo {
+    color: var(--accent);
+    transform: scale(1.35);
+  }
+
+  .indice-rotulo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* O foco sempre revela o rótulo. As mesmas declarações valem no hover, mas
+     só com ponteiro fino (RC2): num aparelho de toque a partir de 64 rem o
+     rótulo abriria no toque e ficaria grudado, sem jeito de fechar. Por isso
+     as duas regras são separadas — a condição de mídia não cabe numa lista
+     de seletores. */
+  :root[data-js] .indice-link:focus-visible .indice-rotulo {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    margin-left: var(--space-2);
+    border: var(--border-w-decorative) solid var(--border-decorative);
+    padding: var(--space-1) var(--space-2);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: var(--text-caption);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :root[data-js] .indice-link:hover .indice-rotulo {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+      margin-left: var(--space-2);
+      border: var(--border-w-decorative) solid var(--border-decorative);
+      padding: var(--space-1) var(--space-2);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: var(--text-caption);
+    }
+  }
+
+  /* Esc esconde o rótulo sem mover o foco (1.4.13). */
+  :root[data-js] .indice-link[data-rotulo="oculto"] .indice-rotulo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  @media (forced-colors: active) {
+    .indice-link[aria-current="true"] .indice-glifo {
+      color: Highlight;
+    }
+  }
+
+  /* Janela baixa: a lista rola com a página em vez de grudar. */
+  @media (max-height: 30rem) {
+    .indice-lista {
+      position: static;
+    }
+  }
+}
+
+/* SiteFooter: a tagline usa o papel h3, que só passa de 24 px a partir de
+   breakpoints.xl (--text-h3 chega a 25,3 px em 80 rem). Aí, e só aí, a RC7
+   autoriza o laranja cheio no `;`; abaixo disso ele fica em --accent-text,
+   que é o par calculado para texto pequeno. */
+@layer components {
+  @media (min-width: 80rem) {
+    .rodape-tagline .semicolon-pequeno {
+      color: var(--accent);
+    }
+  }
+}
+
+/* FaqItem: troca do sinal + / − e abertura com opacidade só onde
+   ::details-content existe. A altura NUNCA anima — animar altura mede
+   layout a cada quadro e faz o texto saltar (plano de qualidade 2.3,
+   item 8: só opacity, transform e clip-path). */
+@layer components {
+  .faq-item .faq-menos,
+  .faq-item[open] .faq-mais {
+    display: none;
+  }
+
+  .faq-item[open] .faq-menos {
+    display: block;
+  }
+}
+
+@supports selector(::details-content) {
+  .faq-item::details-content {
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-museum);
+  }
+
+  .faq-item[open]::details-content {
+    opacity: 1;
+  }
+}

@@ -28,6 +28,12 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# private notes and secrets
+/.claude-local/
+.env
+.env.*
+!.env.example
+
 # vercel
 .vercel
 
@@ -35,6 +41,12 @@ yarn-error.log*
 /test-results
 /playwright-report
 /playwright/.cache
+
+# originais de captura; somente derivados aprovados entram em public/cases
+/docs/research/captures/
+
+# lighthouse ci
+/.lighthouseci
 
 # typescript
 *.tsbuildinfo

@@ -1,10 +1,13 @@
+import { z } from "zod"
+import { FaqItemSchema, type FaqItem } from "./schema"
+
 export type QuestionAnswer = {
   id: number
   question: string
   answer: string
 }
 
-export const questionsAndAnswers: QuestionAnswer[] = [
+export const faqItemsRaw = [
   {
     id: 1,
     question: "O que a Byte Criativo desenvolve?",
@@ -27,6 +30,29 @@ export const questionsAndAnswers: QuestionAnswer[] = [
     id: 4,
     question: "Preciso ter tudo definido antes de falar com vocês?",
     answer:
-      "Não. Pode chegar com uma ideia solta ou um problema de operação. Organizar isso em escopo é parte do nosso trabalho.",
+      "Não. Pode chegar com uma ideia solta ou um problema de operação. Organizar isso em escopo é a primeira parte do trabalho.",
+  },
+  {
+    id: 5,
+    question: "Quem faz o projeto? Há parceiros?",
+    answer:
+      "Uma pessoa desenha e programa cada projeto, da primeira conversa ao que vai ao ar. Quando o projeto pede outra especialidade ou mais mãos, entram parceiros sob a mesma condução.",
+  },
+  {
+    id: 6,
+    question: "Atende em qualquer cidade?",
+    answer:
+      "Sim. O processo funciona à distância: conversas por vídeo, aprovações por link e o projeto num endereço de teste.",
   },
 ]
+
+export const faqItems: FaqItem[] = z.array(FaqItemSchema).parse(faqItemsRaw)
+
+// Preservado para compatibilidade com src/lib/seo.ts
+export const questionsAndAnswers: QuestionAnswer[] = faqItemsRaw.map(
+  (item) => ({
+    id: item.id,
+    question: item.question,
+    answer: item.answer,
+  }),
+)

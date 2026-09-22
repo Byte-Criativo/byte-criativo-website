@@ -20,8 +20,8 @@ export function findMetaContent(html: string, key: string): string | undefined {
 export function jsonLdBlocks(html: string): unknown[] {
   const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   return scripts
-    .filter((m) => attribute(m[1], "type") === "application/ld+json")
-    .map((m) => JSON.parse(m[2]))
+    .filter((m) => attribute(m[1] ?? "", "type") === "application/ld+json")
+    .map((m) => JSON.parse(m[2] ?? ""))
 }
 
 export function visibleText(html: string): string {
