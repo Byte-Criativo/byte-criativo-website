@@ -101,6 +101,13 @@ export function Field({
       // link não teria destino no HTML sem JS (nos campos de texto o alvo
       // é o próprio controle, que já recebe o id).
       id={tipo === "opcoes" ? id : undefined}
+      // aria-invalid pertence ao radiogroup, não aos rádios individuais.
+      // O fieldset e a legend continuam fornecendo o grupo e seu nome nativos.
+      role={tipo === "opcoes" ? "radiogroup" : undefined}
+      aria-invalid={tipo === "opcoes" ? aria["aria-invalid"] : undefined}
+      aria-describedby={
+        tipo === "opcoes" ? aria["aria-describedby"] : undefined
+      }
       className={cn(
         // Um <fieldset> com display:flex vira, por definição do próprio
         // HTML, uma caixa anônima de conteúdo que exclui a legend: o `gap`

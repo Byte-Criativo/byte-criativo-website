@@ -65,7 +65,7 @@ describe("RadioGroup", () => {
     expect(screen.getByRole("radio", { name: "Um site" })).not.toBeChecked()
   })
 
-  it("com erro, cada rádio recebe aria-invalid (a mensagem é do grupo)", () => {
+  it("com erro, o grupo é inválido e cada rádio anuncia a mensagem", () => {
     render(
       <Field
         id="tipo"
@@ -77,8 +77,13 @@ describe("RadioGroup", () => {
         {(aria) => <RadioGroup name="tipo" opcoes={OPCOES} aria={aria} />}
       </Field>,
     )
+    const grupo = screen.getByRole("radiogroup", {
+      name: "O que você quer construir? (obrigatório)",
+    })
+    expect(grupo).toHaveAttribute("aria-invalid", "true")
+    expect(grupo).toHaveAttribute("aria-describedby", "tipo-erro")
     for (const radio of screen.getAllByRole("radio")) {
-      expect(radio).toHaveAttribute("aria-invalid", "true")
+      expect(radio).not.toHaveAttribute("aria-invalid")
       expect(radio).toHaveAttribute("aria-describedby", "tipo-erro")
     }
   })

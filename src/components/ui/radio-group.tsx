@@ -35,15 +35,12 @@ export function RadioGroup({
           key={opcao.valor}
           className="flex min-h-(--alvo-toque) items-center gap-(--space-2) text-body text-ink"
         >
-          {/* Especificação, Field › Estados, "Inválido": aria-invalid="true"
-              no controle — em opcoes, em cada Radio. */}
           <input
             type="radio"
             name={name}
             value={opcao.valor}
             defaultChecked={defaultValue === opcao.valor}
             required={aria.required}
-            aria-invalid={aria["aria-invalid"]}
             aria-describedby={aria["aria-describedby"]}
             className="accent-ink"
           />

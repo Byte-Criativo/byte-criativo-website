@@ -158,7 +158,7 @@ describe("Field", () => {
       </Field>,
     )
     expect(
-      screen.getByRole("group", {
+      screen.getByRole("radiogroup", {
         name: "O que você quer construir? (obrigatório)",
       }),
     ).toBeInTheDocument()
@@ -178,7 +178,7 @@ describe("Field", () => {
     // Sem o id aqui, os links #tipo/#canal/#prazo do resumo do LeadForm
     // não teriam destino no HTML sem JS.
     expect(
-      screen.getByRole("group", {
+      screen.getByRole("radiogroup", {
         name: "O que você quer construir? (obrigatório)",
       }),
     ).toHaveAttribute("id", "tipo")

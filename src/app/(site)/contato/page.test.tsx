@@ -103,7 +103,7 @@ describe("Página Contato (/contato)", () => {
     expect(nome).toHaveAttribute("autocomplete", "name")
     expect(nome).toBeRequired()
 
-    const grupoTipo = screen.getByRole("group", {
+    const grupoTipo = screen.getByRole("radiogroup", {
       name: "O que você quer construir? (obrigatório)",
     })
     for (const opcao of contato.projectTypeOptions) {
@@ -118,7 +118,7 @@ describe("Página Contato (/contato)", () => {
     expect(contexto).toHaveAttribute("name", "contexto")
     expect(screen.getByText("0 de 2.000 caracteres")).toBeInTheDocument()
 
-    const grupoCanal = screen.getByRole("group", {
+    const grupoCanal = screen.getByRole("radiogroup", {
       name: "Como prefere continuar? (obrigatório)",
     })
     expect(
@@ -142,7 +142,7 @@ describe("Página Contato (/contato)", () => {
     expect(empresa).toHaveAttribute("autocomplete", "organization")
     expect(empresa).not.toBeRequired()
 
-    const grupoPrazo = screen.getByRole("group", {
+    const grupoPrazo = screen.getByRole("radiogroup", {
       name: "Tem prazo? (opcional)",
     })
     for (const prazo of contato.deadlineOptions) {
