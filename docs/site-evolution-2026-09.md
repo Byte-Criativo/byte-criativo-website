@@ -1,7 +1,7 @@
 # Evolução do site — setembro de 2026
 
-Implementação local na branch `refine/software-house`, baseada na `origin/main`
-publicada (`6761cf6`). Sem push, deploy, merge ou alteração de serviços externos.
+Registro da revisão local na branch `refine/software-house`, baseada na `origin/main`
+publicada (`6761cf6`). Durante essa revisão não houve push, deploy, merge ou alteração de serviços externos.
 As alterações não commitadas da `main` local foram preservadas em seu worktree.
 
 ## Diagnóstico anterior à implementação
@@ -239,3 +239,11 @@ contato LCP 2768 ms, TBT 12,5 ms, CLS 0, performance 96. Todos os budgets
 existentes passaram. Relatórios em `performance/after-cases/`. As diferenças
 entre rodadas são de laboratório e não demonstram melhoria de conversão ou
 Core Web Vitals de campo.
+
+## Preparação de publicação — 23/09/2026
+
+O responsável autorizou merge e push desta versão. A branch padrão confirmada
+é `main`. A atualização comercial `9436e61` foi integrada: preservadas as
+ressalvas de escopo contratado e a revisão de promessas, mantendo a hero
+aprovada, os nomes de navegação e os quatro projetos. A validação remota do
+PR inclui Firefox em Linux antes do merge.

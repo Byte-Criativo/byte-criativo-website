@@ -246,9 +246,10 @@ describe("Páginas institucionais (Processo, Sobre, Contato, Obrigado, Privacida
     it("usa a versão publicável da introdução, sem mencionar a Goromax (D12)", () => {
       expect(portfolioPage.intro.length).toBeGreaterThanOrEqual(2)
       const introCompleta = portfolioPage.intro.join(" ")
-      expect(introCompleta).not.toContain("banda")
-      expect(introCompleta).toContain("festival no Centro Histórico")
-      expect(introCompleta).toContain("plataforma da música independente")
+      expect(introCompleta).toContain("banda")
+      expect(introCompleta).toContain("site de festival")
+      expect(introCompleta).toContain("plataforma cultural")
+      expect(introCompleta).toContain("projeto próprio")
     })
 
     it("aponta o CTA final para /contato com origem portfolio", () => {

@@ -12,37 +12,37 @@ export const faqItemsRaw = [
     id: 1,
     question: "O que a Byte Criativo desenvolve?",
     answer:
-      "Sites institucionais, sistemas web sob medida, landing pages, automações e produtos digitais. Também cuidamos de UI/UX e dos textos, para o projeto sair completo.",
+      "Sites, sistemas web sob medida e plataformas digitais. Design de interfaces, textos e integrações podem fazer parte do projeto conforme a necessidade. Você não precisa escolher a solução técnica antes da conversa.",
   },
   {
     id: 2,
-    question: "Como funciona o processo?",
+    question: "Minha ideia ainda está no começo. Posso conversar?",
     answer:
-      "Começamos entendendo seu objetivo e sua operação. Com isso definimos escopo, prazo e investimento antes de escrever código. Durante o desenvolvimento você acompanha as decisões, e depois da entrega seguimos disponíveis para evolução.",
+      "Sim. Diga para quem seria o projeto e o que você gostaria que ele permitisse fazer. Se isso ainda não estiver claro, comece pela necessidade que percebeu. A conversa inicial ajuda a entender o contexto e avaliar o próximo passo.",
   },
   {
     id: 3,
-    question: "Quanto custa e quanto tempo leva?",
+    question: "Como saber se preciso de um site ou de um sistema?",
     answer:
-      "Depende do escopo. Um site institucional e um sistema com login e painéis são projetos muito diferentes. Depois da primeira conversa, você recebe uma proposta com valores, etapas e prazo.",
+      "Um site costuma atender à apresentação do negócio, dos serviços e dos caminhos de contato. Um sistema entra quando há tarefas, dados e regras próprias, como cadastros, permissões ou acompanhamento de pedidos. Podemos conversar sobre o que precisa acontecer antes de escolher o formato.",
   },
   {
     id: 4,
-    question: "Preciso ter tudo definido antes de falar com vocês?",
+    question: "Como são definidos investimento e prazo?",
     answer:
-      "Não. Pode chegar com uma ideia solta ou um problema de operação. Organizar isso em escopo é a primeira parte do trabalho.",
+      "Consideramos as páginas ou fluxos, o conteúdo disponível, as integrações, as regras de uso e as validações necessárias. Com a necessidade delimitada, a proposta apresenta entregas, investimento e prazo para sua aprovação.",
   },
   {
     id: 5,
-    question: "Quem faz o projeto? Há parceiros?",
+    question: "Vocês avaliam projetos já existentes?",
     answer:
-      "Uma pessoa desenha e programa cada projeto, da primeira conversa ao que vai ao ar. Quando o projeto pede outra especialidade ou mais mãos, entram parceiros sob a mesma condução.",
+      "Você pode apresentar o site ou sistema atual e contar o que precisa mudar. A possibilidade de atuar depende da tecnologia, do estado do projeto e dos acessos necessários. Não envie senhas no primeiro contato.",
   },
   {
     id: 6,
-    question: "Atende em qualquer cidade?",
+    question: "Como acompanho o trabalho e o que acontece depois da entrega?",
     answer:
-      "Sim. O processo funciona à distância: conversas por vídeo, aprovações por link e o projeto num endereço de teste.",
+      "Você acompanha o desenvolvimento e participa das validações previstas no escopo. A forma de acompanhamento, as entregas e as condições de continuidade precisam estar claras na proposta. Manutenção, novas funcionalidades e suporte são tratados conforme o que for contratado.",
   },
 ]
 

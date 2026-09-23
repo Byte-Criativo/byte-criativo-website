@@ -26,7 +26,7 @@ const site = getSiteConfig()
 // omite o canonical da metadata e emite o <link> manualmente no componente.
 export const metadata: Metadata = {
   ...buildMetadata({
-    title: "Byte Criativo | Design e engenharia de software",
+    title: "Software House, Sites e Sistemas Web Sob Medida | Byte Criativo",
     description: home.hero.apoio,
     path: "/",
   }),
@@ -55,7 +55,7 @@ export default function HomePage() {
     organization(),
     webSite(),
     webPage({
-      name: "Byte Criativo | Design e engenharia de software",
+      name: "Software House, Sites e Sistemas Web Sob Medida | Byte Criativo",
       description: home.hero.apoio,
       path: "/",
     }),

@@ -48,7 +48,9 @@ describe("Content Loaders (src/content/index.ts)", () => {
   it("getServiceBySlug() retorna o serviço específico ou undefined", () => {
     const siteService = getServiceBySlug("desenvolvimento-de-sites")
     expect(siteService).toBeDefined()
-    expect(siteService?.title).toBe("Desenvolvimento de sites profissionais")
+    expect(siteService?.title).toBe(
+      "Desenvolvimento de sites para apresentar seu negócio",
+    )
 
     const nonExistent = getServiceBySlug("servico-inexistente")
     expect(nonExistent).toBeUndefined()
@@ -86,7 +88,7 @@ describe("Content Loaders (src/content/index.ts)", () => {
 
   it("getPortfolioPage() retorna o hub de trabalhos com intro e banda final", () => {
     const portfolio = getPortfolioPage()
-    expect(portfolio.h1).toContain("identidade")
+    expect(portfolio.h1).toContain("necessidades")
     expect(portfolio.intro.length).toBeGreaterThanOrEqual(2)
     expect(portfolio.ctaFinal.ctaPrimary.href).toBe("/contato?origem=portfolio")
   })

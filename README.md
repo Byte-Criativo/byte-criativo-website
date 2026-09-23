@@ -11,13 +11,14 @@ estudos de caso do Underground PB e Festival Alumiô têm capturas reais e
 escopo confirmado em `docs/case-approvals.md`. Links para estudos aparecem
 somente quando o respectivo case está publicado.
 
-A evolução local `refine/software-house` restaura a marca oficial e refina
+A evolução `refine/software-house` restaura a marca oficial e refina
 posicionamento, navegação e cores sem trocar o conceito do layout. Inclui
 também GOROMAX e Carlos Ferrer Online (projeto próprio), além de capturas
 atualizadas dos quatro projetos. Diagnóstico,
 evidências, limitações e instruções de revisão estão em
 [docs/site-evolution-2026-09.md](docs/site-evolution-2026-09.md).
-Publicação depende de aprovação; os testes desta intervenção não enviam leads reais.
+Publicação autorizada pelo responsável em 23/09/2026, após validação do PR.
+Os testes desta intervenção não enviam leads reais.
 
 ## Stack
 

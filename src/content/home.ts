@@ -172,7 +172,7 @@ export const homePageRaw = {
     typographicBlock: "pensar; desenhar; construir; evoluir;",
     accessibleTypographicBlock: "Pensar, desenhar, construir, evoluir.",
     manifesto:
-      "Muitas vezes o site é a primeira conversa entre alguém e o seu negócio. Por isso, na Byte Criativo, quem desenha é quem programa, e o contexto vem antes do código. O escopo fica claro antes de começar e o trabalho continua depois da entrega. Cada decisão fechada; o projeto, sempre em aberto.",
+      "Muitas vezes o site é a primeira conversa entre alguém e o seu negócio. Por isso, na Byte Criativo, quem desenha também programa, e o contexto vem antes do código. O escopo fica claro antes de começar. Depois da entrega, novas etapas são avaliadas conforme a necessidade e o que for contratado.",
     principles: [
       {
         title: "Diagnóstico antes do código",
@@ -182,13 +182,13 @@ export const homePageRaw = {
       },
       {
         title: "Design e engenharia na mesma mesa",
-        text: "Quem desenha a interface é quem programa. A decisão visual já nasce sabendo como vai funcionar, e nada se perde num repasse. Quando o projeto pede outra especialidade, parceiros entram sob a mesma condução.",
+        text: "Quem desenha a interface também programa. A decisão visual considera como vai funcionar desde o início. Quando o projeto pede outra especialidade, parceiros entram sob a mesma condução.",
         whereAppears:
           "na revisão conjunta de interface e implementação, sem repasse entre equipes.",
       },
       {
         title: "Feito para durar e evoluir",
-        text: "Desempenho, busca, acessibilidade e segurança entram na estrutura desde o início, e não no fim. A entrega fecha uma etapa; o projeto continua.",
+        text: "Desempenho, busca, acessibilidade e segurança são considerados desde o início. A entrega fecha uma etapa; melhorias futuras são avaliadas conforme o escopo contratado.",
         whereAppears:
           "nas verificações de desempenho, acessibilidade e segurança de cada entrega.",
       },
@@ -301,9 +301,9 @@ export const homePageRaw = {
       {
         number: 5,
         title: "Lançamento e evolução.",
-        description: "Publicação, medição do que importa e ajustes.",
-        youReceive:
-          "documentação essencial e uma lista priorizada de melhorias.",
+        description:
+          "Publicação e conferência das entregas previstas. Melhorias posteriores são avaliadas conforme a necessidade.",
+        youReceive: "as entregas e orientações previstas no escopo contratado.",
       },
     ],
     note: "Não precisa chegar com tudo definido.",
@@ -315,7 +315,7 @@ export const homePageRaw = {
   },
   conversa: {
     h2: "Conte o que você quer construir;",
-    text: "Algumas linhas bastam. A resposta vem de quem conduz o projeto, com perguntas e um caminho possível. Sem compromisso e sem proposta genérica.",
+    text: "Algumas linhas bastam. A resposta vem de quem conduz o projeto, com perguntas para entender sua necessidade e avaliar o próximo passo.",
     whoConducts:
       "Do site institucional à ferramenta que organiza sua operação, design e desenvolvimento fazem parte do mesmo trabalho. Você acompanha as decisões e conversa diretamente com quem conduz o projeto.",
     commitments: [
@@ -377,7 +377,7 @@ export const footerNavigationItems = [
 
 export const heroContent = {
   eyebrow: "software house · design e engenharia",
-  heading: "Sites e sistemas sob medida para vender mais e operar melhor",
+  heading: "Sites e sistemas à altura do que você quer realizar",
   description:
     "A Byte Criativo planeja, desenha e desenvolve o projeto inteiro com o mesmo time. Você conversa direto com quem decide e escreve o código.",
   ctaLabel: "Falar sobre meu projeto",
@@ -507,7 +507,7 @@ export const whyUs = [
   {
     title: "Contato direto",
     description:
-      "Quem responde sua mensagem é quem projeta e desenvolve, então nada se perde no caminho.",
+      "Você conversa diretamente com quem conduz o projeto e participa das decisões previstas no escopo.",
   },
 ] as const
 
