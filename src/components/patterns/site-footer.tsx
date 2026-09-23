@@ -54,7 +54,7 @@ export function SiteFooter({
                 partir de breakpoints.xl o papel h3 passa de 24 px e o `;`
                 pode usar --accent. */}
             <Heading nivel={2} papel="h3" semicolon className="rodape-tagline">
-              {tagline}
+              {tagline.replace(/;$/, "")}
             </Heading>
             <Text papel="caption" tom="muted">
               {razaoSocial}
