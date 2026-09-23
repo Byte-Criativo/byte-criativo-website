@@ -10,10 +10,39 @@ const sourceRoot = path.resolve(process.argv[2] ?? projectRoot)
 
 const cases = [
   {
+    slug: "carlos-ferrer",
+    liveUrl: "https://www.carlosferrer.online/",
+    trackedCover: "src/assets/case-carlos-ferrer-screenshot.webp",
+    captureDir:
+      "docs/research/captures/staging/2026-09-22T18-01-31-970Z-carlos-ferrer-rUDjgi",
+    expected: [
+      "home-1440.png",
+      "home-390.png",
+      "1997-1440.png",
+      "1997-390.png",
+    ],
+    publicMedia: ["home-1440.avif", "home-390.avif", "era-1997-1440.avif"],
+  },
+  {
+    slug: "goromax",
+    liveUrl: "https://www.goromax.com.br/",
+    trackedCover: "src/assets/case-goromax-screenshot.webp",
+    captureDir:
+      "docs/research/captures/staging/2026-09-22T17-58-34-474Z-goromax-pcbeza",
+    expected: [
+      "home-1440.png",
+      "home-390.png",
+      "imprensa-1440.png",
+      "imprensa-390.png",
+    ],
+    publicMedia: ["home-1440.avif", "imprensa-1440.avif", "home-390.avif"],
+  },
+  {
     slug: "underground-pb",
     liveUrl: "https://www.undergroundpb.com.br/",
     trackedCover: "src/assets/case-undergroundpb-screenshot.webp",
-    captureDir: "docs/research/captures/2026-09-underground-pb",
+    captureDir:
+      "docs/research/captures/staging/2026-09-22T18-01-10-146Z-underground-pb-uy902r",
     expected: [
       "home-1440.png",
       "home-390.png",
@@ -33,7 +62,8 @@ const cases = [
     slug: "festival-alumio",
     liveUrl: "https://www.festivalalumio.com.br/",
     trackedCover: "src/assets/case-festival-alumio-screenshot.webp",
-    captureDir: "docs/research/captures/2026-09-alumio",
+    captureDir:
+      "docs/research/captures/staging/2026-09-22T18-02-01-295Z-festival-alumio-buZZ42",
     expected: [
       "home-1440.png",
       "home-390.png",
@@ -41,8 +71,6 @@ const cases = [
       "programacao-390.png",
       "circuito-1440.png",
       "circuito-390.png",
-      "memoria-1440.png",
-      "memoria-390.png",
     ],
     publicMedia: [
       "home-1440.avif",
@@ -147,8 +175,10 @@ for (const entry of cases) {
   inventory.push({
     slug: entry.slug,
     liveUrl: entry.liveUrl,
-    rightsGate: "D5 pendente; manter os cases em review",
+    rightsNote:
+      "Capturas autorizadas; revisão editorial de novos materiais antes da promoção. Ver docs/case-approvals.md.",
     trackedCover: await fileRecord(projectRoot, entry.trackedCover),
+    captureStatus: "selected-after-visual-review-local-only",
     captureRoot,
     captureManifest: await fileRecord(captureRoot, manifestPath),
     captures,

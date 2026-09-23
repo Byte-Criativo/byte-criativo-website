@@ -60,7 +60,7 @@ describe("ConversaBand", () => {
     const padrao = chamada()
     expect(screen.getAllByRole("link")).toHaveLength(2)
     expect(
-      screen.getByRole("link", { name: "Falar sobre um projeto" }),
+      screen.getByRole("link", { name: "Falar sobre meu projeto" }),
     ).toHaveAttribute("href", "/contato?origem=portfolio")
     padrao.unmount()
 

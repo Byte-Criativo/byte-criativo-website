@@ -36,7 +36,7 @@ export default function NotFound() {
             </li>
             <li>
               <TextLink href="/portfolio" variante="acao">
-                Ver trabalhos
+                Ver projetos
               </TextLink>
             </li>
             <li>
@@ -45,7 +45,7 @@ export default function NotFound() {
               </TextLink>
             </li>
             <li>
-              <Button href="/contato">Falar sobre um projeto</Button>
+              <Button href="/contato">Falar sobre meu projeto</Button>
             </li>
           </Stack>
         </Stack>

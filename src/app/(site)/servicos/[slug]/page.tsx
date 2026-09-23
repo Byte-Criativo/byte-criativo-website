@@ -121,7 +121,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               <Button
                 href={`/contato?tipo=${service.slug}&origem=${service.slug}`}
               >
-                Falar sobre um projeto
+                Falar sobre meu projeto
               </Button>
               <WhatsAppLink
                 aparencia="botao"
@@ -256,7 +256,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
             </ol>
             <div>
               <TextLink href="/processo" variante="acao">
-                Ver o processo completo
+                Ver como trabalhamos
               </TextLink>
             </div>
           </div>
@@ -328,7 +328,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
         titulo={`Falar sobre ${service.title.toLowerCase()}`}
         frase="Conte o contexto do projeto ou tire dúvidas diretamente com quem desenha e programa."
         ctaHref={`/contato?tipo=${service.slug}&origem=${service.slug}`}
-        ctaRotulo="Falar sobre um projeto"
+        ctaRotulo="Falar sobre meu projeto"
         whatsapp={{
           rotulo: "Chamar no WhatsApp",
           mensagem: service.whatsappMessage,

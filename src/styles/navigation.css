@@ -1,0 +1,26 @@
+/* A arte oficial mantém a proporção original. A medida é própria da marca,
+   não uma nova escala de espaçamento. Sem JS, o mesmo espaço já é reservado. */
+.brand-logo {
+  display: block;
+  width: 180px;
+  height: auto;
+  aspect-ratio: 3535 / 647;
+  flex-shrink: 0;
+}
+
+@media (min-width: 64rem) {
+  .site-header-cta > a {
+    padding-inline: var(--space-4);
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 80rem) {
+  .brand-logo {
+    width: 196px;
+  }
+
+  .site-header-cta > a {
+    padding-inline: var(--space-5);
+  }
+}

@@ -7,7 +7,7 @@
 // inteira (sufixo "-full"), rolando a página até o fim antes da captura
 // full-page para disparar imagens com lazy-load.
 import { chromium } from "@playwright/test"
-import { mkdir, writeFile } from "node:fs/promises"
+import { mkdir, mkdtemp, writeFile } from "node:fs/promises"
 import path from "node:path"
 
 const [slug, ...urls] = process.argv.slice(2)
@@ -18,13 +18,41 @@ if (!slug || urls.length === 0) {
   process.exit(1)
 }
 
-const today = new Date().toISOString().slice(0, 10)
-const outDir = path.join(
-  "docs",
-  "research",
-  "captures",
-  `${today.slice(0, 7)}-${slug}`,
-)
+// Cada execução gera candidatos novos; nunca substitui mídias aprovadas.
+if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+  throw new Error(
+    "Slug inválido: use apenas letras minúsculas, números e hífens",
+  )
+}
+const bases = new Set()
+for (const input of urls) {
+  const url = new URL(input)
+  if (
+    !["http:", "https:"].includes(url.protocol) ||
+    url.username ||
+    url.password
+  ) {
+    throw new Error("A captura exige URL pública HTTP(S), sem credenciais")
+  }
+  const base = (url.pathname.replace(/\/$/, "") || "/home")
+    .slice(1)
+    .replace(/\//g, "_")
+  if (bases.has(base)) throw new Error(`URLs geram o mesmo arquivo: ${base}`)
+  bases.add(base)
+}
+const browserChannel = process.env.CASE_CAPTURE_BROWSER_CHANNEL ?? "chrome"
+if (!["chrome", "chromium"].includes(browserChannel)) {
+  throw new Error("CASE_CAPTURE_BROWSER_CHANNEL deve ser chrome ou chromium")
+}
+const fullPageOption = process.env.CASE_CAPTURE_FULL_PAGE ?? "true"
+if (!["true", "false"].includes(fullPageOption)) {
+  throw new Error("CASE_CAPTURE_FULL_PAGE deve ser true ou false")
+}
+const captureFullPage = fullPageOption === "true"
+const stagingRoot = path.join("docs", "research", "captures", "staging")
+await mkdir(stagingRoot, { recursive: true })
+const stamp = new Date().toISOString().replace(/[:.]/g, "-")
+const outDir = await mkdtemp(path.join(stagingRoot, `${stamp}-${slug}-`))
 const viewports = [
   { name: "1440", width: 1440, height: 900, dpr: 2, isMobile: false },
   { name: "390", width: 390, height: 844, dpr: 3, isMobile: true },
@@ -119,8 +147,10 @@ async function scrollToBottomInSteps(page) {
   await page.waitForTimeout(300)
 }
 
-await mkdir(outDir, { recursive: true })
-const browser = await chromium.launch({ channel: "chrome", headless: true })
+const browser = await chromium.launch({
+  channel: browserChannel === "chrome" ? "chrome" : undefined,
+  headless: true,
+})
 const manifest = []
 const failures = []
 
@@ -139,7 +169,15 @@ try {
       })
       try {
         const page = await context.newPage()
-        await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 })
+        const response = await page.goto(url, {
+          waitUntil: "domcontentloaded",
+          timeout: 60_000,
+        })
+        if (!response?.ok())
+          throw new Error(`HTTP ${response?.status() ?? "sem resposta"}`)
+        await page
+          .waitForLoadState("networkidle", { timeout: 10_000 })
+          .catch(() => {})
         await page.evaluate(() => document.fonts.ready)
         await page.waitForTimeout(1500)
         const consentAction = await dismissConsentBanner(page)
@@ -153,6 +191,8 @@ try {
         manifest.push({
           file,
           url,
+          finalUrl: page.url(),
+          httpStatus: response.status(),
           viewport: `${vp.width}x${vp.height}`,
           dpr: vp.dpr,
           theme: "light",
@@ -162,29 +202,33 @@ try {
           dismissedNotices,
         })
 
-        await scrollToBottomInSteps(page)
-        const fullFile = `${base}-${vp.name}-full.png`
-        // scale: "css" mantém a captura em pixels CSS (não multiplicados pelo
-        // dpr). Sem isso, páginas altas em viewport mobile (dpr 3) passam do
-        // limite de textura do Chromium (~16384px) e o PNG sai com blocos de
-        // conteúdo corrompidos/repetidos. Como o arquivo sai em 1 px por
-        // px CSS, a densidade real dessa captura é sempre 1x.
-        await page.screenshot({
-          path: path.join(outDir, fullFile),
-          fullPage: true,
-          scale: "css",
-        })
-        manifest.push({
-          file: fullFile,
-          url,
-          viewport: `${vp.width}x${vp.height}`,
-          dpr: 1,
-          theme: "light",
-          capturedAt: new Date().toISOString(),
-          fullPage: true,
-          consentAction,
-          dismissedNotices,
-        })
+        if (captureFullPage) {
+          await scrollToBottomInSteps(page)
+          const fullFile = `${base}-${vp.name}-full.png`
+          // scale: "css" mantém a captura em pixels CSS (não multiplicados pelo
+          // dpr). Sem isso, páginas altas em viewport mobile (dpr 3) passam do
+          // limite de textura do Chromium (~16384px) e o PNG sai com blocos de
+          // conteúdo corrompidos/repetidos. Como o arquivo sai em 1 px por
+          // px CSS, a densidade real dessa captura é sempre 1x.
+          await page.screenshot({
+            path: path.join(outDir, fullFile),
+            fullPage: true,
+            scale: "css",
+          })
+          manifest.push({
+            file: fullFile,
+            url,
+            finalUrl: page.url(),
+            httpStatus: response.status(),
+            viewport: `${vp.width}x${vp.height}`,
+            dpr: 1,
+            theme: "light",
+            capturedAt: new Date().toISOString(),
+            fullPage: true,
+            consentAction,
+            dismissedNotices,
+          })
+        }
       } catch (error) {
         failures.push({
           url,
@@ -204,7 +248,24 @@ await writeFile(
   path.join(outDir, "manifest.json"),
   JSON.stringify(manifest, null, 2) + "\n",
 )
-console.log(`${manifest.length} capturas em ${outDir}`)
+await writeFile(
+  path.join(outDir, "review.json"),
+  JSON.stringify(
+    {
+      slug,
+      status: "pending-manual-review",
+      browser: browser.version(),
+      browserChannel,
+      captureFullPage,
+      urls,
+      failures,
+      publication: "not-requested",
+    },
+    null,
+    2,
+  ) + "\n",
+)
+console.log(`${manifest.length} capturas candidatas em ${outDir}`)
 
 if (failures.length > 0) {
   console.error(`${failures.length} falha(s) de captura:`)

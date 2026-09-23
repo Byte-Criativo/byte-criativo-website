@@ -87,11 +87,13 @@ export default function ContatoPage() {
               turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
             />
           </div>
-          <div className="flex flex-col gap-(--space-5) lg:col-span-4 lg:col-start-9">
-            <Heading nivel={2}>{contato.caminhos.direto.h2}</Heading>
+          <div className="flex flex-col gap-(--space-5) self-start bg-brand-surface p-(--space-5) lg:col-span-4 lg:col-start-9">
+            <Heading nivel={2} papel="h3">
+              {contato.caminhos.direto.h2}
+            </Heading>
             <div>
               <WhatsAppLink
-                aparencia="botao"
+                aparencia="texto"
                 rotulo={contato.caminhos.direto.whatsapp.label}
                 mensagem={contato.caminhos.direto.whatsapp.message}
                 location="contato"

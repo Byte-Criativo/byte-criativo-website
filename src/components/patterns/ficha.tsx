@@ -97,7 +97,7 @@ export function Ficha({
               externo
               complemento={`do ${nome}`}
             >
-              Ver projeto no ar
+              Visitar site
             </TextLink>
           ) : null}
           {contagem ? (

@@ -1,4 +1,6 @@
 import { z } from "zod"
+import { goromaxCaseRaw } from "./case-goromax"
+import { carlosFerrerCaseRaw } from "./case-carlos-ferrer"
 import { CaseStudy, type CaseStudyData } from "./schema"
 
 // Dados dos estudos de caso, portados das fichas internas
@@ -322,7 +324,7 @@ export const caseStudiesRaw = [
     ],
     services: ["desenvolvimento-de-sites"],
     media: {
-      // Capturas reais do estado do site em 2026-09-16. Originais e seleção:
+      // Capturas reais do estado do site em 2026-09-22. Originais e seleção:
       // scripts/portfolio/festival-alumio.md. O dono autorizou o uso de todos
       // os elementos das capturas selecionadas em 2026-09-22.
       cover: {
@@ -330,8 +332,8 @@ export const caseStudiesRaw = [
         width: 1440,
         height: 900,
         alt: "Página inicial do Festival Alumiô 2026, com ilustração colorida do Centro Histórico e as datas do festival",
-        caption: "Home do Festival Alumiô 2026, capturada em 2026-09-16",
-        capturedAt: "2026-09-16",
+        caption: "Home do Festival Alumiô 2026, capturada em 2026-09-22",
+        capturedAt: "2026-09-22",
         sourceUrl: "https://www.festivalalumio.com.br/",
         containsThirdParty: ["arte", "marca"],
       },
@@ -341,8 +343,8 @@ export const caseStudiesRaw = [
           width: 1440,
           height: 900,
           alt: "Página inicial do Festival Alumiô 2026, com ilustração colorida do Centro Histórico e as datas do festival",
-          caption: "Home do Festival Alumiô 2026, capturada em 2026-09-16",
-          capturedAt: "2026-09-16",
+          caption: "Home do Festival Alumiô 2026, capturada em 2026-09-22",
+          capturedAt: "2026-09-22",
           sourceUrl: "https://www.festivalalumio.com.br/",
           containsThirdParty: ["arte", "marca"],
         },
@@ -352,8 +354,8 @@ export const caseStudiesRaw = [
           height: 900,
           alt: "Página de programação do Festival Alumiô, com filtros por dia, artista e palco",
           caption:
-            "Filtros da programação em desktop, capturados em 2026-09-16",
-          capturedAt: "2026-09-16",
+            "Filtros da programação em desktop, capturados em 2026-09-22",
+          capturedAt: "2026-09-22",
           sourceUrl: "https://www.festivalalumio.com.br/programacao",
           containsThirdParty: ["arte", "marca"],
         },
@@ -362,8 +364,8 @@ export const caseStudiesRaw = [
           width: 1440,
           height: 900,
           alt: "Página do circuito do Festival Alumiô, com ilustrações do Centro Histórico",
-          caption: "Apresentação do circuito, capturada em 2026-09-16",
-          capturedAt: "2026-09-16",
+          caption: "Apresentação do circuito, capturada em 2026-09-22",
+          capturedAt: "2026-09-22",
           sourceUrl: "https://www.festivalalumio.com.br/circuito",
           containsThirdParty: ["arte", "marca"],
         },
@@ -372,8 +374,8 @@ export const caseStudiesRaw = [
           width: 390,
           height: 844,
           alt: "Programação do Festival Alumiô no celular, com opções de dia e busca por artista",
-          caption: "Programação no celular, capturada em 2026-09-16",
-          capturedAt: "2026-09-16",
+          caption: "Programação no celular, capturada em 2026-09-22",
+          capturedAt: "2026-09-22",
           sourceUrl: "https://www.festivalalumio.com.br/programacao",
           containsThirdParty: ["arte", "marca"],
         },
@@ -405,6 +407,8 @@ export const caseStudiesRaw = [
     },
     updatedAt: "2026-09-22",
   },
+  goromaxCaseRaw,
+  carlosFerrerCaseRaw,
 ]
 
 export const caseStudies: CaseStudyData[] = z
@@ -412,7 +416,7 @@ export const caseStudies: CaseStudyData[] = z
   .parse(caseStudiesRaw)
 
 // Slugs publicados em ordem de exibição, para o sitemap e para
-// generateStaticParams. Hoje a lista é vazia: os dois cases aguardam o
+// generateStaticParams. A lista acompanha os cases autorizados.
 // O schema recusa "published" sem permissions.cleared.
 export const publishedCaseEntries: ReadonlyArray<{
   slug: string

@@ -57,21 +57,15 @@ export function HomeConversa({
 
           <div className="flex flex-col gap-(--space-3) sm:flex-row sm:items-center">
             <Button href={conversa.fullFormLink.href}>
-              Falar sobre um projeto
+              Falar sobre meu projeto
             </Button>
             <WhatsAppLink
-              aparencia="botao"
+              aparencia="texto"
               rotulo={conversa.whatsappCtaLabel}
               mensagem={site.contact.defaultWhatsappMessage}
               location="conversa_home"
               context="home"
             />
-          </div>
-
-          <div>
-            <TextLink href={conversa.fullFormLink.href} variante="acao">
-              {conversa.fullFormLink.label}
-            </TextLink>
           </div>
 
           <Text papel="caption" tom="muted">

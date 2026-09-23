@@ -146,7 +146,7 @@ export const processoPageRaw = {
     h2: "Não precisa chegar com tudo definido;",
     text: "Organizar o contexto em escopo é a primeira parte do trabalho.",
     ctaPrimary: {
-      label: "Conversar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato?origem=processo",
     },
     ctaSecondary: {
@@ -172,7 +172,7 @@ export const sobrePageRaw = {
       "A Byte Criativo é conduzida por quem desenha e programa cada projeto, com parceiros sob demanda. Conheça o modelo de trabalho, os princípios e a empresa.",
   },
   h1: "Você fala com quem desenha e programa;",
-  lede: "A Byte Criativo é um estúdio de design e engenharia de software. Uma pessoa conduz cada projeto, da primeira conversa ao que vai ao ar, e parceiros entram quando o projeto pede outra especialidade.",
+  lede: "A Byte Criativo é uma software house orientada por design. Uma pessoa conduz cada projeto, da primeira conversa ao que vai ao ar, e parceiros entram quando o projeto pede outra especialidade.",
   quemConduz: {
     h2: "Quem conduz",
     text: "Trabalhar assim é uma escolha. A conversa, o desenho e o código ficam sob a mesma condução. Quando um projeto pede outra especialidade, parceiros podem entrar conforme a necessidade, com as responsabilidades esclarecidas na proposta.",
@@ -190,7 +190,7 @@ export const sobrePageRaw = {
       "Cada decisão fechada; o projeto, sempre em aberto.",
     ],
     cta: {
-      label: "Ver todos os trabalhos",
+      label: "Ver todos os projetos",
       href: "/portfolio",
     },
   },
@@ -229,7 +229,7 @@ export const sobrePageRaw = {
   ctaFinal: {
     h2: "Conte o que você quer construir;",
     ctaPrimary: {
-      label: "Conversar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato?origem=sobre",
     },
     ctaSecondary: {
@@ -316,7 +316,7 @@ export const contatoPageRaw = {
       },
     ],
     link: {
-      label: "Ver como um projeto anda",
+      label: "Ver como trabalhamos",
       href: "/processo",
     },
   },
@@ -401,7 +401,7 @@ export const obrigadoPageRaw = {
       },
     ],
     link: {
-      label: "Enquanto isso, ver todos os trabalhos",
+      label: "Enquanto isso, ver todos os projetos",
       href: "/portfolio",
     },
   },
@@ -872,21 +872,21 @@ export const privacidadePage: PrivacidadePage =
 
 export const portfolioPageRaw = {
   seo: {
-    title: "Trabalhos",
-    seoTitle: "Trabalhos: portfólio de sites e plataformas | Byte Criativo",
+    title: "Projetos",
+    seoTitle: "Projetos: portfólio de sites e plataformas | Byte Criativo",
     description:
       "Estudos de caso de projetos no ar: o contexto, o que cada um precisava e as decisões de design e de código por trás de cada tela.",
   },
   h1: "Veja como diferentes necessidades ganham forma na web;",
   intro: [
-    "Os trabalhos publicados incluem uma plataforma da música independente e um site de festival. Em cada um, informações, caminhos de navegação e funções foram organizados para necessidades concretas.",
-    "Explore o contexto, as entregas observáveis e os créditos de cada projeto. Uma entrega publicada não é, por si só, prova de resultado comercial.",
+    "Uma plataforma cultural, um site de festival, a presença digital de uma banda e um portfólio pessoal. Cada projeto organiza informações e caminhos de navegação para necessidades concretas.",
+    "Explore o contexto, as entregas observáveis e os créditos de cada projeto. Carlos Ferrer Online é identificado como projeto próprio.",
   ],
   ctaFinal: {
     h2: "Seu projeto também precisa organizar informações ou conectar pessoas?",
     text: "Conte quem vai usar e o que essa pessoa precisa encontrar ou fazer. Não é preciso chegar com as telas ou funcionalidades definidas.",
     ctaPrimary: {
-      label: "Conversar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato?origem=portfolio",
     },
     ctaSecondary: {

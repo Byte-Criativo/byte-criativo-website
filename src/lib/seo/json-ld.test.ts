@@ -120,7 +120,7 @@ describe("json-ld", () => {
 
   it("collectionPageJsonLd gera CollectionPage com ItemList de CreativeWork", () => {
     const colecao = collectionPageJsonLd({
-      name: "Trabalhos",
+      name: "Projetos",
       description: "Estudos de caso publicados.",
       path: "/portfolio",
       items: [

@@ -72,9 +72,10 @@ export default async function CasePage({ params }: PageProps) {
   const dominio = new URL(estudo.liveUrl).hostname.replace(/^www\./, "")
   const caminho = `/portfolio/${estudo.slug}`
 
-  const anterior = getPublishedCases().find(
-    (outro) => outro.slug !== estudo.slug,
-  )
+  const publicados = getPublishedCases()
+  const indice = publicados.findIndex((outro) => outro.slug === estudo.slug)
+  const anterior = publicados[indice - 1]
+  const proximo = publicados[indice + 1]
 
   const jsonLdGraph = buildJsonLdGraph([
     organization(),
@@ -92,7 +93,7 @@ export default async function CasePage({ params }: PageProps) {
     }),
     breadcrumbsJsonLd([
       { name: "Início", path: "/" },
-      { name: "Trabalhos", path: "/portfolio" },
+      { name: "Projetos", path: "/portfolio" },
       { name: nome, path: caminho },
     ]),
   ])
@@ -108,7 +109,7 @@ export default async function CasePage({ params }: PageProps) {
         <Breadcrumbs
           trilha={[
             { rotulo: "Início", href: "/" },
-            { rotulo: "Trabalhos", href: "/portfolio" },
+            { rotulo: "Projetos", href: "/portfolio" },
             { rotulo: nome },
           ]}
         />
@@ -202,7 +203,9 @@ export default async function CasePage({ params }: PageProps) {
             ))}
           </dl>
 
-          <Heading nivel={2}>Créditos de terceiros</Heading>
+          {estudo.thirdPartyCredits.length > 0 && (
+            <Heading nivel={2}>Créditos de terceiros</Heading>
+          )}
           <ul className="flex flex-col gap-(--space-3)">
             {estudo.thirdPartyCredits.map((credito) => (
               <li key={credito.item}>
@@ -255,7 +258,7 @@ export default async function CasePage({ params }: PageProps) {
                       : undefined
                   }
                 />
-                <figcaption className="pt-(--space-2) text-caption text-ink-muted">
+                <figcaption className="pt-(--space-2) pr-(--space-7) text-caption text-ink-muted">
                   {imagem.caption ?? imagem.alt}
                 </figcaption>
               </figure>
@@ -270,6 +273,14 @@ export default async function CasePage({ params }: PageProps) {
             ? {
                 nome: nomeCurto(anterior.title),
                 href: `/portfolio/${anterior.slug}`,
+              }
+            : undefined
+        }
+        proximo={
+          proximo
+            ? {
+                nome: nomeCurto(proximo.title),
+                href: `/portfolio/${proximo.slug}`,
               }
             : undefined
         }

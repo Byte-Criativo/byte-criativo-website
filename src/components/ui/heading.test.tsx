@@ -4,8 +4,8 @@ import { Heading } from "./heading"
 
 describe("Heading", () => {
   it("usa o nível pedido e o papel correspondente", () => {
-    render(<Heading nivel={2}>Trabalhos</Heading>)
-    const titulo = screen.getByRole("heading", { level: 2, name: "Trabalhos" })
+    render(<Heading nivel={2}>Projetos</Heading>)
+    const titulo = screen.getByRole("heading", { level: 2, name: "Projetos" })
     expect(titulo.tagName).toBe("H2")
     expect(titulo).toHaveClass("text-h2")
   })

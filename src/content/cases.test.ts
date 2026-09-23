@@ -34,15 +34,15 @@ export function publishedMediaIssues(
 }
 
 describe("dados dos estudos de caso", () => {
-  it("os dois cases reais passam na validação Zod", () => {
-    expect(caseStudiesRaw).toHaveLength(2)
+  it("os quatro cases reais passam na validação Zod", () => {
+    expect(caseStudiesRaw).toHaveLength(4)
     for (const estudo of caseStudiesRaw) {
       const result = CaseStudy.safeParse(estudo)
       expect(result.success).toBe(true)
     }
   })
 
-  it("os dois cases confirmados estão publicados com autorização registrada", () => {
+  it("os quatro cases confirmados estão publicados com autorização registrada", () => {
     for (const estudo of caseStudies) {
       expect(estudo.status).toBe("published")
       expect(estudo.permissions.cleared).toBe(true)
@@ -150,17 +150,23 @@ describe("loaders de cases", () => {
     expect(getAllCases().map((estudo) => estudo.slug)).toEqual([
       "underground-pb",
       "festival-alumio",
+      "goromax",
+      "carlos-ferrer",
     ])
   })
 
-  it("getPublishedCases e as entradas do sitemap contêm os dois cases", () => {
+  it("getPublishedCases e as entradas do sitemap contêm os quatro cases", () => {
     expect(getPublishedCases().map((estudo) => estudo.slug)).toEqual([
       "underground-pb",
       "festival-alumio",
+      "goromax",
+      "carlos-ferrer",
     ])
     expect(publishedCaseEntries.map((estudo) => estudo.slug)).toEqual([
       "underground-pb",
       "festival-alumio",
+      "goromax",
+      "carlos-ferrer",
     ])
   })
 

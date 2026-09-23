@@ -262,7 +262,7 @@ describe("Página Contato (/contato)", () => {
     }
 
     expect(
-      screen.queryByRole("link", { name: "Falar sobre um projeto" }),
+      screen.queryByRole("link", { name: "Falar sobre meu projeto" }),
     ).toBeNull()
   })
 })

@@ -31,7 +31,7 @@ describe("Ficha", () => {
     ).toBeInTheDocument()
     expect(
       screen.getByRole("link", {
-        name: "Ver projeto no ar do Festival Alumiô (abre em nova aba)",
+        name: "Visitar site do Festival Alumiô (abre em nova aba)",
       }),
     ).toBeInTheDocument()
   })
@@ -43,7 +43,7 @@ describe("Ficha", () => {
     ).not.toBeInTheDocument()
     expect(
       screen.getByRole("link", {
-        name: "Ver projeto no ar do Festival Alumiô (abre em nova aba)",
+        name: "Visitar site do Festival Alumiô (abre em nova aba)",
       }),
     ).toBeInTheDocument()
   })

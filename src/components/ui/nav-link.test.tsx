@@ -10,10 +10,10 @@ describe("NavLink", () => {
     usePathname.mockReturnValue("/portfolio")
     render(
       <NavLink href="/portfolio" secao="/portfolio">
-        Trabalhos
+        Projetos
       </NavLink>,
     )
-    expect(screen.getByRole("link", { name: "Trabalhos" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Projetos" })).toHaveAttribute(
       "aria-current",
       "page",
     )
@@ -23,10 +23,10 @@ describe("NavLink", () => {
     usePathname.mockReturnValue("/portfolio/underground-pb")
     render(
       <NavLink href="/portfolio" secao="/portfolio">
-        Trabalhos
+        Projetos
       </NavLink>,
     )
-    expect(screen.getByRole("link", { name: "Trabalhos" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Projetos" })).toHaveAttribute(
       "aria-current",
       "true",
     )
@@ -36,10 +36,10 @@ describe("NavLink", () => {
     usePathname.mockReturnValue("/contato")
     render(
       <NavLink href="/portfolio" secao="/portfolio">
-        Trabalhos
+        Projetos
       </NavLink>,
     )
-    expect(screen.getByRole("link", { name: "Trabalhos" })).not.toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Projetos" })).not.toHaveAttribute(
       "aria-current",
     )
   })

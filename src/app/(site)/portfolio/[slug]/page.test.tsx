@@ -195,7 +195,7 @@ describe("CasePage - Renderização", () => {
       within(breadcrumbsNav).getByRole("link", { name: "Início" }),
     ).toHaveAttribute("href", "/")
     expect(
-      within(breadcrumbsNav).getByRole("link", { name: "Trabalhos" }),
+      within(breadcrumbsNav).getByRole("link", { name: "Projetos" }),
     ).toHaveAttribute("href", "/portfolio")
 
     // Hero do case dentro de article[data-case]
@@ -203,9 +203,10 @@ describe("CasePage - Renderização", () => {
     expect(artigo).not.toBeNull()
     const h1 = screen.getByRole("heading", { level: 1 })
     expect(h1).toHaveTextContent(casePublicado.title)
-    expect(
-      screen.getByRole("link", { name: /Ver projeto no ar/ }),
-    ).toHaveAttribute("href", casePublicado.liveUrl)
+    expect(screen.getByRole("link", { name: /Visitar site/ })).toHaveAttribute(
+      "href",
+      casePublicado.liveUrl,
+    )
 
     // Corpo editorial
     for (const necessidade of casePublicado.needs) {
@@ -228,7 +229,7 @@ describe("CasePage - Renderização", () => {
 
     // Navegação entre trabalhos: sem outro publicado, sobra "Ver todos"
     expect(
-      screen.getByRole("link", { name: "Ver todos os trabalhos" }),
+      screen.getByRole("link", { name: "Ver todos os projetos" }),
     ).toHaveAttribute("href", "/portfolio")
 
     // JSON-LD: WebPage + CreativeWork + BreadcrumbList (especificação 5.6)

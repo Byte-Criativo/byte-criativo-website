@@ -32,7 +32,7 @@ export function HomeOQueFazemos({
     <section
       id="o-que-fazemos"
       aria-labelledby="o-que-fazemos-titulo"
-      className="border-t-(length:--border-w-decorative) border-solid border-border-decorative py-(--space-8) lg:py-(--space-9)"
+      className="services-overview border-t-(length:--border-w-decorative) border-solid border-border-decorative py-(--space-8) lg:py-(--space-9)"
     >
       <Container className="flex flex-col gap-(--space-7) lg:gap-(--space-8)">
         <Heading nivel={2} id="o-que-fazemos-titulo">

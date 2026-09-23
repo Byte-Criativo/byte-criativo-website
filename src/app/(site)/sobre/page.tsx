@@ -146,7 +146,7 @@ export default function SobrePage() {
           </ol>
           <div>
             <TextLink href="/processo" variante="acao">
-              Ver o processo completo
+              Ver como trabalhamos
             </TextLink>
           </div>
         </Container>

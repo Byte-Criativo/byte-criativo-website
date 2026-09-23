@@ -61,10 +61,10 @@ export function ConversaBand(props: ConversaBandProps): ReactElement {
             {props.frase ? <Text papel="lede">{props.frase}</Text> : null}
             <div className="flex flex-col gap-(--space-3) md:flex-row">
               <Button href={props.ctaHref}>
-                {props.ctaRotulo ?? "Falar sobre um projeto"}
+                {props.ctaRotulo ?? "Falar sobre meu projeto"}
               </Button>
               <WhatsAppLink
-                aparencia="botao"
+                aparencia="texto"
                 rotulo={props.whatsapp.rotulo}
                 mensagem={props.whatsapp.mensagem}
                 location={props.whatsapp.location}

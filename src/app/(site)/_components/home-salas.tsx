@@ -31,7 +31,7 @@ export function HomeSalas({
   return (
     <section
       id="trabalhos"
-      aria-label="Trabalhos em destaque"
+      aria-label="Projetos em destaque"
       className="py-(--space-8) lg:py-(--space-9)"
     >
       <div className="flex flex-col gap-(--space-8)">

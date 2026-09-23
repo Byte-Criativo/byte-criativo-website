@@ -14,9 +14,9 @@ export function catalogoDisponivel(
 }
 
 export const NAVEGACAO: ItemNavegacao[] = [
-  { rotulo: "Trabalhos", href: "/portfolio", secao: "/portfolio" },
+  { rotulo: "Projetos", href: "/portfolio", secao: "/portfolio" },
   { rotulo: "Serviços", href: "/servicos", secao: "/servicos" },
-  { rotulo: "Processo", href: "/processo" },
+  { rotulo: "Como trabalhamos", href: "/processo" },
   { rotulo: "Sobre", href: "/sobre" },
 ]
 
@@ -27,11 +27,11 @@ export const NAVEGACAO_MENU: ItemNavegacao[] = [
 
 export const COLUNAS_RODAPE: ColunaRodape[] = [
   {
-    titulo: "Trabalhos",
+    titulo: "Projetos",
     itens: [
       { rotulo: "Underground PB", href: "/portfolio/underground-pb" },
       { rotulo: "Festival Alumiô", href: "/portfolio/festival-alumio" },
-      { rotulo: "Todos os trabalhos", href: "/portfolio" },
+      { rotulo: "Todos os projetos", href: "/portfolio" },
     ],
   },
   {
@@ -61,7 +61,7 @@ export const COLUNAS_RODAPE: ColunaRodape[] = [
   {
     titulo: "Estúdio",
     itens: [
-      { rotulo: "Processo", href: "/processo" },
+      { rotulo: "Como trabalhamos", href: "/processo" },
       { rotulo: "Sobre", href: "/sobre" },
       { rotulo: "Contato", href: "/contato" },
       { rotulo: "Privacidade", href: "/privacidade" },
@@ -71,7 +71,7 @@ export const COLUNAS_RODAPE: ColunaRodape[] = [
 
 export const ITENS_INDICE: ItemIndice[] = [
   { id: "inicio", rotulo: "Início" },
-  { id: "trabalhos", rotulo: "Trabalhos" },
+  { id: "trabalhos", rotulo: "Projetos" },
   { id: "forma-de-pensar", rotulo: "Forma de pensar" },
   { id: "o-que-a-byte-faz", rotulo: "O que a Byte faz" },
   { id: "como-um-projeto-anda", rotulo: "Como um projeto anda" },

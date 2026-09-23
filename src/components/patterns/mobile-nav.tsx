@@ -1,6 +1,7 @@
 "use client"
 
 import { usePathname } from "next/navigation"
+import Link from "next/link"
 import {
   useCallback,
   useEffect,
@@ -33,7 +34,7 @@ const LARGURA_LG = "(min-width: 64rem)"
 export function MobileNav({
   navegacao,
   ctaHref = "/contato",
-  ctaRotulo = "Falar sobre um projeto",
+  ctaRotulo = "Falar sobre meu projeto",
   whatsapp,
   emailHref,
   wordmark,
@@ -144,16 +145,27 @@ export function MobileNav({
         aria-labelledby={ID_TITULO}
         className="h-full max-h-none w-full max-w-none bg-surface text-ink"
       >
-        <div className="flex items-center justify-between gap-(--space-5) px-(--grid-margin) py-(--space-3)">
-          <span aria-hidden="true">{wordmark}</span>
+        <div className="flex items-center justify-between gap-(--space-4) px-(--grid-margin) py-(--space-3)">
+          <Link
+            href="/"
+            onClick={fechar}
+            className="inline-flex min-h-(--alvo-toque) shrink-0 items-center"
+          >
+            {wordmark}
+            <VisuallyHidden>Byte Criativo, página inicial</VisuallyHidden>
+          </Link>
           <button
             type="button"
+            aria-label="Fechar menu"
+            // O diálogo só abre por ação explícita: preserva o foco
+            // inicial no controle que permite sair dele.
+            autoFocus
             commandfor={ID_DIALOGO}
             command="close"
             onClick={fechar}
-            className={buttonClasses("contorno")}
+            className={buttonClasses("contorno", "shrink-0 px-(--space-4)")}
           >
-            Fechar menu
+            Fechar
           </button>
         </div>
 

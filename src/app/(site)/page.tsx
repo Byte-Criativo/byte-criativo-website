@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 
 const ITENS_INDICE = [
   { id: "hero", rotulo: "Início" },
-  { id: "trabalhos", rotulo: "Trabalhos" },
+  { id: "trabalhos", rotulo: "Projetos" },
   { id: "forma-de-pensar", rotulo: "Forma de pensar" },
   { id: "o-que-fazemos", rotulo: "O que fazemos" },
   { id: "como-anda", rotulo: "Como anda" },

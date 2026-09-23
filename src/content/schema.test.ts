@@ -221,7 +221,7 @@ describe("FaqItemSchema", () => {
 describe("NavItemSchema e FooterColumnSchema", () => {
   it("valida NavItem com label e href", () => {
     expect(
-      NavItemSchema.safeParse({ label: "Trabalhos", href: "/portfolio" })
+      NavItemSchema.safeParse({ label: "Projetos", href: "/portfolio" })
         .success,
     ).toBe(true)
   })
@@ -229,7 +229,7 @@ describe("NavItemSchema e FooterColumnSchema", () => {
   it("valida FooterColumn com title e links", () => {
     expect(
       FooterColumnSchema.safeParse({
-        title: "Trabalhos",
+        title: "Projetos",
         links: [{ label: "Underground PB", href: "/portfolio/underground-pb" }],
       }).success,
     ).toBe(true)
@@ -299,12 +299,12 @@ describe("HomePageSchema", () => {
     expect(HomePageSchema.safeParse(invalid).success).toBe(false)
   })
 
-  it("recusa oQueFazemos sem exatamente 4 situações", () => {
+  it("recusa oQueFazemos sem exatamente 3 grupos", () => {
     const invalid = {
       ...homePageRaw,
       oQueFazemos: {
         ...homePageRaw.oQueFazemos,
-        situations: homePageRaw.oQueFazemos.situations.slice(0, 3),
+        situations: homePageRaw.oQueFazemos.situations.slice(0, 2),
       },
     }
     expect(HomePageSchema.safeParse(invalid).success).toBe(false)

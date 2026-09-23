@@ -1,3 +1,4 @@
+import { BrandLogo } from "@/components/patterns/brand-logo"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { PageFrame } from "@/app/_shared/page-frame"
@@ -60,11 +61,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-const WORDMARK = (
-  <span aria-hidden="true" className="text-label">
-    byte criativo;
-  </span>
-)
+const WORDMARK = <BrandLogo />
 
 function Secao({
   titulo,
@@ -136,13 +133,13 @@ export default function CatalogoPage() {
 
           <Secao titulo="Button e TextLink">
             <div className="flex flex-wrap items-center gap-(--space-4)">
-              <Button href="/contato">Falar sobre um projeto</Button>
+              <Button href="/contato">Falar sobre meu projeto</Button>
               <Button type="button" variante="contorno">
                 Ação secundária
               </Button>
               <BotaoEnviandoDemo />
               <TextLink href="/portfolio" variante="acao">
-                Ver todos os trabalhos
+                Ver todos os projetos
               </TextLink>
               <TextLink
                 href="https://festivalalumio.com.br"
@@ -150,7 +147,7 @@ export default function CatalogoPage() {
                 externo
                 complemento="do Festival Alumiô"
               >
-                Ver projeto no ar
+                Visitar site
               </TextLink>
               <Text>
                 Leia a{" "}
@@ -292,7 +289,7 @@ export default function CatalogoPage() {
             <Breadcrumbs
               trilha={[
                 { rotulo: "Início", href: "/" },
-                { rotulo: "Trabalhos", href: "/portfolio" },
+                { rotulo: "Projetos", href: "/portfolio" },
                 { rotulo: "Festival Alumiô" },
               ]}
             />

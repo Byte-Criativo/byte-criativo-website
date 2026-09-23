@@ -14,9 +14,9 @@ describe("catálogo", () => {
 
   it("a navegação usa os quatro rótulos reais da copy v1", () => {
     expect(NAVEGACAO.map((item) => item.rotulo)).toEqual([
-      "Trabalhos",
+      "Projetos",
       "Serviços",
-      "Processo",
+      "Como trabalhamos",
       "Sobre",
     ])
   })
