@@ -38,13 +38,13 @@ describe("404 (not-found)", () => {
       within(lista).getByRole("link", { name: "Ir para o início" }),
     ).toHaveAttribute("href", "/")
     expect(
-      within(lista).getByRole("link", { name: "Ver trabalhos" }),
+      within(lista).getByRole("link", { name: "Ver projetos" }),
     ).toHaveAttribute("href", "/portfolio")
     expect(
       within(lista).getByRole("link", { name: "Ver todos os serviços" }),
     ).toHaveAttribute("href", "/servicos")
     expect(
-      within(lista).getByRole("link", { name: "Falar sobre um projeto" }),
+      within(lista).getByRole("link", { name: "Falar sobre meu projeto" }),
     ).toHaveAttribute("href", "/contato")
   })
 })

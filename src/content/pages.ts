@@ -144,7 +144,7 @@ export const processoPageRaw = {
     h2: "Não precisa chegar com tudo definido;",
     text: "Organizar o contexto em escopo é a primeira parte do trabalho.",
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato?origem=processo",
     },
     ctaSecondary: {
@@ -170,7 +170,7 @@ export const sobrePageRaw = {
       "A Byte Criativo é conduzida por quem desenha e programa cada projeto, com parceiros sob demanda. Conheça o modelo de trabalho, os princípios e a empresa.",
   },
   h1: "Você fala com quem desenha e programa;",
-  lede: "A Byte Criativo é um estúdio de design e engenharia de software. Uma pessoa conduz cada projeto, da primeira conversa ao que vai ao ar, e parceiros entram quando o projeto pede outra especialidade.",
+  lede: "A Byte Criativo é uma software house orientada por design. Uma pessoa conduz cada projeto, da primeira conversa ao que vai ao ar, e parceiros entram quando o projeto pede outra especialidade.",
   quemConduz: {
     h2: "Quem conduz",
     text: "Trabalhar assim é uma escolha. A conversa, o desenho e o código ficam com a mesma pessoa. Assim, nada se perde entre entender o problema e construir a solução. Quando um projeto pede mais (fotografia, ilustração, uma especialidade técnica, mais mãos num prazo apertado), entram parceiros sob a mesma condução.",
@@ -188,7 +188,7 @@ export const sobrePageRaw = {
       "Cada decisão fechada; o projeto, sempre em aberto.",
     ],
     cta: {
-      label: "Ver todos os trabalhos",
+      label: "Ver todos os projetos",
       href: "/portfolio",
     },
   },
@@ -227,7 +227,7 @@ export const sobrePageRaw = {
   ctaFinal: {
     h2: "Conte o que você quer construir;",
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato?origem=sobre",
     },
     ctaSecondary: {
@@ -312,7 +312,7 @@ export const contatoPageRaw = {
       },
     ],
     link: {
-      label: "Ver como um projeto anda",
+      label: "Ver como trabalhamos",
       href: "/processo",
     },
   },
@@ -397,7 +397,7 @@ export const obrigadoPageRaw = {
       },
     ],
     link: {
-      label: "Enquanto isso, ver todos os trabalhos",
+      label: "Enquanto isso, ver todos os projetos",
       href: "/portfolio",
     },
   },
@@ -868,21 +868,21 @@ export const privacidadePage: PrivacidadePage =
 
 export const portfolioPageRaw = {
   seo: {
-    title: "Trabalhos",
-    seoTitle: "Trabalhos: portfólio de sites e plataformas | Byte Criativo",
+    title: "Projetos",
+    seoTitle: "Projetos: portfólio de sites e plataformas | Byte Criativo",
     description:
       "Estudos de caso de projetos no ar: o contexto, o que cada um precisava e as decisões de design e de código por trás de cada tela.",
   },
   h1: "Cada projeto com a própria identidade;",
   intro: [
-    "Os trabalhos publicados nasceram na cena cultural da Paraíba: um festival no Centro Histórico e uma plataforma da música independente. Cada um tinha muita informação para organizar, gente de verdade usando e uma identidade que não podia se perder na tela.",
+    "Os projetos publicados nasceram na cena cultural da Paraíba: um festival no Centro Histórico e uma plataforma da música independente. Cada um tinha muita informação para organizar, gente de verdade usando e uma identidade que não podia se perder na tela.",
     "Em cada estudo você vê o contexto, o que precisava funcionar e as decisões de design e de código.",
   ],
   ctaFinal: {
     h2: "Seu negócio não tem nada a ver com música?",
     text: "O desafio costuma ser parecido: muita coisa para mostrar, pouca atenção disponível e uma marca que precisa ser reconhecida.",
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato?origem=portfolio",
     },
     ctaSecondary: {

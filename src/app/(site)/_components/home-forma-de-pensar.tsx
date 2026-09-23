@@ -29,7 +29,7 @@ export function HomeFormaDePensar({
         </div>
 
         {/* Bloco tipográfico do manifesto */}
-        <div className="text-manifesto font-bold tracking-tight text-ink">
+        <div className="text-manifesto font-bold tracking-tight text-brand-blue">
           <VisuallyHidden>
             {formaDePensar.accessibleTypographicBlock}
           </VisuallyHidden>
@@ -73,7 +73,7 @@ export function HomeFormaDePensar({
 
         {/* CTA e ponte */}
         <div className="flex flex-col gap-(--space-3) sm:flex-row sm:items-center sm:justify-between">
-          <Button href={formaDePensar.cta.href}>
+          <Button href={formaDePensar.cta.href} variante="contorno">
             {formaDePensar.cta.label}
           </Button>
           <Text papel="caption" tom="muted">

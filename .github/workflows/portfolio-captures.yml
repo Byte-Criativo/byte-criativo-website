@@ -1,0 +1,41 @@
+name: Portfolio capture candidates
+on:
+  schedule:
+    # Primeiro dia do mês, 09:00 em America/Fortaleza (UTC-3).
+    - cron: "0 12 1 * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: portfolio-captures-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Capturar candidatos sem alterar imagens publicadas
+        env:
+          CASE_CAPTURE_CONSENT: necessary-only
+          CASE_CAPTURE_BROWSER_CHANNEL: chromium
+          CASE_CAPTURE_FULL_PAGE: "false"
+        run: node scripts/portfolio/refresh.mjs
+      - name: Guardar candidatos e relatórios para revisão humana
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-candidates-${{ github.run_id }}
+          path: |
+            docs/research/captures/staging/
+            !docs/research/captures/staging/**/*-full.png
+          retention-days: 7
+          if-no-files-found: warn

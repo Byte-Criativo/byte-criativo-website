@@ -8,11 +8,11 @@ const PROPS = {
   cnpj: "CNPJ 52.652.130/0001-02",
   colunas: [
     {
-      titulo: "Trabalhos",
+      titulo: "Projetos",
       itens: [
         { rotulo: "Underground PB", href: "/portfolio/underground-pb" },
         { rotulo: "Festival Alumiô", href: "/portfolio/festival-alumio" },
-        { rotulo: "Todos os trabalhos", href: "/portfolio" },
+        { rotulo: "Todos os projetos", href: "/portfolio" },
       ],
     },
     {

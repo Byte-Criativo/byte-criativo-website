@@ -4,12 +4,20 @@ Site institucional da Byte Criativo.
 
 ## Estado atual
 
-A branch `redesign/v2` contém a reescrita em Next.js App Router, saindo
+A base publicada em `main` usa Next.js App Router, após a migração
 do antigo Pages Router + styled-components. Home, Sobre, Serviços,
 Processo, Portfólio, Contato e Privacidade já estão implementados. Os
 estudos de caso do Underground PB e Festival Alumiô têm capturas reais e
 escopo confirmado em `docs/case-approvals.md`. Links para estudos aparecem
 somente quando o respectivo case está publicado.
+
+A evolução local `refine/software-house` restaura a marca oficial e refina
+posicionamento, navegação e cores sem trocar o conceito do layout. Inclui
+também GOROMAX e Carlos Ferrer Online (projeto próprio), além de capturas
+atualizadas dos quatro projetos. Diagnóstico,
+evidências, limitações e instruções de revisão estão em
+[docs/site-evolution-2026-09.md](docs/site-evolution-2026-09.md).
+Publicação depende de aprovação; os testes desta intervenção não enviam leads reais.
 
 ## Stack
 
@@ -103,6 +111,13 @@ de informação, conteúdo dos casos) que originaram esses tokens ficam fora
 deste repositório, no diretório de trabalho do projeto. O `docs/` deste
 repositório inclui os registros das capturas atuais em
 `scripts/portfolio/` e artefatos históricos do site anterior em `docs/`.
+
+## Atualização das capturas
+
+`node scripts/portfolio/refresh.mjs --dry-run` lista as fontes. Sem `--dry-run`,
+gera candidatos datados para revisão. O workflow mensal prepara artefatos, sem
+substituir imagens ou publicar automaticamente; só ficará ativo após integração
+a `main`. Procedimento e seleção: [docs/portfolio-captures.md](docs/portfolio-captures.md).
 
 ## Operação em produção
 

@@ -138,7 +138,7 @@ export const serviceHubRaw = {
     h2: "Não sabe por onde começar? Conte o contexto.",
     text: 'No formulário, marque "Ainda não sei". Definir o escopo é a primeira parte do trabalho.',
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato?tipo=ainda-nao-sei&origem=servicos",
     },
     ctaSecondary: {
@@ -265,7 +265,7 @@ export const servicePagesRaw = [
     ondeFoiAplicado: {
       description:
         "Ainda não há um estudo de caso de landing page publicado aqui. Os princípios são os mesmos dos trabalhos no ar: uma pergunta principal por página, prova antes do pedido e carregamento leve no celular.",
-      linkText: "Ver todos os trabalhos",
+      linkText: "Ver todos os projetos",
       linkHref: "/portfolio",
     },
     comoConduzimos: [
@@ -424,7 +424,7 @@ export const servicePagesRaw = [
     ondeFoiAplicado: {
       description:
         "Ainda não há um estudo de caso de automação publicado aqui. Antes de propor qualquer integração, o diagnóstico confere o que cada ferramenta permite: APIs, permissões e limites de uso. Assim, nenhuma conexão é prometida sem se sustentar.",
-      linkText: "Ver todos os trabalhos",
+      linkText: "Ver todos os projetos",
       linkHref: "/portfolio",
     },
     comoConduzimos: [
@@ -661,7 +661,7 @@ export const servicePagesRaw = [
     ondeFoiAplicado: {
       description:
         "Ainda não há um estudo de caso de copywriting publicado aqui. O próprio site da Byte Criativo segue estas regras: um vocabulário único de ações e mensagens de erro que dizem o que fazer.",
-      linkText: "Ver todos os trabalhos",
+      linkText: "Ver todos os projetos",
       linkHref: "/portfolio",
     },
     comoConduzimos: [

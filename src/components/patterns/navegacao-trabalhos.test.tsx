@@ -5,22 +5,22 @@ import { NavegacaoTrabalhos } from "./navegacao-trabalhos"
 const ANTERIOR = { nome: "Underground PB", href: "/portfolio/underground-pb" }
 
 describe("NavegacaoTrabalhos", () => {
-  it("com dois trabalhos não há nav: só Ver todos os trabalhos", () => {
+  it("sem vizinhos não há nav: só Ver todos os projetos", () => {
     render(<NavegacaoTrabalhos todosHref="/portfolio" />)
     expect(screen.queryByRole("navigation")).toBeNull()
     expect(
-      screen.getByRole("link", { name: "Ver todos os trabalhos" }),
+      screen.getByRole("link", { name: "Ver todos os projetos" }),
     ).toHaveAttribute("href", "/portfolio")
     expect(screen.getAllByRole("link")).toHaveLength(1)
   })
 
-  it("com três ou mais, vira navegação nomeada com dois links", () => {
+  it("com anterior, vira navegação nomeada com dois links", () => {
     render(<NavegacaoTrabalhos anterior={ANTERIOR} todosHref="/portfolio" />)
-    const nav = screen.getByRole("navigation", { name: "Outros trabalhos" })
+    const nav = screen.getByRole("navigation", { name: "Outros projetos" })
     const itens = [...nav.querySelectorAll("li")]
     expect(itens).toHaveLength(2)
     const anterior = screen.getByRole("link", {
-      name: "Trabalho anterior: Underground PB",
+      name: "Projeto anterior: Underground PB",
     })
     expect(anterior).toHaveAttribute("href", "/portfolio/underground-pb")
     expect(itens[0]?.contains(anterior)).toBe(true)
@@ -29,10 +29,10 @@ describe("NavegacaoTrabalhos", () => {
   it("o nome do link já inclui o projeto: nenhum complemento oculto", () => {
     render(<NavegacaoTrabalhos anterior={ANTERIOR} todosHref="/portfolio" />)
     const link = screen.getByRole("link", {
-      name: "Trabalho anterior: Underground PB",
+      name: "Projeto anterior: Underground PB",
     })
     expect(link.querySelector(".sr-only")).toBeNull()
-    expect(link.textContent?.trim()).toBe("Trabalho anterior: Underground PB")
+    expect(link.textContent?.trim()).toBe("Projeto anterior: Underground PB")
   })
 
   it("não repete o destino do bloco Próximo trabalho", () => {
@@ -44,6 +44,20 @@ describe("NavegacaoTrabalhos", () => {
       .getAllByRole("link")
       .map((link) => link.getAttribute("href"))
     expect(new Set(destinos).size).toBe(destinos.length)
+  })
+
+  it("mostra os dois vizinhos quando o case está no meio da lista", () => {
+    render(
+      <NavegacaoTrabalhos
+        anterior={ANTERIOR}
+        proximo={{ nome: "GOROMAX", href: "/portfolio/goromax" }}
+        todosHref="/portfolio"
+      />,
+    )
+    expect(
+      screen.getByRole("link", { name: "Próximo projeto: GOROMAX" }),
+    ).toHaveAttribute("href", "/portfolio/goromax")
+    expect(screen.getAllByRole("link")).toHaveLength(3)
   })
 
   it("nenhuma seta e nenhum ícone: o texto diz o sentido", () => {

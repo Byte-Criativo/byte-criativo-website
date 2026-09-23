@@ -49,7 +49,7 @@ describe("Hub de Trabalhos (/portfolio)", () => {
       "href",
       "/",
     )
-    expect(within(nav).getByText("Trabalhos")).toHaveAttribute(
+    expect(within(nav).getByText("Projetos")).toHaveAttribute(
       "aria-current",
       "page",
     )
@@ -68,7 +68,7 @@ describe("Hub de Trabalhos (/portfolio)", () => {
 
   it("renderiza uma sala por trabalho, com legenda e link do site ao vivo", () => {
     render(<PortfolioPage />)
-    const secao = screen.getByRole("region", { name: "Trabalhos publicados" })
+    const secao = screen.getByRole("region", { name: "Projetos publicados" })
 
     for (const sala of salas.items) {
       const artigo = within(secao).getByRole("article", { name: sala.name })
@@ -84,7 +84,7 @@ describe("Hub de Trabalhos (/portfolio)", () => {
       }
 
       const noAr = within(artigo).getByRole("link", {
-        name: `Ver projeto no ar do ${sala.name} (abre em nova aba)`,
+        name: `Visitar site do ${sala.name} (abre em nova aba)`,
       })
       expect(noAr).toHaveAttribute("href", sala.liveUrl)
     }
@@ -116,7 +116,7 @@ describe("Hub de Trabalhos — gate D5 (estudos de caso)", () => {
     estado.slugsPublicados = []
     const { container } = render(<PortfolioPage />)
 
-    const secao = screen.getByRole("region", { name: "Trabalhos publicados" })
+    const secao = screen.getByRole("region", { name: "Projetos publicados" })
     expect(
       within(secao).queryByRole("link", { name: /Ver estudo de caso/ }),
     ).not.toBeInTheDocument()
@@ -134,7 +134,7 @@ describe("Hub de Trabalhos — gate D5 (estudos de caso)", () => {
     estado.slugsPublicados = ["underground-pb"]
     const { container } = render(<PortfolioPage />)
 
-    const secao = screen.getByRole("region", { name: "Trabalhos publicados" })
+    const secao = screen.getByRole("region", { name: "Projetos publicados" })
     const salaPublicada = salas.items.find((s) => s.slug === "underground-pb")!
     const salaEmRevisao = salas.items.find((s) => s.slug !== "underground-pb")!
 
@@ -158,7 +158,7 @@ describe("Hub de Trabalhos — gate D5 (estudos de caso)", () => {
     // A sala em revisão continua com o link do site ao vivo.
     expect(
       within(artigoEmRevisao).getByRole("link", {
-        name: `Ver projeto no ar do ${salaEmRevisao.name} (abre em nova aba)`,
+        name: `Visitar site do ${salaEmRevisao.name} (abre em nova aba)`,
       }),
     ).toHaveAttribute("href", salaEmRevisao.liveUrl)
 

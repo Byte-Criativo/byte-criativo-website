@@ -23,8 +23,8 @@ describe("Button", () => {
   })
 
   it("navegação é um link com a mesma aparência", () => {
-    render(<Button href="/contato">Falar sobre um projeto</Button>)
-    const link = screen.getByRole("link", { name: "Falar sobre um projeto" })
+    render(<Button href="/contato">Falar sobre meu projeto</Button>)
+    const link = screen.getByRole("link", { name: "Falar sobre meu projeto" })
     expect(link).toHaveAttribute("href", "/contato")
     expect(link).toHaveClass("bg-action")
   })
@@ -69,7 +69,7 @@ describe("Button", () => {
   })
 
   it("hover só com ponteiro fino (RC2)", () => {
-    render(<Button type="button">Falar sobre um projeto</Button>)
+    render(<Button type="button">Falar sobre meu projeto</Button>)
     expect(screen.getByRole("button").className).toContain("ponteiro:")
   })
 
@@ -106,7 +106,7 @@ describe("Button", () => {
 
   it("I1: o foco repete o mesmo feedback do hover (RC2)", () => {
     const { rerender } = render(
-      <Button type="button">Falar sobre um projeto</Button>,
+      <Button type="button">Falar sobre meu projeto</Button>,
     )
     expect(screen.getByRole("button")).toHaveClass(
       "focus-visible:bg-action-bg-hover",

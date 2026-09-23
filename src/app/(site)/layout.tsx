@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import { SkipLink } from "@/components/ui/skip-link"
+import { BrandLogo } from "@/components/patterns/brand-logo"
 import {
   SiteHeader,
   type ItemNavegacao,
@@ -11,11 +12,7 @@ import {
 } from "@/components/patterns/site-footer"
 import { getPublishedCases, getSiteConfig } from "@/content"
 
-const WORDMARK = (
-  <span aria-hidden="true" className="text-label">
-    byte criativo;
-  </span>
-)
+const WORDMARK = <BrandLogo />
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
   const site = getSiteConfig()
@@ -81,7 +78,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       </main>
       <SiteFooter
         tagline={site.tagline}
-        razaoSocial="Byte Criativo, design e engenharia de software."
+        razaoSocial={site.footer.columns[0]?.lines?.[0] ?? site.name}
         cnpj={`CNPJ ${site.taxId}`}
         colunas={colunasRodape}
         email={site.contact.email}

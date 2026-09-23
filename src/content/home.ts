@@ -2,15 +2,15 @@ import { HomePageSchema, type HomePage } from "./schema"
 
 export const homePageRaw = {
   hero: {
-    h1: "Quem desenha o seu site também escreve o código;",
+    h1: "Software sob medida com design que diferencia;",
     apoio:
-      "A Byte Criativo projeta e constrói sites, plataformas e sistemas sob medida. Design e engenharia são decididos juntos desde o diagnóstico, e você fala direto com quem faz.",
+      "Somos uma software house que une design e desenvolvimento para criar sites, sistemas e produtos digitais sob medida. Da primeira ideia ao software em uso.",
     ctaPrimary: {
-      label: "Falar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato",
     },
     ctaSecondary: {
-      label: "Ver trabalhos",
+      label: "Ver projetos",
       href: "/portfolio",
     },
   },
@@ -30,7 +30,7 @@ export const homePageRaw = {
         ],
         image: {
           src: "/cases/underground-pb/home-1440.avif",
-          alt: "Página inicial do Underground PB, com a agenda da cena independente da Paraíba em destaque",
+          alt: "Página inicial do Underground PB, com o Beco Underground em destaque e acesso à agenda",
         },
         liveUrl: "https://www.undergroundpb.com.br/",
         caseStudyUrl: "/portfolio/underground-pb",
@@ -89,9 +89,79 @@ export const homePageRaw = {
           tech: "Next.js",
         },
       },
+      {
+        slug: "goromax",
+        name: "GOROMAX",
+        type: "Site de banda",
+        phrase:
+          "Identidade, música, agenda e imprensa em um site para a banda GOROMAX, com design, UI/UX, conteúdo e desenvolvimento pela Byte.",
+        capabilities: [
+          "Identidade visual",
+          "Discografia",
+          "Agenda de shows",
+          "Acervo de imprensa",
+        ],
+        image: {
+          src: "/cases/goromax/home-1440.avif",
+          alt: "Página inicial da GOROMAX, com fotografia da banda e identidade em tons escuros e laranja",
+        },
+        liveUrl: "https://www.goromax.com.br/",
+        caseStudyUrl: "/portfolio/goromax",
+        verso: {
+          needs: {
+            title: "O que o site reúne",
+            text: "A presença da banda em um endereço próprio: lançamentos, shows, história, imagens e contato para imprensa e produção.",
+          },
+          inProduction: {
+            title: "O que está no ar",
+            items: [
+              "Discografia com acesso às plataformas de música",
+              "Agenda e histórico de apresentações",
+              "Galeria de fotos e vídeos",
+              "Página de imprensa com links para os veículos originais",
+            ],
+          },
+          tech: "imagens responsivas e páginas dedicadas à música e à imprensa",
+        },
+      },
+      {
+        slug: "carlos-ferrer",
+        name: "Carlos Ferrer Online",
+        type: "Projeto próprio · currículo e portfólio",
+        phrase:
+          "Projeto próprio: site-currículo e portfólio de Carlos Ferrer, com quatro eras da web e navegação em português e inglês.",
+        capabilities: [
+          "Quatro eras da web",
+          "Currículo",
+          "Português e inglês",
+          "Projeto próprio",
+        ],
+        image: {
+          src: "/cases/carlos-ferrer/home-1440.avif",
+          alt: "Abertura do portfólio Carlos Ferrer Online",
+        },
+        liveUrl: "https://www.carlosferrer.online/",
+        caseStudyUrl: "/portfolio/carlos-ferrer",
+        verso: {
+          needs: {
+            title: "O que o projeto explora",
+            text: "A mesma trajetória profissional em quatro linguagens visuais, com acesso a experiência, projetos e currículo.",
+          },
+          inProduction: {
+            title: "O que está no ar",
+            items: [
+              "Versões inspiradas em 1997, 2004, 2012 e 2026",
+              "Navegação em português e inglês",
+              "Página dedicada ao currículo",
+              "Projetos e experiência profissional",
+            ],
+          },
+          tech: "Next.js, React e TypeScript, conforme declarado no site",
+        },
+      },
     ],
     footerLink: {
-      label: "Ver todos os trabalhos",
+      label: "Ver todos os projetos",
       href: "/portfolio",
     },
     bridgeText: "Por trás de cada um, a mesma forma de pensar.",
@@ -128,18 +198,18 @@ export const homePageRaw = {
       "Nenhum projeto sai de um modelo pronto.",
     ],
     cta: {
-      label: "Ver o processo completo",
+      label: "Ver como trabalhamos",
       href: "/processo",
     },
     bridgeText: "Do jeito de pensar para o que a Byte faz.",
   },
   oQueFazemos: {
-    h2: "O que a Byte Criativo faz, e para quem",
+    h2: "Design e código para o que seu negócio precisa",
     situations: [
       {
-        title: "O site não acompanha o que a empresa virou.",
+        title: "Sites e experiências digitais",
         phrase:
-          "Um site que apresenta a empresa de hoje e explica o que ela faz antes da primeira reunião.",
+          "Para apresentar seu negócio e transformar interesse em conversa. Sites, landing pages e conteúdo com identidade própria.",
         links: [
           {
             label: "Desenvolvimento de sites",
@@ -157,9 +227,9 @@ export const homePageRaw = {
         ],
       },
       {
-        title: "A operação cabe em cinco planilhas e um grupo de WhatsApp.",
+        title: "Sistemas e produtos",
         phrase:
-          "Uma ferramenta feita para o seu processo, começando pelo trecho da operação que mais trava.",
+          "Para organizar operações e conectar ferramentas. Sistemas web, plataformas, automações e integrações com as regras do seu negócio.",
         links: [
           {
             label: "Sistemas web sob medida",
@@ -176,21 +246,9 @@ export const homePageRaw = {
         ],
       },
       {
-        title:
-          "O evento, a banda ou o projeto cultural precisa de uma casa própria.",
+        title: "Design e estratégia de produto",
         phrase:
-          "Programação, material de divulgação e memória num lugar com a cara do projeto.",
-        links: [
-          {
-            label: "Desenvolvimento de sites",
-            href: "/servicos/desenvolvimento-de-sites",
-          },
-          { label: "Ver todos os trabalhos", href: "/portfolio" },
-        ],
-      },
-      {
-        title: "A ideia é boa, mas não está claro o que construir primeiro.",
-        phrase: "Antes de construir tudo, a menor versão que prova a ideia.",
+          "Para decidir o que construir primeiro e como será usado. Jornadas, interfaces e protótipos que aproximam a ideia da implementação.",
         links: [
           { label: "Design de produto", href: "/servicos/design-de-produto" },
           { label: "UI/UX design", href: "/servicos/ui-ux-design" },
@@ -250,7 +308,7 @@ export const homePageRaw = {
     ],
     note: "Não precisa chegar com tudo definido.",
     cta: {
-      label: "Ver o processo completo",
+      label: "Ver como trabalhamos",
       href: "/processo",
     },
     bridgeText: "E quem conduz tudo isso?",
@@ -259,7 +317,7 @@ export const homePageRaw = {
     h2: "Conte o que você quer construir;",
     text: "Algumas linhas bastam. A resposta vem de quem conduz o projeto, com perguntas e um caminho possível. Sem compromisso e sem proposta genérica.",
     whoConducts:
-      "A Byte Criativo é um estúdio de design e engenharia de software conduzido por uma pessoa. Ela desenha e programa cada projeto, da primeira conversa ao que vai ao ar. Quando um projeto pede outra especialidade ou mais mãos, entram parceiros sob a mesma condução.",
+      "Do site institucional à ferramenta que organiza sua operação, design e desenvolvimento fazem parte do mesmo trabalho. Você acompanha as decisões e conversa diretamente com quem conduz o projeto.",
     commitments: [
       {
         title: "Quem desenha, programa.",

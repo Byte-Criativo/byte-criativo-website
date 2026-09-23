@@ -1,3 +1,4 @@
+import { BrandLogo } from "./brand-logo"
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import { SiteHeader, type ItemNavegacao } from "./site-header"
@@ -6,9 +7,9 @@ const usePathname = vi.hoisted(() => vi.fn(() => "/"))
 vi.mock("next/navigation", () => ({ usePathname }))
 
 const NAVEGACAO: ItemNavegacao[] = [
-  { rotulo: "Trabalhos", href: "/portfolio", secao: "/portfolio" },
+  { rotulo: "Projetos", href: "/portfolio", secao: "/portfolio" },
   { rotulo: "Serviços", href: "/servicos", secao: "/servicos" },
-  { rotulo: "Processo", href: "/processo" },
+  { rotulo: "Como trabalhamos", href: "/processo" },
   { rotulo: "Sobre", href: "/sobre" },
 ]
 
@@ -16,7 +17,7 @@ function montar() {
   return render(
     <SiteHeader
       navegacao={NAVEGACAO}
-      wordmark={<svg aria-hidden="true" focusable="false" />}
+      wordmark={<BrandLogo />}
       menu={<button type="button">Menu</button>}
     />,
   )
@@ -36,6 +37,19 @@ describe("SiteHeader", () => {
     expect(
       screen.getByRole("link", { name: "Byte Criativo, página inicial" }),
     ).toHaveAttribute("href", "/")
+  })
+
+  it("a marca oficial chega no HTML com proporção reservada e sem texto substituto", () => {
+    montar()
+    const inicio = screen.getByRole("link", {
+      name: "Byte Criativo, página inicial",
+    })
+    const imagem = inicio.querySelector("img")
+    expect(imagem).toHaveAttribute("src", "/logoByte.png")
+    expect(imagem).toHaveAttribute("width", "3535")
+    expect(imagem).toHaveAttribute("height", "647")
+    expect(inicio).toHaveClass("shrink-0")
+    expect(inicio).not.toHaveTextContent("byte criativo;")
   })
 
   // RC3: o wordmark é um alvo de toque, não só um desenho — a área precisa
@@ -65,7 +79,7 @@ describe("SiteHeader", () => {
       )
     }
     expect(
-      screen.getByRole("link", { name: "Falar sobre um projeto" }),
+      screen.getByRole("link", { name: "Falar sobre meu projeto" }),
     ).toHaveAttribute("href", "/contato")
   })
 
@@ -74,7 +88,7 @@ describe("SiteHeader", () => {
     try {
       montar()
       expect(
-        screen.getByRole("link", { name: "Falar sobre um projeto" }),
+        screen.getByRole("link", { name: "Falar sobre meu projeto" }),
       ).toHaveAttribute("aria-current", "page")
     } finally {
       usePathname.mockReturnValue("/")

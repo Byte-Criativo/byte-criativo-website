@@ -35,7 +35,7 @@ export default function ProcessoPage() {
     }),
     breadcrumbsJsonLd([
       { name: "Início", path: "/" },
-      { name: "Processo", path: "/processo" },
+      { name: "Como trabalhamos", path: "/processo" },
     ]),
   ])
 
@@ -54,7 +54,10 @@ export default function ProcessoPage() {
       >
         <Container className="flex flex-col gap-(--space-6)">
           <Breadcrumbs
-            trilha={[{ rotulo: "Início", href: "/" }, { rotulo: "Processo" }]}
+            trilha={[
+              { rotulo: "Início", href: "/" },
+              { rotulo: "Como trabalhamos" },
+            ]}
           />
           <div className="flex max-w-(--medida-max) flex-col gap-(--space-4)">
             <Heading nivel={1} id="hero-titulo" semicolon>

@@ -49,10 +49,10 @@ function requireVar(theme: Record<string, string>, name: string): string {
 const roomSlugs = Object.keys(rooms)
 
 describe("tokens de cor: salas conhecidas", () => {
-  it("rooms tem exatamente as 3 salas de tokens.json (nenhum it.each abaixo roda vazio)", () => {
-    expect(roomSlugs.length).toBe(3)
+  it("rooms tem exatamente as 4 salas de tokens.json (nenhum it.each abaixo roda vazio)", () => {
+    expect(roomSlugs.length).toBe(4)
     expect([...roomSlugs].sort()).toEqual(
-      ["festival-alumio", "goromax", "underground-pb"].sort(),
+      ["festival-alumio", "goromax", "underground-pb", "carlos-ferrer"].sort(),
     )
   })
 })
@@ -131,20 +131,20 @@ describe("tokens de cor: contraste mínimo", () => {
 })
 
 describe("tokens de cor: sincronia dos temas com o CSS", () => {
-  it("tema claro do TS é igual ao :root do CSS (mesmos 19 nomes e hex)", () => {
+  it("tema claro do TS é igual ao :root do CSS (mesmos 22 nomes e hex)", () => {
     const root = parseHexVars(block(":root"))
     const names = Object.keys(lightTheme).sort()
-    expect(names.length).toBe(19)
+    expect(names.length).toBe(22)
     expect(Object.keys(root).sort()).toEqual(names)
     for (const name of names) {
       expect(root[name], name).toBe(requireVar(lightTheme, name).toLowerCase())
     }
   })
 
-  it('tema do verso do TS é igual ao bloco [data-surface="verso"] do CSS (mesmos 19 nomes e hex)', () => {
+  it('tema do verso do TS é igual ao bloco [data-surface="verso"] do CSS (mesmos 22 nomes e hex)', () => {
     const verso = parseHexVars(block('[data-surface="verso"]'))
     const names = Object.keys(versoTheme).sort()
-    expect(names.length).toBe(19)
+    expect(names.length).toBe(22)
     expect(Object.keys(verso).sort()).toEqual(names)
     for (const name of names) {
       expect(verso[name], name).toBe(requireVar(versoTheme, name).toLowerCase())
@@ -280,10 +280,10 @@ describe("tokens de cor: guarda de não-vacuidade", () => {
 })
 
 describe("globals.css: @theme inline expõe as cores para o Tailwind", () => {
-  it("define --color-<nome> para as 19 vars de tema + --color-action, --color-on-action e --font-sans", () => {
+  it("define --color-<nome> para as 22 vars de tema + --color-action, --color-on-action e --font-sans", () => {
     const themeInline = block("@theme inline")
     const names = Object.keys(lightTheme)
-    expect(names.length).toBe(19)
+    expect(names.length).toBe(22)
     for (const varName of names) {
       const nome = varName.replace(/^--/, "")
       expect(themeInline, `--color-${nome}`).toContain(

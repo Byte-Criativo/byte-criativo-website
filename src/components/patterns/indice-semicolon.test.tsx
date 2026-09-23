@@ -4,7 +4,7 @@ import { IndiceSemicolon, type ItemIndice } from "./indice-semicolon"
 
 const ITENS: ItemIndice[] = [
   { id: "inicio", rotulo: "Início" },
-  { id: "trabalhos", rotulo: "Trabalhos" },
+  { id: "trabalhos", rotulo: "Projetos" },
   { id: "forma-de-pensar", rotulo: "Forma de pensar" },
   { id: "o-que-a-byte-faz", rotulo: "O que a Byte faz" },
   { id: "como-um-projeto-anda", rotulo: "Como um projeto anda" },
@@ -12,6 +12,13 @@ const ITENS: ItemIndice[] = [
 ]
 
 describe("IndiceSemicolon", () => {
+  it("a caixa do glifo é opaca para preservar contraste sobre as salas", () => {
+    render(<IndiceSemicolon itens={ITENS} />)
+    expect(screen.getByRole("link", { name: "Início" })).toHaveClass(
+      "bg-surface",
+    )
+  })
+
   it("é uma navegação nomeada com uma lista ordenada de seis links", () => {
     render(<IndiceSemicolon itens={ITENS} />)
     const nav = screen.getByRole("navigation", { name: "Seções desta página" })
@@ -49,12 +56,6 @@ describe("IndiceSemicolon", () => {
 
   // A caixa opaca é o que impede o `;` de sumir quando a coluna passa por
   // cima de uma sala com fundo escuro.
-  it("a caixa do glifo é opaca, em --surface", () => {
-    render(<IndiceSemicolon itens={ITENS} />)
-    expect(screen.getByRole("link", { name: "Início" })).toHaveClass(
-      "bg-surface",
-    )
-  })
 
   // A coluna existe só a partir de breakpoints.lg: no celular ela ficaria
   // sobre o conteúdo, numa margem que nem existe.

@@ -1,0 +1,213 @@
+{
+  "publication": "not-published",
+  "projects": [
+    {
+      "slug": "carlos-ferrer",
+      "reviewDate": "2026-09-22",
+      "status": "selected-after-visual-review-local-only",
+      "derivatives": [
+        {
+          "path": "src/assets/case-carlos-ferrer-screenshot.webp",
+          "width": 1440,
+          "height": 900,
+          "bytes": 37934,
+          "sha256": "fe7a70edd1434c4ea30ff9a53ea5ee9cc4df583c254d3a221f0119deb2f944d9",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-31-970Z-carlos-ferrer-rUDjgi/home-1440.png",
+          "sourceUrl": "https://www.carlosferrer.online/",
+          "capturedAt": "2026-09-22T18:01:35.761Z"
+        },
+        {
+          "path": "public/cases/carlos-ferrer/home-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 30086,
+          "sha256": "10f3169b182b492f437c551b78cfe8d8acd0cfa5a546b9885d29b17fb2fee4f0",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-31-970Z-carlos-ferrer-rUDjgi/home-1440.png",
+          "sourceUrl": "https://www.carlosferrer.online/",
+          "capturedAt": "2026-09-22T18:01:35.761Z"
+        },
+        {
+          "path": "public/cases/carlos-ferrer/home-390.avif",
+          "width": 390,
+          "height": 844,
+          "bytes": 17180,
+          "sha256": "391e4413815c4ed766c765378d3668922b5bfdb65e065fcc20835f4cc47d1245",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-31-970Z-carlos-ferrer-rUDjgi/home-390.png",
+          "sourceUrl": "https://www.carlosferrer.online/",
+          "capturedAt": "2026-09-22T18:01:42.589Z"
+        },
+        {
+          "path": "public/cases/carlos-ferrer/era-1997-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 47006,
+          "sha256": "f2d05647689c34650cd2549f7cde3060b720003fd30cbfc54ff558ddb688801d",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-31-970Z-carlos-ferrer-rUDjgi/1997-1440.png",
+          "sourceUrl": "https://www.carlosferrer.online/1997",
+          "capturedAt": "2026-09-22T18:01:49.847Z"
+        }
+      ]
+    },
+    {
+      "slug": "goromax",
+      "reviewDate": "2026-09-22",
+      "status": "selected-after-visual-review-local-only",
+      "derivatives": [
+        {
+          "path": "src/assets/case-goromax-screenshot.webp",
+          "width": 1440,
+          "height": 900,
+          "bytes": 168736,
+          "sha256": "164fbb83639cb6d99d3b1c67ee10e2e7bbd05501b689495fe401f9124cc5126e",
+          "source": "docs/research/captures/staging/2026-09-22T17-58-34-474Z-goromax-pcbeza/home-1440.png",
+          "sourceUrl": "https://www.goromax.com.br/",
+          "capturedAt": "2026-09-22T17:58:43.718Z"
+        },
+        {
+          "path": "public/cases/goromax/home-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 142950,
+          "sha256": "655c6f8086d430301ccede848cf6713cfb7f9117810588dc0fd66f7c89f52ea7",
+          "source": "docs/research/captures/staging/2026-09-22T17-58-34-474Z-goromax-pcbeza/home-1440.png",
+          "sourceUrl": "https://www.goromax.com.br/",
+          "capturedAt": "2026-09-22T17:58:43.718Z"
+        },
+        {
+          "path": "public/cases/goromax/imprensa-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 61846,
+          "sha256": "027c9633d7f4fddc102a270aa25a7047fc4d4fa2b63129ae7c0dc75eca82e651",
+          "source": "docs/research/captures/staging/2026-09-22T17-58-34-474Z-goromax-pcbeza/imprensa-1440.png",
+          "sourceUrl": "https://www.goromax.com.br/imprensa",
+          "capturedAt": "2026-09-22T17:59:05.339Z"
+        },
+        {
+          "path": "public/cases/goromax/home-390.avif",
+          "width": 390,
+          "height": 844,
+          "bytes": 40438,
+          "sha256": "db03fdff5013982ca52a12c73d0f7ca562be0858b4c3e97da67e3db1847d1674",
+          "source": "docs/research/captures/staging/2026-09-22T17-58-34-474Z-goromax-pcbeza/home-390.png",
+          "sourceUrl": "https://www.goromax.com.br/",
+          "capturedAt": "2026-09-22T17:58:55.351Z"
+        }
+      ]
+    },
+    {
+      "slug": "underground-pb",
+      "reviewDate": "2026-09-22",
+      "status": "selected-after-visual-review-local-only",
+      "derivatives": [
+        {
+          "path": "src/assets/case-undergroundpb-screenshot.webp",
+          "width": 1440,
+          "height": 900,
+          "bytes": 79636,
+          "sha256": "83db5dfcb5ebfc998f77a9fe3605ef2d2a4653a69e5b62b01525c922355e5bdc",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-10-146Z-underground-pb-uy902r/home-1440.png",
+          "sourceUrl": "https://www.undergroundpb.com.br/",
+          "capturedAt": "2026-09-22T18:01:15.192Z"
+        },
+        {
+          "path": "public/cases/underground-pb/home-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 59838,
+          "sha256": "e0e36e3a73be335126b552754264b771d190e0ad21c7c5237a5e4a230caa9357",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-10-146Z-underground-pb-uy902r/home-1440.png",
+          "sourceUrl": "https://www.undergroundpb.com.br/",
+          "capturedAt": "2026-09-22T18:01:15.192Z"
+        },
+        {
+          "path": "public/cases/underground-pb/agenda-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 46858,
+          "sha256": "27134d97b1f641a2c5362a300ba5dce3170ff4bea456cc4a7735e5ad06799040",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-10-146Z-underground-pb-uy902r/agenda-1440.png",
+          "sourceUrl": "https://www.undergroundpb.com.br/agenda/",
+          "capturedAt": "2026-09-22T18:01:31.464Z"
+        },
+        {
+          "path": "public/cases/underground-pb/palcos-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 81618,
+          "sha256": "96b1d6f9de9ddc072920f51dca27c2ffa4229e2a9d5d488fe8305be7bc8719ca",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-10-146Z-underground-pb-uy902r/palcos-1440.png",
+          "sourceUrl": "https://www.undergroundpb.com.br/palcos/",
+          "capturedAt": "2026-09-22T18:01:44.641Z"
+        },
+        {
+          "path": "public/cases/underground-pb/palcos-390.avif",
+          "width": 390,
+          "height": 844,
+          "bytes": 22935,
+          "sha256": "9715f38a672b122e2606271b07c0df5b716a75593b2ea62c4f6d37596fc56bcf",
+          "source": "docs/research/captures/staging/2026-09-22T18-01-10-146Z-underground-pb-uy902r/palcos-390.png",
+          "sourceUrl": "https://www.undergroundpb.com.br/palcos/",
+          "capturedAt": "2026-09-22T18:01:50.952Z"
+        }
+      ]
+    },
+    {
+      "slug": "festival-alumio",
+      "reviewDate": "2026-09-22",
+      "status": "selected-after-visual-review-local-only",
+      "derivatives": [
+        {
+          "path": "src/assets/case-festival-alumio-screenshot.webp",
+          "width": 1440,
+          "height": 900,
+          "bytes": 82822,
+          "sha256": "ddcd985aafce822d6f6aac75f3f5efb671dc8d51c1da1e32fc4377677f4af727",
+          "source": "docs/research/captures/staging/2026-09-22T18-02-01-295Z-festival-alumio-buZZ42/home-1440.png",
+          "sourceUrl": "https://www.festivalalumio.com.br/",
+          "capturedAt": "2026-09-22T18:02:05.730Z"
+        },
+        {
+          "path": "public/cases/festival-alumio/home-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 57977,
+          "sha256": "383b472a275ac37ff2eda24e6e9f823902c20277ea3debddc7bc1371daa45b98",
+          "source": "docs/research/captures/staging/2026-09-22T18-02-01-295Z-festival-alumio-buZZ42/home-1440.png",
+          "sourceUrl": "https://www.festivalalumio.com.br/",
+          "capturedAt": "2026-09-22T18:02:05.730Z"
+        },
+        {
+          "path": "public/cases/festival-alumio/programacao-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 41330,
+          "sha256": "29c3b678b768c9bfc4c8e2f62259f1c17a30cf5574855d309f0b356c3680aec2",
+          "source": "docs/research/captures/staging/2026-09-22T18-02-01-295Z-festival-alumio-buZZ42/programacao-1440.png",
+          "sourceUrl": "https://www.festivalalumio.com.br/programacao",
+          "capturedAt": "2026-09-22T18:02:23.946Z"
+        },
+        {
+          "path": "public/cases/festival-alumio/circuito-1440.avif",
+          "width": 1440,
+          "height": 900,
+          "bytes": 47323,
+          "sha256": "89dd64f7993416fbfc912a67e3c2be2c2d156326bd4f7eb2bc1454f4b176422f",
+          "source": "docs/research/captures/staging/2026-09-22T18-02-01-295Z-festival-alumio-buZZ42/circuito-1440.png",
+          "sourceUrl": "https://www.festivalalumio.com.br/circuito",
+          "capturedAt": "2026-09-22T18:02:37.596Z"
+        },
+        {
+          "path": "public/cases/festival-alumio/programacao-390.avif",
+          "width": 390,
+          "height": 844,
+          "bytes": 22128,
+          "sha256": "2dc6b4774130a1bbffea98e60c1955b1a7d853489b8993cada6daf6854273c91",
+          "source": "docs/research/captures/staging/2026-09-22T18-02-01-295Z-festival-alumio-buZZ42/programacao-390.png",
+          "sourceUrl": "https://www.festivalalumio.com.br/programacao",
+          "capturedAt": "2026-09-22T18:02:30.143Z"
+        }
+      ]
+    }
+  ]
+}

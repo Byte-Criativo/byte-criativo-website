@@ -36,7 +36,7 @@ export function IndiceSemicolon({
             <a
               href={`#${item.id}`}
               data-indice-link={item.id}
-              className="indice-link flex size-(--space-7) items-center justify-center bg-surface"
+              className="indice-link flex size-(--space-7) items-center justify-center rounded-full bg-surface"
             >
               <span data-glifo aria-hidden="true" className="indice-glifo">
                 ;

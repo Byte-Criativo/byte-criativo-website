@@ -80,7 +80,7 @@ describe("Página Sobre (/sobre)", () => {
     }
 
     const link = within(secao).getByRole("link", {
-      name: "Ver o processo completo",
+      name: "Ver como trabalhamos",
     })
     expect(link).toHaveAttribute("href", "/processo")
   })

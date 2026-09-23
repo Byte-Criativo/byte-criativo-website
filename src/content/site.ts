@@ -12,7 +12,7 @@ export const siteConfigRaw = {
   name: "Byte Criativo",
   tagline: "Design e engenharia na mesma frase;",
   description:
-    "A Byte Criativo projeta e constrói sites, plataformas e sistemas sob medida. Design e engenharia decididos juntos desde o diagnóstico.",
+    "Software house orientada por design. Criamos sites, sistemas e produtos digitais sob medida, com design e engenharia desde o diagnóstico.",
   taxId: "52.652.130/0001-02",
   contact: {
     email: CONTACT_EMAIL,
@@ -28,20 +28,20 @@ export const siteConfigRaw = {
   },
   navigation: {
     main: [
-      { label: "Trabalhos", href: "/portfolio" },
+      { label: "Projetos", href: "/portfolio" },
       { label: "Serviços", href: "/servicos" },
-      { label: "Processo", href: "/processo" },
+      { label: "Como trabalhamos", href: "/processo" },
       { label: "Sobre", href: "/sobre" },
     ],
     mobile: [
-      { label: "Trabalhos", href: "/portfolio" },
+      { label: "Projetos", href: "/portfolio" },
       { label: "Serviços", href: "/servicos" },
-      { label: "Processo", href: "/processo" },
+      { label: "Como trabalhamos", href: "/processo" },
       { label: "Sobre", href: "/sobre" },
       { label: "Contato", href: "/contato" },
     ],
     primaryCta: {
-      label: "Falar sobre um projeto",
+      label: "Falar sobre meu projeto",
       href: "/contato",
     },
   },
@@ -51,16 +51,18 @@ export const siteConfigRaw = {
         title: "Byte Criativo",
         tagline: "Design e engenharia na mesma frase;",
         lines: [
-          "Byte Criativo, design e engenharia de software.",
+          "Byte Criativo, software house orientada por design.",
           "CNPJ 52.652.130/0001-02",
         ],
       },
       {
-        title: "Trabalhos",
+        title: "Projetos",
         links: [
           { label: "Underground PB", href: "/portfolio/underground-pb" },
           { label: "Festival Alumiô", href: "/portfolio/festival-alumio" },
-          { label: "Todos os trabalhos", href: "/portfolio" },
+          { label: "GOROMAX", href: "/portfolio/goromax" },
+          { label: "Carlos Ferrer Online", href: "/portfolio/carlos-ferrer" },
+          { label: "Todos os projetos", href: "/portfolio" },
         ],
       },
       {
@@ -88,9 +90,9 @@ export const siteConfigRaw = {
         ],
       },
       {
-        title: "Estúdio",
+        title: "Byte Criativo",
         links: [
-          { label: "Processo", href: "/processo" },
+          { label: "Como trabalhamos", href: "/processo" },
           { label: "Sobre", href: "/sobre" },
           { label: "Contato", href: "/contato" },
           { label: "Privacidade", href: "/privacidade" },

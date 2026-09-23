@@ -30,13 +30,16 @@ export function HomeHero({
     <section
       id="hero"
       aria-label="Início"
-      className="pt-(--space-6) pb-(--space-8) lg:pt-(--space-8) lg:pb-(--space-9)"
+      className="home-hero pt-(--space-6) pb-(--space-8) lg:pt-(--space-7) lg:pb-(--space-8)"
     >
       <div className="mx-auto max-w-(--grid-container-max) px-(--grid-margin)">
         <div className="grid grid-cols-1 items-start gap-(--grid-gutter) lg:grid-cols-12">
           {/* Coluna 1-5: Posicionamento, H1, Apoio e Ações */}
           <div className="flex flex-col gap-(--space-5) lg:col-span-5">
-            <Heading nivel={1} semicolon>
+            <p className="hero-eyebrow text-caption font-semibold text-brand-blue">
+              Software house orientada por design
+            </p>
+            <Heading nivel={1} semicolon className="hero-title">
               {hero.h1.replace(/;$/, "")}
             </Heading>
             <Text papel="lede" medida>
@@ -53,7 +56,7 @@ export function HomeHero({
           </div>
 
           {/* Coluna 6-12: Sala Underground PB com Ficha e Frente/Verso */}
-          <div className="lg:col-span-7">
+          <div className="hero-project lg:col-span-7">
             <FrenteVersoProvider projeto={salaItem.name}>
               <Ficha
                 id="ficha-underground-pb"

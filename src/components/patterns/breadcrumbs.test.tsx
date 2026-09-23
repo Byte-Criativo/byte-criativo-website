@@ -4,7 +4,7 @@ import { Breadcrumbs, type NivelTrilha } from "./breadcrumbs"
 
 const TRILHA: NivelTrilha[] = [
   { rotulo: "Início", href: "/" },
-  { rotulo: "Trabalhos", href: "/portfolio" },
+  { rotulo: "Projetos", href: "/portfolio" },
   { rotulo: "Festival Alumiô" },
 ]
 

@@ -65,8 +65,65 @@ test("os dois cases publicados abrem com créditos, galeria e navegação", asyn
   await expect(page.getByText("Atuação da Byte")).toBeVisible()
   await expect(page.locator("[data-galeria-item]")).toHaveCount(4)
   await expect(
-    page.getByRole("link", { name: "Ver todos os trabalhos" }),
+    page.getByRole("link", { name: "Ver todos os projetos" }),
   ).toBeVisible()
+})
+
+test("novos cases distinguem cliente de projeto próprio e continuam a navegação", async ({
+  page,
+}) => {
+  await page.goto("/portfolio")
+  await page
+    .getByRole("link", { name: "Ver estudo de caso do GOROMAX" })
+    .click()
+  await expect(page).toHaveURL(/\/portfolio\/goromax$/)
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("GOROMAX")
+  await expect(
+    page.getByText(
+      "desenvolvimento do site · design e UI/UX · identidade · conteúdo do site",
+      { exact: true },
+    ),
+  ).toBeVisible()
+  await expect(page.locator("[data-galeria-item]")).toHaveCount(3)
+  await page
+    .getByRole("button", { name: /Ampliar imagem:/ })
+    .first()
+    .click()
+  await expect(page.getByRole("dialog")).toBeVisible()
+  await page.keyboard.press("Escape")
+  await page
+    .getByRole("link", { name: "Próximo projeto: Carlos Ferrer Online" })
+    .click()
+  await expect(page).toHaveURL(/\/portfolio\/carlos-ferrer$/)
+  await expect(
+    page.getByText("Projeto próprio · currículo e portfólio", { exact: true }),
+  ).toBeVisible()
+  await expect(page.locator("[data-galeria-item]")).toHaveCount(3)
+  await expect(
+    page.getByRole("link", { name: "Projeto anterior: GOROMAX" }),
+  ).toHaveAttribute("href", "/portfolio/goromax")
+  await expect(
+    page.getByRole("link", { name: /Próximo projeto:/ }),
+  ).toHaveCount(0)
+  // O diálogo fechado contém cópias ampliadas; verificar capa e miniaturas visíveis.
+  const imagens = page.locator("article img:visible")
+  await expect(imagens).toHaveCount(4)
+  for (const img of await imagens.all()) {
+    await img.scrollIntoViewIfNeeded()
+    await expect(img).toBeVisible()
+    await expect
+      .poll(() =>
+        img.evaluate(
+          (el: HTMLImageElement) => el.complete && el.naturalWidth > 0,
+        ),
+      )
+      .toBe(true)
+  }
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true)
 })
 
 test.describe("formulário sem JavaScript", () => {

@@ -6,10 +6,10 @@ describe("TextLink", () => {
   it("link interno usa next/link e não abre em nova aba", () => {
     render(
       <TextLink href="/portfolio" variante="acao">
-        Ver todos os trabalhos
+        Ver todos os projetos
       </TextLink>,
     )
-    const link = screen.getByRole("link", { name: "Ver todos os trabalhos" })
+    const link = screen.getByRole("link", { name: "Ver todos os projetos" })
     expect(link).toHaveAttribute("href", "/portfolio")
     expect(link).not.toHaveAttribute("target")
     expect(link).not.toHaveAttribute("rel")
@@ -23,11 +23,11 @@ describe("TextLink", () => {
         externo
         complemento="do Festival Alumiô"
       >
-        Ver projeto no ar
+        Visitar site
       </TextLink>,
     )
     const link = screen.getByRole("link", {
-      name: "Ver projeto no ar do Festival Alumiô (abre em nova aba)",
+      name: "Visitar site do Festival Alumiô (abre em nova aba)",
     })
     expect(link).toHaveAttribute("target", "_blank")
     expect(link).toHaveAttribute("rel", "noopener noreferrer")
@@ -36,7 +36,7 @@ describe("TextLink", () => {
   it("o marcador de link externo fica fora do nome acessível", () => {
     render(
       <TextLink href="https://exemplo.com" externo>
-        Ver projeto no ar
+        Visitar site
       </TextLink>,
     )
     expect(screen.getByText("↗", { exact: false })).toHaveAttribute(
@@ -51,7 +51,7 @@ describe("TextLink", () => {
   it("M1: o ↗ usa espaço não separável (U+00A0), não espaço comum", () => {
     render(
       <TextLink href="https://exemplo.com" externo>
-        Ver projeto no ar
+        Visitar site
       </TextLink>,
     )
     const marcador = screen.getByText("↗", { exact: false })
@@ -87,10 +87,10 @@ describe("TextLink", () => {
   it("navegacao marca a página atual com aria-current", () => {
     render(
       <TextLink href="/portfolio" variante="navegacao" aria-current="page">
-        Trabalhos
+        Projetos
       </TextLink>,
     )
-    expect(screen.getByRole("link", { name: "Trabalhos" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Projetos" })).toHaveAttribute(
       "aria-current",
       "page",
     )
@@ -134,10 +134,10 @@ describe("TextLink", () => {
   it("I1: navegacao repete no foco o mesmo sublinhado fino do hover (não o de aria-current)", () => {
     render(
       <TextLink href="/portfolio" variante="navegacao">
-        Trabalhos
+        Projetos
       </TextLink>,
     )
-    const link = screen.getByRole("link", { name: "Trabalhos" })
+    const link = screen.getByRole("link", { name: "Projetos" })
     expect(link).toHaveClass("focus-visible:underline")
     expect(link).toHaveClass(
       "focus-visible:decoration-(length:--border-w-decorative)",
@@ -151,7 +151,7 @@ describe("TextLink", () => {
     render(
       // @ts-expect-error externo nunca vale para a variante navegacao.
       <TextLink href="/portfolio" variante="navegacao" externo>
-        Trabalhos
+        Projetos
       </TextLink>,
     )
   })

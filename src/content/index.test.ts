@@ -25,10 +25,10 @@ describe("Content Loaders (src/content/index.ts)", () => {
 
   it("getHomePage() retorna dados válidos das 6 seções da home", () => {
     const home = getHomePage()
-    expect(home.hero.h1).toContain("Quem desenha o seu site")
+    expect(home.hero.h1).toContain("Software sob medida")
     expect(home.salas.items.length).toBeGreaterThanOrEqual(2)
     expect(home.formaDePensar.principles).toHaveLength(3)
-    expect(home.oQueFazemos.situations).toHaveLength(4)
+    expect(home.oQueFazemos.situations).toHaveLength(3)
     expect(home.comoAnda.steps).toHaveLength(5)
     expect(home.conversa.h2).toBe("Conte o que você quer construir;")
   })

@@ -7,7 +7,7 @@ import { VisuallyHidden } from "./visually-hidden"
 
 export type TextLinkVariante = "acao" | "inline" | "navegacao"
 
-const BASE = "text-ink underline-offset-(--desloc-sublinhado)"
+const BASE = "underline-offset-(--desloc-sublinhado)"
 
 // I1 / RC2: "o foco visível repete o feedback do hover". Cada variante tem
 // um par `focus-visible:*` idêntico ao `ponteiro:hover:*` correspondente —
@@ -16,14 +16,14 @@ const BASE = "text-ink underline-offset-(--desloc-sublinhado)"
 // (quando não é a página atual) usam border.decorative nos três.
 const VARIANTE: Record<TextLinkVariante, string> = {
   // Link de ação isolado: nunca usa a exceção de texto corrido do 2.5.8.
-  acao: "inline-flex min-h-(--alvo-toque) items-center gap-(--space-1) text-label underline decoration-(length:--border-w-decorative) ponteiro:hover:decoration-(length:--border-w-focus) focus-visible:decoration-(length:--border-w-focus)",
+  acao: "inline-flex min-h-(--alvo-toque) items-center gap-(--space-1) text-label text-link underline decoration-(length:--border-w-decorative) ponteiro:hover:decoration-(length:--border-w-focus) focus-visible:decoration-(length:--border-w-focus)",
   // Dentro de frase: herda tamanho e peso; sempre sublinhado (1.4.1).
   inline:
-    "underline decoration-(length:--border-w-decorative) ponteiro:hover:decoration-(length:--border-w-focus) focus-visible:decoration-(length:--border-w-focus)",
+    "text-link underline decoration-(length:--border-w-decorative) ponteiro:hover:decoration-(length:--border-w-focus) focus-visible:decoration-(length:--border-w-focus)",
   // NavLink: sem sublinhado em repouso; a página atual ganha sublinhado de
   // border.focus junto com aria-current (nunca só cor).
   navegacao:
-    "inline-flex min-h-(--alvo-min) items-center no-underline ponteiro:hover:underline ponteiro:hover:decoration-(length:--border-w-decorative) focus-visible:underline focus-visible:decoration-(length:--border-w-decorative) aria-[current]:underline aria-[current]:decoration-(length:--border-w-focus)",
+    "inline-flex min-h-(--alvo-toque) items-center text-ink no-underline ponteiro:hover:underline ponteiro:hover:decoration-(length:--border-w-decorative) focus-visible:underline focus-visible:decoration-(length:--border-w-decorative) aria-[current]:underline aria-[current]:decoration-(length:--border-w-focus)",
 }
 
 export function textLinkClasses(

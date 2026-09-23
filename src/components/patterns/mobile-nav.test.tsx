@@ -1,3 +1,4 @@
+import { BrandLogo } from "./brand-logo"
 import { render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { renderToStaticMarkup } from "react-dom/server"
@@ -37,9 +38,9 @@ function comLarguraDeCelular(): MatchMediaFalso {
 }
 
 const NAVEGACAO = [
-  { rotulo: "Trabalhos", href: "/portfolio", secao: "/portfolio" },
+  { rotulo: "Projetos", href: "/portfolio", secao: "/portfolio" },
   { rotulo: "Serviços", href: "/servicos", secao: "/servicos" },
-  { rotulo: "Processo", href: "/processo" },
+  { rotulo: "Como trabalhamos", href: "/processo" },
   { rotulo: "Sobre", href: "/sobre" },
   { rotulo: "Contato", href: "/contato" },
 ]
@@ -50,7 +51,7 @@ function elemento() {
       navegacao={NAVEGACAO}
       whatsapp={{ rotulo: "Chamar no WhatsApp", mensagem: "Olá!" }}
       emailHref="mailto:contato@bcriativo.com"
-      wordmark={<svg aria-hidden="true" focusable="false" />}
+      wordmark={<BrandLogo />}
     />
   )
 }
@@ -108,7 +109,7 @@ describe("MobileNav", () => {
     const nav = within(dialogo).getByRole("navigation", { name: "Principal" })
     expect(within(nav).getAllByRole("link")).toHaveLength(5)
     expect(
-      within(dialogo).getByRole("link", { name: "Falar sobre um projeto" }),
+      within(dialogo).getByRole("link", { name: "Falar sobre meu projeto" }),
     ).toBeInTheDocument()
     expect(
       within(dialogo).getByRole("link", {
@@ -153,6 +154,19 @@ describe("MobileNav", () => {
     expect(dialogo).not.toHaveAttribute("open")
   })
 
+  it("a marca do menu retorna para a home e fecha o diálogo, inclusive na própria home", async () => {
+    montar()
+    await userEvent.click(screen.getByRole("button", { name: "Menu" }))
+    const dialogo = screen.getByRole("dialog")
+    const inicio = within(dialogo).getByRole("link", {
+      name: "Byte Criativo, página inicial",
+    })
+    expect(inicio).toHaveAttribute("href", "/")
+    expect(inicio.querySelector("img")).toHaveAttribute("src", "/logoByte.png")
+    await userEvent.click(inicio)
+    expect(dialogo).not.toHaveAttribute("open")
+  })
+
   it("concluir uma navegação fecha o menu", async () => {
     const { rerender } = montar()
     await userEvent.click(screen.getByRole("button", { name: "Menu" }))
@@ -183,7 +197,9 @@ describe("MobileNav", () => {
     montar()
     await userEvent.click(screen.getByRole("button", { name: "Menu" }))
     const dialogo = screen.getByRole("dialog")
-    const fechar = within(dialogo).getByRole("button", { name: "Fechar menu" })
+    const inicio = within(dialogo).getByRole("link", {
+      name: "Byte Criativo, página inicial",
+    })
     const ultimoLink = within(dialogo).getByRole("link", {
       name: "Escrever e-mail",
     })
@@ -192,7 +208,7 @@ describe("MobileNav", () => {
     expect(ultimoLink).toHaveFocus()
 
     await userEvent.keyboard("{Tab}")
-    expect(fechar).toHaveFocus()
+    expect(inicio).toHaveFocus()
 
     await userEvent.keyboard("{Shift>}{Tab}{/Shift}")
     expect(ultimoLink).toHaveFocus()

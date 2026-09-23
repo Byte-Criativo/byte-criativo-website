@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../styles/navigation.css";
 
 @theme {
   --color-*: initial;
@@ -20,9 +21,12 @@
   --mark-rest: #8a8a8a;
   --accent: #f65606;
   --accent-text: #b83f00;
-  --action-bg: #000000;
-  --action-ink: #ffffff;
-  --action-bg-hover: #1f1f1f;
+  --action-bg: #f65606;
+  --action-ink: #000000;
+  --action-bg-hover: #ff7a3d;
+  --brand-blue: #0b5cad;
+  --brand-surface: #eef5fc;
+  --link: #0b5cad;
   --success-text: #1b7a43;
   --danger-text: #b3261e;
   --warning-text: #8a5a00;
@@ -54,9 +58,12 @@
   --mark-rest: #a6a6a6;
   --accent: #f65606;
   --accent-text: #ff7a3d;
-  --action-bg: #f2f0eb;
+  --action-bg: #f65606;
   --action-ink: #000000;
-  --action-bg-hover: #ffffff;
+  --action-bg-hover: #ff7a3d;
+  --brand-blue: #53a4f4;
+  --brand-surface: #141414;
+  --link: #53a4f4;
   --success-text: #28b764;
   --danger-text: #e9837d;
   --warning-text: #dc9000;
@@ -92,6 +99,22 @@
 }
 
 [data-case="underground-pb"] [data-bloco="alt"] {
+  --bg: #eee7dc;
+}
+
+[data-case="carlos-ferrer"] {
+  --bg: #f4efe7;
+  --ink: #111111;
+  --ink-muted: #59544d;
+  --action-bg: #111111;
+  --action-bg-hover: #111111;
+  --action-ink: #f4efe7;
+  --room-easel: #111111;
+  --focus-ring: #000000;
+  --focus-halo: #ffffff;
+}
+
+[data-case="carlos-ferrer"] [data-bloco="alt"] {
   --bg: #eee7dc;
 }
 
@@ -319,6 +342,9 @@
 
 @theme inline {
   --font-mono: var(--ff-mono);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-surface: var(--brand-surface);
+  --color-link: var(--link);
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
@@ -763,5 +789,72 @@ dialog::backdrop {
 
   .faq-item[open]::details-content {
     opacity: 1;
+  }
+}
+
+/* Evolução do layout Cavalete: cores da interface não invadem a identidade
+   de cada projeto. Links dentro das salas usam a tinta validada da sala. */
+[data-case] {
+  --link: var(--ink);
+}
+
+.home-hero {
+  background: linear-gradient(180deg, var(--brand-surface), var(--bg));
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hero-eyebrow::before {
+  content: "";
+  width: var(--space-5);
+  height: var(--border-w-easel);
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.hero-title {
+  text-wrap: balance;
+}
+
+.hero-project {
+  min-width: 0;
+  border-top: var(--border-w-easel) solid var(--brand-blue);
+  padding-top: var(--space-5);
+}
+
+.hero-project article {
+  background: transparent;
+}
+
+/* A ficha já está dentro do container: a margem global de 64px reduzia
+     a captura duas vezes. O respiro local conserva o cavalete e amplia a obra. */
+.hero-project [data-parte="cabeca"],
+.hero-project [data-parte="corpo"] {
+  padding-inline: 0;
+}
+
+.hero-project .sala-obra {
+  padding-inline: var(--space-5);
+}
+
+.hero-project .sala-superficie {
+  padding-top: var(--space-5);
+}
+
+.services-overview {
+  background: var(--brand-surface);
+}
+
+.services-overview h3 {
+  color: var(--brand-blue);
+}
+
+@media (min-width: 64rem) {
+  .home-hero > div > div {
+    column-gap: var(--space-7);
   }
 }

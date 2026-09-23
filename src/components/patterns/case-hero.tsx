@@ -59,7 +59,7 @@ export function CaseHero({
           externo
           complemento={`do ${projetoNoAr.nome}`}
         >
-          Ver projeto no ar
+          Visitar site
         </TextLink>
       </div>
 

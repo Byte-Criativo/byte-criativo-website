@@ -91,7 +91,7 @@ describe("ServiceDetailPage - Renderização", () => {
 
     // CTAs do hero
     const heroCta = screen.getAllByRole("link", {
-      name: "Falar sobre um projeto",
+      name: "Falar sobre meu projeto",
     })[0]
     expect(heroCta).toHaveAttribute(
       "href",
@@ -154,7 +154,7 @@ describe("ServiceDetailPage - Renderização", () => {
       expect(screen.getByText(item)).toBeInTheDocument()
     }
     expect(
-      screen.getByRole("link", { name: "Ver o processo completo" }),
+      screen.getByRole("link", { name: "Ver como trabalhamos" }),
     ).toHaveAttribute("href", "/processo")
 
     // Seção "Dúvidas sobre {nome do serviço em minúsculas}"

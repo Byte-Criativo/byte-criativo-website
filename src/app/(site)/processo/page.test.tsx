@@ -27,14 +27,14 @@ describe("Página Processo (/processo)", () => {
     expect(tipos).toContain("BreadcrumbList")
   })
 
-  it("renderiza breadcrumbs com Início e Processo como página atual", () => {
+  it("renderiza breadcrumbs com Início e Como trabalhamos como página atual", () => {
     render(<ProcessoPage />)
     const nav = screen.getByRole("navigation", { name: "Caminho da página" })
     expect(within(nav).getByRole("link", { name: "Início" })).toHaveAttribute(
       "href",
       "/",
     )
-    expect(within(nav).getByText("Processo")).toHaveAttribute(
+    expect(within(nav).getByText("Como trabalhamos")).toHaveAttribute(
       "aria-current",
       "page",
     )

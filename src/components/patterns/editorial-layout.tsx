@@ -26,7 +26,7 @@ export function EditorialLayout({
       data-variante={variante}
       className={cn(
         "mx-auto grid w-full max-w-(--grid-container-max) grid-cols-1 gap-(--grid-gutter) px-(--grid-margin) md:grid-cols-8 lg:grid-cols-12",
-        "[&>*]:lg:col-span-7",
+        "[&>*]:md:col-span-8 [&>*]:lg:col-span-7",
         // Na variante "texto" não há margem de notas: a figura acompanha a
         // mesma coluna do texto em vez de sangrar.
         variante === "com-notas" && "[&>figure]:lg:col-span-10",

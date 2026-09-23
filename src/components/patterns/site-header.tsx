@@ -21,7 +21,7 @@ export type ItemNavegacao = { rotulo: string; href: string; secao?: string }
 export function SiteHeader({
   navegacao,
   ctaHref = "/contato",
-  ctaRotulo = "Falar sobre um projeto",
+  ctaRotulo = "Falar sobre meu projeto",
   wordmark,
   menu,
   className,
@@ -46,20 +46,24 @@ export function SiteHeader({
         className,
       )}
     >
-      <Container className="flex items-center justify-between gap-(--space-5) py-(--space-3) lg:py-(--space-5)">
+      <Container className="flex items-center justify-between gap-(--space-4) py-(--space-3) lg:py-(--space-5) xl:gap-(--space-5)">
         <Link
           href={"/" as Route}
-          className="inline-flex min-h-(--alvo-toque) items-center"
+          className="inline-flex min-h-(--alvo-toque) shrink-0 items-center"
         >
           {wordmark}
           <VisuallyHidden>Byte Criativo, página inicial</VisuallyHidden>
         </Link>
 
         <nav aria-label="Principal" className="hidden lg:block">
-          <ul className="flex items-center gap-(--space-6)">
+          <ul className="flex items-center gap-(--space-4) xl:gap-(--space-5)">
             {navegacao.map((item) => (
               <li key={item.href}>
-                <NavLink href={item.href} secao={item.secao}>
+                <NavLink
+                  href={item.href}
+                  secao={item.secao}
+                  className="min-h-(--alvo-toque) whitespace-nowrap"
+                >
                   {item.rotulo}
                 </NavLink>
               </li>
@@ -69,11 +73,11 @@ export function SiteHeader({
 
         {/* 3.2.6: em /contato o CTA continua visível e marcado como página
             atual — quem sabe a rota é a folha Client CtaAtual. */}
-        <div className="hidden lg:block">
+        <div className="site-header-cta hidden shrink-0 lg:block">
           <CtaAtual href={ctaHref} rotulo={ctaRotulo} />
         </div>
 
-        <div className="lg:hidden">{menu}</div>
+        <div className="shrink-0 lg:hidden">{menu}</div>
       </Container>
 
       <div data-progresso aria-hidden="true" className="progresso-leitura" />

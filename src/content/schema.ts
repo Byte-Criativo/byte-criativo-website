@@ -252,7 +252,7 @@ export const HomePageSchema = z.strictObject({
           links: z.array(NavItemSchema).min(1),
         }),
       )
-      .length(4),
+      .length(3),
     footerNote: z.string().min(5),
     cta: NavItemSchema,
     bridgeText: z.string().min(3),

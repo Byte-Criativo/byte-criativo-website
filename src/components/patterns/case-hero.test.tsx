@@ -45,7 +45,7 @@ describe("CaseHero", () => {
   it("o link externo segue a RC5", () => {
     render(<CaseHero {...PROPS} />)
     const link = screen.getByRole("link", {
-      name: "Ver projeto no ar do Festival Alumiô (abre em nova aba)",
+      name: "Visitar site do Festival Alumiô (abre em nova aba)",
     })
     expect(link).toHaveAttribute("href", "https://festivalalumio.com.br")
     expect(link).toHaveAttribute("target", "_blank")

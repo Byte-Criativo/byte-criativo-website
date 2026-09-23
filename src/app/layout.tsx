@@ -14,6 +14,7 @@ const sans = Schibsted_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  icons: { icon: "/MiniLogo.png" },
   title: { default: "Byte Criativo", template: "%s | Byte Criativo" },
 }
 

@@ -26,6 +26,9 @@ import { BrowserFrame } from "@/components/patterns/browser-frame"
 import CaseUndergroundPB from "@/assets/case-undergroundpb-screenshot.webp"
 import CaseFestivalAlumio from "@/assets/case-festival-alumio-screenshot.webp"
 
+import CaseGoromax from "@/assets/case-goromax-screenshot.webp"
+import CaseCarlosFerrer from "@/assets/case-carlos-ferrer-screenshot.webp"
+
 const portfolio = getPortfolioPage()
 const salas = getHomePage().salas
 
@@ -33,6 +36,8 @@ const IMAGENS: Record<
   string,
   { data: typeof CaseUndergroundPB; dominio: string }
 > = {
+  goromax: { data: CaseGoromax, dominio: "goromax.com.br" },
+  "carlos-ferrer": { data: CaseCarlosFerrer, dominio: "carlosferrer.online" },
   "underground-pb": {
     data: CaseUndergroundPB,
     dominio: "undergroundpb.com.br",
@@ -70,7 +75,7 @@ export default function PortfolioPage() {
     }),
     breadcrumbsJsonLd([
       { name: "Início", path: "/" },
-      { name: "Trabalhos", path: "/portfolio" },
+      { name: "Projetos", path: "/portfolio" },
     ]),
   ])
 
@@ -89,7 +94,7 @@ export default function PortfolioPage() {
       >
         <Container className="flex flex-col gap-(--space-6)">
           <Breadcrumbs
-            trilha={[{ rotulo: "Início", href: "/" }, { rotulo: "Trabalhos" }]}
+            trilha={[{ rotulo: "Início", href: "/" }, { rotulo: "Projetos" }]}
           />
           <div className="flex max-w-(--medida-max) flex-col gap-(--space-4)">
             <Heading nivel={1} id="hero-titulo" semicolon>
@@ -107,7 +112,7 @@ export default function PortfolioPage() {
       {/* Salas dos trabalhos publicados */}
       <section
         id="trabalhos"
-        aria-label="Trabalhos publicados"
+        aria-label="Projetos publicados"
         className="flex flex-col gap-(--space-8) pb-(--space-8) lg:pb-(--space-9)"
       >
         {salas.items.map((sala, indice) => {
