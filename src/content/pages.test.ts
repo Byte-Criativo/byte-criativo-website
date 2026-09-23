@@ -243,7 +243,7 @@ describe("Páginas institucionais (Processo, Sobre, Contato, Obrigado, Privacida
       expect(PortfolioPageSchema.safeParse(portfolioPage).success).toBe(true)
     })
 
-    it("usa a versão publicável da introdução, sem mencionar a Goromax (D12)", () => {
+    it("apresenta os projetos autorizados e distingue o projeto próprio", () => {
       expect(portfolioPage.intro.length).toBeGreaterThanOrEqual(2)
       const introCompleta = portfolioPage.intro.join(" ")
       expect(introCompleta).toContain("banda")
