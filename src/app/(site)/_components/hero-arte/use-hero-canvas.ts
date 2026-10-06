@@ -53,41 +53,63 @@ type NavegadorComDicas = Navigator & {
   deviceMemory?: number
 }
 
-function compilar(
-  gl: WebGLRenderingContext,
-  tipo: number,
-  fonte: string,
-): WebGLShader | null {
-  const shader = gl.createShader(tipo)
-  if (!shader) return null
-  gl.shaderSource(shader, fonte)
-  gl.compileShader(shader)
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error("hero-arte: shader", gl.getShaderInfoLog(shader))
-    gl.deleteShader(shader)
-    return null
-  }
-  return shader
+type CompilacaoParalela = { COMPLETION_STATUS_KHR: number } | null
+
+type Programa = {
+  programa: WebGLProgram
+  vs: WebGLShader
+  fs: WebGLShader
 }
 
-function montarPrograma(gl: WebGLRenderingContext): WebGLProgram | null {
-  const vs = compilar(gl, gl.VERTEX_SHADER, VERTEX_SHADER)
-  const fs = compilar(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER)
-  if (!vs || !fs) return null
+/**
+ * Dispara compilação e link SEM consultar o resultado: consultar
+ * COMPILE_STATUS/LINK_STATUS obriga a thread principal a esperar o driver,
+ * e a compilação de um fragment shader pode levar centenas de ms em GPU
+ * integrada ou celular. Com KHR_parallel_shader_compile o driver compila
+ * em paralelo e `programaPronto` só pergunta se já terminou.
+ */
+function iniciarPrograma(gl: WebGLRenderingContext): Programa | null {
+  const vs = gl.createShader(gl.VERTEX_SHADER)
+  const fs = gl.createShader(gl.FRAGMENT_SHADER)
   const programa = gl.createProgram()
-  if (!programa) return null
+  if (!vs || !fs || !programa) return null
+  gl.shaderSource(vs, VERTEX_SHADER)
+  gl.shaderSource(fs, FRAGMENT_SHADER)
+  gl.compileShader(vs)
+  gl.compileShader(fs)
   gl.attachShader(programa, vs)
   gl.attachShader(programa, fs)
   gl.linkProgram(programa)
+  return { programa, vs, fs }
+}
+
+function programaPronto(
+  gl: WebGLRenderingContext,
+  { programa, vs, fs }: Programa,
+  paralelo: CompilacaoParalela,
+): "pendente" | "ok" | "erro" {
+  if (
+    paralelo &&
+    !gl.getProgramParameter(programa, paralelo.COMPLETION_STATUS_KHR)
+  ) {
+    return "pendente"
+  }
+  if (!gl.getProgramParameter(programa, gl.LINK_STATUS)) {
+    console.error(
+      "hero-arte: programa",
+      gl.getProgramInfoLog(programa),
+      gl.getShaderInfoLog(vs),
+      gl.getShaderInfoLog(fs),
+    )
+    return "erro"
+  }
   gl.deleteShader(vs)
   gl.deleteShader(fs)
-  if (!gl.getProgramParameter(programa, gl.LINK_STATUS)) {
-    console.error("hero-arte: programa", gl.getProgramInfoLog(programa))
-    gl.deleteProgram(programa)
-    return null
-  }
-  return programa
+  return "ok"
 }
+
+/** Renderizadores por software: sem aceleração, a arte custaria a CPU toda. */
+const RENDERIZADOR_POR_SOFTWARE = /swiftshader|llvmpipe|softpipe|software/i
 
 function lerCores(): Record<keyof typeof HERO_ARTE.cores, Oklab> {
   const c = HERO_ARTE.cores
@@ -151,6 +173,17 @@ export function useHeroCanvas(
       marcar("fallback")
       return
     }
+    const depuracao = gl.getExtension("WEBGL_debug_renderer_info")
+    const renderizador = depuracao
+      ? String(gl.getParameter(depuracao.UNMASKED_RENDERER_WEBGL))
+      : ""
+    if (RENDERIZADOR_POR_SOFTWARE.test(renderizador)) {
+      marcar("fallback")
+      return
+    }
+    const paralelo = gl.getExtension(
+      "KHR_parallel_shader_compile",
+    ) as CompilacaoParalela
 
     const preset = HERO_ARTE.presets[intensidade]
     const movimentoReduzido = window.matchMedia(
@@ -163,7 +196,7 @@ export function useHeroCanvas(
     // e o servidor nunca a vê (sem erro de hidratação).
     const semente = Math.random()
 
-    let programa: WebGLProgram | null = null
+    let programa: Programa | null = null
     let buffer: WebGLBuffer | null = null
     let uniforms: Uniforms | null = null
     let cores = lerCores()
@@ -190,8 +223,9 @@ export function useHeroCanvas(
 
     const ponteiro = { x: -10, y: -10, alvoX: -10, alvoY: -10 }
 
+    /** Dispara a compilação; o programa só entra em uso em `concluir`. */
     const preparar = (): boolean => {
-      programa = montarPrograma(gl)
+      programa = iniciarPrograma(gl)
       if (!programa) return false
       buffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
@@ -201,14 +235,19 @@ export function useHeroCanvas(
         new Float32Array([-1, -1, 3, -1, -1, 3]),
         gl.STATIC_DRAW,
       )
-      gl.useProgram(programa)
-      const pos = gl.getAttribLocation(programa, "a_pos")
+      return true
+    }
+
+    /** Programa linkado: liga atributos e uniforms e zera o relógio da arte. */
+    const concluir = (prog: WebGLProgram) => {
+      gl.useProgram(prog)
+      const pos = gl.getAttribLocation(prog, "a_pos")
       gl.enableVertexAttribArray(pos)
       gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0)
-      const prog = programa
       uniforms = Object.fromEntries(
         UNIFORMS.map((nome) => [nome, gl.getUniformLocation(prog, nome)]),
       ) as Uniforms
+      inicio = performance.now()
 
       const u = uniforms
       gl.uniform1f(u.u_semente, semente)
@@ -219,7 +258,7 @@ export function useHeroCanvas(
       gl.uniform1f(u.u_forcaPonteiro, preset.ponteiro)
       gl.uniform1f(u.u_grade, preset.grade)
       aplicarCores()
-      return true
+      gl.uniform2f(u.u_res, canvas.width, canvas.height)
     }
 
     const aplicarCores = () => {
@@ -294,6 +333,23 @@ export function useHeroCanvas(
     const quadro = (agora: number) => {
       raf = 0
       if (!continuar()) return
+
+      // Enquanto o driver compila, só espera (um quadro por vez, sem
+      // bloquear a thread principal).
+      if (!uniforms) {
+        if (!programa) return
+        const estado = programaPronto(gl, programa, paralelo)
+        if (estado === "pendente") {
+          raf = requestAnimationFrame(quadro)
+          return
+        }
+        if (estado === "erro") {
+          marcar("fallback")
+          return
+        }
+        concluir(programa.programa)
+        ultimo = 0
+      }
 
       // Qualidade adaptativa pelo tempo entre quadros, relativo ao período
       // do monitor (ver menorDt).
@@ -415,7 +471,6 @@ export function useHeroCanvas(
     let cancelarInicio: (() => void) | null = null
     const iniciar = () => {
       cancelarInicio = null
-      inicio = performance.now()
       if (!preparar()) {
         marcar("fallback")
         return
@@ -466,7 +521,7 @@ export function useHeroCanvas(
       observadorTela.disconnect()
       observadorTamanho.disconnect()
       if (buffer) gl.deleteBuffer(buffer)
-      if (programa) gl.deleteProgram(programa)
+      if (programa) gl.deleteProgram(programa.programa)
       // Só libera o contexto quando o canvas saiu do DOM de verdade. No
       // modo estrito do React (dev) o efeito roda duas vezes no mesmo
       // canvas, e um contexto perdido voltaria do getContext já inutilizado.
