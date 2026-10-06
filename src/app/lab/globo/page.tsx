@@ -4,7 +4,7 @@ import type { GloboVariante } from "./globo-motor"
 
 /**
  * Rota TEMPORÁRIA de protótipo: conceito A, "Ponto e vírgula, planeta".
- * Fora do sitemap, da navegação e dos índices. `?v=contida|media|ousada`.
+ * Fora do sitemap, da navegação e dos índices. `?v=contida|media|ousada`; ousada é o padrão.
  */
 export const metadata: Metadata = {
   title: "Lab: globo de código",
@@ -20,6 +20,8 @@ export default async function LabGloboPage({
 }) {
   const params = await searchParams
   const v =
-    typeof params.v === "string" && VARIANTES.has(params.v) ? params.v : "media"
+    typeof params.v === "string" && VARIANTES.has(params.v)
+      ? params.v
+      : "ousada"
   return <GloboCena variante={v as GloboVariante} />
 }

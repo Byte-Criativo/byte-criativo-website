@@ -17,7 +17,7 @@ import { homePageData } from "@/content/home"
 import estilos from "./globo.module.css"
 import type { GloboVariante } from "./globo-motor"
 
-const VARIANTES: readonly GloboVariante[] = ["contida", "media", "ousada"]
+const VARIANTES: readonly GloboVariante[] = ["ousada", "media", "contida"]
 
 /**
  * Cena do protótipo: a composição real do hero (header falso, eyebrow,
@@ -150,7 +150,8 @@ export function GloboCena({
 
       <div className={estilos.proximo}>
         <Text papel="caption" tom="muted">
-          Seção seguinte (Projetos), só para ver a saída ao rolar.
+          Seção seguinte (Projetos), só para ver a saída ao rolar. Este bloco
+          tem 120 vh de altura.
         </Text>
       </div>
 
