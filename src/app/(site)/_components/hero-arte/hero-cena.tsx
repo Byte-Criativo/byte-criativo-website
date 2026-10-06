@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useLayoutEffect, useRef, type ReactElement } from "react"
-import { HERO_ARTE } from "./config"
+import { VARIANTE_DA_HOME } from "./config"
 import { HeroCanvas } from "./hero-canvas"
 
 /**
@@ -13,8 +13,8 @@ let jaViuEntrada = false
 
 /**
  * Ilha do hero. Três responsabilidades, nenhuma delas um listener de rolagem:
- * 1. monta o canvas da arte (o motor WebGL chega por import tardio, no
- *    início ocioso depois do load — ver use-hero-canvas.ts);
+ * 1. monta o canvas do globo (o motor chega por import tardio, no início
+ *    ocioso depois do load — ver use-hero-canvas.ts);
  * 2. grava na raiz `data-rolado` (sentinela do topo saiu da tela) e
  *    `data-hero-saiu` (o hero inteiro saiu), que o CSS usa para dar fundo ao
  *    header e mostrar o índice de `;`;
@@ -76,10 +76,7 @@ export function HeroCena(): ReactElement {
   return (
     <>
       <div ref={sentinela} aria-hidden="true" className="hero-sentinela" />
-      <HeroCanvas
-        intensidade={HERO_ARTE.presetDaHome}
-        ancoraSeletor=".hero-semicolon"
-      />
+      <HeroCanvas variante={VARIANTE_DA_HOME} ancoraSeletor=".hero-semicolon" />
     </>
   )
 }

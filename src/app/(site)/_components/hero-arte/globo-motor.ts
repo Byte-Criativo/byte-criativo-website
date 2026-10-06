@@ -1,11 +1,14 @@
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { LINHAS_DE_CODIGO } from "./codigo"
+import { GLOBO as CONFIG, type GloboVariante } from "./config"
+import type { HeroCanvasEstado } from "./use-hero-canvas"
 
 /**
- * Motor do protótipo "Ponto e vírgula, planeta": um globo feito de
- * paralelos de código real, em Canvas 2D com atlas de glifos, coreografado
- * pelo GSAP (entrada em timeline, laço no ticker, rolagem no ScrollTrigger).
+ * Motor do hero "Ponto e vírgula, planeta": um globo feito de paralelos de
+ * código real, em Canvas 2D com atlas de glifos, coreografado pelo GSAP
+ * (entrada em timeline, laço no ticker, rolagem no ScrollTrigger). Importado
+ * de forma tardia pelo hook, depois do `load`, em momento ocioso.
  *
  * Tridimensionalidade: cada glifo vive numa esfera unitária (latitude do
  * paralelo, longitude ao longo do anel). A cada quadro a esfera passa por
@@ -16,88 +19,6 @@ import { LINHAS_DE_CODIGO } from "./codigo"
  * é o da geometria, não um truque. O hemisfério de trás é desenhado
  * primeiro, muito fraco; a frente por cima.
  */
-
-export type GloboVariante = "media" | "contida" | "ousada"
-
-type Preset = {
-  paralelos: number
-  periodoS: number
-  lanterna: boolean
-  pulsosNoMeridiano: boolean
-  alfaFrente: number
-  nasceNoTitulo: boolean
-  achataNaRolagem: boolean
-}
-
-/** Parâmetros da peça, num lugar só. */
-export const CONFIG = {
-  presets: {
-    media: {
-      paralelos: 36,
-      periodoS: 100,
-      lanterna: true,
-      pulsosNoMeridiano: true,
-      alfaFrente: 0.62,
-      nasceNoTitulo: false,
-      achataNaRolagem: false,
-    },
-    contida: {
-      paralelos: 24,
-      periodoS: 120,
-      lanterna: false,
-      pulsosNoMeridiano: false,
-      alfaFrente: 0.55,
-      nasceNoTitulo: false,
-      achataNaRolagem: false,
-    },
-    ousada: {
-      paralelos: 36,
-      periodoS: 110,
-      lanterna: true,
-      pulsosNoMeridiano: true,
-      alfaFrente: 0.62,
-      nasceNoTitulo: true,
-      achataNaRolagem: true,
-    },
-  } satisfies Record<GloboVariante, Preset>,
-  /** Paralelos no celular (abaixo de 48 rem). */
-  paralelosCelular: 24,
-  /** Distância focal da câmera, em raios (1,8 a 2,4 convence). */
-  foco: 3,
-  /** Inclinação do eixo na tela (graus) e para dentro da tela (graus). */
-  inclinacaoZ: 20,
-  inclinacaoX: -13,
-  /** Precessão do eixo: amplitude (graus) e período (s). */
-  precessaoGraus: 1.5,
-  precessaoS: 40,
-  /** Parallax do ponteiro, em graus, com a inércia da lanterna. */
-  parallaxGraus: 4,
-  /** Latitude máxima dos paralelos (graus). */
-  latitudeMax: 78,
-  /** Deriva de velocidade entre paralelos (fração). */
-  deriva: 0.06,
-  /** Opacidade do texto: frente, horizonte e hemisfério de trás. */
-  alfaHorizonte: 0.07,
-  alfaTras: 0.06,
-  /** Lanterna do ponteiro: raio (px), desaceleração local. */
-  raioLanterna: 180,
-  desaceleracaoLanterna: 0.4,
-  /** Pulso laranja do `;` ao cruzar o meridiano: duração e máximo simultâneo. */
-  pulsoMs: 400,
-  pulsosSimultaneos: 4,
-  /** Respiração dos polos: amplitude e período (s). */
-  respiracaoPolos: 0.06,
-  respiracaoS: 6,
-  /** Entrada: duração total (s) e fator da versão curta. */
-  entradaS: 1.6,
-  entradaCurta: 0.25,
-  cores: {
-    laranja: "#f65606",
-    azul: "#0b5cad",
-    preto: "#000000",
-    superficie: "#eef5fc",
-  },
-} as const
 
 type Glifo = { ch: string; theta: number; dTheta: number; semicolon: boolean }
 type Anel = {
@@ -120,17 +41,21 @@ type Atlas = {
   mapa: Map<string, { x: number; w: number }>
 }
 
+type Preset = (typeof CONFIG.presets)[GloboVariante]
+
 export type GloboOpcoes = {
   variante: GloboVariante
   /** Caixa do `;` do título, para a variação ousada nascer dali. */
   ancora: () => DOMRect | null
-  /** Seção a que o ScrollTrigger se prende. */
+  /**
+   * Seção do hero: o ScrollTrigger se prende a ela e `data-entrada="curta"`
+   * (gravado pela ilha HeroCena) pede a versão curta da entrada.
+   */
   secao: HTMLElement
+  /** Grava o estado do canvas (crossfade por CSS). */
+  marcar: (estado: HeroCanvasEstado) => void
   aoFps?: (fps: number) => void
 }
-
-/** Memória de módulo: a entrada completa só toca uma vez por página viva. */
-let jaViuEntrada = false
 
 const GRAUS = Math.PI / 180
 
@@ -226,10 +151,13 @@ function mul(a: Mat, b: Mat): Mat {
 
 export function montarGlobo(
   canvas: HTMLCanvasElement,
-  { variante, ancora, secao, aoFps }: GloboOpcoes,
+  { variante, ancora, secao, marcar, aoFps }: GloboOpcoes,
 ): () => void {
   const ctx = canvas.getContext("2d", { alpha: true })
-  if (!ctx) return () => {}
+  if (!ctx) {
+    marcar("fallback")
+    return () => {}
+  }
   gsap.registerPlugin(ScrollTrigger)
 
   const preset: Preset = CONFIG.presets[variante]
@@ -414,10 +342,15 @@ export function montarGlobo(
     return { x: ox + qx * Rv * s, y: oy + qy * Rv * s, s }
   }
 
+  let pronto = false
   const desenhar = (agora: number) => {
     if (!atlasPreto || !atlasLaranja || !atlasAzul) return
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.clearRect(0, 0, W, H)
+    if (!pronto) {
+      pronto = true
+      marcar("pronto")
+    }
 
     const esc = estado.escala
     const Rv = R * esc
@@ -768,7 +701,8 @@ export function montarGlobo(
   // é medido a partir do centro final do globo.
   redimensionar()
   montarGrao()
-  const fatorEntrada = jaViuEntrada ? CONFIG.entradaCurta : 1
+  const fatorEntrada =
+    secao.dataset.entrada === "curta" ? CONFIG.entradaCurta : 1
   const linha = gsap.timeline({ paused: true })
   if (preset.nasceNoTitulo) {
     const caixa = ancora()
@@ -883,7 +817,6 @@ export function montarGlobo(
     linha.play()
     acordar()
   }
-  jaViuEntrada = true
 
   window.addEventListener("pointermove", aoMover, { passive: true })
   document.addEventListener("pointerleave", aoSair)

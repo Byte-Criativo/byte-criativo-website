@@ -834,10 +834,10 @@ dialog::backdrop {
   color: var(--brand-blue);
 }
 
-/* Hero com arte generativa (hero-arte). O canvas é decoração absoluta sobre
-   o gradiente CSS de mesmas cores: nasce invisível e aparece em crossfade
-   quando o primeiro quadro é desenhado (data-estado="pronto"). Sem WebGL
-   ele nunca aparece e o gradiente fica. `position`/`inset` são estruturais,
+/* Hero com o globo de código (hero-arte). O canvas é decoração absoluta
+   sobre o gradiente CSS de mesmas cores: nasce invisível e aparece em
+   crossfade quando o primeiro quadro é desenhado (data-estado="pronto").
+   Sem Canvas 2D ele nunca aparece e o gradiente fica. `position`/`inset` são estruturais,
    como em .galeria-gatilho. */
 @layer components {
   .hero-arte {
@@ -860,9 +860,9 @@ dialog::backdrop {
 }
 
 /* ---------------------------------------------------------------------
-   Hero da home com arte generativa (feat/hero-motion).
+   Hero da home com o globo de código (feat/hero-motion).
    Camadas, de trás para frente: gradiente CSS (fundo da seção, mesmas
-   cores da arte) → canvas .hero-arte (z 0) → véu de saída (z 1) →
+   cores do globo) → canvas .hero-arte (z 0) → véu de saída (z 1) →
    conteúdo e indicador de rolagem (z 2). A seção começa embaixo do header
    (margem negativa de --altura-header) e ocupa a tela inteira em svh, com
    vh como alternativa. `position`/`inset`/z-index são estruturais.
@@ -1006,16 +1006,9 @@ dialog::backdrop {
     animation-delay: 0.1s;
   }
 
-  /* Saída: a arte desce em paralaxe enquanto o hero sai (sem listener de
-     rolagem; só onde animation-timeline existe). A dissolução dos bytes
-     ao rolar fica no shader (u_rolagem). */
-  @supports (animation-timeline: view()) {
-    .hero-arte {
-      animation: hero-sair linear both;
-      animation-timeline: view();
-      animation-range: exit 0% exit 100%;
-    }
-  }
+  /* Saída: o globo responde à rolagem pelo ScrollTrigger do motor (gira,
+     fica para trás em paralaxe e achata em fita); nenhuma animação CSS por
+     scroll no canvas, para não somar dois movimentos. */
 
   /* O índice de `;` some enquanto o hero está na tela. O estado inicial
      (sem data-hero-saiu) assume o hero visível, que é o caso do topo. */
@@ -1073,12 +1066,6 @@ dialog::backdrop {
   }
 }
 
-@keyframes hero-sair {
-  to {
-    transform: translateY(30%);
-  }
-}
-
 /* Header flutuante sobre a arte, só na home, só com JS (sem JS o header
    fica sólido, como em todo o site) e só até o primeiro rolar
    (data-rolado, gravado pela ilha HeroCena). Fora de camada para vencer
@@ -1095,10 +1082,6 @@ dialog::backdrop {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-arte {
-    animation: none;
-  }
-
   .hero-rolar-linha {
     animation: none;
     transform: none;
