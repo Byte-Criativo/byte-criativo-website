@@ -856,53 +856,6 @@ dialog::backdrop {
   }
 }
 
-/* Rota temporária /lab/hero (Fase 1): só o canvas em tela inteira sobre o
-   mesmo gradiente do hero. Removida na Fase 3. */
-@layer components {
-  .lab-hero {
-    position: relative;
-    min-height: 100vh;
-    min-height: 100svh;
-    overflow: hidden;
-    background: linear-gradient(180deg, var(--brand-surface), var(--bg));
-  }
-
-  .lab-hero-guia {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    align-content: center;
-    padding-inline: var(--grid-margin);
-    pointer-events: none;
-  }
-
-  .lab-hero-guia-titulo {
-    max-width: 11ch;
-    color: var(--ink);
-    text-wrap: balance;
-  }
-
-  .lab-hero-painel {
-    position: absolute;
-    right: var(--space-4);
-    bottom: var(--space-4);
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-    padding: var(--space-2) var(--space-3);
-    border: var(--border-w-decorative) solid var(--border-decorative);
-    border-radius: var(--radius-tag);
-    background: var(--surface);
-    color: var(--ink-muted);
-  }
-
-  .lab-hero-painel a[aria-current="true"] {
-    color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: var(--desloc-sublinhado);
-  }
-}
-
 /* ---------------------------------------------------------------------
    Hero da home com arte generativa (feat/hero-motion).
    Camadas, de trás para frente: gradiente CSS (fundo da seção, mesmas

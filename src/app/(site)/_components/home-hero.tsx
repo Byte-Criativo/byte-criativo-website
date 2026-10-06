@@ -3,7 +3,6 @@ import { Heading } from "@/components/ui/heading"
 import { Text } from "@/components/ui/text"
 import { Button } from "@/components/ui/button"
 import { TextLink } from "@/components/ui/text-link"
-import { VisuallyHidden } from "@/components/ui/visually-hidden"
 import type { HomePage } from "@/content/schema"
 import { HeroCena } from "./hero-arte/hero-cena"
 
@@ -15,8 +14,8 @@ import { HeroCena } from "./hero-arte/hero-cena"
  * gradiente de mesmas cores.
  *
  * O h1 continua íntegro para leitores de tela e buscadores: o texto real
- * fica num span visualmente oculto e os fragmentos animados (palavra a
- * palavra) são decorativos, com aria-hidden. O `;` final segue a regra do
+ * fica dentro dos spans de cada palavra (só a janela de animação é um
+ * span; nenhum texto duplicado nem oculto). O `;` final segue a regra do
  * Heading (span aria-hidden em --accent) e é a âncora de onde a arte emana.
  */
 export function HomeHero({ hero }: { hero: HomePage["hero"] }): ReactElement {
@@ -37,9 +36,7 @@ export function HomeHero({ hero }: { hero: HomePage["hero"] }): ReactElement {
           </p>
 
           <Heading nivel={1} papel="display" className="hero-title">
-            <VisuallyHidden>{titulo}</VisuallyHidden>
             <span
-              aria-hidden="true"
               className="hero-title-visual"
               style={{ "--hero-n": palavras.length } as CSSProperties}
             >
@@ -57,7 +54,9 @@ export function HomeHero({ hero }: { hero: HomePage["hero"] }): ReactElement {
                   </span>
                 </Fragment>
               ))}
-              <span className="semicolon hero-semicolon">;</span>
+              <span aria-hidden="true" className="semicolon hero-semicolon">
+                ;
+              </span>
             </span>
           </Heading>
 
