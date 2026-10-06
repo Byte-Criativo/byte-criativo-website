@@ -1,134 +1,93 @@
-import type { ReactElement } from "react"
+import { Fragment, type CSSProperties, type ReactElement } from "react"
 import { Heading } from "@/components/ui/heading"
 import { Text } from "@/components/ui/text"
 import { Button } from "@/components/ui/button"
 import { TextLink } from "@/components/ui/text-link"
-import { Sala } from "@/components/patterns/sala"
-import { Ficha } from "@/components/patterns/ficha"
-import {
-  FrenteVersoProvider,
-  FrenteVersoControle,
-  FrenteVersoFaces,
-} from "@/components/patterns/frente-verso"
-import { BrowserFrame } from "@/components/patterns/browser-frame"
-import { Stack } from "@/components/ui/stack"
 import type { HomePage } from "@/content/schema"
-import CaseUndergroundPB from "@/assets/case-undergroundpb-screenshot.webp"
+import { HeroCena } from "./hero-arte/hero-cena"
 
-export function HomeHero({
-  hero,
-  salaItem,
-  estudoDeCasoHref,
-}: {
-  hero: HomePage["hero"]
-  salaItem: HomePage["salas"]["items"][number]
-  // Só vem preenchido quando o case está publicado (gate D5); sem ele a
-  // Ficha omite o link "Ver estudo de caso", que 404aria.
-  estudoDeCasoHref?: string
-}): ReactElement {
+/**
+ * Hero da home: abertura em tela inteira com a arte generativa "Tecido de
+ * bytes" atrás do título. O texto é renderizado no servidor e entra com
+ * animação em CSS puro a partir da primeira pintura (globals.css, bloco
+ * "Hero"); o canvas chega depois, pela ilha HeroCena, em crossfade sobre o
+ * gradiente de mesmas cores.
+ *
+ * O h1 continua íntegro para leitores de tela e buscadores: o texto real
+ * fica dentro dos spans de cada palavra (só a janela de animação é um
+ * span; nenhum texto duplicado nem oculto). O `;` final segue a regra do
+ * Heading (span aria-hidden em --accent) e é a âncora de onde a arte emana.
+ */
+export function HomeHero({ hero }: { hero: HomePage["hero"] }): ReactElement {
+  const titulo = hero.h1.replace(/;$/, "")
+  const palavras = titulo.split(" ")
+
   return (
-    <section
-      id="hero"
-      aria-label="Início"
-      className="home-hero pt-(--space-6) pb-(--space-8) lg:pt-(--space-7) lg:pb-(--space-8)"
-    >
-      <div className="mx-auto max-w-(--grid-container-max) px-(--grid-margin)">
-        <div className="grid grid-cols-1 items-start gap-(--grid-gutter) lg:grid-cols-12">
-          {/* Coluna 1-5: Posicionamento, H1, Apoio e Ações */}
-          <div className="flex flex-col gap-(--space-5) lg:col-span-5">
-            <p className="hero-eyebrow text-caption font-semibold text-brand-blue">
-              Software house orientada por design
-            </p>
-            <Heading nivel={1} semicolon className="hero-title">
-              {hero.h1.replace(/;$/, "")}
-            </Heading>
+    <section id="hero" aria-label="Início" className="home-hero">
+      <HeroCena />
+
+      <div className="home-hero-conteudo mx-auto w-full max-w-(--grid-container-max) px-(--grid-margin)">
+        <div className="flex max-w-(--medida-max) flex-col gap-(--space-5) lg:gap-(--space-6)">
+          <p
+            data-hero-ordem="0"
+            className="hero-eyebrow hero-entrada text-caption font-semibold text-brand-blue"
+          >
+            Software house orientada por design
+          </p>
+
+          <Heading nivel={1} papel="display" className="hero-title">
+            <span
+              className="hero-title-visual"
+              style={{ "--hero-n": palavras.length } as CSSProperties}
+            >
+              {/* O espaço fica FORA da janela de cada palavra: dentro de um
+                  inline-block com overflow oculto ele seria descartado como
+                  espaço final de linha e as palavras colariam. */}
+              {palavras.map((palavra, indice) => (
+                <Fragment key={`${indice}-${palavra}`}>
+                  {indice > 0 ? " " : null}
+                  <span
+                    className="hero-palavra"
+                    style={{ "--hero-i": indice } as CSSProperties}
+                  >
+                    <span className="hero-palavra-interna">{palavra}</span>
+                  </span>
+                </Fragment>
+              ))}
+              <span aria-hidden="true" className="semicolon hero-semicolon">
+                ;
+              </span>
+            </span>
+          </Heading>
+
+          <div data-hero-ordem="1" className="hero-entrada">
             <Text papel="lede" medida>
               {hero.apoio}
             </Text>
-            <div className="flex flex-col gap-(--space-3) sm:flex-row sm:items-center">
-              <Button href={hero.ctaPrimary.href}>
-                {hero.ctaPrimary.label}
-              </Button>
-              <TextLink href={hero.ctaSecondary.href} variante="acao">
-                {hero.ctaSecondary.label}
-              </TextLink>
-            </div>
           </div>
 
-          {/* Coluna 6-12: Sala Underground PB com Ficha e Frente/Verso */}
-          <div className="hero-project lg:col-span-7">
-            <FrenteVersoProvider projeto={salaItem.name}>
-              <Ficha
-                id="ficha-underground-pb"
-                nome={salaItem.name}
-                tipo={salaItem.type}
-                nivel={2}
-                frase={salaItem.phrase}
-                capacidades={salaItem.capabilities}
-                estudoDeCasoHref={estudoDeCasoHref}
-                projetoNoArHref={salaItem.liveUrl}
-                contagem={{
-                  atual: 1,
-                  total: 2,
-                  proximo: { nome: "Festival Alumiô", href: "#trabalhos" },
-                }}
-                controle={<FrenteVersoControle />}
-                sala={
-                  <Sala
-                    slug={salaItem.slug}
-                    id={`sala-${salaItem.slug}`}
-                    variante="hero"
-                  >
-                    <FrenteVersoFaces
-                      frente={
-                        <BrowserFrame
-                          dominio="undergroundpb.com.br"
-                          legenda={salaItem.image.alt}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element -- tag nativa com dimensões explícitas e WebP estático para evitar runtime client de next/image no teto de JS da Home */}
-                          <img
-                            src={CaseUndergroundPB.src}
-                            width={CaseUndergroundPB.width}
-                            height={CaseUndergroundPB.height}
-                            alt={salaItem.image.alt}
-                            loading="eager"
-                            fetchPriority="high"
-                            decoding="async"
-                            className="h-auto w-full object-cover"
-                          />
-                        </BrowserFrame>
-                      }
-                      verso={
-                        <Stack espaco={4}>
-                          <div>
-                            <Heading nivel={3} className="text-body font-bold">
-                              {salaItem.verso.needs.title}
-                            </Heading>
-                            <Text medida>{salaItem.verso.needs.text}</Text>
-                          </div>
-                          <div>
-                            <Heading nivel={3} className="text-body font-bold">
-                              {salaItem.verso.inProduction.title}
-                            </Heading>
-                            <ul className="flex flex-col gap-(--space-2) pt-(--space-2) text-body">
-                              {salaItem.verso.inProduction.items.map((item) => (
-                                <li key={item}>— {item}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <Text papel="caption" tom="muted">
-                            Construído com {salaItem.verso.tech}.
-                          </Text>
-                        </Stack>
-                      }
-                    />
-                  </Sala>
-                }
-              />
-            </FrenteVersoProvider>
+          <div
+            data-hero-ordem="2"
+            className="hero-entrada flex flex-col gap-(--space-3) sm:flex-row sm:items-center"
+          >
+            <Button href={hero.ctaPrimary.href}>{hero.ctaPrimary.label}</Button>
+            <TextLink href={hero.ctaSecondary.href} variante="acao">
+              {hero.ctaSecondary.label}
+            </TextLink>
           </div>
         </div>
       </div>
+
+      <div
+        aria-hidden="true"
+        data-hero-ordem="3"
+        className="hero-rolar hero-entrada text-caption"
+      >
+        <span className="hero-rolar-linha" />
+        <span>Rolar</span>
+      </div>
+
+      <div aria-hidden="true" className="hero-veu" />
     </section>
   )
 }

@@ -81,20 +81,12 @@ export default function HomePage() {
       />
       <IndiceSemicolon itens={ITENS_INDICE} />
 
-      {home.salas.items[0] ? (
-        <HomeHero
-          hero={home.hero}
-          salaItem={home.salas.items[0]}
-          estudoDeCasoHref={hrefEstudoDeCaso(home.salas.items[0])}
-        />
-      ) : null}
+      <HomeHero hero={home.hero} />
       <HomeSalas
         salas={home.salas}
-        estudoDeCasoHref={
-          home.salas.items[1]
-            ? hrefEstudoDeCaso(home.salas.items[1])
-            : undefined
-        }
+        estudoDeCasoHrefs={Object.fromEntries(
+          home.salas.items.map((sala) => [sala.slug, hrefEstudoDeCaso(sala)]),
+        )}
       />
       <HomeFormaDePensar formaDePensar={home.formaDePensar} />
       <HomeOQueFazemos
