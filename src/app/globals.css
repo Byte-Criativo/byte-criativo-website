@@ -846,6 +846,9 @@ dialog::backdrop {
     width: 100%;
     height: 100%;
     display: block;
+    /* Caixa fechada: mudar o tamanho interno do canvas não reflui nem
+       repinta nada fora dele. */
+    contain: strict;
     pointer-events: none;
     opacity: 0;
     transition: opacity var(--dur-slow) var(--ease-in-out);

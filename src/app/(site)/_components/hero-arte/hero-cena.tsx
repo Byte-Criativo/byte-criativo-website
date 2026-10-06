@@ -1,15 +1,8 @@
 "use client"
 
-import dynamic from "next/dynamic"
 import { useEffect, useLayoutEffect, useRef, type ReactElement } from "react"
 import { HERO_ARTE } from "./config"
-
-// O canvas carrega depois do texto, só no cliente: nunca bloqueia a pintura
-// e nunca participa do HTML do servidor (sem layout shift: a caixa é a do hero).
-const HeroCanvas = dynamic(
-  () => import("./hero-canvas").then((modulo) => modulo.HeroCanvas),
-  { ssr: false },
-)
+import { HeroCanvas } from "./hero-canvas"
 
 /**
  * Memória de módulo: vale enquanto a página carregada viver, o que cobre as
@@ -20,7 +13,8 @@ let jaViuEntrada = false
 
 /**
  * Ilha do hero. Três responsabilidades, nenhuma delas um listener de rolagem:
- * 1. carrega o canvas da arte (dynamic import, só no cliente);
+ * 1. monta o canvas da arte (o motor WebGL chega por import tardio, no
+ *    início ocioso depois do load — ver use-hero-canvas.ts);
  * 2. grava na raiz `data-rolado` (sentinela do topo saiu da tela) e
  *    `data-hero-saiu` (o hero inteiro saiu), que o CSS usa para dar fundo ao
  *    header e mostrar o índice de `;`;
