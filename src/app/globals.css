@@ -874,11 +874,16 @@ dialog::backdrop {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* Conteúdo ancorado no topo (não centrado): a posição do título não
+       depende da altura do próprio texto, então a troca da webfont ou um
+       número diferente de linhas não desloca o bloco inteiro (CLS). */
+    justify-content: flex-start;
     min-height: 100vh;
     min-height: 100svh;
     margin-top: calc(-1 * var(--altura-header));
-    padding-top: calc(var(--altura-header) + var(--space-7));
+    padding-top: calc(
+      var(--altura-header) + clamp(var(--space-8), 16svh, var(--space-10))
+    );
     padding-bottom: var(--space-9);
     background: linear-gradient(180deg, var(--brand-surface), var(--bg));
   }
