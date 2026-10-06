@@ -858,3 +858,72 @@ dialog::backdrop {
     column-gap: var(--space-7);
   }
 }
+
+/* Hero com arte generativa (hero-arte). O canvas é decoração absoluta sobre
+   o gradiente CSS de mesmas cores: nasce invisível e aparece em crossfade
+   quando o primeiro quadro é desenhado (data-estado="pronto"). Sem WebGL
+   ele nunca aparece e o gradiente fica. `position`/`inset` são estruturais,
+   como em .galeria-gatilho. */
+@layer components {
+  .hero-arte {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-in-out);
+  }
+
+  .hero-arte[data-estado="pronto"] {
+    opacity: 1;
+  }
+}
+
+/* Rota temporária /lab/hero (Fase 1): só o canvas em tela inteira sobre o
+   mesmo gradiente do hero. Removida na Fase 3. */
+@layer components {
+  .lab-hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--brand-surface), var(--bg));
+  }
+
+  .lab-hero-guia {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: center;
+    padding-inline: var(--grid-margin);
+    pointer-events: none;
+  }
+
+  .lab-hero-guia-titulo {
+    max-width: 11ch;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .lab-hero-painel {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-w-decorative) solid var(--border-decorative);
+    border-radius: var(--radius-tag);
+    background: var(--surface);
+    color: var(--ink-muted);
+  }
+
+  .lab-hero-painel a[aria-current="true"] {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: var(--desloc-sublinhado);
+  }
+}
