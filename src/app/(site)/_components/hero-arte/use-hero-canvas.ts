@@ -160,30 +160,35 @@ export function useHeroCanvas(
       return
     }
 
-    const gl = canvas.getContext("webgl", {
-      alpha: false,
-      antialias: false,
-      depth: false,
-      stencil: false,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false,
-      powerPreference: "low-power",
-    })
-    if (!gl) {
-      marcar("fallback")
-      return
+    // O contexto só é criado no início ocioso (ver `iniciar`): criar o
+    // contexto e o primeiro buffer de desenho é a parte cara, e não deve
+    // cair na hidratação.
+    // Atribuição definitiva: todo closure abaixo só roda depois de
+    // `criarContexto` ter sucesso (a limpeza confere antes de usar).
+    let gl!: WebGLRenderingContext
+    let paralelo: CompilacaoParalela = null
+    const criarContexto = (): boolean => {
+      const contexto = canvas.getContext("webgl", {
+        alpha: false,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false,
+        powerPreference: "low-power",
+      })
+      if (!contexto) return false
+      const depuracao = contexto.getExtension("WEBGL_debug_renderer_info")
+      const renderizador = depuracao
+        ? String(contexto.getParameter(depuracao.UNMASKED_RENDERER_WEBGL))
+        : ""
+      if (RENDERIZADOR_POR_SOFTWARE.test(renderizador)) return false
+      gl = contexto
+      paralelo = contexto.getExtension(
+        "KHR_parallel_shader_compile",
+      ) as CompilacaoParalela
+      return true
     }
-    const depuracao = gl.getExtension("WEBGL_debug_renderer_info")
-    const renderizador = depuracao
-      ? String(gl.getParameter(depuracao.UNMASKED_RENDERER_WEBGL))
-      : ""
-    if (RENDERIZADOR_POR_SOFTWARE.test(renderizador)) {
-      marcar("fallback")
-      return
-    }
-    const paralelo = gl.getExtension(
-      "KHR_parallel_shader_compile",
-    ) as CompilacaoParalela
 
     const preset = HERO_ARTE.presets[intensidade]
     const movimentoReduzido = window.matchMedia(
@@ -471,7 +476,7 @@ export function useHeroCanvas(
     let cancelarInicio: (() => void) | null = null
     const iniciar = () => {
       cancelarInicio = null
-      if (!preparar()) {
+      if (!criarContexto() || !preparar()) {
         marcar("fallback")
         return
       }
@@ -520,13 +525,15 @@ export function useHeroCanvas(
       movimentoReduzido.removeEventListener("change", aoMudarMovimento)
       observadorTela.disconnect()
       observadorTamanho.disconnect()
-      if (buffer) gl.deleteBuffer(buffer)
-      if (programa) gl.deleteProgram(programa.programa)
+      const contexto = gl as WebGLRenderingContext | undefined
+      if (!contexto) return
+      if (buffer) contexto.deleteBuffer(buffer)
+      if (programa) contexto.deleteProgram(programa.programa)
       // Só libera o contexto quando o canvas saiu do DOM de verdade. No
       // modo estrito do React (dev) o efeito roda duas vezes no mesmo
       // canvas, e um contexto perdido voltaria do getContext já inutilizado.
       if (!canvas.isConnected) {
-        gl.getExtension("WEBGL_lose_context")?.loseContext()
+        contexto.getExtension("WEBGL_lose_context")?.loseContext()
       }
     }
   }, [ref, intensidade, ancoraSeletor])
