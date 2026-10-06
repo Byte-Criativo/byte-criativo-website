@@ -194,7 +194,11 @@ export function montarGlobo(
   const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)")
   const toque = window.matchMedia("(pointer: coarse)").matches
   const dprToque = toque ? 1.5 : 2
-  const acelerado = temAceleracaoGrafica()
+  // Animar ou não. Começa pelo renderizador (por software, fica estático),
+  // mas o Firefox mascara o nome do renderizador por privacidade: por isso o
+  // custo medido dos primeiros quadros também pode desligar a animação (ver
+  // `adaptar`).
+  let animar = temAceleracaoGrafica()
   const familia =
     getComputedStyle(document.body).fontFamily || "system-ui, sans-serif"
 
@@ -236,6 +240,7 @@ export function montarGlobo(
   let ultimaTroca = 0
   let desdeQuandoBarato = 0
   let inicioDoMotor = 0
+  let quadrosMedidos = 0
 
   // Estado animado pelo GSAP.
   const estado = {
@@ -869,17 +874,57 @@ export function montarGlobo(
       redimensionar()
     }
   }
+  /**
+   * Desiste de animar: um quadro final, redesenhado só na rolagem e no
+   * resize, como no modo sem aceleração. Sem volta nesta visita.
+   */
+  const cairParaEstatico = () => {
+    if (!animar) return
+    animar = false
+    dormir()
+    linha.progress(1).pause()
+    canvas.dataset.modo = "estatico"
+    quadroEstatico()
+  }
+
+  const amostrasIniciais: number[] = []
   const adaptar = (custo: number, agora: number) => {
+    // Durante a entrada o globo ainda é pequeno e tem poucos glifos: esses
+    // quadros baratos não dizem nada sobre o custo em regime.
+    if (estado.escala < 0.999 || estado.revelacao < 0.999) return
+    // Decisão rápida: mediana dos primeiros quadros com o globo completo
+    // (depois do aquecimento). Caro demais logo de cara é renderização por
+    // software que o navegador não admitiu, ou aparelho lento: fica estático.
+    if (amostrasIniciais.length < DESEMPENHO.amostrasParaDecidir) {
+      quadrosMedidos += 1
+      if (quadrosMedidos <= DESEMPENHO.quadrosDeAquecimento) return
+      amostrasIniciais.push(custo)
+      if (amostrasIniciais.length < DESEMPENHO.amostrasParaDecidir) return
+      const ordenadas = [...amostrasIniciais].sort((a, b) => a - b)
+      const mediana = ordenadas[Math.floor(ordenadas.length / 2)] ?? 0
+      canvas.dataset.custoInicial = mediana.toFixed(1)
+      if (mediana > DESEMPENHO.custoEstaticoMs) {
+        cairParaEstatico()
+        return
+      }
+    }
     custos.push(custo)
     if (custos.length < DESEMPENHO.janelaQuadros) return
     custos.shift()
     const media = custos.reduce((a, b) => a + b, 0) / custos.length
-    const intervalo = DESEMPENHO.intervaloDegrauS * 1000
+    canvas.dataset.custo = media.toFixed(1)
+    // Descer é urgente (o quadro já está pesando); subir é cauteloso.
+    const caro = media > DESEMPENHO.custoAltoMs
+    const intervalo =
+      (caro ? DESEMPENHO.intervaloDescidaS : DESEMPENHO.intervaloDegrauS) * 1000
     if (agora - ultimaTroca < intervalo) return
     const segurando = agora - inicioDoMotor < DESEMPENHO.segurarInicialS * 1000
-    if (media > DESEMPENHO.custoAltoMs) {
+    if (caro) {
       if (degrau < DESEMPENHO.degraus.length - 1) {
         aplicarDegrau(degrau + 1, agora)
+      } else {
+        // Já no degrau mais barato e ainda caro: não vale animar.
+        cairParaEstatico()
       }
       return
     }
@@ -895,7 +940,7 @@ export function montarGlobo(
   }
 
   const acordar = () => {
-    if (laco || !ativo || !naTela || reduzido.matches || !acelerado) return
+    if (laco || !ativo || !naTela || reduzido.matches || !animar) return
     ultimo = 0
     laco = passo
     gsap.ticker.add(laco)
@@ -964,7 +1009,7 @@ export function montarGlobo(
     scrub: 0.6,
     onUpdate: (self) => {
       estado.rolagem = self.progress
-      if (reduzido.matches || !acelerado) desenhar(performance.now())
+      if (reduzido.matches || !animar) desenhar(performance.now())
     },
   })
 
@@ -1009,7 +1054,7 @@ export function montarGlobo(
     window.clearTimeout(esperaResize)
     esperaResize = window.setTimeout(() => {
       redimensionar()
-      if (reduzido.matches || !acelerado) quadroEstatico()
+      if (reduzido.matches || !animar) quadroEstatico()
     }, 120)
   })
   const aoMudarMovimento = () => {
@@ -1031,8 +1076,7 @@ export function montarGlobo(
   const iniciar = () => {
     montado = true
     // Diagnóstico (lido só por testes e capturas): modo e degrau atual.
-    canvas.dataset.modo =
-      reduzido.matches || !acelerado ? "estatico" : "animado"
+    canvas.dataset.modo = reduzido.matches || !animar ? "estatico" : "animado"
     canvas.dataset.degrau = String(degrau)
     if (toque) {
       lanterna.alvoX = cx
@@ -1042,7 +1086,7 @@ export function montarGlobo(
     }
     montarEntrada()
     inicioDoMotor = performance.now()
-    if (reduzido.matches || !acelerado) {
+    if (reduzido.matches || !animar) {
       rafInicial = requestAnimationFrame(quadroEstatico)
       return
     }

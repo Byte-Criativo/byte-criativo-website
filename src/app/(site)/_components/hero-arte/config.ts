@@ -89,6 +89,8 @@ export const GLOBO = {
     custoBaixoMs: 7,
     janelaQuadros: 20,
     intervaloDegrauS: 3,
+    /** Intervalo mínimo entre descidas de degrau (quadro caro desce rápido). */
+    intervaloDescidaS: 1,
     segurarInicialS: 2,
     degrauInicial: 1,
     /** Degraus: fração de paralelos desenhados, teto de DPR e fps do ticker. */
@@ -102,6 +104,17 @@ export const GLOBO = {
     ],
     /** Montagem (atlas e anéis) acima disto é dividida em dois ciclos ociosos. */
     montagemMaxMs: 20,
+    /**
+     * Saída para o modo estático pelo custo medido: se a mediana de
+     * `amostrasParaDecidir` quadros (depois de `quadrosDeAquecimento`)
+     * passar de `custoEstaticoMs`, ou se o último degrau continuar acima de
+     * `custoAltoMs`, o globo para num quadro final. É o que cobre a
+     * renderização por software que o navegador não admite pelo nome (o
+     * Firefox mascara o renderizador) e os aparelhos lentos.
+     */
+    custoEstaticoMs: 24,
+    amostrasParaDecidir: 10,
+    quadrosDeAquecimento: 3,
   },
   /** Distância focal da câmera, em raios (1,8 a 2,4 convence). */
   foco: 3,
