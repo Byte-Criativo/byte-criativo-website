@@ -37,7 +37,10 @@
  *      ao longo do fluxo e viram líquido;
  *   6. cor em OKLab: lavagem base → tinta, líquido tinta → azul contido,
  *      veias para profundidade, bytes em pedra com fio de azul; os bytes
- *      mais próximos do `;` carregam o laranja dele (único laranja da peça);
+ *      mais próximos do `;` carregam o laranja dele (único laranja da peça).
+ *      A zona calma é clareada em direção à base e um halo de base pura
+ *      (sem grão) fica atrás do `;`: o laranja do glifo precisa dos 3:1 do
+ *      par aprovado "accent sobre bg" em qualquer quadro;
  *   7. revelação em círculo a partir do `;`; u_rolagem (quanto do hero já
  *      rolou para fora) adianta o tempo e dissolve os bytes, para a arte
  *      responder ao scroll também no toque;
@@ -161,12 +164,15 @@ vec3 corByte=mix(u_cPedra,u_cAzul,0.3*u_azul);
 float doSemicolon=exp(-d*d*55.0);
 corByte=mix(corByte,u_cLaranja,doSemicolon*0.9);
 cor=mix(cor,corByte,bytes*(0.62+0.3*doSemicolon));
+cor=mix(cor,u_cBase,0.22*(1.0-energia));
+float halo=1.0-smoothstep(0.035,0.1,d);
+cor=mix(cor,u_cBase,halo);
 float raioRev=u_revelacao*2.6;
 float rev=1.0-smoothstep(raioRev-0.35,raioRev,d);
 cor=mix(u_cBase,cor,rev);
 vec3 rgb=oklabParaSrgb(cor);
 float grao=hash(gl_FragCoord.xy+vec2(fract(u_angulo*7.0)*61.0))-0.5;
-rgb+=grao*u_grao;
+rgb+=grao*u_grao*(1.0-halo);
 gl_FragColor=vec4(rgb,1.0);
 }
 `
