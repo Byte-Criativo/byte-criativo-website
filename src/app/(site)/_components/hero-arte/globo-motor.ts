@@ -540,28 +540,6 @@ export function montarGlobo(
       )
       ctx.restore()
     }
-    // Halo branco atrás do `;` do título: o laranja precisa de 3:1.
-    if (ponto.ativo) {
-      const haloPonto = ctx.createRadialGradient(
-        ponto.x,
-        ponto.y,
-        0,
-        ponto.x,
-        ponto.y,
-        ponto.r,
-      )
-      haloPonto.addColorStop(0, "rgba(255, 255, 255, 1)")
-      haloPonto.addColorStop(0.72, "rgba(255, 255, 255, 0.98)")
-      haloPonto.addColorStop(1, "rgba(255, 255, 255, 0)")
-      ctx.fillStyle = haloPonto
-      ctx.globalAlpha = 1
-      ctx.fillRect(
-        ponto.x - ponto.r,
-        ponto.y - ponto.r,
-        ponto.r * 2,
-        ponto.r * 2,
-      )
-    }
 
     const lanternaAtiva = preset.lanterna && lanterna.x > -9000
     let pulsosAtivos = 0
@@ -815,6 +793,31 @@ export function montarGlobo(
       }
       ctx.globalCompositeOperation = "source-over"
       ctx.restore()
+    }
+
+    // Halo branco atrás do `;` do título, por último: pintado antes, os
+    // glifos da zona calma (alfa até 0,1) e o grão passavam por cima e
+    // derrubavam o laranja para menos de 3:1.
+    if (ponto.ativo) {
+      const haloPonto = ctx.createRadialGradient(
+        ponto.x,
+        ponto.y,
+        0,
+        ponto.x,
+        ponto.y,
+        ponto.r,
+      )
+      haloPonto.addColorStop(0, "rgba(255, 255, 255, 1)")
+      haloPonto.addColorStop(0.72, "rgba(255, 255, 255, 0.98)")
+      haloPonto.addColorStop(1, "rgba(255, 255, 255, 0)")
+      ctx.fillStyle = haloPonto
+      ctx.globalAlpha = 1
+      ctx.fillRect(
+        ponto.x - ponto.r,
+        ponto.y - ponto.r,
+        ponto.r * 2,
+        ponto.r * 2,
+      )
     }
     ctx.globalAlpha = 1
   }
