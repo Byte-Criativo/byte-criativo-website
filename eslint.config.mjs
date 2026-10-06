@@ -13,5 +13,13 @@ export default defineConfig([
       "prettier/prettier": "error",
     },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "coverage/**"]),
+  // .claude/worktrees abriga árvores de trabalho de agentes (com node_modules
+  // próprio); nunca é código do projeto.
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "coverage/**",
+    ".claude/worktrees/**",
+  ]),
 ])
