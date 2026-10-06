@@ -7,7 +7,6 @@ import {
   INTENSIDADES,
   type HeroIntensidade,
 } from "@/app/(site)/_components/hero-arte/config"
-import type { HeroAncora } from "@/app/(site)/_components/hero-arte/use-hero-canvas"
 
 // Carregado só no cliente, depois do texto: o canvas nunca bloqueia a pintura.
 const HeroCanvas = dynamic(
@@ -17,14 +16,6 @@ const HeroCanvas = dynamic(
     ),
   { ssr: false },
 )
-
-/**
- * Âncora provisória do protótipo: onde o `;` do h1 ficaria na home.
- * Na Fase 2 a posição vem do próprio elemento no DOM.
- */
-function ancoraDoLab(largura: number, altura: number): HeroAncora {
-  return largura / altura > 1 ? { x: 0.27, y: 0.62 } : { x: 0.68, y: 0.57 }
-}
 
 function ContadorQuadros(): ReactElement {
   const ref = useRef<HTMLSpanElement>(null)
@@ -56,16 +47,21 @@ export function LabHero({
 }): ReactElement {
   return (
     <div className="lab-hero">
-      <HeroCanvas intensidade={intensidade} ancora={ancoraDoLab} />
+      <HeroCanvas intensidade={intensidade} ancoraSeletor=".hero-semicolon" />
 
-      {guia ? (
-        <div aria-hidden="true" className="lab-hero-guia">
+      {/* A âncora do canvas é o `;` do guia; sem guia ele fica invisível. */}
+      {
+        <div
+          aria-hidden="true"
+          className="lab-hero-guia"
+          style={guia ? undefined : { visibility: "hidden" }}
+        >
           <p className="lab-hero-guia-titulo text-h1">
             Software sob medida com design que diferencia
-            <span className="semicolon">;</span>
+            <span className="semicolon hero-semicolon">;</span>
           </p>
         </div>
-      ) : null}
+      }
 
       <nav aria-label="Intensidade" className="lab-hero-painel text-caption">
         {INTENSIDADES.map((valor) => (

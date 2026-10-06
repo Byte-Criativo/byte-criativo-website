@@ -38,7 +38,9 @@
  *   6. cor em OKLab: lavagem base → tinta, líquido tinta → azul contido,
  *      veias para profundidade, bytes em pedra com fio de azul; os bytes
  *      mais próximos do `;` carregam o laranja dele (único laranja da peça);
- *   7. revelação em círculo a partir do `;`;
+ *   7. revelação em círculo a partir do `;`; u_rolagem (quanto do hero já
+ *      rolou para fora) adianta o tempo e dissolve os bytes, para a arte
+ *      responder ao scroll também no toque;
  *   8. grão de filme + dithering para eliminar faixas.
  */
 
@@ -61,6 +63,7 @@ uniform float u_semente;
 uniform vec2 u_ponteiro;
 uniform vec2 u_ancora;
 uniform float u_revelacao;
+uniform float u_rolagem;
 uniform float u_velocidade;
 uniform float u_dobra;
 uniform float u_azul;
@@ -114,13 +117,14 @@ return vec3(srgb(lin.r),srgb(lin.g),srgb(lin.b));
 void main(){
 float aspecto=u_res.x/u_res.y;
 vec2 p=vec2(v_uv.x*aspecto,v_uv.y);
-vec2 giro=vec2(cos(u_angulo),sin(u_angulo))*(1.2*u_velocidade);
+float ang=u_angulo+u_rolagem*1.2;
+vec2 giro=vec2(cos(ang),sin(ang))*(1.2*u_velocidade);
 vec2 semente=vec2(u_semente*7.31,u_semente*3.17)*10.0;
 vec2 centroTitulo=u_ancora+vec2(-0.26,0.14);
 vec2 meioTitulo=vec2(0.34,0.2);
 vec2 foraCaixa=max(abs(p-centroTitulo)-meioTitulo,0.0);
 float dCaixa=length(foraCaixa);
-float energia=smoothstep(0.05,0.75,dCaixa);
+float energia=max(smoothstep(0.05,0.75,dCaixa),smoothstep(0.0,0.8,u_rolagem));
 float d=length(p-u_ancora);
 vec2 aoPonteiro=p-u_ponteiro;
 float dp=length(aoPonteiro);

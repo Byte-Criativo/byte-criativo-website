@@ -3,7 +3,7 @@
 import { useRef, type ReactElement } from "react"
 import { cn } from "@/lib/cn"
 import type { HeroIntensidade } from "./config"
-import { useHeroCanvas, type HeroAncora } from "./use-hero-canvas"
+import { useHeroCanvas } from "./use-hero-canvas"
 
 /**
  * Canvas da arte generativa do hero. É decoração: fora da árvore de
@@ -14,15 +14,15 @@ import { useHeroCanvas, type HeroAncora } from "./use-hero-canvas"
  */
 export function HeroCanvas({
   intensidade,
-  ancora,
+  ancoraSeletor,
   className,
 }: {
   intensidade: HeroIntensidade
-  ancora: (largura: number, altura: number) => HeroAncora
+  ancoraSeletor: string
   className?: string
 }): ReactElement {
   const ref = useRef<HTMLCanvasElement>(null)
-  useHeroCanvas(ref, { intensidade, ancora })
+  useHeroCanvas(ref, { intensidade, ancoraSeletor })
 
   return (
     <canvas

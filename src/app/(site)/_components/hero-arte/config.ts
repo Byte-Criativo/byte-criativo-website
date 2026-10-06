@@ -34,10 +34,13 @@ export const HERO_ARTE = {
   dprMax: 2,
   dprMaxToque: 1.5,
   /**
-   * Qualidade adaptativa: se `framesLentos` quadros seguidos passarem de
-   * `quadroLentoMs`, a escala interna cai pela metade até `escalaMinima`.
+   * Qualidade adaptativa: um quadro é lento quando passa de `quadroLentoMs`
+   * E de `fatorQuadroLento` × o menor intervalo já visto (o período do
+   * monitor). Depois de `framesLentos` quadros lentos seguidos, a escala
+   * interna cai 30% até `escalaMinima`.
    */
   quadroLentoMs: 20,
+  fatorQuadroLento: 1.5,
   framesLentos: 24,
   escalaMinima: 0.2,
   /**
@@ -61,6 +64,8 @@ export const HERO_ARTE = {
     laranja: "--accent",
     ink: "--ink",
   },
+  /** Preset usado na home: "media" com a velocidade de "calma" (híbrido aprovado). */
+  presetDaHome: "media" as HeroIntensidade,
   presets: {
     calma: {
       velocidade: 0.55,
@@ -71,7 +76,7 @@ export const HERO_ARTE = {
       grade: 16,
     },
     media: {
-      velocidade: 0.85,
+      velocidade: 0.55,
       dobra: 0.6,
       azul: 0.75,
       grao: 0.04,

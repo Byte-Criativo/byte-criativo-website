@@ -5,13 +5,14 @@ import { HERO_ARTE, type HeroIntensidade } from "./config"
 import { variavelParaOklab, type Oklab } from "./oklab"
 import { FRAGMENT_SHADER, VERTEX_SHADER } from "./shader"
 
-/** Posição do `;` em frações da caixa do canvas (x da esquerda, y de cima). */
-export type HeroAncora = { x: number; y: number }
-
 export type HeroCanvasOpcoes = {
   intensidade: HeroIntensidade
-  /** Função para a âncora poder depender da proporção da tela. */
-  ancora: (largura: number, altura: number) => HeroAncora
+  /**
+   * Seletor CSS do `;` de onde a energia emana, procurado primeiro dentro do
+   * pai do canvas. A posição é lida do DOM a cada quadro, então acompanha
+   * reflow, troca de fonte e redimensionamento sem observador extra.
+   */
+  ancoraSeletor: string
 }
 
 /**
@@ -30,6 +31,7 @@ const UNIFORMS = [
   "u_ponteiro",
   "u_ancora",
   "u_revelacao",
+  "u_rolagem",
   "u_velocidade",
   "u_dobra",
   "u_azul",
@@ -118,7 +120,7 @@ function suavizar(t: number): number {
  */
 export function useHeroCanvas(
   ref: RefObject<HTMLCanvasElement | null>,
-  { intensidade, ancora }: HeroCanvasOpcoes,
+  { intensidade, ancoraSeletor }: HeroCanvasOpcoes,
 ): void {
   useEffect(() => {
     const canvas = ref.current
@@ -175,7 +177,13 @@ export function useHeroCanvas(
     let perdido = false
     let lentos = 0
     let ultimo = 0
+    // Menor intervalo entre quadros visto até agora: aproxima o período do
+    // monitor (16,7 ms a 60 Hz, 33 ms a 30 Hz), para um monitor lento não ser
+    // confundido com uma GPU lenta.
+    let menorDt = Number.POSITIVE_INFINITY
     const inicio = performance.now()
+    let caixa = canvas.getBoundingClientRect()
+    let elementoAncora: Element | null = null
 
     const ponteiro = { x: -10, y: -10, alvoX: -10, alvoY: -10 }
 
@@ -221,8 +229,14 @@ export function useHeroCanvas(
       gl.uniform3fv(uniforms.u_cInk, cores.ink)
     }
 
+    const localizarAncora = () => {
+      elementoAncora =
+        canvas.parentElement?.querySelector(ancoraSeletor) ??
+        document.querySelector(ancoraSeletor)
+    }
+
     const redimensionar = () => {
-      const caixa = canvas.getBoundingClientRect()
+      caixa = canvas.getBoundingClientRect()
       largura = Math.max(1, caixa.width)
       altura = Math.max(1, caixa.height)
       const dpr = Math.min(window.devicePixelRatio || 1, dprMax)
@@ -243,12 +257,24 @@ export function useHeroCanvas(
       const revelacao = movimentoReduzido.matches
         ? 1
         : suavizar((agora - inicio) / HERO_ARTE.revelacaoMs)
-      const aspecto = largura / altura
-      const a = ancora(largura, altura)
+      // Posição do `;` e quanto do hero já rolou para fora, ambos lidos da
+      // geometria atual (sem listener de rolagem: o laço já roda por quadro).
+      caixa = canvas.getBoundingClientRect()
+      const alturaCaixa = Math.max(1, caixa.height)
+      if (!elementoAncora?.isConnected) localizarAncora()
+      let ancoraX = 0.3 * (largura / altura)
+      let ancoraY = 0.5
+      if (elementoAncora) {
+        const r = elementoAncora.getBoundingClientRect()
+        ancoraX = (r.left + r.width / 2 - caixa.left) / alturaCaixa
+        ancoraY = 1 - (r.top + r.height / 2 - caixa.top) / alturaCaixa
+      }
+      const rolagem = Math.min(1, Math.max(0, -caixa.top / alturaCaixa))
 
       gl.uniform1f(uniforms.u_angulo, angulo)
       gl.uniform1f(uniforms.u_revelacao, revelacao)
-      gl.uniform2f(uniforms.u_ancora, a.x * aspecto, 1 - a.y)
+      gl.uniform1f(uniforms.u_rolagem, rolagem)
+      gl.uniform2f(uniforms.u_ancora, ancoraX, ancoraY)
       gl.uniform2f(uniforms.u_ponteiro, ponteiro.x, ponteiro.y)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
       if (canvas.dataset.estado !== "pronto") marcar("pronto")
@@ -260,10 +286,16 @@ export function useHeroCanvas(
       raf = 0
       if (!continuar()) return
 
-      // Qualidade adaptativa pelo tempo entre quadros.
+      // Qualidade adaptativa pelo tempo entre quadros, relativo ao período
+      // do monitor (ver menorDt).
       const dt = ultimo ? agora - ultimo : 0
       ultimo = agora
-      if (dt > HERO_ARTE.quadroLentoMs && dt < 500) {
+      if (dt > 0 && dt < menorDt) menorDt = dt
+      const limiteLento = Math.max(
+        HERO_ARTE.quadroLentoMs,
+        menorDt * HERO_ARTE.fatorQuadroLento,
+      )
+      if (dt > limiteLento && dt < 500) {
         lentos += 1
         if (
           lentos >= HERO_ARTE.framesLentos &&
@@ -301,7 +333,6 @@ export function useHeroCanvas(
     // --- ponteiro ------------------------------------------------------------
     const aoMover = (evento: PointerEvent) => {
       if (evento.pointerType !== "mouse") return
-      const caixa = canvas.getBoundingClientRect()
       ponteiro.alvoX = (evento.clientX - caixa.left) / Math.max(1, caixa.height)
       ponteiro.alvoY =
         1 - (evento.clientY - caixa.top) / Math.max(1, caixa.height)
@@ -371,6 +402,7 @@ export function useHeroCanvas(
       return
     }
     redimensionar()
+    localizarAncora()
 
     canvas.addEventListener("webglcontextlost", aoPerder)
     canvas.addEventListener("webglcontextrestored", aoRestaurar)
@@ -404,5 +436,5 @@ export function useHeroCanvas(
         gl.getExtension("WEBGL_lose_context")?.loseContext()
       }
     }
-  }, [ref, intensidade, ancora])
+  }, [ref, intensidade, ancoraSeletor])
 }

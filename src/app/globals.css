@@ -526,6 +526,11 @@
   scroll-padding-top: calc(
     var(--alvo-toque) + var(--space-3) * 2 + var(--space-4)
   );
+  /* Altura do header (conteúdo + borda), para o hero da home começar
+     embaixo dele. Os mesmos números do scroll-padding-top acima. */
+  --altura-header: calc(
+    var(--alvo-toque) + var(--space-3) * 2 + var(--border-w-decorative)
+  );
 }
 
 /* `position: sticky` e `top: 0` do header são estruturais — a mesma posição,
@@ -544,12 +549,17 @@
     scroll-padding-top: calc(
       var(--space-7) + var(--space-5) * 2 + var(--space-4)
     );
+    --altura-header: calc(
+      var(--space-7) + var(--space-5) * 2 + var(--border-w-decorative)
+    );
   }
 }
 
 @media (max-height: 30rem) {
   :root {
     scroll-padding-top: var(--space-4);
+    /* Header estático (abaixo): o hero não passa por baixo dele. */
+    --altura-header: 0px;
   }
 
   [data-site-header] {
@@ -798,10 +808,6 @@ dialog::backdrop {
   --link: var(--ink);
 }
 
-.home-hero {
-  background: linear-gradient(180deg, var(--brand-surface), var(--bg));
-}
-
 .hero-eyebrow {
   display: flex;
   align-items: center;
@@ -820,43 +826,12 @@ dialog::backdrop {
   text-wrap: balance;
 }
 
-.hero-project {
-  min-width: 0;
-  border-top: var(--border-w-easel) solid var(--brand-blue);
-  padding-top: var(--space-5);
-}
-
-.hero-project article {
-  background: transparent;
-}
-
-/* A ficha já está dentro do container: a margem global de 64px reduzia
-     a captura duas vezes. O respiro local conserva o cavalete e amplia a obra. */
-.hero-project [data-parte="cabeca"],
-.hero-project [data-parte="corpo"] {
-  padding-inline: 0;
-}
-
-.hero-project .sala-obra {
-  padding-inline: var(--space-5);
-}
-
-.hero-project .sala-superficie {
-  padding-top: var(--space-5);
-}
-
 .services-overview {
   background: var(--brand-surface);
 }
 
 .services-overview h3 {
   color: var(--brand-blue);
-}
-
-@media (min-width: 64rem) {
-  .home-hero > div > div {
-    column-gap: var(--space-7);
-  }
 }
 
 /* Hero com arte generativa (hero-arte). O canvas é decoração absoluta sobre
@@ -925,5 +900,243 @@ dialog::backdrop {
     color: var(--ink);
     text-decoration: underline;
     text-underline-offset: var(--desloc-sublinhado);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Hero da home com arte generativa (feat/hero-motion).
+   Camadas, de trás para frente: gradiente CSS (fundo da seção, mesmas
+   cores da arte) → canvas .hero-arte (z 0) → véu de saída (z 1) →
+   conteúdo e indicador de rolagem (z 2). A seção começa embaixo do header
+   (margem negativa de --altura-header) e ocupa a tela inteira em svh, com
+   vh como alternativa. `position`/`inset`/z-index são estruturais.
+   --------------------------------------------------------------------- */
+@layer components {
+  .home-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    margin-top: calc(-1 * var(--altura-header));
+    padding-top: calc(var(--altura-header) + var(--space-7));
+    padding-bottom: var(--space-9);
+    background: linear-gradient(180deg, var(--brand-surface), var(--bg));
+  }
+
+  .home-hero-conteudo {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-sentinela {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: var(--space-2);
+    pointer-events: none;
+  }
+
+  .hero-veu {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--space-10);
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    pointer-events: none;
+  }
+
+  .hero-rolar {
+    position: absolute;
+    z-index: 2;
+    left: var(--grid-margin);
+    bottom: var(--space-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--ink-muted);
+  }
+
+  .hero-rolar-linha {
+    display: block;
+    width: var(--border-w-focus);
+    height: var(--space-6);
+    background: var(--ink-muted);
+    transform-origin: top;
+    animation: hero-rolar-linha 2.4s var(--ease-in-out) infinite;
+  }
+
+  /* Palavras do título: cada uma numa janela com overflow oculto, de onde
+     sobe com a curva customizada. O respiro embaixo evita cortar
+     descendentes com a entrelinha apertada do papel display. */
+  .hero-title-visual {
+    display: block;
+  }
+
+  .hero-palavra {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+
+  .hero-palavra-interna {
+    display: inline-block;
+    transform: translateY(110%);
+    animation: hero-palavra 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--hero-i, 0) * 60ms);
+  }
+
+  /* O `;` entra por último, com um único pulso de cursor de editor. */
+  .hero-semicolon {
+    display: inline-block;
+    opacity: 0;
+    animation: hero-cursor 0.5s steps(1, end) forwards;
+    animation-delay: calc(var(--hero-n, 7) * 60ms + 0.3s);
+  }
+
+  /* Eyebrow, apoio, CTAs e indicador entram em sequência curta. */
+  .hero-entrada {
+    opacity: 0;
+    transform: translateY(var(--space-3));
+    animation: hero-entrada 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .hero-entrada[data-hero-ordem="0"] {
+    animation-delay: 0.05s;
+  }
+
+  .hero-entrada[data-hero-ordem="1"] {
+    animation-delay: 0.85s;
+  }
+
+  .hero-entrada[data-hero-ordem="2"] {
+    animation-delay: 1s;
+  }
+
+  .hero-entrada[data-hero-ordem="3"] {
+    animation-delay: 1.2s;
+  }
+
+  /* Versão curta (até 0,4 s): a entrada completa já tocou nesta sessão de
+     página (ilha HeroCena). */
+  .home-hero[data-entrada="curta"] .hero-palavra-interna {
+    animation-duration: 0.35s;
+    animation-delay: calc(var(--hero-i, 0) * 10ms);
+  }
+
+  .home-hero[data-entrada="curta"] .hero-semicolon {
+    animation: hero-entrada 0.2s linear forwards;
+    animation-delay: 0.15s;
+  }
+
+  .home-hero[data-entrada="curta"] .hero-entrada {
+    animation-duration: 0.3s;
+    animation-delay: 0.1s;
+  }
+
+  /* Saída: a arte desce em paralaxe enquanto o hero sai (sem listener de
+     rolagem; só onde animation-timeline existe). A dissolução dos bytes
+     ao rolar fica no shader (u_rolagem). */
+  @supports (animation-timeline: view()) {
+    .hero-arte {
+      animation: hero-sair linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+
+  /* O índice de `;` some enquanto o hero está na tela. O estado inicial
+     (sem data-hero-saiu) assume o hero visível, que é o caso do topo. */
+  .indice-inv {
+    transition:
+      opacity var(--dur-base) var(--ease-in-out),
+      visibility 0s linear var(--dur-base);
+  }
+
+  :root[data-js]:has(.home-hero):not([data-hero-saiu]) .indice-inv {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur-base) var(--ease-in-out),
+      visibility 0s linear 0s;
+  }
+}
+
+@keyframes hero-palavra {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-cursor {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0;
+  }
+  80%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-entrada {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-rolar-linha {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes hero-sair {
+  to {
+    transform: translateY(30%);
+  }
+}
+
+/* Header flutuante sobre a arte, só na home, só com JS (sem JS o header
+   fica sólido, como em todo o site) e só até o primeiro rolar
+   (data-rolado, gravado pela ilha HeroCena). Fora de camada para vencer
+   os utilitários bg-bg/border do SiteHeader sem mexer no componente. */
+[data-site-header] {
+  transition:
+    background-color var(--dur-base) var(--ease-in-out),
+    border-color var(--dur-base) var(--ease-in-out);
+}
+
+:root[data-js]:has(.home-hero):not([data-rolado]) [data-site-header] {
+  background-color: transparent;
+  border-bottom-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-arte {
+    animation: none;
+  }
+
+  .hero-rolar-linha {
+    animation: none;
+    transform: none;
   }
 }
