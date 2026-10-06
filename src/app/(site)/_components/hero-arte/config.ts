@@ -69,7 +69,7 @@ export const GLOBO = {
      * de `transicaoPx` a partir da borda. É o que garante o contraste AA do
      * título, do apoio e dos CTAs com o globo passando por trás.
      */
-    zonaCalma: { margemPx: 24, transicaoPx: 80, alfaMax: 0.12 },
+    zonaCalma: { margemPx: 24, transicaoPx: 80, alfaMax: 0.1 },
     /** Tamanho da fonte dos glifos, em px CSS, limitado nesta faixa. */
     fonteMinPx: 12,
     fonteMaxPx: 15,
@@ -79,19 +79,19 @@ export const GLOBO = {
    * sem WebGL) o globo fica estático: um quadro final, redesenhado só na
    * rolagem e no resize. Com aceleração, a qualidade se adapta ao custo
    * medido de cada quadro: acima de `custoAltoMs` na média de
-   * `janelaQuadros` quadros desce um degrau (menos glifos, depois DPR 1,
+   * `janelaQuadros` quadros desce um degrau (menos paralelos, depois DPR 1,
    * depois 30 fps); abaixo de `custoBaixoMs` por `intervaloDegrauS`
    * segundos sobe um degrau. Começa em `degrauInicial` durante a entrada e
    * nos `segurarInicialS` segundos seguintes.
    */
   desempenho: {
     custoAltoMs: 12,
-    custoBaixoMs: 5,
+    custoBaixoMs: 7,
     janelaQuadros: 20,
     intervaloDegrauS: 3,
     segurarInicialS: 2,
     degrauInicial: 1,
-    /** Degraus: fração de glifos desenhados, teto de DPR e fps do ticker. */
+    /** Degraus: fração de paralelos desenhados, teto de DPR e fps do ticker. */
     degraus: [
       { densidade: 1, dprMax: 2, fps: 60 },
       { densidade: 0.66, dprMax: 2, fps: 60 },

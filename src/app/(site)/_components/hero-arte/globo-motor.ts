@@ -211,7 +211,19 @@ export function montarGlobo(
   let aneis: Anel[] = []
   let grao: HTMLCanvasElement | null = null
   // Zona calma do texto, em px do canvas (caixa do bloco de conteúdo).
-  const calma = { l: 0, t: 0, r: 0, b: 0, ativa: false }
+  const calma = {
+    l: 0,
+    t: 0,
+    r: 0,
+    b: 0,
+    cx: 0,
+    cy: 0,
+    rx: 1,
+    ry: 1,
+    ativa: false,
+  }
+  // Caixa do `;` do título em px do canvas: ganha um halo branco por trás.
+  const ponto = { x: 0, y: 0, r: 0, ativo: false }
   // Qualidade adaptativa (ver CONFIG.desempenho).
   const DESEMPENHO = CONFIG.desempenho
   let degrau: number = DESEMPENHO.degrauInicial
@@ -365,18 +377,34 @@ export function montarGlobo(
       calma.t = cb.top - caixa.top - m
       calma.r = cb.right - caixa.left + m
       calma.b = cb.bottom - caixa.top + m
+      calma.cx = (calma.l + calma.r) / 2
+      calma.cy = (calma.t + calma.b) / 2
+      calma.rx = Math.max(1, (calma.r - calma.l) / 2)
+      calma.ry = Math.max(1, (calma.b - calma.t) / 2)
       calma.ativa = true
     } else {
       calma.ativa = false
     }
+    const pc = ancora()
+    if (pc && pc.width > 0) {
+      ponto.x = pc.left + pc.width / 2 - caixa.left
+      ponto.y = pc.top + pc.height / 2 - caixa.top
+      ponto.r = Math.hypot(pc.width, pc.height) * 1.15
+      ponto.ativo = true
+    } else {
+      ponto.ativo = false
+    }
+    // O globo nunca sobe para debaixo do header (contraste do logo e dos links).
+    const header = document.querySelector("[data-site-header]")
+    const alturaHeader = header ? header.getBoundingClientRect().height : 0
     if (W >= 1024) {
       R = (L.desktop.diametroVh / 200) * H
       cx = L.desktop.centroX * W
-      cy = L.desktop.centroY * H
+      cy = Math.max(L.desktop.centroY * H, alturaHeader + 1.12 * R + 8)
     } else if (W >= 768) {
       R = (L.tablet.diametroVh / 200) * H
       cx = L.tablet.centroX * W
-      cy = L.tablet.centroY * H
+      cy = Math.max(L.tablet.centroY * H, alturaHeader + 1.12 * R + 8)
     } else {
       R = (L.celular.diametroVw / 200) * W
       cx = L.celular.centroX * W
@@ -492,6 +520,49 @@ export function montarGlobo(
       }
     }
 
+    // Véu suave atrás do bloco de texto (nunca uma caixa): elipse branca que
+    // some antes da borda. Garante o AA do título, do apoio e dos CTAs.
+    if (calma.ativa) {
+      ctx.save()
+      ctx.translate(calma.cx, calma.cy)
+      ctx.scale(calma.rx / calma.ry, 1)
+      const veu = ctx.createRadialGradient(0, 0, 0, 0, 0, calma.ry * 1.35)
+      veu.addColorStop(0, "rgba(255, 255, 255, 0.85)")
+      veu.addColorStop(0.7, "rgba(255, 255, 255, 0.55)")
+      veu.addColorStop(1, "rgba(255, 255, 255, 0)")
+      ctx.fillStyle = veu
+      ctx.globalAlpha = 1
+      ctx.fillRect(
+        -calma.rx * 1.6,
+        -calma.ry * 1.4,
+        calma.rx * 3.2,
+        calma.ry * 2.8,
+      )
+      ctx.restore()
+    }
+    // Halo branco atrás do `;` do título: o laranja precisa de 3:1.
+    if (ponto.ativo) {
+      const haloPonto = ctx.createRadialGradient(
+        ponto.x,
+        ponto.y,
+        0,
+        ponto.x,
+        ponto.y,
+        ponto.r,
+      )
+      haloPonto.addColorStop(0, "rgba(255, 255, 255, 1)")
+      haloPonto.addColorStop(0.72, "rgba(255, 255, 255, 0.98)")
+      haloPonto.addColorStop(1, "rgba(255, 255, 255, 0)")
+      ctx.fillStyle = haloPonto
+      ctx.globalAlpha = 1
+      ctx.fillRect(
+        ponto.x - ponto.r,
+        ponto.y - ponto.r,
+        ponto.r * 2,
+        ponto.r * 2,
+      )
+    }
+
     const lanternaAtiva = preset.lanterna && lanterna.x > -9000
     let pulsosAtivos = 0
     for (const anel of aneis) {
@@ -540,7 +611,18 @@ export function montarGlobo(
       // Sem hemisfério de trás no toque, na fita achatada e durante a entrada
       // (o quadro da entrada já paga o crescimento e a revelação).
       if (tras && (toque || curva < 0.5 || estado.revelacao < 1)) continue
-      for (const anel of aneis) {
+      for (let ia = 0; ia < aneis.length; ia += 1) {
+        const anel = aneis[ia]
+        if (!anel) continue
+        // Qualidade adaptativa: pula anéis inteiros (o texto de cada anel
+        // continua íntegro), nunca o equador.
+        if (densidade < 1 && ia !== Math.floor(aneis.length / 2)) {
+          if (densidade <= 0.34) {
+            if (ia % 3 !== 0) continue
+          } else if (densidade <= 0.51) {
+            if (ia % 2 === 1) continue
+          } else if (ia % 3 === 2) continue
+        }
         const fracaoLat = Math.abs(anel.lat) / (CONFIG.latitudeMax * GRAUS)
         let alfaAnel = suave((estado.revelacao - fracaoLat) / 0.12)
         if (preset.achataNaRolagem) {
@@ -568,14 +650,6 @@ export function montarGlobo(
           const g = anel.glifos[k]
           if (!g) continue
           if (tras && k % 2 === 1) continue
-          // Qualidade adaptativa: pula glifos por índice, nunca os `;`.
-          if (densidade < 1 && !g.semicolon) {
-            if (densidade <= 0.34) {
-              if (k % 3 !== 0) continue
-            } else if (densidade <= 0.51) {
-              if (k % 2 === 1) continue
-            } else if (k % 3 === 2) continue
-          }
           const lambda = g.theta + anel.rot + rotExtra
           const lf = envolve(lambda - Math.PI / 2)
           // Ponto na esfera unitária (curvo) e na "fita" aberta (reto), misturados.
@@ -615,12 +689,15 @@ export function montarGlobo(
               (preset.alfaFrente - CONFIG.alfaHorizonte) * suave(prof / 0.85)
           }
           alfa *= alfaAnel
-          // Zona calma: atrás do bloco de texto o globo é só sugestão.
+          // Zona calma: atrás do bloco de texto o globo é só sugestão. O
+          // fator vale também para pulsos e lanterna (aplicado no fim).
+          let fatorCalma = 1
           if (calma.ativa && !tras) {
             const dx = Math.max(calma.l - a.x, a.x - calma.r, 0)
             const dy = Math.max(calma.t - a.y, a.y - calma.b, 0)
             const fora = suave(Math.hypot(dx, dy) / zonaTransicao)
-            alfa *= calmaMin + (1 - calmaMin) * fora
+            fatorCalma = calmaMin + (1 - calmaMin) * fora
+            alfa *= fatorCalma
           }
           if (alfa <= 0.01) continue
 
@@ -663,6 +740,8 @@ export function montarGlobo(
               alfaFinal = alfaFinal + (0.95 * alfaAnel - alfaFinal) * foco
           }
 
+          if (alfaFinal > alfa)
+            alfaFinal = alfa + (alfaFinal - alfa) * fatorCalma
           desenharGlifo(atlas, g, a.x, a.y, largura, altura, angulo, alfaFinal)
         }
         if (!tras) anel.fator = fatorVelocidade
