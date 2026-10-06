@@ -59,6 +59,36 @@ export type GloboOpcoes = {
 
 const GRAUS = Math.PI / 180
 
+/** Renderizadores por software: sem aceleração, o globo fica estático. */
+const RENDERIZADOR_POR_SOFTWARE = /swiftshader|llvmpipe|softpipe|software/i
+
+/**
+ * Pergunta a um contexto WebGL descartável quem está renderizando. Sem
+ * WebGL ou com renderizador por software, o Canvas 2D também está em
+ * software, e animar 60 vezes por segundo custaria a CPU inteira.
+ */
+function temAceleracaoGrafica(): boolean {
+  const c = document.createElement("canvas")
+  const gl = c.getContext("webgl")
+  if (!gl) return false
+  const info = gl.getExtension("WEBGL_debug_renderer_info")
+  const renderizador = info
+    ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL))
+    : String(gl.getParameter(gl.RENDERER))
+  gl.getExtension("WEBGL_lose_context")?.loseContext()
+  return !RENDERIZADOR_POR_SOFTWARE.test(renderizador)
+}
+
+/** Agenda num momento ocioso (com teto) e devolve o cancelamento. */
+function ocioso(fn: () => void, tetoMs: number): () => void {
+  if (typeof window.requestIdleCallback === "function") {
+    const id = window.requestIdleCallback(() => fn(), { timeout: tetoMs })
+    return () => window.cancelIdleCallback(id)
+  }
+  const id = window.setTimeout(fn, 0)
+  return () => window.clearTimeout(id)
+}
+
 function suave(t: number): number {
   const x = Math.min(1, Math.max(0, t))
   return x * x * (3 - 2 * x)
@@ -163,7 +193,8 @@ export function montarGlobo(
   const preset: Preset = CONFIG.presets[variante]
   const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)")
   const toque = window.matchMedia("(pointer: coarse)").matches
-  const dprMax = toque ? 1.5 : 2
+  const dprToque = toque ? 1.5 : 2
+  const acelerado = temAceleracaoGrafica()
   const familia =
     getComputedStyle(document.body).fontFamily || "system-ui, sans-serif"
 
@@ -179,6 +210,20 @@ export function montarGlobo(
   let atlasAzul: Atlas | null = null
   let aneis: Anel[] = []
   let grao: HTMLCanvasElement | null = null
+  // Zona calma do texto, em px do canvas (caixa do bloco de conteúdo).
+  const calma = { l: 0, t: 0, r: 0, b: 0, ativa: false }
+  // Qualidade adaptativa (ver CONFIG.desempenho).
+  const DESEMPENHO = CONFIG.desempenho
+  let degrau: number = DESEMPENHO.degrauInicial
+  let densidade: number = DESEMPENHO.degraus[degrau]?.densidade ?? 1
+  let dprMax: number = Math.min(
+    dprToque,
+    DESEMPENHO.degraus[degrau]?.dprMax ?? 2,
+  )
+  const custos: number[] = []
+  let ultimaTroca = 0
+  let desdeQuandoBarato = 0
+  let inicioDoMotor = 0
 
   // Estado animado pelo GSAP.
   const estado = {
@@ -212,7 +257,10 @@ export function montarGlobo(
     for (const linha of LINHAS_DE_CODIGO) for (const ch of linha) chars.add(ch)
     chars.add(" ")
     const todos = [...chars].join("")
-    tamanhoFonte = Math.min(12, Math.max(10, R / 26))
+    tamanhoFonte = Math.min(
+      CONFIG.layout.fonteMaxPx,
+      Math.max(CONFIG.layout.fonteMinPx, R / 30),
+    )
     atlasPreto = criarAtlas(
       todos,
       tamanhoFonte,
@@ -307,18 +355,33 @@ export function montarGlobo(
       canvas.width = w
       canvas.height = h
     }
-    if (W >= 1024) {
-      R = 0.28 * H
-      cx = W - 0.98 * R
-      cy = 0.5 * H
-    } else if (W >= 640) {
-      R = 0.27 * H
-      cx = W - 0.7 * R
-      cy = 0.52 * H
+    const L = CONFIG.layout
+    // Caixa do bloco de texto (título, apoio, CTAs) em px do canvas.
+    const bloco = secao.querySelector(".home-hero-conteudo > div")
+    const cb = bloco?.getBoundingClientRect()
+    if (cb && cb.width > 0) {
+      const m = L.zonaCalma.margemPx
+      calma.l = cb.left - caixa.left - m
+      calma.t = cb.top - caixa.top - m
+      calma.r = cb.right - caixa.left + m
+      calma.b = cb.bottom - caixa.top + m
+      calma.ativa = true
     } else {
-      R = 0.21 * H
-      cx = 0.78 * W
-      cy = 0.98 * H
+      calma.ativa = false
+    }
+    if (W >= 1024) {
+      R = (L.desktop.diametroVh / 200) * H
+      cx = L.desktop.centroX * W
+      cy = L.desktop.centroY * H
+    } else if (W >= 768) {
+      R = (L.tablet.diametroVh / 200) * H
+      cx = L.tablet.centroX * W
+      cy = L.tablet.centroY * H
+    } else {
+      R = (L.celular.diametroVw / 200) * W
+      cx = L.celular.centroX * W
+      const fundo = calma.ativa ? calma.b - L.zonaCalma.margemPx : 0.6 * H
+      cy = fundo + (L.celular.abaixoDoConteudoVh / 100) * H
     }
   }
 
@@ -437,6 +500,11 @@ export function montarGlobo(
     }
 
     const alturaGlifo = atlasPreto.altura / dpr
+    const zonaTransicao = CONFIG.layout.zonaCalma.transicaoPx
+    const calmaMin = Math.min(
+      1,
+      CONFIG.layout.zonaCalma.alfaMax / preset.alfaFrente,
+    )
     const desenharGlifo = (
       atlas: Atlas,
       g: Glifo,
@@ -500,6 +568,14 @@ export function montarGlobo(
           const g = anel.glifos[k]
           if (!g) continue
           if (tras && k % 2 === 1) continue
+          // Qualidade adaptativa: pula glifos por índice, nunca os `;`.
+          if (densidade < 1 && !g.semicolon) {
+            if (densidade <= 0.34) {
+              if (k % 3 !== 0) continue
+            } else if (densidade <= 0.51) {
+              if (k % 2 === 1) continue
+            } else if (k % 3 === 2) continue
+          }
           const lambda = g.theta + anel.rot + rotExtra
           const lf = envolve(lambda - Math.PI / 2)
           // Ponto na esfera unitária (curvo) e na "fita" aberta (reto), misturados.
@@ -539,6 +615,13 @@ export function montarGlobo(
               (preset.alfaFrente - CONFIG.alfaHorizonte) * suave(prof / 0.85)
           }
           alfa *= alfaAnel
+          // Zona calma: atrás do bloco de texto o globo é só sugestão.
+          if (calma.ativa && !tras) {
+            const dx = Math.max(calma.l - a.x, a.x - calma.r, 0)
+            const dy = Math.max(calma.t - a.y, a.y - calma.b, 0)
+            const fora = suave(Math.hypot(dx, dy) / zonaTransicao)
+            alfa *= calmaMin + (1 - calmaMin) * fora
+          }
           if (alfa <= 0.01) continue
 
           // Cruzamento do meridiano pelo `;`: acende em laranja.
@@ -676,7 +759,9 @@ export function montarGlobo(
     const kp = 1 - Math.pow(0.02, dt) // parallax mais lento (~1 s)
     parallax.x += (parallax.alvoX - parallax.x) * kp
     parallax.y += (parallax.alvoY - parallax.y) * kp
+    const antes = performance.now()
     desenhar(agora)
+    adaptar(performance.now() - antes, agora)
     quadros += 1
     if (agora - marcaFps >= 1000) {
       aoFps?.(quadros)
@@ -685,8 +770,50 @@ export function montarGlobo(
     }
   }
 
+  /** Sobe ou desce um degrau de qualidade conforme o custo medido do quadro. */
+  const aplicarDegrau = (novo: number, agora: number) => {
+    const d = DESEMPENHO.degraus[novo]
+    if (!d) return
+    degrau = novo
+    densidade = d.densidade
+    canvas.dataset.degrau = String(novo)
+    const dprNovo = Math.min(dprToque, d.dprMax)
+    gsap.ticker.fps(d.fps)
+    ultimaTroca = agora
+    desdeQuandoBarato = 0
+    custos.length = 0
+    if (dprNovo !== dprMax) {
+      dprMax = dprNovo
+      redimensionar()
+    }
+  }
+  const adaptar = (custo: number, agora: number) => {
+    custos.push(custo)
+    if (custos.length < DESEMPENHO.janelaQuadros) return
+    custos.shift()
+    const media = custos.reduce((a, b) => a + b, 0) / custos.length
+    const intervalo = DESEMPENHO.intervaloDegrauS * 1000
+    if (agora - ultimaTroca < intervalo) return
+    const segurando = agora - inicioDoMotor < DESEMPENHO.segurarInicialS * 1000
+    if (media > DESEMPENHO.custoAltoMs) {
+      if (degrau < DESEMPENHO.degraus.length - 1) {
+        aplicarDegrau(degrau + 1, agora)
+      }
+      return
+    }
+    if (media < DESEMPENHO.custoBaixoMs) {
+      if (!desdeQuandoBarato) desdeQuandoBarato = agora
+      const piso = segurando ? DESEMPENHO.degrauInicial : 0
+      if (agora - desdeQuandoBarato >= intervalo && degrau > piso) {
+        aplicarDegrau(degrau - 1, agora)
+      }
+    } else {
+      desdeQuandoBarato = 0
+    }
+  }
+
   const acordar = () => {
-    if (laco || !ativo || !naTela || reduzido.matches) return
+    if (laco || !ativo || !naTela || reduzido.matches || !acelerado) return
     ultimo = 0
     laco = passo
     gsap.ticker.add(laco)
@@ -697,45 +824,56 @@ export function montarGlobo(
   }
 
   // --- entrada ---------------------------------------------------------------
-  // A geometria vem antes da timeline: o deslocamento até o ';' do título
-  // é medido a partir do centro final do globo.
-  redimensionar()
-  montarGrao()
+  // Montada depois da geometria (ver `montarEntrada`): o deslocamento até o
+  // ';' do título é medido a partir do centro final do globo.
   const fatorEntrada =
     secao.dataset.entrada === "curta" ? CONFIG.entradaCurta : 1
   const linha = gsap.timeline({ paused: true })
-  if (preset.nasceNoTitulo) {
-    const caixa = ancora()
-    if (caixa) {
-      const c = canvas.getBoundingClientRect()
-      estado.escala = 0.05
-      estado.deslocX = caixa.left + caixa.width / 2 - c.left - cx
-      estado.deslocY = caixa.top + caixa.height * 0.62 - c.top - cy
-      // O `;` do título acende a 0,3 s; o planeta sai dele a partir de 0,5 s.
-      linha.to(
-        estado,
-        {
-          escala: 1,
-          deslocX: 0,
-          deslocY: 0,
-          duration: 1.15 * fatorEntrada,
-          ease: "power3.out",
-        },
-        0.45 * fatorEntrada,
-      )
+  const montarEntrada = () => {
+    if (preset.nasceNoTitulo) {
+      const caixa = ancora()
+      if (caixa) {
+        const c = canvas.getBoundingClientRect()
+        estado.escala = 0.05
+        estado.deslocX = caixa.left + caixa.width / 2 - c.left - cx
+        estado.deslocY = caixa.top + caixa.height * 0.62 - c.top - cy
+        // O `;` do título acende a 0,3 s; o planeta sai dele a partir de 0,45 s
+        // e chega ao centro em 1,3 s, crescendo mais do que anda.
+        linha.to(
+          estado,
+          {
+            escala: 1,
+            deslocX: 0,
+            deslocY: 0,
+            duration: 0.85 * fatorEntrada,
+            ease: "power3.inOut",
+          },
+          0.45 * fatorEntrada,
+        )
+      }
     }
+    const inicioRevelacao = preset.nasceNoTitulo ? 0.45 : 0
+    linha.to(
+      estado,
+      { revelacao: 1, duration: 0.85 * fatorEntrada, ease: "power2.out" },
+      (inicioRevelacao + 0.1) * fatorEntrada,
+    )
+    linha.to(
+      estado,
+      { polos: 1, duration: 0.3 * fatorEntrada, ease: "power1.out" },
+      (inicioRevelacao + 0.75) * fatorEntrada,
+    )
   }
-  const inicioRevelacao = preset.nasceNoTitulo ? 0.45 : 0
-  linha.to(
-    estado,
-    { revelacao: 1, duration: 1.1 * fatorEntrada, ease: "power2.out" },
-    inicioRevelacao * fatorEntrada,
-  )
-  linha.to(
-    estado,
-    { polos: 1, duration: 0.3 * fatorEntrada, ease: "power1.out" },
-    (inicioRevelacao + 1.0) * fatorEntrada,
-  )
+
+  /** Modo estático: um quadro final, redesenhado só na rolagem e no resize. */
+  const quadroEstatico = () => {
+    estado.revelacao = 1
+    estado.polos = 1
+    estado.escala = 1
+    estado.deslocX = 0
+    estado.deslocY = 0
+    desenhar(performance.now())
+  }
 
   const gatilho = ScrollTrigger.create({
     trigger: secao,
@@ -744,7 +882,7 @@ export function montarGlobo(
     scrub: 0.6,
     onUpdate: (self) => {
       estado.rolagem = self.progress
-      if (reduzido.matches) desenhar(performance.now())
+      if (reduzido.matches || !acelerado) desenhar(performance.now())
     },
   })
 
@@ -783,40 +921,71 @@ export function montarGlobo(
     { threshold: 0 },
   )
   let esperaResize = 0
+  let montado = false
   const observadorTamanho = new ResizeObserver(() => {
+    if (!montado) return
     window.clearTimeout(esperaResize)
     esperaResize = window.setTimeout(() => {
       redimensionar()
-      if (reduzido.matches) desenhar(performance.now())
+      if (reduzido.matches || !acelerado) quadroEstatico()
     }, 120)
   })
   const aoMudarMovimento = () => {
+    if (!montado) return
     if (reduzido.matches) {
       dormir()
-      estado.revelacao = 1
-      estado.polos = 1
-      estado.escala = 1
-      estado.deslocX = 0
-      estado.deslocY = 0
-      desenhar(performance.now())
+      quadroEstatico()
     } else {
       acordar()
     }
   }
 
   // --- início ----------------------------------------------------------------
-  if (toque) {
-    lanterna.alvoX = cx
-    lanterna.alvoY = cy
-    lanterna.x = cx
-    lanterna.y = cy
+  // Montagem em dois ciclos ociosos (geometria e atlas; depois anéis e grão)
+  // para nenhuma tarefa passar de ~20 ms; o primeiro quadro vem no quadro
+  // seguinte, nunca na mesma tarefa.
+  let cancelarMontagem: (() => void) | null = null
+  let rafInicial = 0
+  const iniciar = () => {
+    montado = true
+    // Diagnóstico (lido só por testes e capturas): modo e degrau atual.
+    canvas.dataset.modo =
+      reduzido.matches || !acelerado ? "estatico" : "animado"
+    canvas.dataset.degrau = String(degrau)
+    if (toque) {
+      lanterna.alvoX = cx
+      lanterna.alvoY = cy
+      lanterna.x = cx
+      lanterna.y = cy
+    }
+    montarEntrada()
+    inicioDoMotor = performance.now()
+    if (reduzido.matches || !acelerado) {
+      rafInicial = requestAnimationFrame(quadroEstatico)
+      return
+    }
+    gsap.ticker.fps(DESEMPENHO.degraus[degrau]?.fps ?? 60)
+    rafInicial = requestAnimationFrame(() => {
+      linha.play()
+      acordar()
+    })
   }
-  if (reduzido.matches) {
-    aoMudarMovimento()
-  } else {
-    linha.play()
-    acordar()
+  const etapaAneis = () => {
+    cancelarMontagem = null
+    const t0 = performance.now()
+    montarAneis()
+    montarGrao()
+    if (performance.now() - t0 > DESEMPENHO.montagemMaxMs) {
+      // Custou mais que o teto: deixa o primeiro quadro para outro ciclo.
+      cancelarMontagem = ocioso(iniciar, 500)
+      return
+    }
+    iniciar()
   }
+  cancelarMontagem = ocioso(() => {
+    geometria()
+    cancelarMontagem = ocioso(etapaAneis, 500)
+  }, 500)
 
   window.addEventListener("pointermove", aoMover, { passive: true })
   document.addEventListener("pointerleave", aoSair)
@@ -826,7 +995,10 @@ export function montarGlobo(
   observadorTamanho.observe(canvas)
 
   return () => {
+    cancelarMontagem?.()
+    if (rafInicial) cancelAnimationFrame(rafInicial)
     dormir()
+    gsap.ticker.fps(60)
     linha.kill()
     gatilho.kill()
     window.clearTimeout(esperaResize)

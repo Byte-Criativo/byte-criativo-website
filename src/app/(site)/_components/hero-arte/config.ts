@@ -50,6 +50,59 @@ export const GLOBO = {
   } satisfies Record<GloboVariante, Preset>,
   /** Paralelos no celular (abaixo de 48 rem). */
   paralelosCelular: 24,
+  /**
+   * Tamanho e posição do globo por faixa de largura. O globo é maior que a
+   * tela de propósito: as bordas direita e inferior o cortam. O centro é
+   * fração da largura (x) e da altura (y) do hero; no celular, o centro
+   * vertical fica logo abaixo do bloco de texto (`abaixoDoConteudoVh`).
+   */
+  layout: {
+    /** ≥ 64 rem */
+    desktop: { diametroVh: 100, centroX: 0.7, centroY: 0.6 },
+    /** 48 a 64 rem */
+    tablet: { diametroVh: 90, centroX: 0.68, centroY: 0.58 },
+    /** < 48 rem */
+    celular: { diametroVw: 128, centroX: 0.75, abaixoDoConteudoVh: 8 },
+    /**
+     * Zona calma do texto: dentro da caixa do bloco de conteúdo (mais a
+     * margem) os glifos ficam com no máximo `alfaMax`, com transição suave
+     * de `transicaoPx` a partir da borda. É o que garante o contraste AA do
+     * título, do apoio e dos CTAs com o globo passando por trás.
+     */
+    zonaCalma: { margemPx: 24, transicaoPx: 80, alfaMax: 0.12 },
+    /** Tamanho da fonte dos glifos, em px CSS, limitado nesta faixa. */
+    fonteMinPx: 12,
+    fonteMaxPx: 15,
+  },
+  /**
+   * Custo sob controle. Sem aceleração gráfica (renderizador por software ou
+   * sem WebGL) o globo fica estático: um quadro final, redesenhado só na
+   * rolagem e no resize. Com aceleração, a qualidade se adapta ao custo
+   * medido de cada quadro: acima de `custoAltoMs` na média de
+   * `janelaQuadros` quadros desce um degrau (menos glifos, depois DPR 1,
+   * depois 30 fps); abaixo de `custoBaixoMs` por `intervaloDegrauS`
+   * segundos sobe um degrau. Começa em `degrauInicial` durante a entrada e
+   * nos `segurarInicialS` segundos seguintes.
+   */
+  desempenho: {
+    custoAltoMs: 12,
+    custoBaixoMs: 5,
+    janelaQuadros: 20,
+    intervaloDegrauS: 3,
+    segurarInicialS: 2,
+    degrauInicial: 1,
+    /** Degraus: fração de glifos desenhados, teto de DPR e fps do ticker. */
+    degraus: [
+      { densidade: 1, dprMax: 2, fps: 60 },
+      { densidade: 0.66, dprMax: 2, fps: 60 },
+      { densidade: 0.5, dprMax: 2, fps: 60 },
+      { densidade: 0.33, dprMax: 2, fps: 60 },
+      { densidade: 0.33, dprMax: 1, fps: 60 },
+      { densidade: 0.33, dprMax: 1, fps: 30 },
+    ],
+    /** Montagem (atlas e anéis) acima disto é dividida em dois ciclos ociosos. */
+    montagemMaxMs: 20,
+  },
   /** Distância focal da câmera, em raios (1,8 a 2,4 convence). */
   foco: 3,
   /** Inclinação do eixo na tela (graus) e para dentro da tela (graus). */
