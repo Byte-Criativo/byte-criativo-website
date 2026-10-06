@@ -422,7 +422,8 @@ export function montarGlobo(
     const esc = estado.escala
     const Rv = R * esc
     const centroX = cx + estado.deslocX
-    const centroY = cy + estado.deslocY - estado.rolagem * 0.2 * H
+    // Paralaxe de atraso: o globo demora a sair junto com a seção.
+    const centroY = cy + estado.deslocY + estado.rolagem * 0.35 * H
     const curva = preset.achataNaRolagem
       ? 1 - suave((estado.rolagem - 0.05) / 0.75)
       : 1
@@ -586,7 +587,7 @@ export function montarGlobo(
           const dx = b.x - a.x
           const dy = b.y - a.y
           const largura = Math.hypot(dx, dy)
-          if (largura < 0.4) continue
+          if (largura < 0.4 || largura > alturaGlifo * 3) continue
           const angulo = Math.atan2(dy, dx)
           const altura = alturaGlifo * esc * a.s
 
@@ -776,14 +777,14 @@ export function montarGlobo(
           escala: 1,
           deslocX: 0,
           deslocY: 0,
-          duration: 1.0 * fatorEntrada,
-          ease: "expo.out",
+          duration: 1.15 * fatorEntrada,
+          ease: "power3.out",
         },
-        0.5 * fatorEntrada,
+        0.45 * fatorEntrada,
       )
     }
   }
-  const inicioRevelacao = preset.nasceNoTitulo ? 0.5 : 0
+  const inicioRevelacao = preset.nasceNoTitulo ? 0.45 : 0
   linha.to(
     estado,
     { revelacao: 1, duration: 1.1 * fatorEntrada, ease: "power2.out" },
