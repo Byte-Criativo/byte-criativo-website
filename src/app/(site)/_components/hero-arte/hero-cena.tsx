@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { useLayoutEffect, useRef, type ReactElement } from "react"
+import { useEffect, useLayoutEffect, useRef, type ReactElement } from "react"
 import { HERO_ARTE } from "./config"
 
 // O canvas carrega depois do texto, só no cliente: nunca bloqueia a pintura
@@ -37,7 +37,6 @@ export function HeroCena(): ReactElement {
     if (!marcador || !hero) return
 
     if (jaViuEntrada) hero.dataset.entrada = "curta"
-    jaViuEntrada = true
 
     const raiz = document.documentElement
     const observadorTopo = new IntersectionObserver(
@@ -65,6 +64,18 @@ export function HeroCena(): ReactElement {
       observadorHero.disconnect()
       raiz.removeAttribute("data-rolado")
       raiz.removeAttribute("data-hero-saiu")
+    }
+  }, [])
+
+  // A memória só é gravada quando o hero sai do DOM de verdade (troca de
+  // rota). A limpeza de um efeito passivo roda depois de o nó ser removido,
+  // então `isConnected` separa a desmontagem real da repetição do efeito no
+  // modo estrito do React em dev — que, sem a guarda, marcaria a entrada
+  // como "já vista" na primeira visita.
+  useEffect(() => {
+    const hero = sentinela.current?.closest("section")
+    return () => {
+      if (hero && !hero.isConnected) jaViuEntrada = true
     }
   }, [])
 
