@@ -37,7 +37,7 @@ export const CONFIG = {
       periodoS: 100,
       lanterna: true,
       pulsosNoMeridiano: true,
-      alfaFrente: 0.75,
+      alfaFrente: 0.62,
       nasceNoTitulo: false,
       achataNaRolagem: false,
     },
@@ -55,7 +55,7 @@ export const CONFIG = {
       periodoS: 110,
       lanterna: true,
       pulsosNoMeridiano: true,
-      alfaFrente: 0.75,
+      alfaFrente: 0.62,
       nasceNoTitulo: true,
       achataNaRolagem: true,
     },
@@ -63,7 +63,7 @@ export const CONFIG = {
   /** Paralelos no celular (abaixo de 48 rem). */
   paralelosCelular: 24,
   /** Distância focal da câmera, em raios (1,8 a 2,4 convence). */
-  foco: 2.1,
+  foco: 3,
   /** Inclinação do eixo na tela (graus) e para dentro da tela (graus). */
   inclinacaoZ: 20,
   inclinacaoX: -13,
@@ -77,7 +77,7 @@ export const CONFIG = {
   /** Deriva de velocidade entre paralelos (fração). */
   deriva: 0.06,
   /** Opacidade do texto: frente, horizonte e hemisfério de trás. */
-  alfaHorizonte: 0.12,
+  alfaHorizonte: 0.07,
   alfaTras: 0.06,
   /** Lanterna do ponteiro: raio (px), desaceleração local. */
   raioLanterna: 180,
@@ -284,7 +284,7 @@ export function montarGlobo(
     for (const linha of LINHAS_DE_CODIGO) for (const ch of linha) chars.add(ch)
     chars.add(" ")
     const todos = [...chars].join("")
-    tamanhoFonte = Math.min(13, Math.max(11, R / 24))
+    tamanhoFonte = Math.min(12, Math.max(10, R / 26))
     atlasPreto = criarAtlas(
       todos,
       tamanhoFonte,
@@ -380,8 +380,8 @@ export function montarGlobo(
       canvas.height = h
     }
     if (W >= 1024) {
-      R = 0.31 * H
-      cx = W - 0.85 * R
+      R = 0.28 * H
+      cx = W - 0.98 * R
       cy = 0.5 * H
     } else if (W >= 640) {
       R = 0.27 * H
@@ -423,7 +423,9 @@ export function montarGlobo(
     const Rv = R * esc
     const centroX = cx + estado.deslocX
     const centroY = cy + estado.deslocY - estado.rolagem * 0.2 * H
-    const curva = preset.achataNaRolagem ? 1 - suave(estado.rolagem * 1.15) : 1
+    const curva = preset.achataNaRolagem
+      ? 1 - suave((estado.rolagem - 0.05) / 0.75)
+      : 1
     const rotExtra =
       estado.rolagem * Math.PI * (preset.achataNaRolagem ? 1.5 : 0.5)
 
@@ -483,6 +485,13 @@ export function montarGlobo(
       // Disco levemente mais claro que o fundo: o corpo do planeta.
       ctx.fillStyle = "rgba(255, 255, 255, 0.35)"
       ctx.fill()
+      // Semente: enquanto nasce do `;`, o disco é laranja e vai clareando.
+      const semeadura = 1 - suave((esc - 0.05) / 0.5)
+      if (semeadura > 0.01) {
+        ctx.globalAlpha = semeadura
+        ctx.fillStyle = CONFIG.cores.laranja
+        ctx.fill()
+      }
     }
 
     const lanternaAtiva = preset.lanterna && lanterna.x > -9000
@@ -530,7 +539,7 @@ export function montarGlobo(
         const fracaoLat = Math.abs(anel.lat) / (CONFIG.latitudeMax * GRAUS)
         let alfaAnel = suave((estado.revelacao - fracaoLat) / 0.12)
         if (preset.achataNaRolagem) {
-          alfaAnel *= 1 - suave((estado.rolagem * 1.2 - (1 - fracaoLat)) / 0.25)
+          alfaAnel *= 1 - suave((estado.rolagem - 0.75) / 0.25)
         }
         if (alfaAnel <= 0) continue
 
@@ -553,6 +562,7 @@ export function montarGlobo(
         for (let k = 0; k < anel.glifos.length; k += 1) {
           const g = anel.glifos[k]
           if (!g) continue
+          if (tras && k % 2 === 1) continue
           const lambda = g.theta + anel.rot + rotExtra
           const lf = envolve(lambda - Math.PI / 2)
           // Ponto na esfera unitária (curvo) e na "fita" aberta (reto), misturados.
@@ -672,7 +682,7 @@ export function montarGlobo(
         const qy = m4 * py
         const qz = m7 * py
         const p = projetar(qx, qy, qz, Rv, centroX, centroY)
-        const tamanho = Rv * 0.2 * respira * p.s
+        const tamanho = Rv * 0.17 * respira * p.s
         ctx.font = `700 ${tamanho}px ${familia}`
         ctx.fillStyle = CONFIG.cores.laranja
         ctx.textAlign = "center"
@@ -758,29 +768,31 @@ export function montarGlobo(
       const c = canvas.getBoundingClientRect()
       estado.escala = 0.05
       estado.deslocX = caixa.left + caixa.width / 2 - c.left - cx
-      estado.deslocY = caixa.top + caixa.height / 2 - c.top - cy
+      estado.deslocY = caixa.top + caixa.height * 0.62 - c.top - cy
+      // O `;` do título acende a 0,3 s; o planeta sai dele a partir de 0,5 s.
       linha.to(
         estado,
         {
           escala: 1,
           deslocX: 0,
           deslocY: 0,
-          duration: 0.9 * fatorEntrada,
+          duration: 1.0 * fatorEntrada,
           ease: "expo.out",
         },
-        0.25 * fatorEntrada,
+        0.5 * fatorEntrada,
       )
     }
   }
+  const inicioRevelacao = preset.nasceNoTitulo ? 0.5 : 0
   linha.to(
     estado,
-    { revelacao: 1, duration: 1.3 * fatorEntrada, ease: "power2.out" },
-    0,
+    { revelacao: 1, duration: 1.1 * fatorEntrada, ease: "power2.out" },
+    inicioRevelacao * fatorEntrada,
   )
   linha.to(
     estado,
     { polos: 1, duration: 0.3 * fatorEntrada, ease: "power1.out" },
-    1.3 * fatorEntrada,
+    (inicioRevelacao + 1.0) * fatorEntrada,
   )
 
   const gatilho = ScrollTrigger.create({

@@ -23,7 +23,8 @@ const VARIANTES: readonly GloboVariante[] = ["ousada", "media", "contida"]
  * Cena do protótipo: a composição real do hero (header falso, eyebrow,
  * h1 com `;`, apoio, CTAs) sobre o canvas do globo. A entrada do título
  * reaproveita as classes `.hero-*` que já existem em globals.css; o `;`
- * é atrasado para acender junto com os polos do globo, em 1,3 s.
+ * é atrasado para acender junto com os polos do globo, em 1,3 s; na
+ * ousada acende a 0,3 s, porque o planeta nasce dele.
  */
 export function GloboCena({
   variante,
@@ -118,7 +119,9 @@ export function GloboCena({
                 <span
                   aria-hidden="true"
                   className="semicolon hero-semicolon"
-                  style={{ animationDelay: "1.3s" }}
+                  style={{
+                    animationDelay: variante === "ousada" ? "0.3s" : "1.3s",
+                  }}
                 >
                   ;
                 </span>
