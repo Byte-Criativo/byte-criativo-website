@@ -104,13 +104,3 @@ export const HERO_ARTE = {
     },
   } satisfies Record<HeroIntensidade, HeroPreset>,
 } as const
-
-export const INTENSIDADES: readonly HeroIntensidade[] = [
-  "calma",
-  "media",
-  "intensa",
-]
-
-export function intensidadeValida(valor: unknown): valor is HeroIntensidade {
-  return typeof valor === "string" && (INTENSIDADES as string[]).includes(valor)
-}

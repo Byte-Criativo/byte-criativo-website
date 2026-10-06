@@ -3,11 +3,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { homePageData } from "@/content/home"
 import { HomeHero } from "./home-hero"
 
-// O canvas é import dinâmico só no cliente; no jsdom basta não montar nada.
-vi.mock("next/dynamic", () => ({
-  default: () => () => null,
-}))
-
 // O jsdom não tem IntersectionObserver; a ilha HeroCena só observa, nunca
 // precisa de uma entrada real aqui.
 class ObservadorFalso {
