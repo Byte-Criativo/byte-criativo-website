@@ -181,9 +181,12 @@ export function useHeroCanvas(
     // monitor (16,7 ms a 60 Hz, 33 ms a 30 Hz), para um monitor lento não ser
     // confundido com uma GPU lenta.
     let menorDt = Number.POSITIVE_INFINITY
-    const inicio = performance.now()
+    let inicio = performance.now()
     let caixa = canvas.getBoundingClientRect()
     let elementoAncora: Element | null = null
+    let ancoraX = 0.3
+    let ancoraY = 0.5
+    let quadros = 0
 
     const ponteiro = { x: -10, y: -10, alvoX: -10, alvoY: -10 }
 
@@ -261,14 +264,20 @@ export function useHeroCanvas(
       // geometria atual (sem listener de rolagem: o laço já roda por quadro).
       caixa = canvas.getBoundingClientRect()
       const alturaCaixa = Math.max(1, caixa.height)
-      if (!elementoAncora?.isConnected) localizarAncora()
-      let ancoraX = 0.3 * (largura / altura)
-      let ancoraY = 0.5
-      if (elementoAncora) {
-        const r = elementoAncora.getBoundingClientRect()
-        ancoraX = (r.left + r.width / 2 - caixa.left) / alturaCaixa
-        ancoraY = 1 - (r.top + r.height / 2 - caixa.top) / alturaCaixa
+      // O `;` só muda de lugar em reflow: medir a cada poucos quadros basta
+      // e poupa a thread principal.
+      if (quadros % HERO_ARTE.quadrosPorMedidaDaAncora === 0) {
+        if (!elementoAncora?.isConnected) localizarAncora()
+        if (elementoAncora) {
+          const r = elementoAncora.getBoundingClientRect()
+          ancoraX = (r.left + r.width / 2 - caixa.left) / alturaCaixa
+          ancoraY = 1 - (r.top + r.height / 2 - caixa.top) / alturaCaixa
+        } else {
+          ancoraX = 0.3 * (largura / altura)
+          ancoraY = 0.5
+        }
       }
+      quadros += 1
       const rolagem = Math.min(1, Math.max(0, -caixa.top / alturaCaixa))
 
       gl.uniform1f(uniforms.u_angulo, angulo)
@@ -291,9 +300,12 @@ export function useHeroCanvas(
       const dt = ultimo ? agora - ultimo : 0
       ultimo = agora
       if (dt > 0 && dt < menorDt) menorDt = dt
+      // Período do monitor limitado a ~30 Hz: se até os primeiros quadros
+      // forem lentos, a culpa é da GPU, não do monitor.
       const limiteLento = Math.max(
         HERO_ARTE.quadroLentoMs,
-        menorDt * HERO_ARTE.fatorQuadroLento,
+        Math.min(menorDt, HERO_ARTE.periodoMonitorMaxMs) *
+          HERO_ARTE.fatorQuadroLento,
       )
       if (dt > limiteLento && dt < 500) {
         lentos += 1
@@ -397,15 +409,43 @@ export function useHeroCanvas(
       acordar()
     }
 
-    if (!preparar()) {
-      marcar("fallback")
-      return
+    // A arte só começa depois do `load` e num momento ocioso: a compilação
+    // do shader e os primeiros quadros nunca disputam a thread principal com
+    // a hidratação nem com a pintura do título (que é o LCP).
+    let cancelarInicio: (() => void) | null = null
+    const iniciar = () => {
+      cancelarInicio = null
+      inicio = performance.now()
+      if (!preparar()) {
+        marcar("fallback")
+        return
+      }
+      redimensionar()
+      localizarAncora()
+      canvas.addEventListener("webglcontextlost", aoPerder)
+      canvas.addEventListener("webglcontextrestored", aoRestaurar)
+      visivel = document.visibilityState === "visible"
+      acordar()
     }
-    redimensionar()
-    localizarAncora()
+    const agendarInicio = () => {
+      if (typeof window.requestIdleCallback === "function") {
+        const id = window.requestIdleCallback(iniciar, {
+          timeout: HERO_ARTE.esperaInicioMaxMs,
+        })
+        cancelarInicio = () => window.cancelIdleCallback(id)
+      } else {
+        const id = window.setTimeout(iniciar, HERO_ARTE.esperaInicioMinMs)
+        cancelarInicio = () => window.clearTimeout(id)
+      }
+    }
+    if (document.readyState === "complete") {
+      agendarInicio()
+    } else {
+      const aoCarregar = () => agendarInicio()
+      window.addEventListener("load", aoCarregar, { once: true })
+      cancelarInicio = () => window.removeEventListener("load", aoCarregar)
+    }
 
-    canvas.addEventListener("webglcontextlost", aoPerder)
-    canvas.addEventListener("webglcontextrestored", aoRestaurar)
     window.addEventListener("pointermove", aoMover, { passive: true })
     document.addEventListener("pointerleave", aoSair)
     document.addEventListener("visibilitychange", aoVisibilidade)
@@ -413,10 +453,8 @@ export function useHeroCanvas(
     observadorTela.observe(canvas)
     observadorTamanho.observe(canvas)
 
-    visivel = document.visibilityState === "visible"
-    acordar()
-
     return () => {
+      cancelarInicio?.()
       dormir()
       window.clearTimeout(esperaResize)
       canvas.removeEventListener("webglcontextlost", aoPerder)

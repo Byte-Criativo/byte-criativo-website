@@ -41,7 +41,18 @@ export const HERO_ARTE = {
    */
   quadroLentoMs: 20,
   fatorQuadroLento: 1.5,
+  /** Período de monitor mais longo que a regra acima aceita (≈30 Hz). */
+  periodoMonitorMaxMs: 34,
   framesLentos: 24,
+  /** A posição do `;` é medida no DOM a cada N quadros. */
+  quadrosPorMedidaDaAncora: 12,
+  /**
+   * A arte começa depois do `load`, num momento ocioso: no máximo
+   * `esperaInicioMaxMs` depois do load (requestIdleCallback) ou, sem a API,
+   * `esperaInicioMinMs` depois.
+   */
+  esperaInicioMaxMs: 1200,
+  esperaInicioMinMs: 250,
   escalaMinima: 0.2,
   /**
    * Período do ciclo completo da arte, em segundos. O tempo entra no shader
