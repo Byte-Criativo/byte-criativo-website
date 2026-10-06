@@ -484,7 +484,8 @@ export function montarGlobo(
       ctx.arc(centroX, centroY, Rv, 0, Math.PI * 2)
       ctx.fill()
       // Disco levemente mais claro que o fundo: o corpo do planeta.
-      ctx.fillStyle = "rgba(255, 255, 255, 0.35)"
+      ctx.globalAlpha = 0.35 * curva
+      ctx.fillStyle = "#ffffff"
       ctx.fill()
       // Semente: enquanto nasce do `;`, o disco é laranja e vai clareando.
       const semeadura = 1 - suave((esc - 0.05) / 0.5)
@@ -535,7 +536,9 @@ export function montarGlobo(
     // Dois passes: hemisfério de trás (fraco) e frente.
     for (let passe = 0; passe < 2; passe += 1) {
       const tras = passe === 0
-      if (tras && (toque || curva < 0.5)) continue
+      // Sem hemisfério de trás no toque, na fita achatada e durante a entrada
+      // (o quadro da entrada já paga o crescimento e a revelação).
+      if (tras && (toque || curva < 0.5 || estado.revelacao < 1)) continue
       for (const anel of aneis) {
         const fracaoLat = Math.abs(anel.lat) / (CONFIG.latitudeMax * GRAUS)
         let alfaAnel = suave((estado.revelacao - fracaoLat) / 0.12)
@@ -567,12 +570,12 @@ export function montarGlobo(
           const lambda = g.theta + anel.rot + rotExtra
           const lf = envolve(lambda - Math.PI / 2)
           // Ponto na esfera unitária (curvo) e na "fita" aberta (reto), misturados.
-          const px = -r * Math.cos(lambda) * curva + -lf * r * (1 - curva)
+          const px = -r * Math.cos(lambda) * curva + lf * r * (1 - curva)
           const pz = r * Math.sin(lambda) * curva
           // Segundo ponto, no fim do glifo, para tangente e encurtamento.
           const lambda2 = lambda + g.dTheta
           const lf2 = envolve(lambda2 - Math.PI / 2)
-          const px2 = -r * Math.cos(lambda2) * curva + -lf2 * r * (1 - curva)
+          const px2 = -r * Math.cos(lambda2) * curva + lf2 * r * (1 - curva)
           const pz2 = r * Math.sin(lambda2) * curva
 
           const qx = m0 * px + m1 * y + m2 * pz
@@ -761,6 +764,10 @@ export function montarGlobo(
   }
 
   // --- entrada ---------------------------------------------------------------
+  // A geometria vem antes da timeline: o deslocamento até o ';' do título
+  // é medido a partir do centro final do globo.
+  redimensionar()
+  montarGrao()
   const fatorEntrada = jaViuEntrada ? CONFIG.entradaCurta : 1
   const linha = gsap.timeline({ paused: true })
   if (preset.nasceNoTitulo) {
@@ -864,8 +871,6 @@ export function montarGlobo(
   }
 
   // --- início ----------------------------------------------------------------
-  redimensionar()
-  montarGrao()
   if (toque) {
     lanterna.alvoX = cx
     lanterna.alvoY = cy
