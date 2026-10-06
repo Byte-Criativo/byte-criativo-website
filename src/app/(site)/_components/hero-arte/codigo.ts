@@ -1,0 +1,43 @@
+/**
+ * Linhas de código reais deste repositório, encurtadas, em português como
+ * o código é escrito aqui. Cada uma termina em `;`: na Byte, design e
+ * código são a mesma frase, e a frase termina em ponto e vírgula.
+ */
+export const LINHAS_DE_CODIGO: readonly string[] = [
+  'const [face, trocar] = useState<Face>("frente");',
+  "const { projeto, face, trocar } = useFrenteVerso();",
+  'const CLASSE_ATIVO = "bg-ink text-bg";',
+  "const RESPIRO: Record<SalaVariante, string> = { larga };",
+  "export function Sala({ slug, variante = 'larga' });",
+  "const idTitulo = `${id}-titulo`;",
+  "const ENTRADA_DA_SALA = 0.4;",
+  "const alvos = salas.map((id) => document.getElementById(id));",
+  "const observador = new IntersectionObserver(marcar);",
+  'ativo.dataset.rotulo = "oculto";',
+  "const ponteiro = { x: -10, y: -10, alvoX: -10, alvoY: -10 };",
+  "const continuar = () => visivel && naTela && !perdido;",
+  "const decorrido = (agora - inicio) / 1000;",
+  "const semente = Math.random();",
+  "const dpr = Math.min(window.devicePixelRatio || 1, dprMax);",
+  "const k = HERO_ARTE.amortecimentoPonteiro;",
+  "const revelacao = suavizar((agora - inicio) / revelacaoMs);",
+  "const recorte = contexto.slice(0, LIMITE_CONTEXTO);",
+  "const dados = JSON.parse(bruto) as DadosContinuacao;",
+  "const aoTeclar = (evento: KeyboardEvent) => fechar();",
+  'const aoVisibilidade = () => document.visibilityState === "visible";',
+  "const observadorTamanho = new ResizeObserver(redimensionar);",
+  "const fimFrase = Math.max(texto.lastIndexOf('.'), 0);",
+  "const { face } = useFrenteVerso();",
+  "const preset = HERO_ARTE.presets[intensidade];",
+  "const limiteLento = Math.max(quadroLentoMs, menorDt * 1.5);",
+  "export function Ficha({ nome, tipo, frase, capacidades });",
+  "export function Heading({ nivel, papel, semicolon });",
+  "const Tag = `h${nivel}` as 'h1' | 'h2' | 'h3';",
+  "const papelFinal: HeadingPapel = papel ?? `h${nivel}`;",
+  "const classes = textLinkClasses(variante, className);",
+  "const rota = usePathname();",
+  'const atual = rota === href ? "page" : undefined;',
+  "const casesPublicados = new Set(getPublishedCases());",
+  "const navegacaoHeader = site.navigation.main.map(item);",
+  "const colunasRodape = site.footer.columns.filter(temLinks);",
+]
