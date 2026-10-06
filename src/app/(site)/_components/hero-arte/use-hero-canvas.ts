@@ -397,7 +397,12 @@ export function useHeroCanvas(
       observadorTamanho.disconnect()
       if (buffer) gl.deleteBuffer(buffer)
       if (programa) gl.deleteProgram(programa)
-      gl.getExtension("WEBGL_lose_context")?.loseContext()
+      // Só libera o contexto quando o canvas saiu do DOM de verdade. No
+      // modo estrito do React (dev) o efeito roda duas vezes no mesmo
+      // canvas, e um contexto perdido voltaria do getContext já inutilizado.
+      if (!canvas.isConnected) {
+        gl.getExtension("WEBGL_lose_context")?.loseContext()
+      }
     }
   }, [ref, intensidade, ancora])
 }
