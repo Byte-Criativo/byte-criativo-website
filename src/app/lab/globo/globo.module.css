@@ -131,6 +131,7 @@
 }
 
 .proximo {
+  min-height: 120vh;
   margin-inline: auto;
   max-width: var(--grid-container-max);
   padding: var(--space-9) var(--grid-margin);
