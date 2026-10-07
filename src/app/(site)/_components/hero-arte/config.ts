@@ -149,6 +149,22 @@ export const GLOBO = {
   /** Parallax do ponteiro, em graus, com a inércia da lanterna. */
   parallaxGraus: 4,
   /**
+   * Girar com o ponteiro: arrastar sobre o globo (fora do texto, no topo da
+   * página) gira o planeta junto com o dedo ou o mouse; na vertical inclina
+   * o eixo até `inclinacaoMaxGraus`, que volta sozinha ao soltar (constante
+   * de tempo `retornoS`). Soltar em movimento arremessa: a velocidade (teto
+   * `velocidadeMax`, rad/s) decai com constante de tempo `inerciaS` até o
+   * giro natural. Parado por mais de `paradoMs` antes de soltar, não
+   * arremessa.
+   */
+  giro: {
+    inclinacaoMaxGraus: 22,
+    retornoS: 0.9,
+    inerciaS: 1.1,
+    velocidadeMax: 8,
+    paradoMs: 90,
+  },
+  /**
    * Os anéis são desenhados em trechos (uma chamada de Canvas por pedaço de
    * palavra, não por glifo): cada trecho é reto, e o arco que ele cobre é
    * limitado para a corda não se afastar mais que isto (px) da curva.

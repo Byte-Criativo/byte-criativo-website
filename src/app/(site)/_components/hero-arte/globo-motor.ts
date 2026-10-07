@@ -655,6 +655,23 @@ export function montarGlobo(
   const lanterna = { x: -9999, y: -9999, alvoX: -9999, alvoY: -9999 }
   // Parallax do ponteiro, em graus, amortecido junto com a lanterna.
   const parallax = { x: 0, y: 0, alvoX: 0, alvoY: 0 }
+  // Girar com o ponteiro (ver CONFIG.giro): o arrasto soma rotação aos anéis
+  // e inclinação ao eixo; ao soltar, a velocidade vira inércia.
+  const giro = {
+    /** `pointerId` do arrasto em curso; −1 sem arrasto. */
+    ponteiro: -1,
+    x: 0,
+    y: 0,
+    /** Instante do último movimento do arrasto (ms). */
+    t: 0,
+    /** Velocidade de giro (rad/s): medida no arrasto, inércia depois. */
+    velocidade: 0,
+    /** Inclinação extra do eixo (rad), somada à de `CONFIG.inclinacaoX`. */
+    inclinacao: 0,
+  }
+  // Centro, raio e curvatura do último quadro: o teste de "está sobre o
+  // globo" do ponteiro usa o globo como ele está na tela.
+  const naTelaAgora = { cx: 0, cy: 0, R: 0, curva: 0 }
 
   const semente = Math.random()
 
@@ -1235,13 +1252,20 @@ export function montarGlobo(
       : 1
     const rotExtra =
       estado.rolagem * Math.PI * (preset.achataNaRolagem ? 1.5 : 0.5)
+    naTelaAgora.cx = centroX
+    naTelaAgora.cy = centroY
+    naTelaAgora.R = Rv
+    naTelaAgora.curva = curva
 
     // Matriz de rotação do quadro: inclinações com precessão e parallax.
     const t = agora / 1000
     const prec = CONFIG.precessaoGraus * GRAUS
     const fase = (t / CONFIG.precessaoS) * Math.PI * 2
     const tiltZ = CONFIG.inclinacaoZ * GRAUS + prec * Math.sin(fase)
-    const tiltX = CONFIG.inclinacaoX * GRAUS + prec * Math.cos(fase)
+    // A inclinação do arrasto entra na matriz de inclinação (não na da
+    // paralaxe): é ela que decide frente e verso, então o horizonte acompanha.
+    const tiltX =
+      CONFIG.inclinacaoX * GRAUS + prec * Math.cos(fase) + giro.inclinacao
     const inclinacao = mul(rotZ(tiltZ * curva), rotX(tiltX * curva))
     const M = mul(
       mul(rotY(parallax.x * GRAUS), rotX(parallax.y * GRAUS)),
@@ -2208,8 +2232,21 @@ export function montarGlobo(
     ultimo = agora
     // Presenças andam até o alvo em `transicaoS`: nenhum degrau corta.
     const fade = dt / DESEMPENHO.transicaoS
+    // Inércia do arremesso (decai até o giro natural) e volta da inclinação,
+    // só sem dedo ou mouse segurando.
+    let arremesso = 0
+    if (giro.ponteiro < 0) {
+      const G = CONFIG.giro
+      arremesso = giro.velocidade
+      giro.velocidade *= Math.exp(-dt / G.inerciaS)
+      if (Math.abs(giro.velocidade) < 0.005) giro.velocidade = 0
+      giro.inclinacao *= Math.exp(-dt / G.retornoS)
+      if (Math.abs(giro.inclinacao) < 0.0005) giro.inclinacao = 0
+    }
     for (const anel of aneis) {
-      anel.rot = (anel.rot + anel.velocidade * anel.fator * dt) % (Math.PI * 2)
+      anel.rot =
+        (anel.rot + (anel.velocidade * anel.fator + arremesso) * dt) %
+        (Math.PI * 2)
       if (anel.presenca !== anel.alvo) {
         anel.presenca = aproximar(anel.presenca, anel.alvo, fade)
       }
@@ -2483,10 +2520,101 @@ export function montarGlobo(
   })
 
   // --- eventos ---------------------------------------------------------------
+  /**
+   * O ponteiro em (x, y), px do canvas, pode girar o globo? Só no modo
+   * animado, no topo da página (globo ainda redondo), dentro do disco e fora
+   * das zonas calmas (texto e "Rolar"): ali seguem valendo a seleção de
+   * texto e os cliques.
+   */
+  const sobreOGlobo = (x: number, y: number) => {
+    if (!montado || !animar || reduzido.matches) return false
+    if (naTelaAgora.curva < 0.9 || naTelaAgora.R <= 0) return false
+    const dx = x - naTelaAgora.cx
+    const dy = y - naTelaAgora.cy
+    if (dx * dx + dy * dy > naTelaAgora.R * naTelaAgora.R) return false
+    return distanciaCalma(x, y) > 0
+  }
+  const INTERATIVO = "a, button, input, select, textarea, label, summary"
+  let giravel = false
+  /** Cursor de "pegar" (CSS) só quando o ponteiro está sobre o globo. */
+  const marcarGiravel = (sim: boolean) => {
+    if (sim === giravel) return
+    giravel = sim
+    secao.toggleAttribute("data-giravel", sim)
+  }
+  const aoApertar = (e: PointerEvent) => {
+    if (giro.ponteiro >= 0 || !e.isPrimary) return
+    if (e.pointerType === "mouse" && e.button !== 0) return
+    const alvo = e.target
+    if (alvo instanceof Element && alvo.closest(INTERATIVO)) return
+    const c = canvas.getBoundingClientRect()
+    if (!sobreOGlobo(e.clientX - c.left, e.clientY - c.top)) return
+    // Com o mouse, nada de seleção de texto nem foco enquanto se arrasta; no
+    // toque, nada é cancelado: o gesto vertical continua rolando a página
+    // (`touch-action: pan-y` no hero) e chega aqui como `pointercancel`.
+    if (e.pointerType === "mouse") e.preventDefault()
+    giro.ponteiro = e.pointerId
+    giro.x = e.clientX
+    giro.y = e.clientY
+    giro.t = performance.now()
+    giro.velocidade = 0
+    try {
+      secao.setPointerCapture(e.pointerId)
+    } catch {
+      // Sem captura o arrasto ainda funciona enquanto o ponteiro fica no hero.
+    }
+    secao.toggleAttribute("data-girando", true)
+  }
+  const aoArrastar = (e: PointerEvent) => {
+    if (e.pointerId !== giro.ponteiro) return
+    const agora = performance.now()
+    const G = CONFIG.giro
+    const raio = Math.max(1, naTelaAgora.R)
+    // A superfície acompanha o ponteiro: dx px na frente do globo são
+    // dx / raio radianos de giro; dy inclina o eixo, com teto.
+    const dTheta = (e.clientX - giro.x) / raio
+    const dPhi = (e.clientY - giro.y) / raio
+    const limite = G.inclinacaoMaxGraus * GRAUS
+    giro.inclinacao = Math.min(
+      limite,
+      Math.max(-limite, giro.inclinacao - dPhi),
+    )
+    for (const anel of aneis) anel.rot = (anel.rot + dTheta) % (Math.PI * 2)
+    const dt = Math.max(1, agora - giro.t) / 1000
+    const v = Math.min(G.velocidadeMax, Math.max(-G.velocidadeMax, dTheta / dt))
+    giro.velocidade += (v - giro.velocidade) * 0.5
+    giro.x = e.clientX
+    giro.y = e.clientY
+    giro.t = agora
+  }
+  const aoSoltar = (e: PointerEvent) => {
+    if (e.pointerId !== giro.ponteiro) return
+    giro.ponteiro = -1
+    // Cancelado (o navegador assumiu a rolagem) ou parado antes de soltar:
+    // sem arremesso.
+    if (
+      e.type === "pointercancel" ||
+      performance.now() - giro.t > CONFIG.giro.paradoMs
+    ) {
+      giro.velocidade = 0
+    }
+    try {
+      secao.releasePointerCapture(e.pointerId)
+    } catch {
+      // Já solta.
+    }
+    secao.toggleAttribute("data-girando", false)
+  }
   const aoMover = (e: PointerEvent) => {
     if (e.pointerType !== "mouse") return
     ultimoMouse = performance.now()
     const c = canvas.getBoundingClientRect()
+    const alvo = e.target
+    marcarGiravel(
+      giro.ponteiro >= 0 ||
+        (!(alvo instanceof Element && alvo.closest(INTERATIVO)) &&
+          sobreOGlobo(e.clientX - c.left, e.clientY - c.top)),
+    )
     lanterna.alvoX = e.clientX - c.left
     lanterna.alvoY = e.clientY - c.top
     parallax.alvoX =
@@ -2518,6 +2646,7 @@ export function montarGlobo(
   const aoSair = (e: PointerEvent) => {
     // O dedo que sobe também "sai": no toque a lanterna é a autônoma.
     if (e.pointerType !== "mouse") return
+    marcarGiravel(false)
     lanterna.alvoX = -9999
     lanterna.alvoY = -9999
     parallax.alvoX = 0
@@ -2621,6 +2750,10 @@ export function montarGlobo(
 
   window.addEventListener("pointermove", aoMover, { passive: true })
   secao.addEventListener("pointerdown", aoTocar, { passive: true })
+  secao.addEventListener("pointerdown", aoApertar)
+  secao.addEventListener("pointermove", aoArrastar, { passive: true })
+  secao.addEventListener("pointerup", aoSoltar)
+  secao.addEventListener("pointercancel", aoSoltar)
   document.addEventListener("pointerleave", aoSair)
   document.addEventListener("visibilitychange", aoVisibilidade)
   reduzido.addEventListener("change", aoMudarMovimento)
@@ -2638,6 +2771,12 @@ export function montarGlobo(
     window.clearTimeout(esperaResize)
     window.removeEventListener("pointermove", aoMover)
     secao.removeEventListener("pointerdown", aoTocar)
+    secao.removeEventListener("pointerdown", aoApertar)
+    secao.removeEventListener("pointermove", aoArrastar)
+    secao.removeEventListener("pointerup", aoSoltar)
+    secao.removeEventListener("pointercancel", aoSoltar)
+    secao.removeAttribute("data-giravel")
+    secao.removeAttribute("data-girando")
     document.removeEventListener("pointerleave", aoSair)
     document.removeEventListener("visibilitychange", aoVisibilidade)
     reduzido.removeEventListener("change", aoMudarMovimento)
