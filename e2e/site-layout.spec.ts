@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
+import { esperarAnimacoes } from "./esperar-animacoes"
 
 test.describe("Layout do site (landmarks e acessibilidade)", () => {
   test("renderiza banner, main e contentinfo", async ({ page }) => {
@@ -41,6 +42,7 @@ test.describe("Layout do site (landmarks e acessibilidade)", () => {
   test("não tem violações axe serious/critical em 1440", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.goto("/")
+    await esperarAnimacoes(page)
 
     const resultados = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
@@ -55,6 +57,7 @@ test.describe("Layout do site (landmarks e acessibilidade)", () => {
   test("não tem violações axe serious/critical em 390", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto("/")
+    await esperarAnimacoes(page)
 
     const resultados = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
