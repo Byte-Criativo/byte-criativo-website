@@ -54,7 +54,8 @@ export const GLOBO = {
    * Tamanho e posição do globo por faixa de largura. O globo é maior que a
    * tela de propósito: as bordas direita e inferior o cortam. O centro é
    * fração da largura (x) e da altura (y) do hero; no celular, o centro
-   * vertical fica logo abaixo do bloco de texto (`abaixoDoConteudoVh`).
+   * vertical é medido a partir do fim do bloco de texto
+   * (`abaixoDoConteudoVh`; negativo sobe o globo para trás do texto).
    */
   layout: {
     /** ≥ 64 rem */
@@ -62,7 +63,7 @@ export const GLOBO = {
     /** 48 a 64 rem */
     tablet: { diametroVh: 90, centroX: 0.68, centroY: 0.58 },
     /** < 48 rem */
-    celular: { diametroVw: 128, centroX: 0.75, abaixoDoConteudoVh: 8 },
+    celular: { diametroVw: 155, centroX: 0.6, abaixoDoConteudoVh: -14 },
     /**
      * Zona calma do texto: dentro da caixa do bloco de conteúdo (mais a
      * margem) os glifos ficam com no máximo `alfaMax`, com transição suave
@@ -168,13 +169,175 @@ export const GLOBO = {
   raioLanterna: 180,
   desaceleracaoLanterna: 0.4,
   /**
-   * Brasa do `;` ao cruzar o meridiano: acende em `subidaMs`, esfria de
-   * laranja para tinta em `esfriaMs` (crossfade) e deixa um brilho laranja
-   * atrás do glifo (alfa e raio em alturas de glifo). No máximo
-   * `pulsosSimultaneos` brasas acesas ao mesmo tempo.
+   * Brasa do `;`, a assinatura do globo. Ao cruzar o meridiano da frente (ou
+   * passar sob a lanterna), o `;` acende em laranja negrito em `subidaMs`,
+   * dá um pulo de escala e esfria até a tinta em `esfriaMs` (crossfade). Atrás
+   * dele, um brilho em duas camadas (núcleo denso e halo largo, misturados
+   * por `multiply`, que é o "bloom" que funciona sobre fundo claro); sobre a
+   * esfera, uma onda geodésica se abre a partir dele. Na zona calma do texto
+   * o `;` só troca de cor, atenuado: nada de brilho, pulo, onda ou linha
+   * compilando ali.
    */
-  pulso: { subidaMs: 140, esfriaMs: 1300, brilhoAlfa: 0.3, brilhoRaio: 1.3 },
-  pulsosSimultaneos: 5,
+  brasa: {
+    /**
+     * Botão de equilíbrio: multiplica o alfa do brilho, o overshoot da
+     * escala e o alfa da onda. Calibrado com capturas no mesmo instante
+     * da ignição (desktop 1440×900 e Pixel 7) em 0,7 / 1 / 1,4: em 0,7 o
+     * brilho quase some no celular e a onda vira fio; em 1,4 o núcleo vira
+     * mancha laranja e a onda compete com o texto. Em 1 a brasa é vista à
+     * primeira olhada e continua menor que o `;` do título.
+     */
+    intensidade: 1,
+    subidaMs: 140,
+    esfriaMs: 1300,
+    /**
+     * Brilho: alfa no pico e raio em alturas de glifo, com raio mínimo em
+     * px CSS (o glifo do celular é pequeno e o brilho sumia).
+     */
+    nucleo: { alfa: 0.42, raio: 0.95, raioMinPx: 13 },
+    halo: { alfa: 0.16, raio: 2.7, raioMinPx: 38 },
+    /**
+     * Pulo do `;`: cresce até 1 + `pico` (com leve overshoot) e volta ao
+     * tamanho em `duracaoMs`, em torno do centro do glifo.
+     */
+    escala: { pico: 0.5, duracaoMs: 400 },
+    /**
+     * Onda: círculo geodésico projetado (`pontos` pontos) que nasce no `;` e
+     * se abre até `raioRad` sobre a esfera em `duracaoMs`, sumindo. Em globo
+     * pequeno, o raio na tela não fica abaixo de `raioMinPx`.
+     */
+    onda: {
+      raioRad: 0.25,
+      raioMinPx: 60,
+      duracaoMs: 900,
+      alfa: 0.55,
+      espessuraPx: 1.25,
+      pontos: 24,
+    },
+    /**
+     * Cadência: ritmo, não pisca-pisca. Teto de `porSegundo` ignições
+     * visíveis (balde de fichas com capacidade `rajada`: a primeira depois
+     * de uma pausa nunca é barrada, e a rajada curta impede pares colados),
+     * `intervaloMinMs` entre duas, e no máximo `simultaneas` brasas acesas.
+     * Ignição fora da tela (ou sob o véu) não acontece: não se veria e
+     * gastaria a cota. Na zona calma não passa pela porteira (é só troca de
+     * cor, quase invisível).
+     */
+    cadencia: {
+      porSegundo: 1,
+      rajada: 1.3,
+      intervaloMinMs: 450,
+      simultaneas: 4,
+    },
+    /**
+     * Janela do meridiano (rad ao longo do paralelo): o `;` que cruza com a
+     * porteira fechada espera a vez enquanto não passar desta distância
+     * (~7 s de giro). A porteira atrasa em vez de descartar: as brasas que
+     * chegam juntas se espalham pelas pausas e o ritmo fica regular
+     * (rodízio) quase sem perder nenhuma.
+     */
+    janelaMeridianoRad: 0.4,
+    /**
+     * Fração mínima "fora da zona calma" (0 dentro da caixa do texto, 1 a
+     * `transicaoPx` dela) para a ignição ser plena (com brilho, pulo e
+     * onda) e contar como visível.
+     */
+    foraMinimo: 0.5,
+    /**
+     * A linha compila: ao acender, uma onda quente corre os trechos da
+     * instrução que o `;` encerra, do começo até ele, em `duracaoMs` (tinta
+     * → laranja suave, até `pico` → tinta). `largura` é a meia-largura da
+     * onda, em fração da instrução.
+     */
+    compila: { duracaoMs: 450, pico: 0.75, largura: 0.3 },
+    /**
+     * Lanterna acende: o `;` que passa a `raioPx` do centro da lanterna
+     * acende (pela porteira), se não acendeu nos últimos `recargaMs`. Vale
+     * para o mouse e, com `autonoma`, para a lanterna que passeia sozinha no
+     * toque.
+     */
+    lanterna: { raioPx: 30, recargaMs: 4000, autonoma: true },
+    /**
+     * Toque no hero acende até `quantos` `;` a no máximo `raioPx` do dedo,
+     * um a cada `passoMs` (nunca menos que o intervalo mínimo da cadência),
+     * cada um gastando uma ficha da porteira. Um toque a cada `intervaloMs`,
+     * no máximo.
+     */
+    toque: { quantos: 2, raioPx: 110, passoMs: 200, intervaloMs: 1200 },
+    /**
+     * Abertura com faísca: quando o globo termina de nascer do `;` do
+     * título, `quantos` ignições, uma a cada `passoMs`, do `;` mais perto
+     * do título para dentro do planeta.
+     */
+    abertura: { quantos: 4, passoMs: 180 },
+    /**
+     * Quadro estático (sem animação): até `quantos` `;` acesos e parados,
+     * com brilho em `nivel`, longe da zona calma e afastados entre si pelo
+     * menos `distanciaMinR` raios do globo.
+     */
+    estatico: { quantos: 3, nivel: 0.85, distanciaMinR: 0.22 },
+    /**
+     * Eco nos polos: cada ignição dá aos dois `;` grandes dos polos um
+     * impulso curto de respiração (escala + `escala`, alfa × (1 + `alfa`))
+     * que decai sozinho em `duracaoMs`. Impulsos juntos somam até `teto`:
+     * nunca vira pisca-pisca. Escala com `intensidade`; fora do quadro
+     * estático.
+     */
+    ecoPolos: { escala: 0.08, alfa: 0.3, duracaoMs: 750, teto: 1.5 },
+    /**
+     * Meridiano de ignição no celular (< 48 rem), deslocado ao longo dos
+     * paralelos: põe a ignição na faixa livre entre o texto e o véu sem
+     * mexer no globo (nem na fita). 0 = meridiano da frente; positivo leva
+     * as brasas para a direita e para baixo. Com `adaptativo`, a geometria
+     * escolhe, entre ±`limiteRad`, o deslocamento que põe mais paralelos
+     * cruzando a faixa livre (de `afastamentoCalmaPx` abaixo da zona calma,
+     * onde a brasa já é plena, até o véu), pesando mais os mais longe do
+     * texto; `rad` é o preferido no empate e o valor sem adaptação. Com
+     * `segundo`, um segundo meridiano (a pelo menos `separacaoRad` do
+     * primeiro e com nota de pelo menos `segundoMinimo` da dele) dobra as
+     * ignições na faixa estreita. A porteira continua a mesma.
+     */
+    meridianoCelular: {
+      rad: 0.35,
+      adaptativo: true,
+      afastamentoCalmaPx: 40,
+      limiteRad: 1.1,
+      segundo: true,
+      separacaoRad: 0.5,
+      segundoMinimo: 0.5,
+    },
+    /**
+     * Segundo meridiano de ignição no desktop e no tablet (rad, à direita do
+     * da frente). Acima do véu, o meridiano da frente só cruza ~19 dos 36
+     * paralelos: sozinho, dá ~0,65 brasa por segundo, com pausas longas. Com
+     * o segundo, a porteira (1 por segundo) passa a ditar o ritmo.
+     */
+    meridianoDesktop: { segundo: true, segundoRad: 0.5 },
+    /**
+     * Véu de saída (gradiente no rodapé do hero, por cima do canvas): a
+     * fração de cima dele que ainda conta como visível. Com 0, nenhuma
+     * brasa acende sob o véu (nem conta em `data-ignicoes-visiveis`): a
+     * régua do motor é a mesma de quem mede "fora do véu".
+     */
+    veuVisivel: 0,
+  },
+  /**
+   * Lanterna autônoma no toque (sem ponteiro): passeia numa curva de
+   * Lissajous de `periodoS` segundos (frequências `fx` e `fy`) pela parte
+   * visível do globo fora da zona calma: a `margemPx` das bordas da tela, a
+   * `afastamentoCalmaPx` da caixa calma e dentro de `discoR` raios do
+   * centro do globo.
+   */
+  lanternaAutonoma: {
+    periodoS: 14,
+    fx: 1,
+    fy: 2,
+    margemPx: 28,
+    afastamentoCalmaPx: 40,
+    discoR: 0.92,
+    /** Aparelho híbrido: o mouse manda na lanterna até tanto depois. */
+    pausaMouseMs: 3000,
+  },
   /** Respiração dos polos: amplitude e período (s). */
   respiracaoPolos: 0.06,
   respiracaoS: 6,
