@@ -80,6 +80,9 @@ describe("Hub de Trabalhos (/portfolio)", () => {
       expect(within(artigo).getByText(sala.type)).toBeInTheDocument()
       expect(within(artigo).getByText(sala.phrase)).toBeInTheDocument()
       expect(within(artigo).getByAltText(sala.image.alt)).toBeInTheDocument()
+      expect(
+        within(artigo).getByRole("figure", { name: sala.image.alt }),
+      ).toBeInTheDocument()
 
       for (const capacidade of sala.capabilities) {
         expect(within(artigo).getByText(capacidade)).toBeInTheDocument()
@@ -90,6 +93,36 @@ describe("Hub de Trabalhos (/portfolio)", () => {
       })
       expect(noAr).toHaveAttribute("href", sala.liveUrl)
     }
+  })
+
+  it("cada sala usa <picture>: retrato do celular abaixo de sm e captura desktop no <img>", () => {
+    render(<PortfolioPage />)
+    const secao = screen.getByRole("region", { name: "Projetos publicados" })
+
+    salas.items.forEach((sala, indice) => {
+      const artigo = within(secao).getByRole("article", { name: sala.name })
+      const img = within(artigo).getByAltText(sala.image.alt)
+      const picture = img.closest("picture")
+      expect(picture).not.toBeNull()
+
+      // No Vitest o import de .webp vira só a URL (sem .src nem
+      // dimensões): aqui conferimos a estrutura; os valores do srcset e das
+      // dimensões ficam no teste do componente.
+      const source = picture?.querySelector("source")
+      expect(source).toHaveAttribute("media", "(width < 30rem)")
+      expect(source).toHaveAttribute("sizes", "calc(100vw - 42px)")
+      expect(source).toHaveAttribute("type", "image/webp")
+      expect(source?.getAttribute("srcset")?.split(", ")).toHaveLength(2)
+
+      // Só a primeira sala é candidata a LCP.
+      if (indice === 0) {
+        expect(img).toHaveAttribute("loading", "eager")
+        expect(img).toHaveAttribute("fetchpriority", "high")
+      } else {
+        expect(img).toHaveAttribute("loading", "lazy")
+        expect(img).not.toHaveAttribute("fetchpriority")
+      }
+    })
   })
 
   it("renderiza a banda final com CTA e WhatsApp", () => {

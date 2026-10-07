@@ -44,3 +44,40 @@ Promovidos somente ao worktree após revisão visual. Sem deploy ou merge.
 
 Origem, data UTC de captura e master de cada derivado constam em
 [`selection-2026-09-22.json`](selection-2026-09-22.json).
+
+## Rodada de 07/10/2026 (Frente das salas no celular)
+
+Objetivo: mostrar a home do projeto no celular na Frente da sala, abaixo de
+`sm` (30rem), no lugar da captura desktop reduzida. Só a home foi capturada,
+com `CASE_CAPTURE_CONSENT=necessary-only` e `CASE_CAPTURE_FULL_PAGE=false`,
+em Chrome 155.0.8059.39: 1440×900 (DPR 2) e 390×844 (DPR 3), HTTP 200 nas
+duas. Masters, `manifest.json` e `review.json` (sem falhas) em
+`docs/research/captures/staging/2026-10-07T18-57-12-401Z-goromax-0jO7FS/`.
+Nenhum banner apareceu (`consentAction: none`); nenhum modal ou dado pessoal.
+
+- **Recorte do celular:** topo de 390×545 CSS (1170×1635 no master), sem
+  retoque nem composição.
+- **O que está visível:** no celular, a fotografia da banda enquadrada numa
+  integrante diante de parede descascada, a linha "Metal · Stoner · Da
+  Paraíba" e o logotipo GOROMAX laranja.
+- **Peso:** o 1170 w passou do teto de ~120 KB em qualidade 88 (185552 B);
+  baixou em passos de 2 até o piso de 80 e ficou em 121714 B, 1,4% acima do
+  teto. O 780 w tinha saído em qualidade 88 com 109978 B, quase o peso do
+  1170 w; foi regerado em qualidade 80, a partir do mesmo recorte PNG sem
+  perdas, e ficou com 72490 B. O de qualidade 88 ficou só no staging
+  (`case-goromax-celular-780.q88.webp`).
+- **Desktop mantido:** a nova captura desktop só difere no menu do site e o
+  WebP dela pesaria 250094 B (+48% sobre os 168736 B atuais), então
+  `case-goromax-screenshot.webp` não mudou e o derivado desktop desta rodada
+  não foi promovido.
+
+Derivados promovidos ao worktree (WebP, esforço 6; sem deploy ou merge):
+
+| Arquivo                                     | Dimensões   |  Bytes | Qualidade | SHA-256                                                            |
+| ------------------------------------------- | ----------- | -----: | --------: | ------------------------------------------------------------------ |
+| `src/assets/case-goromax-celular-780.webp`  | 780 × 1090  |  72490 |        80 | `0c99dabfd164fc3a4faceeec7d9cfc3b047ff2fbfbbe8bbc2eac97fc34d3d7f9` |
+| `src/assets/case-goromax-celular-1170.webp` | 1170 × 1635 | 121714 |        80 | `dc62e2d9da8608caccfce28267dead12e2f19716958f9aa989ba15351e7c0dc3` |
+
+Origem, master e data UTC de cada derivado constam em
+[`selection-2026-10-07.json`](selection-2026-10-07.json). Revisão visual
+aprovada no portão da rodada; a publicação depende do ok do responsável.

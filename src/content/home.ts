@@ -30,7 +30,7 @@ export const homePageRaw = {
         ],
         image: {
           src: "/cases/underground-pb/home-1440.avif",
-          alt: "Página inicial do Underground PB, com o Beco Underground em destaque e acesso à agenda",
+          alt: "Página inicial do Underground PB em 7 de outubro de 2026, com o Pogo Fest – Ano II em destaque e acesso à agenda",
         },
         liveUrl: "https://www.undergroundpb.com.br/",
         caseStudyUrl: "/portfolio/underground-pb",
@@ -67,7 +67,7 @@ export const homePageRaw = {
         ],
         image: {
           src: "/cases/festival-alumio/home-1440.avif",
-          alt: "Página inicial do Festival Alumiô 2026, com ilustração colorida do Centro Histórico e as datas do festival",
+          alt: "Página inicial do Festival Alumiô 2026, com a chamada “Vem alumiar o Centro” e as datas do festival",
         },
         liveUrl: "https://www.festivalalumio.com.br/",
         caseStudyUrl: "/portfolio/festival-alumio",
@@ -103,7 +103,7 @@ export const homePageRaw = {
         ],
         image: {
           src: "/cases/goromax/home-1440.avif",
-          alt: "Página inicial da GOROMAX, com fotografia da banda e identidade em tons escuros e laranja",
+          alt: "Página inicial da GOROMAX, com o logotipo laranja sobre a fotografia da banda diante de uma parede descascada",
         },
         liveUrl: "https://www.goromax.com.br/",
         caseStudyUrl: "/portfolio/goromax",
@@ -138,7 +138,7 @@ export const homePageRaw = {
         ],
         image: {
           src: "/cases/carlos-ferrer/home-1440.avif",
-          alt: "Abertura do portfólio Carlos Ferrer Online",
+          alt: "Abertura do portfólio Carlos Ferrer Online, com o título “Software Engineer, Founder & CEO”",
         },
         liveUrl: "https://www.carlosferrer.online/",
         caseStudyUrl: "/portfolio/carlos-ferrer",

@@ -44,3 +44,34 @@ Promovidos somente ao worktree após revisão visual. Sem deploy ou merge.
 
 Origem, data UTC de captura e master de cada derivado constam em
 [`selection-2026-09-22.json`](selection-2026-09-22.json).
+
+## Rodada de 07/10/2026 (Frente das salas no celular)
+
+Objetivo: mostrar a home do projeto no celular na Frente da sala, abaixo de
+`sm` (30rem), no lugar da captura desktop reduzida. Só a home foi capturada,
+com `CASE_CAPTURE_CONSENT=necessary-only` e `CASE_CAPTURE_FULL_PAGE=false`,
+em Chrome 155.0.8059.39: 1440×900 (DPR 2) e 390×844 (DPR 3), HTTP 200 nas
+duas. Masters, `manifest.json` e `review.json` (sem falhas) em
+`docs/research/captures/staging/2026-10-07T18-57-31-624Z-festival-alumio-3KXf10/`.
+Nenhum banner apareceu (`consentAction: none`); nenhum modal ou dado pessoal.
+
+- **Recorte do celular:** topo de 390×545 CSS (1170×1635 no master), sem
+  retoque nem composição.
+- **O que está visível:** no celular, o selo "5ª edição", o título "Vem
+  alumiar o Centro.", as datas "18 · 19 · 20 setembro 2026" e o local
+  (Centro Histórico, João Pessoa). A ilustração dos casarios não aparece no
+  recorte, por isso a legenda da sala deixou de citá-la.
+- **Desktop mantido:** a captura desktop de 22/09 continua igual à home de
+  07/10 (mesmo título, datas e ilustração), então
+  `case-festival-alumio-screenshot.webp` não mudou.
+
+Derivados promovidos ao worktree (WebP, esforço 6; sem deploy ou merge):
+
+| Arquivo                                             | Dimensões   | Bytes | Qualidade | SHA-256                                                            |
+| --------------------------------------------------- | ----------- | ----: | --------: | ------------------------------------------------------------------ |
+| `src/assets/case-festival-alumio-celular-780.webp`  | 780 × 1090  | 57918 |        88 | `387eb597257279cda9c1b8058c28b3c9b90421557f847ce13b46473612ab7da1` |
+| `src/assets/case-festival-alumio-celular-1170.webp` | 1170 × 1635 | 89484 |        88 | `c9d2a2174a4d9b46993c078162a14f3286a1f4662ce5ac0a19720e5502a36fcd` |
+
+Origem, master e data UTC de cada derivado constam em
+[`selection-2026-10-07.json`](selection-2026-10-07.json). Revisão visual
+aprovada no portão da rodada; a publicação depende do ok do responsável.

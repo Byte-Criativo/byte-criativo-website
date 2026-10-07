@@ -9,19 +9,15 @@ import {
   FrenteVersoControle,
   FrenteVersoFaces,
 } from "@/components/patterns/frente-verso"
-import { BrowserFrame } from "@/components/patterns/browser-frame"
 import { Stack } from "@/components/ui/stack"
 import type { HomePage } from "@/content/schema"
-import CaseUndergroundPB from "@/assets/case-undergroundpb-screenshot.webp"
-import CaseFestivalAlumio from "@/assets/case-festival-alumio-screenshot.webp"
+import { CapturaDaSala } from "./captura-da-sala"
+import {
+  CAPTURAS_DAS_SALAS,
+  type CapturaDaSalaDados,
+} from "./capturas-das-salas"
 
 type SalaItem = HomePage["salas"]["items"][number]
-
-type CapturaEstatica = {
-  src: string
-  width: number
-  height: number
-}
 
 /**
  * As duas salas da home, em largura total: Underground PB e Festival
@@ -32,13 +28,11 @@ type CapturaEstatica = {
 function SalaDaHome({
   item,
   captura,
-  dominio,
   contagem,
   estudoDeCasoHref,
 }: {
   item: SalaItem
-  captura: CapturaEstatica
-  dominio: string
+  captura: CapturaDaSalaDados
   contagem: FichaContagem
   estudoDeCasoHref?: string
 }): ReactElement {
@@ -59,18 +53,11 @@ function SalaDaHome({
           <Sala slug={item.slug} id={`sala-${item.slug}`} variante="larga">
             <FrenteVersoFaces
               frente={
-                <BrowserFrame dominio={dominio} legenda={item.image.alt}>
-                  {/* eslint-disable-next-line @next/next/no-img-element -- tag nativa com dimensões explícitas e WebP estático para evitar runtime client de next/image no teto de JS da Home */}
-                  <img
-                    src={captura.src}
-                    width={captura.width}
-                    height={captura.height}
-                    alt={item.image.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-auto w-full object-cover"
-                  />
-                </BrowserFrame>
+                <CapturaDaSala
+                  captura={captura}
+                  alt={item.image.alt}
+                  loading="lazy"
+                />
               }
               verso={
                 <Stack espaco={4}>
@@ -116,8 +103,19 @@ export function HomeSalas({
 }): ReactElement {
   const salaUnderground = salas.items[0]
   const salaAlumio = salas.items[1]
+  const capturaUnderground = salaUnderground
+    ? CAPTURAS_DAS_SALAS[salaUnderground.slug]
+    : undefined
+  const capturaAlumio = salaAlumio
+    ? CAPTURAS_DAS_SALAS[salaAlumio.slug]
+    : undefined
 
-  if (!salaUnderground || !salaAlumio) {
+  if (
+    !salaUnderground ||
+    !salaAlumio ||
+    !capturaUnderground ||
+    !capturaAlumio
+  ) {
     return <></>
   }
 
@@ -131,8 +129,7 @@ export function HomeSalas({
         {/* Sala 1: Underground PB em largura total */}
         <SalaDaHome
           item={salaUnderground}
-          captura={CaseUndergroundPB}
-          dominio="undergroundpb.com.br"
+          captura={capturaUnderground}
           contagem={{
             atual: 1,
             total: 2,
@@ -149,8 +146,7 @@ export function HomeSalas({
         {/* Sala 2: Festival Alumiô em largura total */}
         <SalaDaHome
           item={salaAlumio}
-          captura={CaseFestivalAlumio}
-          dominio="festivalalumio.com.br"
+          captura={capturaAlumio}
           contagem={{ atual: 2, total: 2 }}
           estudoDeCasoHref={estudoDeCasoHrefs[salaAlumio.slug]}
         />

@@ -22,31 +22,11 @@ import {
   FrenteVersoControle,
   FrenteVersoFaces,
 } from "@/components/patterns/frente-verso"
-import { BrowserFrame } from "@/components/patterns/browser-frame"
-import CaseUndergroundPB from "@/assets/case-undergroundpb-screenshot.webp"
-import CaseFestivalAlumio from "@/assets/case-festival-alumio-screenshot.webp"
-
-import CaseGoromax from "@/assets/case-goromax-screenshot.webp"
-import CaseCarlosFerrer from "@/assets/case-carlos-ferrer-screenshot.webp"
+import { CapturaDaSala } from "../_components/captura-da-sala"
+import { CAPTURAS_DAS_SALAS } from "../_components/capturas-das-salas"
 
 const portfolio = getPortfolioPage()
 const salas = getHomePage().salas
-
-const IMAGENS: Record<
-  string,
-  { data: typeof CaseUndergroundPB; dominio: string }
-> = {
-  goromax: { data: CaseGoromax, dominio: "goromax.com.br" },
-  "carlos-ferrer": { data: CaseCarlosFerrer, dominio: "carlosferrer.online" },
-  "underground-pb": {
-    data: CaseUndergroundPB,
-    dominio: "undergroundpb.com.br",
-  },
-  "festival-alumio": {
-    data: CaseFestivalAlumio,
-    dominio: "festivalalumio.com.br",
-  },
-}
 
 export const metadata: Metadata = buildMetadata({
   title: portfolio.seo.seoTitle,
@@ -116,8 +96,8 @@ export default function PortfolioPage() {
         className="flex flex-col gap-(--space-8) pb-(--space-8) lg:pb-(--space-9)"
       >
         {salas.items.map((sala, indice) => {
-          const imagem = IMAGENS[sala.slug]
-          if (!imagem) return null
+          const captura = CAPTURAS_DAS_SALAS[sala.slug]
+          if (!captura) return null
           return (
             <FrenteVersoProvider key={sala.slug} projeto={sala.name}>
               <Ficha
@@ -141,22 +121,15 @@ export default function PortfolioPage() {
                   >
                     <FrenteVersoFaces
                       frente={
-                        <BrowserFrame
-                          dominio={imagem.dominio}
-                          legenda={sala.image.alt}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element -- tag nativa com dimensões explícitas e WebP estático, mesmo padrão das salas da home */}
-                          <img
-                            src={imagem.data.src}
-                            width={imagem.data.width}
-                            height={imagem.data.height}
-                            alt={sala.image.alt}
-                            loading={indice === 0 ? "eager" : "lazy"}
-                            fetchPriority={indice === 0 ? "high" : undefined}
-                            decoding="async"
-                            className="h-auto w-full object-cover"
-                          />
-                        </BrowserFrame>
+                        // A primeira sala é candidata a LCP (no celular
+                        // também, agora com o retrato): carga imediata e
+                        // prioridade alta; as demais esperam a rolagem.
+                        <CapturaDaSala
+                          captura={captura}
+                          alt={sala.image.alt}
+                          loading={indice === 0 ? "eager" : "lazy"}
+                          fetchPriority={indice === 0 ? "high" : undefined}
+                        />
                       }
                       verso={
                         <Stack espaco={4}>
