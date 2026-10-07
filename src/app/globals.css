@@ -881,11 +881,21 @@ dialog::backdrop {
     min-height: 100vh;
     min-height: 100svh;
     margin-top: calc(-1 * var(--altura-header));
+    /* No celular o texto ocupa a largura inteira: o respiro acima dele é
+       menor para sobrar palco embaixo, onde o globo acende as brasas. */
     padding-top: calc(
-      var(--altura-header) + clamp(var(--space-8), 16svh, var(--space-10))
+      var(--altura-header) + clamp(var(--space-7), 8svh, var(--space-8))
     );
     padding-bottom: var(--space-9);
     background: linear-gradient(180deg, var(--brand-surface), var(--bg));
+  }
+
+  @media (min-width: 48rem) {
+    .home-hero {
+      padding-top: calc(
+        var(--altura-header) + clamp(var(--space-8), 16svh, var(--space-10))
+      );
+    }
   }
 
   .home-hero-conteudo {
@@ -902,15 +912,23 @@ dialog::backdrop {
     pointer-events: none;
   }
 
+  /* Abaixo de 48 rem o véu é mais curto: o texto ocupa a largura toda e o
+     globo só tem a faixa de baixo para acender as brasas. */
   .hero-veu {
     position: absolute;
     z-index: 1;
     right: 0;
     bottom: 0;
     left: 0;
-    height: var(--space-10);
+    height: var(--space-7);
     background: linear-gradient(to bottom, transparent, var(--bg));
     pointer-events: none;
+  }
+
+  @media (min-width: 48rem) {
+    .hero-veu {
+      height: var(--space-10);
+    }
   }
 
   .hero-rolar {

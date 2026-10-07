@@ -32,6 +32,16 @@ import type { HeroCanvasEstado } from "./use-hero-canvas"
  * fade; o `;` que acende esfria em crossfade. O texto de cada anel é
  * determinístico (a semente não muda), então resize e troca de DPR não
  * sorteiam o globo de novo.
+ *
+ * Brasa (a assinatura): o `;` que cruza o meridiano da frente, ou passa sob
+ * a lanterna, acende em laranja negrito com um pulo de escala, um brilho em
+ * duas camadas e uma onda geodésica na esfera; a instrução que ele encerra
+ * "compila" (uma onda quente corre a linha até ele). Uma porteira dá o
+ * ritmo (teto de taxa, intervalo mínimo, teto de simultâneas) e a zona
+ * calma do texto só deixa o `;` trocar de cor. O brilho, a onda e o `;`
+ * negrito são pintados depois dos anéis, num passe só das brasas: o brilho
+ * em `multiply` tinge de laranja o fundo e os glifos por baixo sem lavar a
+ * tinta (o `lighter` não funciona sobre fundo claro).
  */
 
 /**
@@ -52,6 +62,13 @@ type Peca = {
   c2: number
   s2: number
   semicolon: boolean
+  /**
+   * Índice, no anel, do `;` que encerra a instrução desta peça (a dele
+   * mesmo, se for um `;`); -1 na linha cortada pelo fim do anel.
+   */
+  ponto: number
+  /** Meio da peça ao longo da instrução: 0 no começo da linha, 1 no `;`. */
+  fracao: number
 }
 type Anel = {
   lat: number
@@ -68,15 +85,34 @@ type Anel = {
   /** Fora da tela por presença zero: o estado do meridiano foi zerado. */
   dormindo: boolean
   pecas: Peca[]
-  /** Início da brasa de cada `;` (ms, pelo índice da peça), 0 se apagado. */
+  /**
+   * Início da brasa de cada `;` (ms, pelo índice da peça), 0 se apagado.
+   * Pode estar no futuro: a cascata da abertura e o toque agendam.
+   */
   pulsos: Float64Array
-  ladoAnterior: Int8Array
+  /** 1 se a brasa é plena (brilho, pulo, onda); 0 se só troca de cor. */
+  plena: Uint8Array
+  /** 1 no `;` aceso e parado do quadro estático. */
+  fixa: Uint8Array
+  /**
+   * Cada `;` diante do meridiano de ignição: -1 antes dele; 1 armado (acabou
+   * de cruzar e espera a vez na porteira); 2 resolvido nesta volta (acendeu
+   * ou desistiu); 0 desconhecido (anel montado ou acordado agora: não
+   * acende até cruzar de novo, sem pulsos falsos).
+   */
+  meridiano: Int8Array
+  /** O mesmo diante do segundo meridiano de ignição. */
+  meridiano2: Int8Array
 }
 
 /**
  * Atlas com as linhas de código já compostas, uma por faixa, caractere a
  * caractere na mesma grade espaçada de sempre (aspas já em azul, `;` em
- * branco), mais uma faixa final com o `;` em tinta e em laranja.
+ * branco), e uma faixa final com o `;` em tinta, em laranja e em laranja
+ * negrito. A mesma grade toda em laranja (a linha que compila) é outro
+ * canvas, `laranja`, feito depois, num momento ocioso, e só quando o globo
+ * anima: no renderizador por software ela custava uma pintura grande dentro
+ * da tarefa de montagem.
  */
 type AtlasDeLinhas = {
   canvas: HTMLCanvasElement
@@ -85,7 +121,46 @@ type AtlasDeLinhas = {
   /** Largura do espaço (px do atlas). */
   espaco: number
   faixas: { y: number; recortes: { x: number; w: number }[] }[]
-  ponto: { y: number; w: number; xTinta: number; xLaranja: number }
+  /** Linhas em laranja, na mesma grade (null até ficar pronta). */
+  laranja: HTMLCanvasElement | null
+  ponto: {
+    y: number
+    w: number
+    xTinta: number
+    xLaranja: number
+    xNegrito: number
+    wNegrito: number
+  }
+}
+
+/**
+ * Brasa plena desenhada neste quadro: o laço dos anéis grava aqui a
+ * geometria do `;` e o passe das brasas desenha brilho, onda e o `;`
+ * negrito por cima. Os registros são reaproveitados (sem alocação).
+ */
+type RegistroBrasa = {
+  x: number
+  y: number
+  c: number
+  s: number
+  largura: number
+  altura: number
+  /** Alfa do `;` aceso (com a lanterna e a zona calma já aplicadas). */
+  acesa: number
+  /** Alfa da tinta que sai em crossfade. */
+  tinta: number
+  brasa: number
+  /** Desde a ignição (ms); negativo na brasa parada do quadro estático. */
+  decorrido: number
+  fora: number
+  alfaAnel: number
+  /** Centro do `;` na esfera unitária, antes da matriz do quadro. */
+  ex: number
+  ey: number
+  ez: number
+  /** Cosseno e seno do ângulo do `;` no anel (base tangente da onda). */
+  cm: number
+  sm: number
 }
 
 type Preset = (typeof CONFIG.presets)[GloboVariante]
@@ -182,8 +257,14 @@ function rgba(hex: string, a: number): string {
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`
 }
 
-/** Sprite do brilho da brasa: disco laranja radial, desenhado uma vez. */
-function criarBrilho(cor: string): HTMLCanvasElement {
+/**
+ * Sprite do brilho da brasa: disco laranja radial, desenhado uma vez. O
+ * perfil (paradas de alfa) separa o núcleo denso do halo largo e macio.
+ */
+function criarBrilho(
+  cor: string,
+  paradas: readonly (readonly [number, number])[],
+): HTMLCanvasElement {
   const tamanho = 64
   const c = document.createElement("canvas")
   c.width = tamanho
@@ -192,12 +273,26 @@ function criarBrilho(cor: string): HTMLCanvasElement {
   if (!g) return c
   const meio = tamanho / 2
   const grad = g.createRadialGradient(meio, meio, 0, meio, meio, meio)
-  grad.addColorStop(0, rgba(cor, 1))
-  grad.addColorStop(0.35, rgba(cor, 0.45))
-  grad.addColorStop(1, rgba(cor, 0))
+  for (const [posicao, alfa] of paradas) {
+    grad.addColorStop(posicao, rgba(cor, alfa))
+  }
   g.fillStyle = grad
   g.fillRect(0, 0, tamanho, tamanho)
   return c
+}
+
+/**
+ * Pulo de escala do `;` aceso, de 0 a 1 no tempo `u` (0..1): sobe com
+ * leve overshoot (back-out, pico de ~1,1 perto de 23 % do tempo, junto com
+ * a cor) até 40 % e volta macio ao tamanho.
+ */
+function pulo(u: number): number {
+  if (u <= 0 || u >= 1) return 0
+  if (u < 0.4) {
+    const x = u / 0.4 - 1
+    return 1 + 2.70158 * x * x * x + 1.70158 * x * x
+  }
+  return 1 - suave((u - 0.4) / 0.6)
 }
 
 function ehAspas(ch: string): boolean {
@@ -241,8 +336,13 @@ function criarAtlasDeLinhas(
   })
   const wPonto = largura(";")
   const espaco = largura(" ")
+  // O `;` aceso é negrito (peso 700, como o do título): mais largo que o da
+  // grade, ganha recorte próprio e é desenhado centrado no lugar do outro.
+  const fonteNegrito = `700 ${tamanhoPx * dpr}px ${familia}`
+  ctx.font = fonteNegrito
+  const wNegrito = Math.ceil(ctx.measureText(";").width) + 2 * dpr
   // Mudar o tamanho do canvas zera o contexto: a fonte vem de novo depois.
-  canvas.width = Math.max(1, maisLarga, 2 * wPonto)
+  canvas.width = Math.max(1, maisLarga, 2 * wPonto + wNegrito)
   canvas.height = altura * (linhas.length + 1)
   ctx.font = fonte
   ctx.textBaseline = "middle"
@@ -259,13 +359,44 @@ function criarAtlasDeLinhas(
   ctx.fillText(";", dpr, yPonto + altura / 2)
   ctx.fillStyle = CONFIG.cores.laranja
   ctx.fillText(";", wPonto + dpr, yPonto + altura / 2)
+  ctx.font = fonteNegrito
+  ctx.fillText(";", 2 * wPonto + dpr, yPonto + altura / 2)
   return {
     canvas,
     altura,
     espaco,
     faixas,
-    ponto: { y: yPonto, w: wPonto, xTinta: 0, xLaranja: wPonto },
+    laranja: null,
+    ponto: {
+      y: yPonto,
+      w: wPonto,
+      xTinta: 0,
+      xLaranja: wPonto,
+      xNegrito: 2 * wPonto,
+      wNegrito,
+    },
   }
+}
+
+/**
+ * Linhas em laranja (a linha que compila): copia a grade de tinta e recolore
+ * só onde há tinta (`source-atop`), em duas chamadas em vez de um fillText
+ * por caractere. As faixas ficam nas mesmas coordenadas do atlas.
+ */
+function criarLinhasLaranja(atlas: AtlasDeLinhas): HTMLCanvasElement | null {
+  const largura = atlas.canvas.width
+  const altura = atlas.ponto.y
+  if (largura < 1 || altura < 1) return null
+  const canvas = document.createElement("canvas")
+  canvas.width = largura
+  canvas.height = altura
+  const ctx = canvas.getContext("2d")
+  if (!ctx) return null
+  ctx.drawImage(atlas.canvas, 0, 0, largura, altura, 0, 0, largura, altura)
+  ctx.globalCompositeOperation = "source-atop"
+  ctx.fillStyle = CONFIG.cores.laranja
+  ctx.fillRect(0, 0, largura, altura)
+  return canvas
 }
 
 /** Matriz 3×3 em linha (row-major). */
@@ -340,13 +471,122 @@ export function montarGlobo(
   let cy = 0
   let tamanhoFonte = 12
   let atlas: AtlasDeLinhas | null = null
+  // Agendamento da cópia laranja das linhas (ver `criarLinhasLaranja`).
+  let cancelarLaranja: (() => void) | null = null
   let aneis: Anel[] = []
   let padraoGrao: CanvasPattern | null = null
-  const brilho = criarBrilho(CONFIG.cores.laranja)
+  const BRASA = CONFIG.brasa
+  // Núcleo denso (cai rápido) e halo largo (cai devagar): o "bloom".
+  const nucleo = criarBrilho(CONFIG.cores.laranja, [
+    [0, 1],
+    [0.4, 0.62],
+    [1, 0],
+  ])
+  const haloBrasa = criarBrilho(CONFIG.cores.laranja, [
+    [0, 1],
+    [0.25, 0.6],
+    [0.6, 0.18],
+    [1, 0],
+  ])
   // Tamanho e DPR da última montagem: resize sem mudança real não remonta.
   let medidaMontada = ""
-  // Fim de cada brasa acesa (ms), em ordem: conta as simultâneas.
+  // Fim de cada brasa plena acesa ou agendada (ms), em ordem: conta as
+  // simultâneas.
   const fimDasBrasas: number[] = []
+  // Porteira da cadência: balde de fichas (teto de taxa) e a última ignição
+  // plena (intervalo mínimo).
+  const porteira: { fichas: number; recarga: number; ultima: number } = {
+    fichas: BRASA.cadencia.rajada,
+    recarga: 0,
+    ultima: -1e9,
+  }
+  // Contadores gravados no canvas (lidos só por testes e capturas).
+  let ignicoes = 0
+  let ignicoesVisiveis = 0
+  // Brasas plenas deste quadro (ver RegistroBrasa), reaproveitadas.
+  const registros: RegistroBrasa[] = Array.from({ length: 16 }, () => ({
+    x: 0,
+    y: 0,
+    c: 1,
+    s: 0,
+    largura: 0,
+    altura: 0,
+    acesa: 0,
+    tinta: 0,
+    brasa: 0,
+    decorrido: 0,
+    fora: 0,
+    alfaAnel: 0,
+    ex: 0,
+    ey: 0,
+    ez: 0,
+    cm: 1,
+    sm: 0,
+  }))
+  // Círculo da onda: cosseno e seno de cada ponto, calculados uma vez.
+  const pontosOnda = BRASA.onda.pontos
+  const ondaCos = new Float64Array(pontosOnda + 1)
+  const ondaSen = new Float64Array(pontosOnda + 1)
+  for (let i = 0; i <= pontosOnda; i += 1) {
+    ondaCos[i] = Math.cos((i / pontosOnda) * Math.PI * 2)
+    ondaSen[i] = Math.sin((i / pontosOnda) * Math.PI * 2)
+  }
+  /**
+   * Pedido de ignição perto de um ponto (cascata da abertura, toque): o
+   * próximo quadro junta os `;` livres e visíveis e agenda os mais perto.
+   */
+  const pedido = {
+    ativo: false,
+    /** A cascata da abertura (fura o balde); o toque não fura. */
+    abertura: false,
+    x: 0,
+    y: 0,
+    raio: 0,
+    quantos: 0,
+    passoMs: 0,
+  }
+  // A faísca da abertura ainda não saiu: até lá, nada acende sozinho.
+  let aberturaPendente = preset.nasceNoTitulo && preset.pulsosNoMeridiano
+  const candidatos: {
+    anel: Anel
+    k: number
+    x: number
+    y: number
+    d: number
+  }[] = []
+  // O quadro estático escolhe de novo os `;` acesos e parados.
+  let escolherFixas = false
+  // Passeio da lanterna autônoma (px do canvas): faixa visível fora da
+  // zona calma (x0..x1, y0..y1, com centro e amplitude da curva) e o disco
+  // do globo (centro gx, gy e raio gr) que prende o alvo.
+  const passeio = {
+    x0: 0,
+    x1: 0,
+    y0: 0,
+    y1: 0,
+    cx: 0,
+    cy: 0,
+    ax: 0,
+    ay: 0,
+    gx: 0,
+    gy: 0,
+    gr: 0,
+  }
+  // Topo do canvas na página, altura da janela e do header, e o véu de saída
+  // (topo e limite do que ainda se vê nele), em px do canvas: o que está na
+  // tela.
+  let topoNaPagina = 0
+  let alturaJanela = 1
+  let alturaHeader = 0
+  let topoDoVeu = 1e9
+  let limiteDoVeu = 1e9
+  // Meridianos de ignição (rad): no desktop, 0 e o segundo da configuração;
+  // no celular, os da faixa livre (o segundo é NaN quando não há).
+  let meridianoIgnicao = 0
+  let meridianoIgnicao2 = Number.NaN
+  // Último movimento do mouse (aparelho híbrido: o mouse manda na lanterna).
+  let ultimoMouse = -1e9
+  let ultimoToque = -1e9
   // Zona calma do texto, em px do canvas (caixa do bloco de conteúdo).
   const calma = {
     l: 0,
@@ -358,6 +598,25 @@ export function montarGlobo(
     rx: 1,
     ry: 1,
     ativa: false,
+  }
+  // Caixa do rótulo "Rolar" (com a mesma margem): segunda zona calma. No
+  // celular, com o véu curto, o globo passa atrás dele, e o rótulo também é
+  // texto visível que precisa de AA.
+  const rotulo = { l: 0, t: 0, r: 0, b: 0, ativo: false }
+  /** Distância (px) do ponto até a zona calma mais próxima; 0 dentro dela. */
+  const distanciaCalma = (x: number, y: number) => {
+    let d = Number.POSITIVE_INFINITY
+    if (calma.ativa) {
+      const fx = Math.max(calma.l - x, x - calma.r, 0)
+      const fy = Math.max(calma.t - y, y - calma.b, 0)
+      d = Math.sqrt(fx * fx + fy * fy)
+    }
+    if (rotulo.ativo) {
+      const fx = Math.max(rotulo.l - x, x - rotulo.r, 0)
+      const fy = Math.max(rotulo.t - y, y - rotulo.b, 0)
+      d = Math.min(d, Math.sqrt(fx * fx + fy * fy))
+    }
+    return d
   }
   // Caixa do `;` do título em px do canvas: ganha um halo branco por trás.
   const ponto = { x: 0, y: 0, r: 0, ativo: false }
@@ -411,25 +670,52 @@ export function montarGlobo(
     tras.presenca = alvoTras()
   }
 
+  // Fonte e DPR do atlas montado: o atlas só é refeito quando eles mudam.
+  let atlasMontado = ""
   /**
-   * Monta atlas e anéis. O gerador volta à semente a cada montagem e a
-   * rotação e a presença de cada anel passam para a montagem nova: resize e
-   * troca de DPR redesenham o mesmo globo, nunca outro.
+   * Monta o atlas de linhas (o passo mais caro da montagem: um fillText por
+   * caractere). Fica numa tarefa ociosa própria na abertura, para nenhuma
+   * tarefa da montagem passar muito de 50 ms no renderizador por software.
+   */
+  const montarAtlas = () => {
+    tamanhoFonte = Math.min(
+      CONFIG.layout.fonteMaxPx,
+      Math.max(CONFIG.layout.fonteMinPx, R / 30),
+    )
+    const chave = `${tamanhoFonte}@${dpr}`
+    if (atlas && chave === atlasMontado) return
+    atlas = criarAtlasDeLinhas(LINHAS_DE_CODIGO, tamanhoFonte, dpr, familia)
+    atlasMontado = atlas ? chave : ""
+    // A cópia laranja só serve ao globo animado e sai da tarefa de montagem.
+    cancelarLaranja?.()
+    cancelarLaranja = null
+    if (atlas && animar && !reduzido.matches) {
+      const doAtlas = atlas
+      cancelarLaranja = ocioso(() => {
+        cancelarLaranja = null
+        doAtlas.laranja = criarLinhasLaranja(doAtlas)
+      }, 1500)
+    }
+  }
+
+  /**
+   * Monta os anéis (e o atlas, se a fonte ou o DPR mudaram). O gerador volta
+   * à semente a cada montagem e a rotação e a presença de cada anel passam
+   * para a montagem nova: resize e troca de DPR redesenham o mesmo globo,
+   * nunca outro.
    */
   const montarAneis = () => {
     medidaMontada = `${W}x${H}@${dpr}`
     const aleatorio = criarAleatorio(semente)
     const anteriores = aneis
     const novos: Anel[] = []
+    // Algum anel ganhou peças novas (os arrays de brasa não foram reaproveitados).
+    let recomecou = false
     const n =
       W < 768
         ? Math.min(preset.paralelos, CONFIG.paralelosCelular)
         : preset.paralelos
-    tamanhoFonte = Math.min(
-      CONFIG.layout.fonteMaxPx,
-      Math.max(CONFIG.layout.fonteMinPx, R / 30),
-    )
-    atlas = criarAtlasDeLinhas(LINHAS_DE_CODIGO, tamanhoFonte, dpr, familia)
+    montarAtlas()
     if (!atlas) return
     const { faixas, ponto: pontoAtlas } = atlas
     const espaco = atlas.espaco / dpr
@@ -443,7 +729,12 @@ export function montarGlobo(
       // `trechoFlechaPx` (flecha = raio · ângulo² / 8).
       const arcoMax = Math.sqrt((8 * CONFIG.trechoFlechaPx) / raioPx)
       const pecas: Peca[] = []
-      const nova = (sx: number, sy: number, sw: number, theta: number) => ({
+      const nova = (
+        sx: number,
+        sy: number,
+        sw: number,
+        theta: number,
+      ): Peca => ({
         sx,
         sy,
         sw,
@@ -454,6 +745,8 @@ export function montarGlobo(
         c2: 1,
         s2: 0,
         semicolon: false,
+        ponto: -1,
+        fracao: 0,
       })
       let percorrido = 0
       let k = Math.floor(aleatorio() * LINHAS_DE_CODIGO.length)
@@ -462,6 +755,8 @@ export function montarGlobo(
         const indice = k % LINHAS_DE_CODIGO.length
         const caracteres = [...(LINHAS_DE_CODIGO[indice] ?? "")]
         const faixa = faixas[indice]
+        // Primeira peça da instrução em composição (a linha que compila).
+        let inicioInstrucao = pecas.length
         // Trecho em composição: cresce até um espaço, um `;`, o fim da
         // linha ou o arco máximo.
         let trecho: Peca | null = null
@@ -483,7 +778,24 @@ export function montarGlobo(
               )
               p.dTheta = w / raioPx
               p.semicolon = true
+              const kp = pecas.length
+              p.ponto = kp
+              p.fracao = 1
               pecas.push(p)
+              // As peças da instrução apontam para o `;` que a encerra,
+              // com a posição ao longo dela (a onda quente corre de 0 a 1).
+              const inicio = pecas[inicioInstrucao]?.theta ?? theta
+              const extensao = Math.max(theta - inicio, 1e-6)
+              for (let q = inicioInstrucao; q < kp; q += 1) {
+                const peca = pecas[q]
+                if (!peca) continue
+                peca.ponto = kp
+                peca.fracao = Math.min(
+                  1,
+                  (peca.theta + peca.dTheta / 2 - inicio) / extensao,
+                )
+              }
+              inicioInstrucao = kp + 1
             }
           } else {
             if (trecho && theta + w / raioPx - trecho.theta > arcoMax) {
@@ -521,6 +833,10 @@ export function montarGlobo(
         (1 - CONFIG.deriva + 2 * CONFIG.deriva * aleatorio())
       const anterior = anteriores.length === n ? anteriores[i] : undefined
       const alvo = anelVisivel(i, n, densidade) ? 1 : 0
+      // Com as mesmas peças (troca de DPR, resize pequeno), as brasas em
+      // curso continuam: nenhuma some de um quadro para o outro.
+      const mesmas = anterior?.pecas.length === pecas.length
+      if (!mesmas) recomecou = true
       novos.push({
         lat,
         r,
@@ -532,11 +848,22 @@ export function montarGlobo(
         alvo,
         dormindo: false,
         pecas,
-        pulsos: new Float64Array(pecas.length),
-        ladoAnterior: new Int8Array(pecas.length),
+        pulsos:
+          mesmas && anterior ? anterior.pulsos : new Float64Array(pecas.length),
+        plena:
+          mesmas && anterior ? anterior.plena : new Uint8Array(pecas.length),
+        fixa: new Uint8Array(pecas.length),
+        meridiano:
+          mesmas && anterior ? anterior.meridiano : new Int8Array(pecas.length),
+        meridiano2:
+          mesmas && anterior
+            ? anterior.meridiano2
+            : new Int8Array(pecas.length),
       })
     }
     aneis = novos
+    // Brasas de peças que deixaram de existir não contam mais como acesas.
+    if (recomecou) fimDasBrasas.length = 0
   }
 
   const montarGrao = () => {
@@ -587,6 +914,17 @@ export function montarGlobo(
     } else {
       calma.ativa = false
     }
+    const cr = secao.querySelector(".hero-rolar")?.getBoundingClientRect()
+    if (cr && cr.width > 0) {
+      const m = L.zonaCalma.margemPx
+      rotulo.l = cr.left - caixa.left - m
+      rotulo.t = cr.top - caixa.top - m
+      rotulo.r = cr.right - caixa.left + m
+      rotulo.b = cr.bottom - caixa.top + m
+      rotulo.ativo = true
+    } else {
+      rotulo.ativo = false
+    }
     const pc = ancora()
     if (pc && pc.width > 0) {
       ponto.x = pc.left + pc.width / 2 - caixa.left
@@ -598,7 +936,19 @@ export function montarGlobo(
     }
     // O globo nunca sobe para debaixo do header (contraste do logo e dos links).
     const header = document.querySelector("[data-site-header]")
-    const alturaHeader = header ? header.getBoundingClientRect().height : 0
+    alturaHeader = header ? header.getBoundingClientRect().height : 0
+    topoNaPagina = caixa.top + window.scrollY
+    alturaJanela = Math.max(1, window.innerHeight)
+    // Véu de saída (gradiente no rodapé do hero, por cima do canvas): o que
+    // cai nele não conta como visível; só o começo dele (`veuVisivel`) ainda
+    // deixa ver uma brasa.
+    const veu = secao.querySelector(".hero-veu")?.getBoundingClientRect()
+    const alturaVeu = veu ? veu.height : 0
+    topoDoVeu = veu && alturaVeu > 0 ? veu.top - caixa.top : H
+    limiteDoVeu = topoDoVeu + CONFIG.brasa.veuVisivel * alturaVeu
+    // Fundo do que se vê no topo da página: a janela ou o véu, o que vier antes.
+    const fundoDaJanela = Math.min(H, alturaJanela - topoNaPagina)
+    const fundoVisivel = Math.min(fundoDaJanela, limiteDoVeu)
     if (W >= 1024) {
       R = (L.desktop.diametroVh / 200) * H
       cx = L.desktop.centroX * W
@@ -612,7 +962,163 @@ export function montarGlobo(
       cx = L.celular.centroX * W
       const fundo = calma.ativa ? calma.b - L.zonaCalma.margemPx : 0.6 * H
       cy = fundo + (L.celular.abaixoDoConteudoVh / 100) * H
+      // O limbo de baixo do globo nunca fica acima da dobra: em telas altas
+      // os glifos se amontoavam no horizonte e sobrava uma faixa vazia.
+      cy = Math.max(cy, fundoDaJanela - 0.9 * R)
     }
+    // Meridianos de ignição: no desktop, o da frente e um segundo um pouco à
+    // direita (só o da frente cruza poucos paralelos acima do véu); no
+    // celular, os da faixa livre entre o texto e o véu.
+    const MD = CONFIG.brasa.meridianoDesktop
+    meridianoIgnicao = 0
+    meridianoIgnicao2 = MD.segundo ? MD.segundoRad : Number.NaN
+    if (W < 768) {
+      meridianoIgnicao2 = Number.NaN
+      escolherMeridianos(fundoVisivel)
+    }
+    // Diagnóstico (lido só por testes e capturas), como `degrau` e `custo`.
+    canvas.dataset.meridiano = Number.isNaN(meridianoIgnicao2)
+      ? meridianoIgnicao.toFixed(2)
+      : `${meridianoIgnicao.toFixed(2)},${meridianoIgnicao2.toFixed(2)}`
+    // Passeio da lanterna autônoma: a parte do disco do globo que está na
+    // tela (no topo da página, acima do véu), fora da zona calma. Entre
+    // "abaixo do texto" e "à direita do texto", fica a faixa maior. O alvo é
+    // preso à faixa e ao disco a cada quadro (ver `passo`): a lanterna nunca
+    // para atrás do texto, mesmo com o centro do globo lá.
+    const LA = CONFIG.lanternaAutonoma
+    let x0 = Math.max(0, cx - R) + LA.margemPx
+    const x1 = Math.min(W, cx + R) - LA.margemPx
+    let y0 = Math.max(0, cy - R) + LA.margemPx
+    const y1 = Math.min(fundoVisivel, cy + R) - LA.margemPx
+    if (calma.ativa) {
+      const livre = LA.afastamentoCalmaPx
+      const abaixo =
+        Math.max(0, x1 - x0) * Math.max(0, y1 - Math.max(y0, calma.b + livre))
+      const direita =
+        Math.max(0, x1 - Math.max(x0, calma.r + livre)) * Math.max(0, y1 - y0)
+      if (abaixo >= direita) y0 = Math.max(y0, calma.b + livre)
+      else x0 = Math.max(x0, calma.r + livre)
+    }
+    passeio.x0 = x0
+    passeio.x1 = Math.max(x0, x1)
+    passeio.y0 = y0
+    passeio.y1 = Math.max(y0, y1)
+    passeio.cx = (passeio.x0 + passeio.x1) / 2
+    passeio.cy = (passeio.y0 + passeio.y1) / 2
+    passeio.ax = (passeio.x1 - passeio.x0) / 2
+    passeio.ay = (passeio.y1 - passeio.y0) / 2
+    passeio.gx = cx
+    passeio.gy = cy
+    passeio.gr = LA.discoR * R
+  }
+
+  /**
+   * Meridianos de ignição do celular (rad ao longo dos paralelos). Com o
+   * texto ocupando a largura toda, só sobra uma faixa livre entre a zona
+   * calma (mais `afastamentoCalmaPx`) e o véu, e um meridiano só cruza
+   * poucos paralelos ali. Entre -`limiteRad` e +`limiteRad`, cada
+   * deslocamento ganha uma nota: os cruzamentos de paralelo na faixa,
+   * pesados pela frente da esfera e pela distância ao texto (as duas fazem
+   * a brasa brilhar mais). Fica o de nota maior (no empate, o mais perto do
+   * preferido, `rad`) ou, com `segundo`, o par afastado de pelo menos
+   * `separacaoRad` com a maior soma, se o mais fraco valer `segundoMinimo`
+   * do outro: duas linhas de ignição dobram as brasas numa faixa estreita.
+   * Só conta (sem desenhar), uma vez por geometria.
+   */
+  const escolherMeridianos = (fundo: number) => {
+    const MC = CONFIG.brasa.meridianoCelular
+    meridianoIgnicao = MC.rad
+    if (!MC.adaptativo) return
+    const topo = calma.ativa ? calma.b + MC.afastamentoCalmaPx : 0
+    if (fundo - topo < 8) return
+    const incl = mul(
+      rotZ(CONFIG.inclinacaoZ * GRAUS),
+      rotX(CONFIG.inclinacaoX * GRAUS),
+    )
+    const n = Math.min(preset.paralelos, CONFIG.paralelosCelular)
+    const latMax = CONFIG.latitudeMax * GRAUS
+    const deslocamentos: number[] = []
+    const notas: number[] = []
+    for (let d = -MC.limiteRad; d <= MC.limiteRad + 1e-9; d += 0.05) {
+      const sd = Math.sin(d)
+      const cd = Math.cos(d)
+      let nota = 0
+      for (let i = 0; i < n; i += 1) {
+        const lat = (i / (n - 1) - 0.5) * 2 * latMax
+        const r = Math.cos(lat)
+        const y = Math.sin(lat)
+        const px = r * sd
+        const pz = r * cd
+        const frente = incl[6] * px + incl[7] * y + incl[8] * pz
+        if (frente < 0.2) continue
+        const sp = CONFIG.foco / (CONFIG.foco - frente)
+        const x = cx + (incl[0] * px + incl[1] * y + incl[2] * pz) * R * sp
+        const yy = cy + (incl[3] * px + incl[4] * y + incl[5] * pz) * R * sp
+        if (x < 16 || x > W - 16 || yy < topo || yy > fundo) continue
+        const fora = calma.ativa
+          ? suave((yy - calma.b) / CONFIG.layout.zonaCalma.transicaoPx)
+          : 1
+        nota += suave(frente / 0.85) * fora
+      }
+      deslocamentos.push(d)
+      notas.push(nota)
+    }
+    // Nota com desempate: perto do preferido ganha por pouco.
+    const nota = (i: number) =>
+      (notas[i] ?? 0) - 0.02 * Math.abs((deslocamentos[i] ?? 0) - MC.rad)
+    let primeiro = -1
+    notas.forEach((n, i) => {
+      if (n > 0 && (primeiro < 0 || nota(i) > nota(primeiro))) primeiro = i
+    })
+    if (primeiro < 0) return
+    meridianoIgnicao = deslocamentos[primeiro] ?? MC.rad
+    if (!MC.segundo) return
+    // O par (afastado de `separacaoRad`) de soma maior; o mais forte dos
+    // dois é o primeiro. Só vale se o segundo tiver `segundoMinimo` da nota
+    // do primeiro.
+    let par: [number, number] | null = null
+    let somaPar = Number.NEGATIVE_INFINITY
+    for (let a = 0; a < notas.length; a += 1) {
+      for (let b = a + 1; b < notas.length; b += 1) {
+        const da = deslocamentos[a] ?? 0
+        const db = deslocamentos[b] ?? 0
+        if (Math.abs(da - db) < MC.separacaoRad - 1e-9) continue
+        const [forte, fraco] = nota(a) >= nota(b) ? [a, b] : [b, a]
+        if ((notas[fraco] ?? 0) < MC.segundoMinimo * (notas[forte] ?? 0)) {
+          continue
+        }
+        if ((notas[fraco] ?? 0) <= 0) continue
+        const soma = nota(a) + nota(b)
+        if (soma > somaPar) {
+          somaPar = soma
+          par = [forte, fraco]
+        }
+      }
+    }
+    if (par) {
+      meridianoIgnicao = deslocamentos[par[0]] ?? MC.rad
+      meridianoIgnicao2 = deslocamentos[par[1]] ?? Number.NaN
+    }
+  }
+
+  /**
+   * Estado de um `;` diante de um meridiano de ignição, a cada quadro (ver
+   * Anel.meridiano): ao cruzar (`l` de < 0 para ≥ 0, perto dele) ele se
+   * arma e espera a vez na porteira enquanto estiver na janela; a porteira
+   * atrasa em vez de descartar.
+   */
+  const avancarMeridiano = (
+    estado: number,
+    l: number,
+    livre: boolean,
+    pode: boolean,
+  ): number => {
+    let m = estado
+    if (l < 0) m = -1
+    else if (m === -1) m = l < 0.3 ? 1 : 2
+    else if (m === 0) m = 2
+    if (m === 1 && (l > BRASA.janelaMeridianoRad || !livre || !pode)) m = 2
+    return m
   }
 
   const redimensionar = () => {
@@ -624,6 +1130,87 @@ export function montarGlobo(
   // (qx, qy, qz) vai para a tela em centro + q · R · s, com s = F / (F − qz).
   // Feita inline no laço quente, sem alocar objeto por glifo.
   const F = CONFIG.foco
+
+  /**
+   * Registra uma ignição a partir de `inicio` (pode ser no futuro: cascata
+   * e toque agendam) e grava os contadores no canvas, só neste momento.
+   * Visível = plena: na tela e fora da zona calma.
+   */
+  const acender = (
+    anel: Anel,
+    k: number,
+    inicio: number,
+    plena: boolean,
+    x: number,
+    y: number,
+  ) => {
+    anel.pulsos[k] = inicio
+    anel.plena[k] = plena ? 1 : 0
+    ignicoes += 1
+    if (plena) {
+      const fim = inicio + BRASA.subidaMs + BRASA.esfriaMs
+      let i = fimDasBrasas.length
+      while (i > 0 && (fimDasBrasas[i - 1] ?? 0) > fim) i -= 1
+      fimDasBrasas.splice(i, 0, fim)
+      porteira.ultima = Math.max(porteira.ultima, inicio)
+      ignicoesVisiveis += 1
+      canvas.dataset.ignicoesVisiveis = String(ignicoesVisiveis)
+      canvas.dataset.ignicaoX = x.toFixed(0)
+      canvas.dataset.ignicaoY = y.toFixed(0)
+      canvas.dataset.ignicaoT = inicio.toFixed(0)
+    }
+    canvas.dataset.ignicoes = String(ignicoes)
+  }
+  /**
+   * Porteira da cadência. Fora da tela, não acende (não se veria e gastaria
+   * a cota); na zona calma só troca de cor e não passa pela porteira; no
+   * resto, precisa de ficha no balde, do intervalo mínimo desde a última e
+   * de vaga entre as simultâneas. Devolve se acendeu.
+   */
+  const tentarAcender = (
+    anel: Anel,
+    k: number,
+    x: number,
+    y: number,
+    fora: number,
+    naTela: boolean,
+    agora: number,
+  ): boolean => {
+    if (!naTela) return false
+    if (fora < BRASA.foraMinimo) {
+      acender(anel, k, agora, false, x, y)
+      return true
+    }
+    const C = BRASA.cadencia
+    if (
+      porteira.fichas < 1 ||
+      agora - porteira.ultima < C.intervaloMinMs ||
+      fimDasBrasas.length >= C.simultaneas
+    ) {
+      return false
+    }
+    porteira.fichas -= 1
+    acender(anel, k, agora, true, x, y)
+    return true
+  }
+  /** Pede ignições perto de (x, y): atendido no próximo quadro animado. */
+  const pedir = (
+    x: number,
+    y: number,
+    quantos: number,
+    raio: number,
+    passoMs: number,
+    abertura: boolean,
+  ) => {
+    if (reduzido.matches || !animar || !preset.pulsosNoMeridiano) return
+    pedido.ativo = true
+    pedido.abertura = abertura
+    pedido.x = x
+    pedido.y = y
+    pedido.quantos = quantos
+    pedido.raio = raio
+    pedido.passoMs = passoMs
+  }
 
   let pronto = false
   const desenhar = (agora: number) => {
@@ -741,18 +1328,61 @@ export function montarGlobo(
     }
 
     const lanternaAtiva = preset.lanterna && lanterna.x > -9000
-    // Brasas ainda acesas (a lista está em ordem de fim).
+    // Quadro estático (sem aceleração ou com movimento reduzido): nada
+    // acende; só os `;` escolhidos ficam acesos e parados.
+    const parado = reduzido.matches || !animar
+    // Brasas plenas acesas ou agendadas (a lista está em ordem de fim).
     while (fimDasBrasas.length > 0 && (fimDasBrasas[0] ?? 0) <= agora) {
       fimDasBrasas.shift()
     }
-    let brasasAcesas = fimDasBrasas.length
-    const PULSO = CONFIG.pulso
-    const duracaoBrasa = PULSO.subidaMs + PULSO.esfriaMs
+    const duracaoBrasa = BRASA.subidaMs + BRASA.esfriaMs
+    // Nada acende enquanto o globo nasce: a primeira brasa é a faísca da
+    // abertura.
+    const podeAcender =
+      !parado &&
+      preset.pulsosNoMeridiano &&
+      estado.escala > 0.999 &&
+      estado.revelacao > 0.999
+    // O meridiano e a lanterna só acendem depois da faísca da abertura.
+    const podeAcenderSozinho = podeAcender && !aberturaPendente
+    // Balde de fichas da cadência: enche com o tempo, até a rajada.
+    if (!parado) {
+      const C = BRASA.cadencia
+      if (porteira.recarga > 0) {
+        porteira.fichas = Math.min(
+          C.rajada,
+          porteira.fichas + ((agora - porteira.recarga) / 1000) * C.porSegundo,
+        )
+      }
+      porteira.recarga = agora
+    }
+    // O que está na tela, em px do canvas: a seção pode ser mais alta que a
+    // janela, a página pode ter rolado, o header e o véu cobrem as pontas.
+    // Depois de rolar, o header fica opaco e cobre o topo; embaixo, o véu.
+    const rolado = window.scrollY - topoNaPagina
+    const vistaT = Math.max(
+      0,
+      rolado +
+        (document.documentElement.hasAttribute("data-rolado")
+          ? alturaHeader
+          : 0),
+    )
+    const vistaB = Math.min(H, rolado + alturaJanela, limiteDoVeu)
+    const deslocMeridiano = meridianoIgnicao
+    const deslocMeridiano2 = meridianoIgnicao2
+    const doisMeridianos = !Number.isNaN(deslocMeridiano2)
+    const lanternaAcende =
+      podeAcenderSozinho && lanternaAtiva && (!toque || BRASA.lanterna.autonoma)
+    const raioAcende2 = BRASA.lanterna.raioPx * BRASA.lanterna.raioPx
+    const juntar = pedido.ativo && podeAcender
+    if (juntar) candidatos.length = 0
+    let nRegistros = 0
 
     const alturaGlifo = atlasDeLinhas.altura / dpr
     const alturaAtlas = atlasDeLinhas.altura
     const imagem = atlasDeLinhas.canvas
     const xLaranja = atlasDeLinhas.ponto.xLaranja
+    const linhasLaranja = atlasDeLinhas.laranja
     const zonaTransicao = CONFIG.layout.zonaCalma.transicaoPx
     const calmaMin = Math.min(
       1,
@@ -780,11 +1410,12 @@ export function montarGlobo(
       largura: number,
       altura: number,
       alfa: number,
+      fonte: CanvasImageSource = imagem,
     ) => {
       ctx.setTransform(dpr * c, dpr * s, -dpr * s, dpr * c, x * dpr, y * dpr)
       definirAlfa(alfa)
       ctx.drawImage(
-        imagem,
+        fonte,
         sx,
         p.sy,
         p.sw,
@@ -794,6 +1425,112 @@ export function montarGlobo(
         largura,
         altura,
       )
+    }
+
+    // Quadro estático: escolhe os `;` que ficam acesos e parados. Só a
+    // conta da projeção do centro de cada `;` (nenhuma chamada de Canvas):
+    // os mais de frente, na tela, longe da zona calma e afastados entre si.
+    if (escolherFixas) {
+      escolherFixas = false
+      const E = BRASA.estatico
+      const escolhidos: { x: number; y: number }[] = []
+      const minimo = E.distanciaMinR * Rv
+      const fundoFixas = Math.min(vistaB, topoDoVeu) - 12
+      // Um ponto da esfera (antes da matriz) serve para brasa parada? De
+      // frente, longe das bordas, acima do topo do véu, fora da zona calma
+      // (com a régua da brasa plena) e afastado das já escolhidas.
+      const naFaixa = (px: number, y: number, pz: number) => {
+        const frente = t6 * px + t7 * y + t8 * pz
+        if (frente < 0.35) return null
+        const qz = m6 * px + m7 * y + m8 * pz
+        const sp = F / (F - qz)
+        const x = centroX + (m0 * px + m1 * y + m2 * pz) * Rv * sp
+        const yy = centroY + (m3 * px + m4 * y + m5 * pz) * Rv * sp
+        if (x < 24 || x > W - 24 || yy < vistaT + 24 || yy > fundoFixas) {
+          return null
+        }
+        const fora = suave(distanciaCalma(x, yy) / zonaTransicao)
+        if (fora < BRASA.foraMinimo) return null
+        if (escolhidos.some((o) => Math.hypot(o.x - x, o.y - yy) < minimo)) {
+          return null
+        }
+        return { x, y: yy, frente }
+      }
+      candidatos.length = 0
+      for (const anel of aneis) {
+        anel.fixa.fill(0)
+        if (anel.alvo < 1) continue
+        const rotacao = anel.rot + rotExtra
+        const cr = Math.cos(rotacao)
+        const sr = Math.sin(rotacao)
+        anel.pecas.forEach((p, k) => {
+          if (!p.semicolon) return
+          let cm = (p.c1 + p.c2) * cr - (p.s1 + p.s2) * sr
+          let sm = (p.s1 + p.s2) * cr + (p.c1 + p.c2) * sr
+          const norma = Math.sqrt(cm * cm + sm * sm) || 1
+          cm /= norma
+          sm /= norma
+          const ponto = naFaixa(-anel.r * cm, anel.y, anel.r * sm)
+          if (ponto) {
+            candidatos.push({
+              anel,
+              k,
+              x: ponto.x,
+              y: ponto.y,
+              d: -ponto.frente,
+            })
+          }
+        })
+      }
+      candidatos.sort((a, b) => a.d - b.d)
+      for (const cand of candidatos) {
+        if (escolhidos.length >= E.quantos) break
+        if (
+          escolhidos.some(
+            (o) => Math.hypot(o.x - cand.x, o.y - cand.y) < minimo,
+          )
+        ) {
+          continue
+        }
+        cand.anel.fixa[cand.k] = 1
+        escolhidos.push(cand)
+      }
+      candidatos.length = 0
+      // Faixa estreita (celular) sem `;` suficientes nela: gira o anel até
+      // um `;` cair num meridiano de ignição dentro da faixa. No quadro
+      // parado ninguém vê o anel girar, e ele segue preso aos glifos.
+      const longitudes = [meridianoIgnicao, meridianoIgnicao2, 0, 0.3, -0.3]
+      for (const anel of aneis) {
+        if (escolhidos.length >= E.quantos) break
+        if (anel.alvo < 1 || anel.fixa.includes(1)) continue
+        for (const lambda of longitudes) {
+          if (Number.isNaN(lambda)) continue
+          const ponto = naFaixa(
+            anel.r * Math.sin(lambda),
+            anel.y,
+            anel.r * Math.cos(lambda),
+          )
+          if (!ponto) continue
+          // O `;` mais perto dessa longitude (ângulo no anel = lf + 90°).
+          const alvo = lambda + Math.PI / 2 - anel.rot - rotExtra
+          let melhor = -1
+          let menor = Number.POSITIVE_INFINITY
+          anel.pecas.forEach((p, k) => {
+            if (!p.semicolon) return
+            const desvio = Math.abs(envolve(p.theta + p.dTheta / 2 - alvo))
+            if (desvio < menor) {
+              menor = desvio
+              melhor = k
+            }
+          })
+          const p = anel.pecas[melhor]
+          if (!p) break
+          anel.rot += envolve(alvo - (p.theta + p.dTheta / 2))
+          anel.fixa[melhor] = 1
+          escolhidos.push(ponto)
+          break
+        }
+      }
     }
 
     // Hemisfério de trás: presença em fade (degrau, fim da entrada) e
@@ -813,7 +1550,8 @@ export function montarGlobo(
         if (presenca <= 0.001) {
           if (!anel.dormindo) {
             // Volta sem pulsos falsos: o meridiano recomeça do zero.
-            anel.ladoAnterior.fill(0)
+            anel.meridiano.fill(0)
+            anel.meridiano2.fill(0)
             anel.dormindo = true
           }
           continue
@@ -911,44 +1649,19 @@ export function montarGlobo(
           alfa *= alfaAnel
           // Zona calma: atrás do bloco de texto o globo é só sugestão. O
           // fator vale também para brasas e lanterna (aplicado no fim).
+          // `fora` (0 na caixa do texto, 1 a `transicaoPx` dela) é o que
+          // libera os efeitos da brasa: dentro, só a troca de cor.
           let fatorCalma = 1
-          if (calma.ativa && !atras) {
-            const fx = Math.max(calma.l - meioX, meioX - calma.r, 0)
-            const fy = Math.max(calma.t - meioY, meioY - calma.b, 0)
-            const fora = suave(Math.sqrt(fx * fx + fy * fy) / zonaTransicao)
-            fatorCalma = calmaMin + (1 - calmaMin) * fora
-            alfa *= fatorCalma
+          let fora = 1
+          if (!atras) {
+            const d = distanciaCalma(meioX, meioY)
+            if (d < zonaTransicao) {
+              fora = suave(d / zonaTransicao)
+              fatorCalma = calmaMin + (1 - calmaMin) * fora
+              alfa *= fatorCalma
+            }
           }
           if (alfa <= 0.01) continue
-
-          // Cruzamento do meridiano pelo `;`: acende a brasa.
-          let brasa = 0
-          if (p.semicolon && !atras) {
-            const lado = lf >= 0 ? 1 : -1
-            const anterior = anel.ladoAnterior[k] ?? 0
-            if (
-              preset.pulsosNoMeridiano &&
-              anterior < 0 &&
-              lado > 0 &&
-              Math.abs(lf) < 0.3 &&
-              brasasAcesas < CONFIG.pulsosSimultaneos
-            ) {
-              anel.pulsos[k] = agora
-              fimDasBrasas.push(agora + duracaoBrasa)
-              brasasAcesas += 1
-            }
-            anel.ladoAnterior[k] = lado
-            const inicio = anel.pulsos[k] ?? 0
-            const decorrido = agora - inicio
-            if (inicio > 0 && decorrido < duracaoBrasa) {
-              // Acende rápido e esfria devagar (curva de brasa).
-              const esfriou = (decorrido - PULSO.subidaMs) / PULSO.esfriaMs
-              brasa =
-                decorrido < PULSO.subidaMs
-                  ? suave(decorrido / PULSO.subidaMs)
-                  : (1 - esfriou) * (1 - esfriou)
-            }
-          }
 
           let alfaTinta = alfa
           if (lanternaAtiva && !atras) {
@@ -957,27 +1670,193 @@ export function montarGlobo(
             const d = Math.sqrt(lx * lx + ly * ly)
             const foco = 1 - suave((d - 40) / CONFIG.raioLanterna)
             if (foco > 0)
-              alfaTinta = alfa + (0.95 * alfaAnel - alfa) * foco * fatorCalma
+              alfaTinta = alfa + (0.95 * alfaAnel - alfa) * foco * fora
           }
 
-          if (brasa > 0) {
-            // Brilho laranja atrás, tinta saindo e laranja entrando.
-            const raio = altura * PULSO.brilhoRaio
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-            definirAlfa(PULSO.brilhoAlfa * brasa * fatorCalma * alfaAnel)
-            ctx.drawImage(
-              brilho,
-              meioX - raio,
-              meioY - raio,
-              raio * 2,
-              raio * 2,
-            )
-            const tinta = alfaTinta * (1 - brasa)
-            if (tinta > 0.01) {
-              pintar(p.sx, p, ax, ay, c, s, largura, altura, tinta)
+          if (atras) {
+            pintar(p.sx, p, ax, ay, c, s, largura, altura, alfaTinta)
+            continue
+          }
+
+          if (p.semicolon) {
+            // Brasa do `;`: parada (quadro estático) ou pelo tempo.
+            let brasa = 0
+            let plena = false
+            let decorrido = -1
+            if (parado) {
+              if (anel.fixa[k] === 1) {
+                brasa = BRASA.estatico.nivel
+                plena = true
+              }
+            } else {
+              // Cruzamento do(s) meridiano(s) de ignição. O deslocamento do
+              // celular vale só para a ignição: `lf` também desenha a fita.
+              const lfIg =
+                deslocMeridiano === 0 ? lf : envolve(lf - deslocMeridiano)
+              const inicio = anel.pulsos[k] ?? 0
+              const livre = inicio <= 0 || agora - inicio >= duracaoBrasa
+              let meridiano = avancarMeridiano(
+                anel.meridiano[k] ?? 0,
+                lfIg,
+                livre,
+                podeAcenderSozinho,
+              )
+              let meridiano2 = 2
+              if (doisMeridianos) {
+                meridiano2 = avancarMeridiano(
+                  anel.meridiano2[k] ?? 0,
+                  envolve(lf - deslocMeridiano2),
+                  livre,
+                  podeAcenderSozinho,
+                )
+              }
+              const armado = meridiano === 1 || meridiano2 === 1
+              if (podeAcender && livre) {
+                // Na tela inteira: longe da borda, o brilho não sai cortado.
+                const naTela =
+                  meioX >= 12 &&
+                  meioX <= W - 12 &&
+                  meioY >= vistaT &&
+                  meioY <= vistaB
+                // Sob a lanterna (mouse ou passeio autônomo), se não acendeu
+                // há pouco: com o ponteiro parado, o mesmo `;` não repisca.
+                let sob = false
+                if (
+                  !armado &&
+                  lanternaAcende &&
+                  (inicio <= 0 || agora - inicio >= BRASA.lanterna.recargaMs)
+                ) {
+                  const lx = lanterna.x - meioX
+                  const ly = lanterna.y - meioY
+                  sob = lx * lx + ly * ly < raioAcende2
+                }
+                if (armado) {
+                  // Fora da tela não há o que esperar: desiste nesta volta.
+                  if (
+                    !naTela ||
+                    tentarAcender(anel, k, meioX, meioY, fora, naTela, agora)
+                  ) {
+                    if (meridiano === 1) meridiano = 2
+                    if (meridiano2 === 1) meridiano2 = 2
+                  }
+                } else if (sob) {
+                  tentarAcender(anel, k, meioX, meioY, fora, naTela, agora)
+                } else if (
+                  juntar &&
+                  naTela &&
+                  zi > 0.2 &&
+                  fora >= BRASA.foraMinimo
+                ) {
+                  const ddx = meioX - pedido.x
+                  const ddy = meioY - pedido.y
+                  const d = Math.sqrt(ddx * ddx + ddy * ddy)
+                  if (d <= pedido.raio) {
+                    candidatos.push({ anel, k, x: meioX, y: meioY, d })
+                  }
+                }
+              }
+              anel.meridiano[k] = meridiano
+              if (doisMeridianos) anel.meridiano2[k] = meridiano2
+              const ini = anel.pulsos[k] ?? 0
+              decorrido = agora - ini
+              if (ini > 0 && decorrido >= 0 && decorrido < duracaoBrasa) {
+                // Acende rápido e esfria devagar (curva de brasa).
+                const esfriou = (decorrido - BRASA.subidaMs) / BRASA.esfriaMs
+                brasa =
+                  decorrido < BRASA.subidaMs
+                    ? suave(decorrido / BRASA.subidaMs)
+                    : (1 - esfriou) * (1 - esfriou)
+                plena = anel.plena[k] === 1
+              }
             }
-            const acesa = alfa + (0.95 * alfaAnel - alfa) * fatorCalma
-            pintar(xLaranja, p, ax, ay, c, s, largura, altura, acesa * brasa)
+            if (brasa <= 0) {
+              pintar(p.sx, p, ax, ay, c, s, largura, altura, alfaTinta)
+              continue
+            }
+            // Tinta saindo; o laranja entra por cima. Na subida a tinta sai
+            // mais rápido que o laranja entra: o `;` que pula já é laranja,
+            // não um `;` preto grande.
+            const sai = 1 - brasa
+            const tinta =
+              alfaTinta * (decorrido < BRASA.subidaMs ? sai * sai : sai)
+            const acesa = alfa + (0.95 * alfaAnel - alfa) * fora
+            const registro = plena ? registros[nRegistros] : undefined
+            if (registro) {
+              // Plena: o passe das brasas desenha brilho, onda, a tinta
+              // saindo e o `;` negrito, os dois com o mesmo pulo (senão o
+              // crossfade mostra dois `;` de tamanhos diferentes).
+              nRegistros += 1
+              let cm = cl + cl2
+              let sm = sl + sl2
+              const norma = Math.sqrt(cm * cm + sm * sm) || 1
+              cm /= norma
+              sm /= norma
+              registro.x = meioX
+              registro.y = meioY
+              registro.c = c
+              registro.s = s
+              registro.largura = largura
+              registro.altura = altura
+              registro.acesa = acesa
+              registro.tinta = tinta
+              registro.brasa = brasa
+              registro.decorrido = decorrido
+              registro.fora = fora
+              registro.alfaAnel = alfaAnel
+              registro.ex = -r * cm
+              registro.ey = y
+              registro.ez = r * sm
+              registro.cm = cm
+              registro.sm = sm
+            } else {
+              // Zona calma: só a cor, atenuada.
+              if (tinta > 0.01) {
+                pintar(p.sx, p, ax, ay, c, s, largura, altura, tinta)
+              }
+              pintar(xLaranja, p, ax, ay, c, s, largura, altura, acesa * brasa)
+            }
+            continue
+          }
+
+          // A linha compila: uma onda quente corre a instrução cujo `;`
+          // acabou de acender, do começo dela até ele. Fora da zona calma.
+          let calor = 0
+          if (!parado && linhasLaranja && p.ponto >= 0) {
+            const ini = anel.pulsos[p.ponto] ?? 0
+            if (ini > 0 && anel.plena[p.ponto] === 1) {
+              const L = BRASA.compila.largura
+              const frente =
+                -L + ((agora - ini) / BRASA.compila.duracaoMs) * (1 + 2 * L)
+              const distancia = Math.abs(frente - p.fracao)
+              if (distancia < L) {
+                calor = BRASA.compila.pico * (1 - suave(distancia / L)) * fora
+              }
+            }
+          }
+          if (calor > 0.01) {
+            pintar(
+              p.sx,
+              p,
+              ax,
+              ay,
+              c,
+              s,
+              largura,
+              altura,
+              alfaTinta * (1 - calor),
+            )
+            pintar(
+              p.sx,
+              p,
+              ax,
+              ay,
+              c,
+              s,
+              largura,
+              altura,
+              alfaTinta * calor,
+              linhasLaranja ?? imagem,
+            )
           } else {
             pintar(p.sx, p, ax, ay, c, s, largura, altura, alfaTinta)
           }
@@ -986,6 +1865,219 @@ export function montarGlobo(
       }
     }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+    // Pedido atendido (cascata da abertura, toque): os `;` livres mais perto
+    // do ponto, afastados entre si (nunca dois vizinhos na mesma linha),
+    // respeitando o teto de simultâneas. A cascata da abertura é uma vez só
+    // e mantém os 180 ms; o toque passa pela porteira como qualquer brasa
+    // (uma ficha cada, intervalo mínimo desde a última): tocar sem parar
+    // nunca vira pisca-pisca.
+    if (juntar) {
+      pedido.ativo = false
+      const C = BRASA.cadencia
+      const passo = pedido.abertura
+        ? pedido.passoMs
+        : Math.max(pedido.passoMs, C.intervaloMinMs)
+      const primeiraDaCascata = porteira.ultima + C.intervaloMinMs
+      if (pedido.abertura) aberturaPendente = false
+      candidatos.sort((a, b) => a.d - b.d)
+      const escolhidos: { x: number; y: number }[] = []
+      const minimo = 3 * alturaGlifo
+      for (const cand of candidatos) {
+        if (escolhidos.length >= pedido.quantos) break
+        if (fimDasBrasas.length >= C.simultaneas) break
+        const perto = escolhidos.some(
+          (o) => Math.hypot(o.x - cand.x, o.y - cand.y) < minimo,
+        )
+        if (perto) continue
+        let inicio = agora + escolhidos.length * passo
+        if (pedido.abertura) {
+          // A cascata é a primeira brasa; se alguma acendeu no mesmo
+          // instante, ela espera o intervalo mínimo antes de começar.
+          inicio =
+            Math.max(agora, primeiraDaCascata) + escolhidos.length * passo
+        } else {
+          if (porteira.fichas < 1) break
+          porteira.fichas -= 1
+          inicio = Math.max(inicio, porteira.ultima + C.intervaloMinMs)
+        }
+        acender(cand.anel, cand.k, inicio, true, cand.x, cand.y)
+        escolhidos.push(cand)
+      }
+      candidatos.length = 0
+    }
+
+    // Passe das brasas plenas, por cima dos anéis: brilho, onda e `;`
+    // negrito com o pulo de escala.
+    let eco = 0
+    if (nRegistros > 0) {
+      const intensidade = BRASA.intensidade
+      // Brilho em duas camadas, em `multiply`: tinge de laranja o fundo e os
+      // glifos por baixo sem lavar a tinta (o `lighter` some no fundo claro).
+      ctx.globalCompositeOperation = "multiply"
+      for (let i = 0; i < nRegistros; i += 1) {
+        const b = registros[i]
+        if (!b) continue
+        const nivel = b.brasa * b.fora * b.alfaAnel * intensidade
+        if (nivel <= 0.01) continue
+        // O brilho nunca entra na caixa calma: o raio para na distância até
+        // ela (o sprite chega a zero na borda).
+        const ateCalma = distanciaCalma(b.x, b.y)
+        const rh = Math.min(
+          ateCalma,
+          Math.max(b.altura * BRASA.halo.raio, BRASA.halo.raioMinPx),
+        )
+        ctx.globalAlpha = Math.min(1, BRASA.halo.alfa * nivel)
+        ctx.drawImage(haloBrasa, b.x - rh, b.y - rh, rh * 2, rh * 2)
+        const rn = Math.min(
+          ateCalma,
+          Math.max(b.altura * BRASA.nucleo.raio, BRASA.nucleo.raioMinPx),
+        )
+        ctx.globalAlpha = Math.min(1, BRASA.nucleo.alfa * nivel)
+        ctx.drawImage(nucleo, b.x - rn, b.y - rn, rn * 2, rn * 2)
+      }
+      ctx.globalCompositeOperation = "source-over"
+
+      // Onda: círculo geodésico em volta do `;` (raio angular crescendo),
+      // projetado com a esfera, então a curvatura do planeta aparece. Só na
+      // frente, nunca na zona calma (o traço se interrompe ali), e some
+      // quando o globo achata em fita.
+      const O = BRASA.onda
+      const curvaOnda = suave((curva - 0.8) / 0.2)
+      if (curvaOnda > 0) {
+        ctx.strokeStyle = CONFIG.cores.laranja
+        ctx.lineWidth = O.espessuraPx
+        const rhoMax = Math.max(O.raioRad, O.raioMinPx / Math.max(Rv, 1))
+        for (let i = 0; i < nRegistros; i += 1) {
+          const b = registros[i]
+          if (!b || b.decorrido < 0 || b.decorrido >= O.duracaoMs) continue
+          const u = b.decorrido / O.duracaoMs
+          const resta = 1 - u
+          const alfaOnda =
+            O.alfa *
+            intensidade *
+            resta *
+            Math.sqrt(resta) *
+            b.fora *
+            b.alfaAnel *
+            curvaOnda
+          if (alfaOnda <= 0.01) continue
+          const rho = rhoMax * (1 - resta * resta * resta)
+          const cosR = Math.cos(rho)
+          const sinR = Math.sin(rho)
+          // Base tangente no `;`: e1 ao longo do paralelo, e2 = P × e1.
+          const e1x = b.sm
+          const e1z = b.cm
+          const e2x = b.ey * b.cm
+          const e2y = Math.sqrt(b.ex * b.ex + b.ez * b.ez)
+          const e2z = -b.ey * b.sm
+          ctx.beginPath()
+          let caneta = false
+          for (let j = 0; j <= pontosOnda; j += 1) {
+            const cf = ondaCos[j] ?? 1
+            const sf = ondaSen[j] ?? 0
+            const qx = cosR * b.ex + sinR * (cf * e1x + sf * e2x)
+            const qy = cosR * b.ey + sinR * sf * e2y
+            const qw = cosR * b.ez + sinR * (cf * e1z + sf * e2z)
+            if (t6 * qx + t7 * qy + t8 * qw < 0.02) {
+              caneta = false
+              continue
+            }
+            const zq = m6 * qx + m7 * qy + m8 * qw
+            const sq = F / (F - zq)
+            const X = centroX + (m0 * qx + m1 * qy + m2 * qw) * Rv * sq
+            const Y = centroY + (m3 * qx + m4 * qy + m5 * qw) * Rv * sq
+            if (distanciaCalma(X, Y) === 0) {
+              caneta = false
+              continue
+            }
+            if (caneta) ctx.lineTo(X, Y)
+            else ctx.moveTo(X, Y)
+            caneta = true
+          }
+          ctx.globalAlpha = Math.min(1, alfaOnda)
+          ctx.stroke()
+        }
+      }
+
+      // `;` negrito, com o pulo em torno do centro do glifo. Na borda da
+      // zona calma ele volta ao peso da grade em crossfade (por `fora`),
+      // sem trocar de glifo num quadro.
+      const PA = atlasDeLinhas.ponto
+      const proporcao = PA.wNegrito / PA.w
+      const E = BRASA.escala
+      const ECO = BRASA.ecoPolos
+      for (let i = 0; i < nRegistros; i += 1) {
+        const b = registros[i]
+        if (!b) continue
+        const animada = b.decorrido >= 0
+        const salto = animada ? pulo(b.decorrido / E.duracaoMs) : 0
+        const escala = 1 + E.pico * intensidade * salto * b.fora
+        // Eco nos polos: cada ignição soma um impulso curto, com teto.
+        if (animada && b.decorrido < ECO.duracaoMs) {
+          const subida = Math.min(1, b.decorrido / 80)
+          eco += subida * (1 - suave(b.decorrido / ECO.duracaoMs)) * b.fora
+        }
+        ctx.setTransform(
+          dpr * b.c,
+          dpr * b.s,
+          -dpr * b.s,
+          dpr * b.c,
+          b.x * dpr,
+          b.y * dpr,
+        )
+        if (b.tinta > 0.01) {
+          const lw = b.largura * escala
+          const lh = b.altura * escala
+          ctx.globalAlpha = Math.min(1, b.tinta)
+          ctx.drawImage(
+            imagem,
+            PA.xTinta,
+            PA.y,
+            PA.w,
+            alturaAtlas,
+            -lw / 2,
+            -lh / 2,
+            lw,
+            lh,
+          )
+        }
+        const alfaNegrito = b.acesa * b.brasa * b.fora
+        if (alfaNegrito > 0.01) {
+          const dw = b.largura * proporcao * escala
+          const dh = b.altura * escala
+          ctx.globalAlpha = Math.min(1, alfaNegrito)
+          ctx.drawImage(
+            imagem,
+            PA.xNegrito,
+            PA.y,
+            PA.wNegrito,
+            alturaAtlas,
+            -dw / 2,
+            -dh / 2,
+            dw,
+            dh,
+          )
+        }
+        const alfaRegular = b.acesa * b.brasa * (1 - b.fora)
+        if (alfaRegular > 0.01) {
+          ctx.globalAlpha = Math.min(1, alfaRegular)
+          ctx.drawImage(
+            imagem,
+            PA.xLaranja,
+            PA.y,
+            PA.w,
+            alturaAtlas,
+            -b.largura / 2,
+            -b.altura / 2,
+            b.largura,
+            b.altura,
+          )
+        }
+      }
+      eco = Math.min(ECO.teto, eco) * intensidade
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
 
     // Aro de luz na borda superior direita.
     if (curva > 0.01) {
@@ -1006,9 +2098,13 @@ export function montarGlobo(
       ctx.stroke()
     }
 
-    // Polos: dois `;` grandes, laranja, projetados com a esfera.
+    // Polos: dois `;` grandes, laranja, projetados com a esfera. Respiram
+    // devagar e, a cada ignição, mais forte por um instante (eco, somado no
+    // passe das brasas, com teto); somem na fita junto com a curvatura. O
+    // polo que cai na zona calma (no celular, o globo fica atrás do texto)
+    // é atenuado como os glifos de lá, e ali não tem eco.
     if (estado.polos > 0.01) {
-      const respira =
+      const base =
         1 +
         CONFIG.respiracaoPolos *
           0.5 *
@@ -1019,13 +2115,26 @@ export function montarGlobo(
         const qy = m4 * py
         const qz = m7 * py
         const sp = F / (F - qz)
+        const foraPolo = suave(
+          distanciaCalma(centroX + qx * Rv * sp, centroY + qy * Rv * sp) /
+            zonaTransicao,
+        )
+        const ecoPolo = eco * foraPolo
+        const respira = base + BRASA.ecoPolos.escala * ecoPolo
+        const realce = 1 + BRASA.ecoPolos.alfa * ecoPolo
         const tamanho = Rv * 0.17 * respira * sp
         ctx.font = `700 ${tamanho}px ${familia}`
         ctx.fillStyle = CONFIG.cores.laranja
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
-        ctx.globalAlpha =
-          estado.polos * curva * (0.55 + 0.45 * suave((qz + 0.3) / 0.6))
+        ctx.globalAlpha = Math.min(
+          1,
+          estado.polos *
+            curva *
+            (0.55 + 0.45 * suave((qz + 0.3) / 0.6)) *
+            realce *
+            foraPolo,
+        )
         ctx.save()
         ctx.translate(centroX + qx * Rv * sp, centroY + qy * Rv * sp)
         ctx.rotate(tiltZ * curva)
@@ -1104,6 +2213,34 @@ export function montarGlobo(
       }
     }
     tras.presenca = aproximar(tras.presenca, alvoTras(), fade)
+    // Aparelho híbrido: enquanto o mouse se mexe (e por `pausaMouseMs`
+    // depois), ele manda na lanterna; o passeio só volta sem ele.
+    if (
+      toque &&
+      preset.lanterna &&
+      agora - ultimoMouse > CONFIG.lanternaAutonoma.pausaMouseMs
+    ) {
+      // Sem ponteiro, a lanterna passeia sozinha (Lissajous) pela parte
+      // visível do globo fora do texto: o globo continua vivo no toque.
+      // O alvo fica na faixa e dentro do disco (corda na altura dele): as
+      // duas regiões são convexas, então o caminho amortecido também fica.
+      const LA = CONFIG.lanternaAutonoma
+      const fase = ((agora / 1000) * Math.PI * 2) / LA.periodoS
+      const y = Math.min(
+        passeio.y1,
+        Math.max(passeio.y0, passeio.cy + passeio.ay * Math.sin(LA.fy * fase)),
+      )
+      const dy = y - passeio.gy
+      const meiaCorda = Math.sqrt(
+        Math.max(0, passeio.gr * passeio.gr - dy * dy),
+      )
+      const xMin = Math.max(passeio.x0, passeio.gx - meiaCorda)
+      const xMax = Math.min(passeio.x1, passeio.gx + meiaCorda)
+      const x = passeio.cx + passeio.ax * Math.sin(LA.fx * fase)
+      lanterna.alvoX =
+        xMin <= xMax ? Math.min(xMax, Math.max(xMin, x)) : (xMin + xMax) / 2
+      lanterna.alvoY = y
+    }
     const k = 1 - Math.pow(0.001, dt) // ~300 ms de inércia
     lanterna.x += (lanterna.alvoX - lanterna.x) * k
     lanterna.y += (lanterna.alvoY - lanterna.y) * k
@@ -1158,10 +2295,19 @@ export function montarGlobo(
   }
 
   const amostrasIniciais: number[] = []
+  // Fim da cascata da abertura (ms): até lá a decisão rápida não amostra, para
+  // as brasas da abertura não empurrarem um aparelho no limite para o estático.
+  let medirDepoisDe = 0
   const adaptar = (custo: number, agora: number) => {
     // Durante a entrada o globo ainda é pequeno e tem poucos glifos: esses
     // quadros baratos não dizem nada sobre o custo em regime.
     if (estado.escala < 0.999 || estado.revelacao < 0.999) return
+    if (
+      amostrasIniciais.length < DESEMPENHO.amostrasParaDecidir &&
+      agora < medirDepoisDe
+    ) {
+      return
+    }
     // Decisão rápida: mediana dos primeiros quadros com o globo completo
     // (depois do aquecimento). Caro demais logo de cara é renderização por
     // software que o navegador não admitiu, ou aparelho lento: fica estático.
@@ -1276,6 +2422,37 @@ export function montarGlobo(
       { polos: 1, duration: 0.3 * fatorEntrada, ease: "power1.out" },
       (inicioRevelacao + 0.75) * fatorEntrada,
     )
+    if (preset.nasceNoTitulo && preset.pulsosNoMeridiano) {
+      // Abertura com faísca: o globo acabou de nascer do `;` do título e uma
+      // cascata curta de brasas, da mais perto do título para dentro do
+      // planeta, liga um ao outro. Só no modo animado (`pedir` confere).
+      const A = CONFIG.brasa.abertura
+      linha.call(
+        () => {
+          medirDepoisDe =
+            performance.now() +
+            A.quantos * A.passoMs +
+            CONFIG.brasa.subidaMs +
+            CONFIG.brasa.esfriaMs
+          // Sem a faísca (sem âncora ou sem animação), o ritmo normal começa já.
+          if (!ponto.ativo || reduzido.matches || !animar) {
+            aberturaPendente = false
+          }
+          if (ponto.ativo) {
+            pedir(
+              ponto.x,
+              ponto.y,
+              A.quantos,
+              Number.POSITIVE_INFINITY,
+              A.passoMs,
+              true,
+            )
+          }
+        },
+        undefined,
+        (inicioRevelacao + 0.95) * fatorEntrada,
+      )
+    }
   }
 
   /** Modo estático: um quadro final, redesenhado só na rolagem e no resize. */
@@ -1286,6 +2463,9 @@ export function montarGlobo(
     estado.deslocX = 0
     estado.deslocY = 0
     assentar()
+    // Os `;` acesos e parados são escolhidos de novo a cada quadro estático
+    // inteiro (início, resize); na rolagem eles seguem presos aos glifos.
+    escolherFixas = true
     desenhar(performance.now())
   }
 
@@ -1303,6 +2483,7 @@ export function montarGlobo(
   // --- eventos ---------------------------------------------------------------
   const aoMover = (e: PointerEvent) => {
     if (e.pointerType !== "mouse") return
+    ultimoMouse = performance.now()
     const c = canvas.getBoundingClientRect()
     lanterna.alvoX = e.clientX - c.left
     lanterna.alvoY = e.clientY - c.top
@@ -1315,7 +2496,26 @@ export function montarGlobo(
       2 *
       CONFIG.parallaxGraus
   }
-  const aoSair = () => {
+  /**
+   * Toque no hero acende os `;` mais perto do dedo (no próximo quadro). O
+   * ouvinte é passivo e nada é cancelado: a rolagem e os CTAs seguem
+   * intocados. Toque no bloco de texto não acende nada.
+   */
+  const aoTocar = (e: PointerEvent) => {
+    if (e.pointerType === "mouse" || !montado) return
+    const agora = performance.now()
+    const T = CONFIG.brasa.toque
+    if (agora - ultimoToque < T.intervaloMs) return
+    const c = canvas.getBoundingClientRect()
+    const x = e.clientX - c.left
+    const y = e.clientY - c.top
+    if (distanciaCalma(x, y) === 0) return
+    ultimoToque = agora
+    pedir(x, y, T.quantos, T.raioPx, T.passoMs, false)
+  }
+  const aoSair = (e: PointerEvent) => {
+    // O dedo que sobe também "sai": no toque a lanterna é a autônoma.
+    if (e.pointerType !== "mouse") return
     lanterna.alvoX = -9999
     lanterna.alvoY = -9999
     parallax.alvoX = 0
@@ -1348,6 +2548,9 @@ export function montarGlobo(
     if (!montado) return
     if (reduzido.matches) {
       dormir()
+      // A entrada termina na hora: sem isso, a timeline seguiria mexendo no
+      // estado por baixo do quadro estático.
+      linha.progress(1).pause()
       quadroEstatico()
     } else {
       acordar()
@@ -1355,9 +2558,9 @@ export function montarGlobo(
   }
 
   // --- início ----------------------------------------------------------------
-  // Montagem em dois ciclos ociosos (geometria e atlas; depois anéis e grão)
-  // para nenhuma tarefa passar de ~20 ms; o primeiro quadro vem no quadro
-  // seguinte, nunca na mesma tarefa.
+  // Montagem em três ciclos ociosos (geometria; atlas; anéis e grão) para
+  // nenhuma tarefa pesar sozinha; o primeiro quadro vem no quadro seguinte,
+  // nunca na mesma tarefa.
   let cancelarMontagem: (() => void) | null = null
   let rafInicial = 0
   const iniciar = () => {
@@ -1365,16 +2568,22 @@ export function montarGlobo(
     // Diagnóstico (lido só por testes e capturas): modo e degrau atual.
     canvas.dataset.modo = reduzido.matches || !animar ? "estatico" : "animado"
     canvas.dataset.degrau = String(degrau)
+    canvas.dataset.ignicoes = "0"
+    canvas.dataset.ignicoesVisiveis = "0"
     if (toque) {
-      lanterna.alvoX = cx
-      lanterna.alvoY = cy
-      lanterna.x = cx
-      lanterna.y = cy
+      // A lanterna autônoma parte do centro do passeio (ver `passo`).
+      lanterna.alvoX = passeio.cx
+      lanterna.alvoY = passeio.cy
+      lanterna.x = passeio.cx
+      lanterna.y = passeio.cy
     }
     montarEntrada()
     inicioDoMotor = performance.now()
     if (reduzido.matches || !animar) {
-      densidade = DESEMPENHO.estatico.densidade
+      densidade =
+        W < 768
+          ? DESEMPENHO.estatico.densidadeCelular
+          : DESEMPENHO.estatico.densidade
       trasNoDegrau = DESEMPENHO.estatico.tras
       definirAlvos()
       rafInicial = requestAnimationFrame(quadroEstatico)
@@ -1398,12 +2607,18 @@ export function montarGlobo(
     }
     iniciar()
   }
+  // Abertura em três tarefas ociosas: geometria, atlas, anéis (o primeiro
+  // quadro vem depois, num quadro de animação).
   cancelarMontagem = ocioso(() => {
     geometria()
-    cancelarMontagem = ocioso(etapaAneis, 500)
+    cancelarMontagem = ocioso(() => {
+      montarAtlas()
+      cancelarMontagem = ocioso(etapaAneis, 500)
+    }, 500)
   }, 500)
 
   window.addEventListener("pointermove", aoMover, { passive: true })
+  secao.addEventListener("pointerdown", aoTocar, { passive: true })
   document.addEventListener("pointerleave", aoSair)
   document.addEventListener("visibilitychange", aoVisibilidade)
   reduzido.addEventListener("change", aoMudarMovimento)
@@ -1412,6 +2627,7 @@ export function montarGlobo(
 
   return () => {
     cancelarMontagem?.()
+    cancelarLaranja?.()
     if (rafInicial) cancelAnimationFrame(rafInicial)
     dormir()
     gsap.ticker.fps(60)
@@ -1419,6 +2635,7 @@ export function montarGlobo(
     gatilho.kill()
     window.clearTimeout(esperaResize)
     window.removeEventListener("pointermove", aoMover)
+    secao.removeEventListener("pointerdown", aoTocar)
     document.removeEventListener("pointerleave", aoSair)
     document.removeEventListener("visibilitychange", aoVisibilidade)
     reduzido.removeEventListener("change", aoMudarMovimento)
