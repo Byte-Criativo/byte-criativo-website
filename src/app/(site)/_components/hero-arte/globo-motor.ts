@@ -108,8 +108,11 @@ type Anel = {
 /**
  * Atlas com as linhas de código já compostas, uma por faixa, caractere a
  * caractere na mesma grade espaçada de sempre (aspas já em azul, `;` em
- * branco); ao lado, a mesma grade toda em laranja (a linha que compila); e
- * uma faixa final com o `;` em tinta, em laranja e em laranja negrito.
+ * branco), e uma faixa final com o `;` em tinta, em laranja e em laranja
+ * negrito. A mesma grade toda em laranja (a linha que compila) é outro
+ * canvas, `laranja`, feito depois, num momento ocioso, e só quando o globo
+ * anima: no renderizador por software ela custava uma pintura grande dentro
+ * da tarefa de montagem.
  */
 type AtlasDeLinhas = {
   canvas: HTMLCanvasElement
@@ -118,8 +121,8 @@ type AtlasDeLinhas = {
   /** Largura do espaço (px do atlas). */
   espaco: number
   faixas: { y: number; recortes: { x: number; w: number }[] }[]
-  /** Deslocamento em x da cópia laranja das linhas. */
-  deslocLaranja: number
+  /** Linhas em laranja, na mesma grade (null até ficar pronta). */
+  laranja: HTMLCanvasElement | null
   ponto: {
     y: number
     w: number
@@ -338,11 +341,8 @@ function criarAtlasDeLinhas(
   const fonteNegrito = `700 ${tamanhoPx * dpr}px ${familia}`
   ctx.font = fonteNegrito
   const wNegrito = Math.ceil(ctx.measureText(";").width) + 2 * dpr
-  // A cópia laranja das linhas fica ao lado da de tinta, com folga para o
-  // filtro de um recorte não puxar a borda do outro.
-  const deslocLaranja = maisLarga + 2 * dpr
   // Mudar o tamanho do canvas zera o contexto: a fonte vem de novo depois.
-  canvas.width = Math.max(1, deslocLaranja + maisLarga, 2 * wPonto + wNegrito)
+  canvas.width = Math.max(1, maisLarga, 2 * wPonto + wNegrito)
   canvas.height = altura * (linhas.length + 1)
   ctx.font = fonte
   ctx.textBaseline = "middle"
@@ -354,27 +354,7 @@ function criarAtlasDeLinhas(
       ctx.fillText(ch, recorte.x + dpr, faixa.y + altura / 2)
     })
   })
-  // Linhas em laranja: copia a grade e recolore só onde há tinta
-  // (`source-atop`), em duas chamadas em vez de um fillText por caractere.
-  const alturaLinhas = linhas.length * altura
-  if (maisLarga > 0 && alturaLinhas > 0) {
-    ctx.drawImage(
-      canvas,
-      0,
-      0,
-      maisLarga,
-      alturaLinhas,
-      deslocLaranja,
-      0,
-      maisLarga,
-      alturaLinhas,
-    )
-    ctx.globalCompositeOperation = "source-atop"
-    ctx.fillStyle = CONFIG.cores.laranja
-    ctx.fillRect(deslocLaranja, 0, maisLarga, alturaLinhas)
-    ctx.globalCompositeOperation = "source-over"
-  }
-  const yPonto = alturaLinhas
+  const yPonto = linhas.length * altura
   ctx.fillStyle = CONFIG.cores.preto
   ctx.fillText(";", dpr, yPonto + altura / 2)
   ctx.fillStyle = CONFIG.cores.laranja
@@ -386,7 +366,7 @@ function criarAtlasDeLinhas(
     altura,
     espaco,
     faixas,
-    deslocLaranja,
+    laranja: null,
     ponto: {
       y: yPonto,
       w: wPonto,
@@ -396,6 +376,27 @@ function criarAtlasDeLinhas(
       wNegrito,
     },
   }
+}
+
+/**
+ * Linhas em laranja (a linha que compila): copia a grade de tinta e recolore
+ * só onde há tinta (`source-atop`), em duas chamadas em vez de um fillText
+ * por caractere. As faixas ficam nas mesmas coordenadas do atlas.
+ */
+function criarLinhasLaranja(atlas: AtlasDeLinhas): HTMLCanvasElement | null {
+  const largura = atlas.canvas.width
+  const altura = atlas.ponto.y
+  if (largura < 1 || altura < 1) return null
+  const canvas = document.createElement("canvas")
+  canvas.width = largura
+  canvas.height = altura
+  const ctx = canvas.getContext("2d")
+  if (!ctx) return null
+  ctx.drawImage(atlas.canvas, 0, 0, largura, altura, 0, 0, largura, altura)
+  ctx.globalCompositeOperation = "source-atop"
+  ctx.fillStyle = CONFIG.cores.laranja
+  ctx.fillRect(0, 0, largura, altura)
+  return canvas
 }
 
 /** Matriz 3×3 em linha (row-major). */
@@ -470,6 +471,8 @@ export function montarGlobo(
   let cy = 0
   let tamanhoFonte = 12
   let atlas: AtlasDeLinhas | null = null
+  // Agendamento da cópia laranja das linhas (ver `criarLinhasLaranja`).
+  let cancelarLaranja: (() => void) | null = null
   let aneis: Anel[] = []
   let padraoGrao: CanvasPattern | null = null
   const BRASA = CONFIG.brasa
@@ -667,10 +670,39 @@ export function montarGlobo(
     tras.presenca = alvoTras()
   }
 
+  // Fonte e DPR do atlas montado: o atlas só é refeito quando eles mudam.
+  let atlasMontado = ""
   /**
-   * Monta atlas e anéis. O gerador volta à semente a cada montagem e a
-   * rotação e a presença de cada anel passam para a montagem nova: resize e
-   * troca de DPR redesenham o mesmo globo, nunca outro.
+   * Monta o atlas de linhas (o passo mais caro da montagem: um fillText por
+   * caractere). Fica numa tarefa ociosa própria na abertura, para nenhuma
+   * tarefa da montagem passar muito de 50 ms no renderizador por software.
+   */
+  const montarAtlas = () => {
+    tamanhoFonte = Math.min(
+      CONFIG.layout.fonteMaxPx,
+      Math.max(CONFIG.layout.fonteMinPx, R / 30),
+    )
+    const chave = `${tamanhoFonte}@${dpr}`
+    if (atlas && chave === atlasMontado) return
+    atlas = criarAtlasDeLinhas(LINHAS_DE_CODIGO, tamanhoFonte, dpr, familia)
+    atlasMontado = atlas ? chave : ""
+    // A cópia laranja só serve ao globo animado e sai da tarefa de montagem.
+    cancelarLaranja?.()
+    cancelarLaranja = null
+    if (atlas && animar && !reduzido.matches) {
+      const doAtlas = atlas
+      cancelarLaranja = ocioso(() => {
+        cancelarLaranja = null
+        doAtlas.laranja = criarLinhasLaranja(doAtlas)
+      }, 1500)
+    }
+  }
+
+  /**
+   * Monta os anéis (e o atlas, se a fonte ou o DPR mudaram). O gerador volta
+   * à semente a cada montagem e a rotação e a presença de cada anel passam
+   * para a montagem nova: resize e troca de DPR redesenham o mesmo globo,
+   * nunca outro.
    */
   const montarAneis = () => {
     medidaMontada = `${W}x${H}@${dpr}`
@@ -683,11 +715,7 @@ export function montarGlobo(
       W < 768
         ? Math.min(preset.paralelos, CONFIG.paralelosCelular)
         : preset.paralelos
-    tamanhoFonte = Math.min(
-      CONFIG.layout.fonteMaxPx,
-      Math.max(CONFIG.layout.fonteMinPx, R / 30),
-    )
-    atlas = criarAtlasDeLinhas(LINHAS_DE_CODIGO, tamanhoFonte, dpr, familia)
+    montarAtlas()
     if (!atlas) return
     const { faixas, ponto: pontoAtlas } = atlas
     const espaco = atlas.espaco / dpr
@@ -1354,7 +1382,7 @@ export function montarGlobo(
     const alturaAtlas = atlasDeLinhas.altura
     const imagem = atlasDeLinhas.canvas
     const xLaranja = atlasDeLinhas.ponto.xLaranja
-    const deslocLaranja = atlasDeLinhas.deslocLaranja
+    const linhasLaranja = atlasDeLinhas.laranja
     const zonaTransicao = CONFIG.layout.zonaCalma.transicaoPx
     const calmaMin = Math.min(
       1,
@@ -1382,11 +1410,12 @@ export function montarGlobo(
       largura: number,
       altura: number,
       alfa: number,
+      fonte: CanvasImageSource = imagem,
     ) => {
       ctx.setTransform(dpr * c, dpr * s, -dpr * s, dpr * c, x * dpr, y * dpr)
       definirAlfa(alfa)
       ctx.drawImage(
-        imagem,
+        fonte,
         sx,
         p.sy,
         p.sw,
@@ -1792,7 +1821,7 @@ export function montarGlobo(
           // A linha compila: uma onda quente corre a instrução cujo `;`
           // acabou de acender, do começo dela até ele. Fora da zona calma.
           let calor = 0
-          if (!parado && p.ponto >= 0) {
+          if (!parado && linhasLaranja && p.ponto >= 0) {
             const ini = anel.pulsos[p.ponto] ?? 0
             if (ini > 0 && anel.plena[p.ponto] === 1) {
               const L = BRASA.compila.largura
@@ -1817,7 +1846,7 @@ export function montarGlobo(
               alfaTinta * (1 - calor),
             )
             pintar(
-              p.sx + deslocLaranja,
+              p.sx,
               p,
               ax,
               ay,
@@ -1826,6 +1855,7 @@ export function montarGlobo(
               largura,
               altura,
               alfaTinta * calor,
+              linhasLaranja ?? imagem,
             )
           } else {
             pintar(p.sx, p, ax, ay, c, s, largura, altura, alfaTinta)
@@ -2528,9 +2558,9 @@ export function montarGlobo(
   }
 
   // --- início ----------------------------------------------------------------
-  // Montagem em dois ciclos ociosos (geometria e atlas; depois anéis e grão)
-  // para nenhuma tarefa passar de ~20 ms; o primeiro quadro vem no quadro
-  // seguinte, nunca na mesma tarefa.
+  // Montagem em três ciclos ociosos (geometria; atlas; anéis e grão) para
+  // nenhuma tarefa pesar sozinha; o primeiro quadro vem no quadro seguinte,
+  // nunca na mesma tarefa.
   let cancelarMontagem: (() => void) | null = null
   let rafInicial = 0
   const iniciar = () => {
@@ -2550,7 +2580,10 @@ export function montarGlobo(
     montarEntrada()
     inicioDoMotor = performance.now()
     if (reduzido.matches || !animar) {
-      densidade = DESEMPENHO.estatico.densidade
+      densidade =
+        W < 768
+          ? DESEMPENHO.estatico.densidadeCelular
+          : DESEMPENHO.estatico.densidade
       trasNoDegrau = DESEMPENHO.estatico.tras
       definirAlvos()
       rafInicial = requestAnimationFrame(quadroEstatico)
@@ -2574,9 +2607,14 @@ export function montarGlobo(
     }
     iniciar()
   }
+  // Abertura em três tarefas ociosas: geometria, atlas, anéis (o primeiro
+  // quadro vem depois, num quadro de animação).
   cancelarMontagem = ocioso(() => {
     geometria()
-    cancelarMontagem = ocioso(etapaAneis, 500)
+    cancelarMontagem = ocioso(() => {
+      montarAtlas()
+      cancelarMontagem = ocioso(etapaAneis, 500)
+    }, 500)
   }, 500)
 
   window.addEventListener("pointermove", aoMover, { passive: true })
@@ -2589,6 +2627,7 @@ export function montarGlobo(
 
   return () => {
     cancelarMontagem?.()
+    cancelarLaranja?.()
     if (rafInicial) cancelAnimationFrame(rafInicial)
     dormir()
     gsap.ticker.fps(60)

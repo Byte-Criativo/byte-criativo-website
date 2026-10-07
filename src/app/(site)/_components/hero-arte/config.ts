@@ -118,11 +118,12 @@ export const GLOBO = {
       { tras: false, densidade: 0.33, dprMax: 1, fps: 30 },
     ],
     /**
-     * Desenho do modo estático (sem aceleração ou com movimento reduzido):
-     * o mesmo de antes dos degraus com fade, para o custo do quadro único no
-     * renderizador por software (Lighthouse do CI) não mudar.
+     * Desenho do modo estático (sem aceleração ou com movimento reduzido).
+     * O custo do quadro único no renderizador por software (Lighthouse do
+     * CI) é o que pesa: no celular o globo é maior (mais texto por anel),
+     * então ali o quadro parado leva metade dos paralelos.
      */
-    estatico: { tras: true, densidade: 0.66 },
+    estatico: { tras: true, densidade: 0.66, densidadeCelular: 0.5 },
     /** Montagem (atlas e anéis) acima disto é dividida em dois ciclos ociosos. */
     montagemMaxMs: 20,
     /**
