@@ -47,4 +47,27 @@ describe("Heading", () => {
     )
     expect(screen.getByText(";")).toHaveClass("semicolon-pequeno")
   })
+
+  it("o ponto e vírgula substitui o ponto final do título", () => {
+    const { container } = render(
+      <Heading nivel={2} semicolon>
+        Não sabe por onde começar? Conte o contexto.
+      </Heading>,
+    )
+    expect(container.querySelector("h2")).toHaveTextContent(
+      /^Não sabe por onde começar\? Conte o contexto;$/,
+    )
+  })
+
+  it("título que termina em pergunta ou exclamação fica sem o ponto e vírgula", () => {
+    const { container } = render(
+      <Heading nivel={2} semicolon>
+        Seu projeto também precisa organizar informações?
+      </Heading>,
+    )
+    expect(container.querySelector("h2")).toHaveTextContent(
+      /^Seu projeto também precisa organizar informações\?$/,
+    )
+    expect(screen.queryByText(";")).not.toBeInTheDocument()
+  })
 })

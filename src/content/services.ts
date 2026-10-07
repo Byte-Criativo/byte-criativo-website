@@ -135,7 +135,7 @@ export const serviceHubRaw = {
     },
   },
   ctaFinal: {
-    h2: "Não sabe por onde começar? Conte o contexto.",
+    h2: "Não sabe por onde começar? Conte o contexto",
     text: 'No formulário, marque "Ainda não sei". Uma ideia inicial ou um exemplo da rotina já ajudam a começar.',
     ctaPrimary: {
       label: "Falar sobre meu projeto",

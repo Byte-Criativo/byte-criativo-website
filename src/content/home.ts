@@ -322,12 +322,12 @@ export const homePageRaw = {
       {
         title: "Quem desenha, programa.",
         howToCheck:
-          "desde a primeira conversa, você fala com quem vai desenhar e programar o projeto.",
+          "Desde a primeira conversa, você fala com quem vai desenhar e programar o projeto.",
       },
       {
         title: "Escopo escrito antes do código.",
         howToCheck:
-          "a proposta traz entregáveis, etapas, prazo, investimento e o que fica de fora.",
+          "A proposta traz entregáveis, etapas, prazo, investimento e o que fica de fora.",
       },
     ],
     formNotice:

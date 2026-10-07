@@ -34,9 +34,10 @@ export function HomeConversa({
       titulo={conversa.h2.replace(/;$/, "")}
       abertura={conversa.text}
       tituloCompromissos="Dois compromissos desde o início"
-      compromissos={conversa.commitments.map(
-        (c) => `${c.title} ${c.howToCheck}`,
-      )}
+      compromissos={conversa.commitments.map((c) => ({
+        titulo: c.title,
+        texto: c.howToCheck,
+      }))}
       formulario={
         <Stack espaco={5} className="max-w-(--medida-max)">
           <Text medida className="text-body-lg">
