@@ -118,3 +118,14 @@ WebP e 14 imagens AVIF. O [inventário da seleção](../scripts/portfolio/select
 registra dimensões, bytes, SHA-256, URL de origem, master e data UTC de captura de
 cada derivado. Os registros dos projetos detalham a seleção e preservam o histórico
 anterior. Essa promoção local não constitui publicação em produção.
+
+## Rodada de 07/10/2026
+
+Em 07/10/2026, uma rodada só das homes (viewport, sem página inteira) gerou a
+Frente das salas no celular: oito WebP recortados do topo da captura de 390 px
+(780 w e 1170 w de cada projeto) e a nova capa desktop do Underground PB, cuja
+home mudou. As outras três capas desktop ficaram como estavam e
+`public/cases/**` não mudou. O [inventário da rodada](../scripts/portfolio/selection-2026-10-07.json)
+registra dimensões, bytes, SHA-256, recorte, master e data UTC; os registros
+dos projetos explicam o que foi mantido e por quê. Promoção local, sem
+publicação.

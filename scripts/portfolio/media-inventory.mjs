@@ -22,6 +22,16 @@ const cases = [
       "1997-390.png",
     ],
     publicMedia: ["home-1440.avif", "home-390.avif", "era-1997-1440.avif"],
+    latestRound: {
+      date: "2026-10-07",
+      captureDir:
+        "docs/research/captures/staging/2026-10-07T18-57-02-531Z-carlos-ferrer-pLVg2A",
+      expected: ["home-1440.png", "home-390.png"],
+      tracked: [
+        "src/assets/case-carlos-ferrer-celular-780.webp",
+        "src/assets/case-carlos-ferrer-celular-1170.webp",
+      ],
+    },
   },
   {
     slug: "goromax",
@@ -36,6 +46,16 @@ const cases = [
       "imprensa-390.png",
     ],
     publicMedia: ["home-1440.avif", "imprensa-1440.avif", "home-390.avif"],
+    latestRound: {
+      date: "2026-10-07",
+      captureDir:
+        "docs/research/captures/staging/2026-10-07T18-57-12-401Z-goromax-0jO7FS",
+      expected: ["home-1440.png", "home-390.png"],
+      tracked: [
+        "src/assets/case-goromax-celular-780.webp",
+        "src/assets/case-goromax-celular-1170.webp",
+      ],
+    },
   },
   {
     slug: "underground-pb",
@@ -57,6 +77,18 @@ const cases = [
       "palcos-1440.avif",
       "palcos-390.avif",
     ],
+    latestRound: {
+      date: "2026-10-07",
+      captureDir:
+        "docs/research/captures/staging/2026-10-07T19-12-12-981Z-underground-pb-SXQM0B",
+      expected: ["home-1440.png", "home-390.png"],
+      // A capa desktop também foi trocada nesta rodada (a home mudou).
+      tracked: [
+        "src/assets/case-undergroundpb-celular-780.webp",
+        "src/assets/case-undergroundpb-celular-1170.webp",
+        "src/assets/case-undergroundpb-screenshot.webp",
+      ],
+    },
   },
   {
     slug: "festival-alumio",
@@ -78,6 +110,16 @@ const cases = [
       "circuito-1440.avif",
       "programacao-390.avif",
     ],
+    latestRound: {
+      date: "2026-10-07",
+      captureDir:
+        "docs/research/captures/staging/2026-10-07T18-57-31-624Z-festival-alumio-3KXf10",
+      expected: ["home-1440.png", "home-390.png"],
+      tracked: [
+        "src/assets/case-festival-alumio-celular-780.webp",
+        "src/assets/case-festival-alumio-celular-1170.webp",
+      ],
+    },
   },
 ]
 
@@ -137,9 +179,10 @@ async function fileRecord(root, relativePath) {
   }
 }
 
-const inventory = []
-for (const entry of cases) {
-  const manifestPath = path.join(entry.captureDir, "manifest.json")
+// Lê uma pasta de captura (manifesto + PNGs esperados), local ou na raiz
+// alternativa passada como argumento.
+async function captureRound(captureDir, expected) {
+  const manifestPath = path.join(captureDir, "manifest.json")
   const localManifest = await fileRecord(projectRoot, manifestPath)
   const captureRoot = localManifest.exists ? projectRoot : sourceRoot
   let manifest = []
@@ -154,11 +197,8 @@ for (const entry of cases) {
   }
 
   const captures = await Promise.all(
-    entry.expected.map(async (file) => {
-      const record = await fileRecord(
-        captureRoot,
-        path.join(entry.captureDir, file),
-      )
+    expected.map(async (file) => {
+      const record = await fileRecord(captureRoot, path.join(captureDir, file))
       const metadata = manifest.find((item) => item.file === file)
       return {
         ...record,
@@ -167,9 +207,24 @@ for (const entry of cases) {
           capturedAt: metadata.capturedAt,
           viewport: metadata.viewport,
           dpr: metadata.dpr,
+          consentAction: metadata.consentAction,
         }),
       }
     }),
+  )
+
+  return {
+    captureRoot,
+    captureManifest: await fileRecord(captureRoot, manifestPath),
+    captures,
+  }
+}
+
+const inventory = []
+for (const entry of cases) {
+  const { captureRoot, captureManifest, captures } = await captureRound(
+    entry.captureDir,
+    entry.expected,
   )
 
   inventory.push({
@@ -180,13 +235,29 @@ for (const entry of cases) {
     trackedCover: await fileRecord(projectRoot, entry.trackedCover),
     captureStatus: "selected-after-visual-review-local-only",
     captureRoot,
-    captureManifest: await fileRecord(captureRoot, manifestPath),
+    captureManifest,
     captures,
     publicMedia: await Promise.all(
       entry.publicMedia.map((file) =>
         fileRecord(projectRoot, path.join("public/cases", entry.slug, file)),
       ),
     ),
+    // Rodada mais recente (07/10/2026): recortes do celular para a Frente
+    // das salas, com a captura desktop da mesma rodada quando a home mudou.
+    ...(entry.latestRound && {
+      latestRound: {
+        date: entry.latestRound.date,
+        ...(await captureRound(
+          entry.latestRound.captureDir,
+          entry.latestRound.expected,
+        )),
+        tracked: await Promise.all(
+          entry.latestRound.tracked.map((file) =>
+            fileRecord(projectRoot, file),
+          ),
+        ),
+      },
+    }),
   })
 }
 

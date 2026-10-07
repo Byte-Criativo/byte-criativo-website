@@ -47,3 +47,55 @@ Origem, data UTC de captura e master de cada derivado constam em
 A captura conserva características do site de origem: o selo de data se sobrepõe
 a parte do título e algumas etiquetas do mapa aparecem cortadas nas bordas.
 Essas ocorrências foram observadas na revisão e não foram retocadas.
+
+## Rodada de 07/10/2026 (Frente das salas no celular)
+
+Objetivo: mostrar a home do projeto no celular na Frente da sala, abaixo de
+`sm` (30rem), no lugar da captura desktop reduzida. Só a home foi capturada,
+com `CASE_CAPTURE_CONSENT=necessary-only` e `CASE_CAPTURE_FULL_PAGE=false`
+(viewport, sem página inteira), em Chrome 155.0.8059.39: 1440×900 (DPR 2) e
+390×844 (DPR 3), HTTP 200 nas duas.
+
+**Primeira captura reprovada:**
+`docs/research/captures/staging/2026-10-07T18-57-22-481Z-underground-pb-ds6itf/`.
+O banner de cookies ("Só cookies essenciais por padrão; Spotify/YouTube pedem
+permissão", com "Aceitar tudo" e "Só essenciais") ficou aberto na captura e o
+manifesto gravou `consentAction: none`. Causa: o `capture.mjs` usava
+`.first()` e pegava o "Aceitar e carregar" oculto do player do Spotify, que
+vem antes no DOM, então o banner visível passava como inexistente. O script
+foi corrigido: agora filtra só ocorrências visíveis e reconhece "Só
+essenciais" como escolha `necessary-only`. Nada dessa pasta foi promovido.
+
+**Recaptura aprovada:**
+`docs/research/captures/staging/2026-10-07T19-12-12-981Z-underground-pb-SXQM0B/`,
+com `manifest.json` e `review.json` (sem falhas). Consentimento registrado
+nas duas viewports: `consentAction: necessary-only` ("Só essenciais").
+Nenhum banner, modal ou dado pessoal visível.
+
+- **Recorte do celular:** topo de 390×505 CSS (1170×1515 no master), sem
+  retoque nem composição. Termina depois dos botões "Ver evento" e "Ver
+  agenda" e antes do cartaz, que começa em 511 CSS: cortar o cartaz no meio
+  seria enganoso.
+- **O que está visível (07/10/2026):** no celular, a barra "Apoiar a cena",
+  "Hoje na cena", o título "Pogo Fest - Ano II", "10 out · 20h00", Vila do
+  Porto, João Pessoa, e os botões "Ver evento" e "Ver agenda". No desktop, o
+  mesmo destaque com o cartaz do Pogo Fest, o selo 10/out, a faixa "Próximos
+  shows" (18/out, 13/nov e 27/nov) e "A cena é nossa".
+- **Desktop trocado:** a home mudou desde 22/09 (o destaque agora é o Pogo
+  Fest, em 10/10), então a capa `case-undergroundpb-screenshot.webp` da sala
+  passou a ser a captura desktop desta mesma rodada. A legenda única das duas
+  versões cita a data da captura, porque agenda e cartazes são conteúdo
+  mutável. A capa de 22/09 (79636 B, `83db5dfc…`) fica só no histórico acima.
+  `public/cases/underground-pb/**` não mudou.
+
+Derivados promovidos ao worktree (WebP, esforço 6; sem deploy ou merge):
+
+| Arquivo                                           | Dimensões   |  Bytes | Qualidade | SHA-256                                                            |
+| ------------------------------------------------- | ----------- | -----: | --------: | ------------------------------------------------------------------ |
+| `src/assets/case-undergroundpb-celular-780.webp`  | 780 × 1010  |  25792 |        88 | `43f1da8b782a96f621d5a49490960969154ba6916449839daa720079355f0734` |
+| `src/assets/case-undergroundpb-celular-1170.webp` | 1170 × 1515 |  37214 |        88 | `947cc8b4a74dd4bec25c97b48d1b3aa4f87e3a99abbee4f74d0189cc628d8407` |
+| `src/assets/case-undergroundpb-screenshot.webp`   | 1440 × 900  | 111282 |        88 | `b128dd27acd2776b733a7f7e87cac0bb0ded0aa2504982bc8bf8f5f2d0543625` |
+
+Origem, master e data UTC de cada derivado constam em
+[`selection-2026-10-07.json`](selection-2026-10-07.json). Revisão visual
+aprovada no portão da rodada; a publicação depende do ok do responsável.

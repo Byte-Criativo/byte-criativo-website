@@ -1,0 +1,141 @@
+{
+  "publication": "not-published",
+  "projects": [
+    {
+      "slug": "carlos-ferrer",
+      "reviewDate": "2026-10-07",
+      "status": "selected-after-visual-review-local-only",
+      "derivatives": [
+        {
+          "path": "src/assets/case-carlos-ferrer-celular-780.webp",
+          "width": 780,
+          "height": 1090,
+          "bytes": 42702,
+          "sha256": "dbb0efd6d3683c9bfcbc87d98920d7437d459ea2d42bed8c27bfc9879a645a55",
+          "source": "docs/research/captures/staging/2026-10-07T18-57-02-531Z-carlos-ferrer-pLVg2A/home-390.png",
+          "sourceUrl": "https://www.carlosferrer.online/",
+          "capturedAt": "2026-10-07T18:57:12.065Z",
+          "crop": "1170x1635+0+0 do master, redimensionado para 780 w",
+          "quality": 88
+        },
+        {
+          "path": "src/assets/case-carlos-ferrer-celular-1170.webp",
+          "width": 1170,
+          "height": 1635,
+          "bytes": 63354,
+          "sha256": "c5d6c89744a8e6eb2a354cbb9b051365cb31905f2d98acb28339f6e323b68330",
+          "source": "docs/research/captures/staging/2026-10-07T18-57-02-531Z-carlos-ferrer-pLVg2A/home-390.png",
+          "sourceUrl": "https://www.carlosferrer.online/",
+          "capturedAt": "2026-10-07T18:57:12.065Z",
+          "crop": "1170x1635+0+0 do master (= 390×545 CSS)",
+          "quality": 88
+        }
+      ]
+    },
+    {
+      "slug": "goromax",
+      "reviewDate": "2026-10-07",
+      "status": "selected-after-visual-review-local-only",
+      "derivatives": [
+        {
+          "path": "src/assets/case-goromax-celular-780.webp",
+          "width": 780,
+          "height": 1090,
+          "bytes": 72490,
+          "sha256": "0c99dabfd164fc3a4faceeec7d9cfc3b047ff2fbfbbe8bbc2eac97fc34d3d7f9",
+          "source": "docs/research/captures/staging/2026-10-07T18-57-12-401Z-goromax-0jO7FS/home-390.png",
+          "sourceUrl": "https://www.goromax.com.br/",
+          "capturedAt": "2026-10-07T18:57:22.143Z",
+          "crop": "1170x1635+0+0 do master, redimensionado para 780 w",
+          "quality": 80
+        },
+        {
+          "path": "src/assets/case-goromax-celular-1170.webp",
+          "width": 1170,
+          "height": 1635,
+          "bytes": 121714,
+          "sha256": "dc62e2d9da8608caccfce28267dead12e2f19716958f9aa989ba15351e7c0dc3",
+          "source": "docs/research/captures/staging/2026-10-07T18-57-12-401Z-goromax-0jO7FS/home-390.png",
+          "sourceUrl": "https://www.goromax.com.br/",
+          "capturedAt": "2026-10-07T18:57:22.143Z",
+          "crop": "1170x1635+0+0 do master (= 390×545 CSS)",
+          "quality": 80
+        }
+      ]
+    },
+    {
+      "slug": "underground-pb",
+      "reviewDate": "2026-10-07",
+      "status": "selected-after-visual-review-local-only",
+      "derivatives": [
+        {
+          "path": "src/assets/case-undergroundpb-celular-780.webp",
+          "width": 780,
+          "height": 1010,
+          "bytes": 25792,
+          "sha256": "43f1da8b782a96f621d5a49490960969154ba6916449839daa720079355f0734",
+          "source": "docs/research/captures/staging/2026-10-07T19-12-12-981Z-underground-pb-SXQM0B/home-390.png",
+          "sourceUrl": "https://www.undergroundpb.com.br/",
+          "capturedAt": "2026-10-07T19:12:22.334Z",
+          "crop": "1170x1515+0+0 do master, redimensionado para 780 w",
+          "quality": 88
+        },
+        {
+          "path": "src/assets/case-undergroundpb-celular-1170.webp",
+          "width": 1170,
+          "height": 1515,
+          "bytes": 37214,
+          "sha256": "947cc8b4a74dd4bec25c97b48d1b3aa4f87e3a99abbee4f74d0189cc628d8407",
+          "source": "docs/research/captures/staging/2026-10-07T19-12-12-981Z-underground-pb-SXQM0B/home-390.png",
+          "sourceUrl": "https://www.undergroundpb.com.br/",
+          "capturedAt": "2026-10-07T19:12:22.334Z",
+          "crop": "1170x1515+0+0 do master (= 390×505 CSS)",
+          "quality": 88
+        },
+        {
+          "path": "src/assets/case-undergroundpb-screenshot.webp",
+          "width": 1440,
+          "height": 900,
+          "bytes": 111282,
+          "sha256": "b128dd27acd2776b733a7f7e87cac0bb0ded0aa2504982bc8bf8f5f2d0543625",
+          "source": "docs/research/captures/staging/2026-10-07T19-12-12-981Z-underground-pb-SXQM0B/home-1440.png",
+          "sourceUrl": "https://www.undergroundpb.com.br/",
+          "capturedAt": "2026-10-07T19:12:18.170Z",
+          "crop": "master inteiro 2880×1800 redimensionado para 1440×900",
+          "quality": 88
+        }
+      ]
+    },
+    {
+      "slug": "festival-alumio",
+      "reviewDate": "2026-10-07",
+      "status": "selected-after-visual-review-local-only",
+      "derivatives": [
+        {
+          "path": "src/assets/case-festival-alumio-celular-780.webp",
+          "width": 780,
+          "height": 1090,
+          "bytes": 57918,
+          "sha256": "387eb597257279cda9c1b8058c28b3c9b90421557f847ce13b46473612ab7da1",
+          "source": "docs/research/captures/staging/2026-10-07T18-57-31-624Z-festival-alumio-3KXf10/home-390.png",
+          "sourceUrl": "https://www.festivalalumio.com.br/",
+          "capturedAt": "2026-10-07T18:57:39.508Z",
+          "crop": "1170x1635+0+0 do master, redimensionado para 780 w",
+          "quality": 88
+        },
+        {
+          "path": "src/assets/case-festival-alumio-celular-1170.webp",
+          "width": 1170,
+          "height": 1635,
+          "bytes": 89484,
+          "sha256": "c9d2a2174a4d9b46993c078162a14f3286a1f4662ce5ac0a19720e5502a36fcd",
+          "source": "docs/research/captures/staging/2026-10-07T18-57-31-624Z-festival-alumio-3KXf10/home-390.png",
+          "sourceUrl": "https://www.festivalalumio.com.br/",
+          "capturedAt": "2026-10-07T18:57:39.508Z",
+          "crop": "1170x1635+0+0 do master (= 390×545 CSS)",
+          "quality": 88
+        }
+      ]
+    }
+  ]
+}
