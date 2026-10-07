@@ -625,10 +625,12 @@ export function montarGlobo(
   let degrau: number = DESEMPENHO.degrauInicial
   let densidade: number = DESEMPENHO.degraus[degrau]?.densidade ?? 1
   let trasNoDegrau: boolean = DESEMPENHO.degraus[degrau]?.tras ?? false
-  let dprMax: number = Math.min(
-    dprToque,
-    DESEMPENHO.degraus[degrau]?.dprMax ?? 2,
-  )
+  // Sem aceleração gráfica o quadro estático é pintado e enviado à tela pela
+  // CPU: densidade 1 (no celular, 2,25× menos pixels que 1,5) tira o custo
+  // do envio do canvas, que pesava mais que o próprio desenho.
+  let dprMax: number = animar
+    ? Math.min(dprToque, DESEMPENHO.degraus[degrau]?.dprMax ?? 2)
+    : 1
   // Presença do hemisfério de trás (0..1), alcançada em fade como a dos anéis.
   const tras = { presenca: 0 }
   const janela: number[] = []
