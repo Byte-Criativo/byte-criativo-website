@@ -47,7 +47,7 @@ export function SiteFooter({
           id={navId}
           tabIndex={-1}
           aria-label="Rodapé"
-          className="grid grid-cols-1 gap-(--space-7) md:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-1 gap-(--space-6) md:grid-cols-2 md:gap-(--space-7) lg:grid-cols-4"
         >
           <div className="flex flex-col gap-(--space-2)">
             {/* A classe é o gancho da regra de RC7 em globals.css: só a
@@ -69,7 +69,9 @@ export function SiteFooter({
               <Heading nivel={2} papel="h3" className="text-caption">
                 {coluna.titulo}
               </Heading>
-              <ul className="flex flex-col gap-(--space-2)">
+              {/* No toque cada link já tem 44 px de alvo: o vão entre eles só
+                  alongava o rodapé. O vão volta com o alvo mínimo do lg. */}
+              <ul className="flex flex-col lg:gap-(--space-2)">
                 {coluna.itens.map((item) => (
                   <li key={item.href}>
                     <TextLink

@@ -11,6 +11,10 @@ export type NivelTrilha = { rotulo: string; href?: string }
  *
  * O último nível nunca é link: é texto com `aria-current="page"`. O separador
  * é pontuação visual e sai da leitura, fora de qualquer link.
+ *
+ * A trilha fica sempre numa linha: quebrada, a segunda linha começava com um
+ * "›" órfão. Quem cede é o nível atual, truncado com reticências — ele
+ * repete o H1 logo abaixo, e o texto inteiro continua no DOM.
  */
 export function Breadcrumbs({
   trilha,
@@ -24,9 +28,18 @@ export function Breadcrumbs({
       aria-label="Caminho da página"
       className={cn("text-caption text-ink-muted", className)}
     >
-      <ol className="flex flex-wrap items-center gap-(--space-2)">
+      <ol className="flex items-center gap-(--space-2)">
         {trilha.map((nivel, indice) => (
-          <li key={nivel.rotulo} className="flex items-center gap-(--space-2)">
+          <li
+            key={nivel.rotulo}
+            className={cn(
+              "flex items-center gap-(--space-2)",
+              // `overflow-hidden` zera o mínimo automático do item flex: é ele
+              // que deixa o nível atual encolher (a guarda de tokens não
+              // aceita o `0` de `min-w-0`).
+              nivel.href ? "flex-none" : "overflow-hidden",
+            )}
+          >
             {indice > 0 ? (
               <span data-separador aria-hidden="true">
                 ›
@@ -41,7 +54,7 @@ export function Breadcrumbs({
                 {nivel.rotulo}
               </TextLink>
             ) : (
-              <span aria-current="page" className="text-ink">
+              <span aria-current="page" className="truncate text-ink">
                 {nivel.rotulo}
               </span>
             )}

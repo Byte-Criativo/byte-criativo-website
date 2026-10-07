@@ -123,8 +123,10 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               >
                 Falar sobre meu projeto
               </Button>
+              {/* Um primário por grupo: o WhatsApp é a alternativa, em link
+                  de texto, como no hero da home e nas bandas de conversa. */}
               <WhatsAppLink
-                aparencia="botao"
+                aparencia="texto"
                 rotulo="Chamar no WhatsApp"
                 mensagem={service.whatsappMessage}
                 location="service-hero"
