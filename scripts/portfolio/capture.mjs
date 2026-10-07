@@ -61,6 +61,10 @@ const viewports = [
 // Seletores comuns de banners de consentimento. A escolha precisa ser
 // explícita, pois altera o estado registrado na captura. isVisible() não
 // espera, então checar os seletores é rápido quando não há banner.
+// Sempre a primeira ocorrência VISÍVEL de cada seletor: no Underground PB o
+// primeiro "Aceitar" do DOM é o "Aceitar e carregar", oculto, do player do
+// Spotify, e o `.first()` puro deixava passar o banner aberto (o manifest
+// gravava `consentAction: none` com o banner na captura).
 const consentSelectors = {
   accept: [
     'button:has-text("Aceitar")',
@@ -72,6 +76,9 @@ const consentSelectors = {
   "necessary-only": [
     'button:has-text("Apenas necessários")',
     'button:has-text("Apenas necessarios")',
+    'button:has-text("Só essenciais")',
+    'button:has-text("Apenas essenciais")',
+    'button:has-text("Somente essenciais")',
   ],
 }
 
@@ -88,6 +95,7 @@ async function dismissConsentBanner(page) {
       if (
         await page
           .locator(selector)
+          .filter({ visible: true })
           .first()
           .isVisible()
           .catch(() => false)
@@ -104,7 +112,7 @@ async function dismissConsentBanner(page) {
   }
   for (const { action, selector } of visible) {
     if (action !== choice) continue
-    const button = page.locator(selector).first()
+    const button = page.locator(selector).filter({ visible: true }).first()
     await button.click({ timeout: 1000 })
     console.log(`  banner de consentimento: ${choice} via "${selector}"`)
     await page.waitForTimeout(300)
