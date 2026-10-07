@@ -1,5 +1,6 @@
 import { AxeBuilder } from "@axe-core/playwright"
 import { test, expect } from "@playwright/test"
+import { esperarAnimacoes } from "./esperar-animacoes"
 
 // Tags do contrato de acessibilidade da Fase 6: WCAG 2.0 e 2.1 nível A/AA,
 // mais WCAG 2.2 AA (owasp/best-practice ficam fora de propósito, para não
@@ -9,7 +10,7 @@ const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]
 test.describe("Acessibilidade", () => {
   test("home não tem violações axe serious/critical", async ({ page }) => {
     await page.goto("/", { waitUntil: "load" })
-    await page.waitForTimeout(500)
+    await esperarAnimacoes(page)
 
     const results = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze()
 
