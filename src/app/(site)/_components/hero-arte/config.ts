@@ -78,30 +78,50 @@ export const GLOBO = {
    * Custo sob controle. Sem aceleração gráfica (renderizador por software ou
    * sem WebGL) o globo fica estático: um quadro final, redesenhado só na
    * rolagem e no resize. Com aceleração, a qualidade se adapta ao custo
-   * medido de cada quadro: acima de `custoAltoMs` na média de
-   * `janelaQuadros` quadros desce um degrau (menos paralelos, depois DPR 1,
-   * depois 30 fps); abaixo de `custoBaixoMs` por `intervaloDegrauS`
-   * segundos sobe um degrau. Começa em `degrauInicial` durante a entrada e
-   * nos `segurarInicialS` segundos seguintes.
+   * medido de cada quadro: o custo de uma janela de `janelaQuadros` quadros
+   * é a mediana (um pico isolado de GC ou de outra aba não conta); com
+   * `janelasParaDescer` janelas seguidas acima de `custoAltoMs` desce um
+   * degrau; abaixo de `custoBaixoMs` por `intervaloDegrauS` segundos sobe
+   * um, mas nunca de volta a um degrau que já falhou antes do resfriamento.
+   * Começa em `degrauInicial` durante a entrada e nos `segurarInicialS`
+   * segundos seguintes.
+   *
+   * Nenhuma troca de degrau é visível de um quadro para o outro: paralelos e
+   * hemisfério de trás entram e saem em fade de `transicaoS` segundos.
    */
   desempenho: {
     custoAltoMs: 12,
     custoBaixoMs: 7,
-    janelaQuadros: 20,
+    janelaQuadros: 30,
+    janelasParaDescer: 2,
     intervaloDegrauS: 3,
     /** Intervalo mínimo entre descidas de degrau (quadro caro desce rápido). */
     intervaloDescidaS: 1,
+    /** Espera para voltar a um degrau que falhou; dobra a cada nova falha. */
+    resfriamentoS: 20,
     segurarInicialS: 2,
     degrauInicial: 1,
-    /** Degraus: fração de paralelos desenhados, teto de DPR e fps do ticker. */
+    transicaoS: 0.9,
+    /**
+     * Degraus, do mais rico ao mais barato, na ordem em que a perda menos
+     * aparece: hemisfério de trás, DPR, fração de paralelos e, por último,
+     * o fps do ticker.
+     */
     degraus: [
-      { densidade: 1, dprMax: 2, fps: 60 },
-      { densidade: 0.66, dprMax: 2, fps: 60 },
-      { densidade: 0.5, dprMax: 2, fps: 60 },
-      { densidade: 0.33, dprMax: 2, fps: 60 },
-      { densidade: 0.33, dprMax: 1, fps: 60 },
-      { densidade: 0.33, dprMax: 1, fps: 30 },
+      { tras: true, densidade: 1, dprMax: 2, fps: 60 },
+      { tras: false, densidade: 1, dprMax: 2, fps: 60 },
+      { tras: false, densidade: 1, dprMax: 1.5, fps: 60 },
+      { tras: false, densidade: 0.66, dprMax: 1.5, fps: 60 },
+      { tras: false, densidade: 0.5, dprMax: 1, fps: 60 },
+      { tras: false, densidade: 0.33, dprMax: 1, fps: 60 },
+      { tras: false, densidade: 0.33, dprMax: 1, fps: 30 },
     ],
+    /**
+     * Desenho do modo estático (sem aceleração ou com movimento reduzido):
+     * o mesmo de antes dos degraus com fade, para o custo do quadro único no
+     * renderizador por software (Lighthouse do CI) não mudar.
+     */
+    estatico: { tras: true, densidade: 0.66 },
     /** Montagem (atlas e anéis) acima disto é dividida em dois ciclos ociosos. */
     montagemMaxMs: 20,
     /**
@@ -126,6 +146,12 @@ export const GLOBO = {
   precessaoS: 40,
   /** Parallax do ponteiro, em graus, com a inércia da lanterna. */
   parallaxGraus: 4,
+  /**
+   * Os anéis são desenhados em trechos (uma chamada de Canvas por pedaço de
+   * palavra, não por glifo): cada trecho é reto, e o arco que ele cobre é
+   * limitado para a corda não se afastar mais que isto (px) da curva.
+   */
+  trechoFlechaPx: 0.5,
   /** Latitude máxima dos paralelos (graus). */
   latitudeMax: 78,
   /** Deriva de velocidade entre paralelos (fração). */
@@ -133,12 +159,22 @@ export const GLOBO = {
   /** Opacidade do texto: frente, horizonte e hemisfério de trás. */
   alfaHorizonte: 0.07,
   alfaTras: 0.06,
+  /**
+   * Faixa do contorno (profundidade na esfera unitária) em que o glifo entra
+   * e sai em fade: nenhum glifo aparece ou some de um quadro para o outro.
+   */
+  horizonte: 0.08,
   /** Lanterna do ponteiro: raio (px), desaceleração local. */
   raioLanterna: 180,
   desaceleracaoLanterna: 0.4,
-  /** Pulso laranja do `;` ao cruzar o meridiano: duração e máximo simultâneo. */
-  pulsoMs: 400,
-  pulsosSimultaneos: 4,
+  /**
+   * Brasa do `;` ao cruzar o meridiano: acende em `subidaMs`, esfria de
+   * laranja para tinta em `esfriaMs` (crossfade) e deixa um brilho laranja
+   * atrás do glifo (alfa e raio em alturas de glifo). No máximo
+   * `pulsosSimultaneos` brasas acesas ao mesmo tempo.
+   */
+  pulso: { subidaMs: 140, esfriaMs: 1300, brilhoAlfa: 0.3, brilhoRaio: 1.3 },
+  pulsosSimultaneos: 5,
   /** Respiração dos polos: amplitude e período (s). */
   respiracaoPolos: 0.06,
   respiracaoS: 6,
