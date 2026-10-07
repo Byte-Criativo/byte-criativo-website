@@ -857,6 +857,24 @@ dialog::backdrop {
   .hero-arte[data-estado="pronto"] {
     opacity: 1;
   }
+
+  /* Girar o globo com o ponteiro (motor do hero): a mão aberta aparece só
+     sobre o globo fora do texto (o motor grava `data-giravel`) e fecha
+     enquanto se arrasta (`data-girando`, sem seleção de texto). No toque, o
+     hero só entrega ao motor o gesto horizontal: o vertical continua
+     rolando a página e a pinça continua dando zoom. */
+  .home-hero {
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .home-hero[data-giravel] {
+    cursor: grab;
+  }
+
+  .home-hero[data-girando] {
+    cursor: grabbing;
+    user-select: none;
+  }
 }
 
 /* ---------------------------------------------------------------------
