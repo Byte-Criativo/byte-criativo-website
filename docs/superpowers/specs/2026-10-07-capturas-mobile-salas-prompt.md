@@ -188,6 +188,79 @@ um `BrowserFrame` com o domínio na barra.
 - Testes, lint e E2E verdes. Desktop sem diferença, exceto a captura da
   mesma rodada, se tiver sido trocada.
 
-## Resultados
+## Resultados (2026-10-07)
 
-_(preenchido depois da execução)_
+Executado com subagents: um de captura, um de implementação e um de QA
+independente. Os portões de revisão visual ficaram com o orquestrador.
+Branch `feat/capturas-mobile-salas`.
+
+**Capturas (só as homes, só viewport, Chrome 155):**
+
+- **Carlos Ferrer, Goromax e Festival Alumiô:** passaram no checklist.
+  - Recorte de **545** px CSS em vez de 560: com 560, a primeira linha do
+    Festival e um bloco de texto do Goromax ficavam cortados ao meio.
+  - Desktop mantida nos três. No Goromax só o menu do site mudou, e a nova
+    pesaria 48 % a mais.
+- **Underground PB:** a primeira captura reprovou porque o banner de cookies
+  ficou aberto, com o manifest dizendo `none`.
+  - Causa: o `capture.mjs` usava `.first()` e pegava o "Aceitar e carregar"
+    oculto do player do Spotify. Além disso, "Só essenciais" não estava nos
+    seletores. Corrigido e recapturado com `necessary-only` registrado.
+  - Recorte de **505** px CSS: o cartaz começa em 511, então o recorte para
+    depois dos botões.
+  - A desktop da sala foi trocada pela da mesma rodada, porque a home mudou
+    (Pogo Fest no lugar do Beco Underground).
+
+**Legendas** (uma só, verdadeira para as duas versões):
+
+- UPB: "…em 7 de outubro de 2026, com o Pogo Fest – Ano II em destaque e
+  acesso à agenda".
+- Festival: "…com a chamada 'Vem alumiar o Centro' e as datas do festival".
+- GOROMAX: "…com o logotipo laranja sobre a fotografia da banda diante de
+  uma parede descascada". O dono ratificou essa legenda.
+- Carlos Ferrer: "…com o título 'Software Engineer, Founder & CEO'".
+
+**Lighthouse mobile** (mediana de 3, main → branch):
+
+| Rota       | LCP (ms)    | CLS | Peso total (KB) | Imagens (KB)  |
+| ---------- | ----------- | --- | --------------- | ------------- |
+| /          | 3139 → 2297 | 0   | 505,8 → 430,0   | 182,6 → 105,7 |
+| /contato   | 2003 → 2794 | 0   | 280,0 → 280,3   | 21,9 → 21,9   |
+| /portfolio | 3651 → 3303 | 0   | 640,5 → 432,5   | 386,5 → 177,5 |
+
+- O LCP do /contato variou por ruído da máquina: mesmo elemento, mesmos
+  bytes.
+- JS idêntico e acessibilidade 100 nas seis medições.
+- O Lighthouse emula 412 px e baixa as versões de 780.
+
+**Celular** (altura da Frente / do Verso em px; main entre colchetes):
+
+| Largura | Escala | UPB             | Alumiô          | Goromax         | Carlos Ferrer   |
+| ------- | ------ | --------------- | --------------- | --------------- | --------------- |
+| 360 @3  | 0,82   | 528 / 609       | 561 / 652       | 561 / 506       | 561 / 485       |
+| 390 @3  | 0,89   | 567 / 583 [313] | 602 / 575 [334] | 602 / 460 [313] | 582 / 409 [293] |
+| 430 @3  | 0,99   | 619 / 534       | 638 / 551       | 658 / 461       | 638 / 409       |
+
+- O aparelho baixa uma imagem por sala: -celular-1170 em DPR 3 e -780 em
+  DPR 2. Nenhuma `*-screenshot*.webp` é baixada no celular.
+- Sem CLS e sem transbordo horizontal.
+- Em 390 × 844, o seletor e a Frente inteira cabem numa tela.
+
+**Desktop** (480 / 768 / 1024 / 1440): mesma altura de imagem da main, com
+diferença de 0,00 px. Só a captura do UPB muda de conteúdo.
+
+**Testes:**
+
+- Vitest 924/924, lint e `format:check` verdes.
+- E2E 86/87: a falha foi o teste de teclado do menu no Firefox, sem relação
+  com as salas. Isolado, passou 5 de 5.
+- O `media-inventory.mjs` confere bytes e SHA-256.
+
+**Observações (não bloqueiam):**
+
+- Em 360 px a escala é 0,82 (o critério de 0,85 vale para 390).
+- No Goromax e no Carlos Ferrer, a troca Frente/Verso ainda move de 140 a
+  170 px.
+- O Goromax 1170 w está 1,4 % acima do teto de ~120 KB, no piso q80.
+- A sintaxe `(width < 30rem)` exige Safari 16.4 ou mais novo, o mesmo piso
+  do Tailwind v4. Fora disso, cai na captura desktop.
