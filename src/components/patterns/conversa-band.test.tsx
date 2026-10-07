@@ -14,7 +14,7 @@ function chamada(extra?: { ctaRotulo?: string; frase?: string }) {
     <ConversaBand
       variante="chamada"
       id="conversa"
-      titulo="Seu negócio não tem nada a ver com música?"
+      titulo="Seu negócio também pode ganhar forma na web"
       ctaHref="/contato?origem=portfolio"
       whatsapp={WHATSAPP}
       {...extra}
@@ -30,7 +30,10 @@ function conversa() {
       titulo="Conversa direta"
       abertura="Conte o que você quer construir."
       tituloCompromissos="O que você pode cobrar da Byte Criativo"
-      compromissos={["Resposta em até um dia útil.", "Proposta com escopo."]}
+      compromissos={[
+        { titulo: "Resposta rápida.", texto: "Em até um dia útil." },
+        { titulo: "Proposta com escopo.", texto: "Antes de começar." },
+      ]}
       formulario={<form aria-label="Formulário curto" />}
     />,
   )
@@ -41,7 +44,7 @@ describe("ConversaBand", () => {
     const { container } = chamada()
     expect(
       screen.getByRole("region", {
-        name: "Seu negócio não tem nada a ver com música?",
+        name: "Seu negócio também pode ganhar forma na web",
       }),
     ).toBeInTheDocument()
     const pontuacao = container.querySelector("h2 [aria-hidden='true']")
@@ -84,6 +87,13 @@ describe("ConversaBand", () => {
     ).toBeInTheDocument()
     const lista = container.querySelector("ol")
     expect(lista?.querySelectorAll("li")).toHaveLength(2)
+    // Título em destaque e a frase depois, separados por espaço.
+    expect(lista?.querySelector("li strong")).toHaveTextContent(
+      "Resposta rápida.",
+    )
+    expect(lista?.querySelector("li")).toHaveTextContent(
+      "Resposta rápida. Em até um dia útil.",
+    )
     expect(
       screen.getByRole("form", { name: "Formulário curto" }),
     ).toBeInTheDocument()

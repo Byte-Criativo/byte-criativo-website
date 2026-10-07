@@ -120,6 +120,25 @@ describe("FrenteVerso", () => {
     )
   })
 
+  // A cor herdada do <article> da Ficha chega computada na tinta da parede:
+  // sem `text-ink` na própria face, um descendente sem cor própria (a lista
+  // "O que está no ar") sai escuro sobre o fundo do verso.
+  it("a face do verso reaplica a tinta, para os descendentes herdarem a cor do verso", () => {
+    const { container } = montar()
+    expect(container.querySelector('[data-face="verso"]')).toHaveClass(
+      "text-ink",
+    )
+  })
+
+  // O CSS de `md` para baixo tira a face inativa do fluxo, presa à célula
+  // deste invólucro: ele precisa ser o ancestral posicionado e ter o gancho.
+  it("o invólucro das faces é o ancestral posicionado da face inativa", () => {
+    const { container } = montar()
+    const involucro = container.querySelector("[data-faces]")
+    expect(involucro).toHaveClass("relative")
+    expect(involucro?.querySelectorAll(":scope > [data-face]")).toHaveLength(2)
+  })
+
   // I2 (gate B, RC10): em cores forçadas, bg-ink/text-bg somem (o fundo não
   // é desenhado) e os dois botões ficam visualmente iguais mesmo com
   // aria-pressed distinto. O controle precisa de um seletor estável para a

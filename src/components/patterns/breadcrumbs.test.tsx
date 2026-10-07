@@ -61,4 +61,17 @@ describe("Breadcrumbs", () => {
       "page",
     )
   })
+
+  // Quebrada, a segunda linha começava com um "›" órfão. A trilha fica numa
+  // linha e quem cede é o nível atual (repete o H1 logo abaixo).
+  it("fica numa linha só e o nível atual é que encolhe, com reticências", () => {
+    const { container } = render(<Breadcrumbs trilha={TRILHA_LONGA} />)
+    expect(container.querySelector("ol")).not.toHaveClass("flex-wrap")
+    const atual = screen.getByText("Sistemas web sob medida")
+    expect(atual).toHaveClass("truncate")
+    expect(atual.closest("li")).toHaveClass("overflow-hidden")
+    for (const link of screen.getAllByRole("link")) {
+      expect(link.closest("li")).toHaveClass("flex-none")
+    }
+  })
 })

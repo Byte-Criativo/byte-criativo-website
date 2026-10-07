@@ -21,6 +21,21 @@ const PAPEL_GRANDE: Record<HeadingPapel, boolean> = {
   manifesto: true,
 }
 
+/**
+ * O `;` da marca é o ponto final do título: substitui o ponto e nunca se soma
+ * a outra pontuação ("contexto.;", "pessoas?;"). Só dá para decidir quando o
+ * título é texto puro; com filhos compostos, quem monta garante.
+ */
+function pontuarComSemicolon(children: ReactNode): {
+  texto: ReactNode
+  comSemicolon: boolean
+} {
+  if (typeof children !== "string")
+    return { texto: children, comSemicolon: true }
+  if (/[?!]$/.test(children)) return { texto: children, comSemicolon: false }
+  return { texto: children.replace(/\.$/, ""), comSemicolon: true }
+}
+
 export function Heading({
   nivel,
   papel,
@@ -38,6 +53,9 @@ export function Heading({
 }): ReactElement {
   const Tag = `h${nivel}` as "h1" | "h2" | "h3"
   const papelFinal: HeadingPapel = papel ?? (`h${nivel}` as HeadingPapel)
+  const { texto, comSemicolon } = semicolon
+    ? pontuarComSemicolon(children)
+    : { texto: children, comSemicolon: false }
 
   return (
     <Tag
@@ -48,8 +66,8 @@ export function Heading({
         className,
       )}
     >
-      {children}
-      {semicolon ? (
+      {texto}
+      {comSemicolon ? (
         <span
           aria-hidden="true"
           className={

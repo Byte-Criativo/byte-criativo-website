@@ -26,7 +26,8 @@ export type ConversaBandProps = Comum &
         variante: "conversa"
         abertura: string
         tituloCompromissos: string
-        compromissos: string[]
+        /** Título curto em destaque e a frase que o explica. */
+        compromissos: Array<{ titulo: string; texto: string }>
         formulario: ReactNode
       }
   )
@@ -82,7 +83,10 @@ export function ConversaBand(props: ConversaBandProps): ReactElement {
               <Heading nivel={3}>{props.tituloCompromissos}</Heading>
               <ol className="flex flex-col gap-(--space-3) text-body">
                 {props.compromissos.map((compromisso) => (
-                  <li key={compromisso}>{compromisso}</li>
+                  <li key={compromisso.titulo}>
+                    <strong className="font-bold">{compromisso.titulo}</strong>{" "}
+                    {compromisso.texto}
+                  </li>
                 ))}
               </ol>
             </div>
