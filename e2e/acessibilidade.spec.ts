@@ -95,6 +95,10 @@ test.describe("Acessibilidade", () => {
       )
 
     expect(textos.length).toBeGreaterThan(0)
+    // A conta acima ignora o canal alfa: só vale com cores opacas.
+    expect(
+      textos.filter((t) => /rgba/.test(t.cor) || /rgba/.test(t.fundo)),
+    ).toEqual([])
     expect(reprovados).toEqual([])
   })
 })
