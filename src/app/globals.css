@@ -502,6 +502,30 @@
       transform var(--dur-base) var(--ease-museum),
       visibility 0s linear var(--dur-base);
   }
+
+  /* Abaixo de `md` o verso é a face mais alta (quase o dobro da frente):
+     com as duas na mesma célula, a sala ficava com a altura do verso
+     escondido e sobrava parede vazia embaixo da captura. Aqui a face
+     inativa sai do fluxo, presa à área da célula (o invólucro é o ancestral
+     posicionado), e a célula abraça só a face visível. O invólucro recorta
+     a face que sai durante o crossfade, para ela não cobrir o texto da
+     Ficha. A partir de `md` a frente é a mais alta e a sala segue do tamanho
+     dela, com o verso do mesmo tamanho da tela. `width < 48rem` é o mesmo
+     corte do `max-md:` do Tailwind (breakpoints.md), literal porque
+     `@media` não aceita var(). A troca de altura nasce de um clique, então
+     não conta como CLS. */
+  @media (width < 48rem) {
+    :root[data-js] [data-faces] {
+      overflow: clip;
+    }
+
+    :root[data-js] [data-face][data-ativo="false"] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+    }
+  }
 }
 
 /* RC10 (gate B, I2): em forced-colors, bg-ink/text-bg do botão pressionado

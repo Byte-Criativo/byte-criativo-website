@@ -56,8 +56,11 @@ const FACES: ReadonlyArray<{ valor: Face; rotulo: string }> = [
 
 const CLASSE_CONTROLE =
   "hidden overflow-hidden rounded-(--radius-tag) border-(length:--border-w-control) border-solid border-ink js:inline-flex"
+// Abaixo de `sm` a cabeça da Ficha empilha e estica o grupo na largura toda:
+// os dois botões dividem essa largura em metades iguais (sem área morta à
+// direita de "Verso"). A partir de `sm` o controle volta ao tamanho mínimo.
 const CLASSE_BOTAO =
-  "min-h-(--space-7) min-w-(--space-8) px-(--space-3) text-label transition-colors duration-(--dur-fast) focus-visible:relative"
+  "min-h-(--space-7) min-w-(--space-8) flex-1 px-(--space-3) text-label transition-colors duration-(--dur-fast) focus-visible:relative sm:flex-none"
 const CLASSE_ATIVO = "bg-ink text-bg"
 const CLASSE_INATIVO =
   "bg-surface text-ink focus-visible:bg-surface-muted ponteiro:hover:bg-surface-muted"
@@ -106,8 +109,11 @@ export function FrenteVersoFaces({
 
   return (
     <div
+      data-faces
       className={
-        className ? `grid gap-(--space-5) ${className}` : "grid gap-(--space-5)"
+        className
+          ? `relative grid gap-(--space-5) ${className}`
+          : "relative grid gap-(--space-5)"
       }
     >
       <div
@@ -122,8 +128,12 @@ export function FrenteVersoFaces({
         data-face="verso"
         data-ativo={face === "verso"}
         // Redefine todas as vars: por isso o verso pode viver dentro da sala.
+        // O `text-ink` aqui é obrigatório: a cor herdada do <article> da
+        // Ficha já chega computada na tinta da parede, e um descendente sem
+        // cor própria (a lista "O que está no ar") sairia escuro sobre o
+        // fundo do verso.
         data-surface="verso"
-        className="bg-bg p-(--space-5) lg:p-(--space-6) js:col-start-1 js:row-start-1"
+        className="bg-bg p-(--space-5) text-ink lg:p-(--space-6) js:col-start-1 js:row-start-1"
       >
         <h3 className="text-label text-ink js:sr-only">Verso</h3>
         {verso}
