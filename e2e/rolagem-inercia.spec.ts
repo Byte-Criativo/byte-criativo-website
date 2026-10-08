@@ -20,6 +20,9 @@ type JanelaAmostrada = Window & {
   __amostrando?: boolean
 }
 
+/** `defaultPrevented` de cada roda com Shift, lido depois dos ouvintes. */
+type JanelaComShift = Window & { __shiftBarrado?: boolean[] }
+
 const QUADROS_PARADOS = 20
 
 const projetoDesktop = (nome: string) => nome !== "mobile"
@@ -346,6 +349,7 @@ test.describe("Rolagem com inércia: roda do mouse", () => {
 
   test("roda com Shift e roda horizontal rolam a tabela de /privacidade sem mover a página", async ({
     page,
+    browserName,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto("/privacidade")
@@ -380,10 +384,37 @@ test.describe("Rolagem com inércia: roda do mouse", () => {
     await tabela.evaluate((el) => {
       el.scrollLeft = 0
     })
+    // O que é do motor: a roda com Shift chega ao navegador intacta (o
+    // `virtualScroll` deixa o Lenis de fora, sem `preventDefault`). Lido
+    // num `setTimeout`, depois de todos os ouvintes do evento.
+    await page.evaluate(() => {
+      const w = window as JanelaComShift
+      w.__shiftBarrado = []
+      window.addEventListener(
+        "wheel",
+        (evento) => {
+          if (evento.shiftKey) {
+            setTimeout(() => w.__shiftBarrado?.push(evento.defaultPrevented))
+          }
+        },
+        { passive: true },
+      )
+    })
     await comecarAmostras(page)
     await page.keyboard.down("Shift")
     await page.mouse.wheel(0, 120)
     await page.keyboard.up("Shift")
+    const barrado = () =>
+      page.evaluate(() => (window as JanelaComShift).__shiftBarrado ?? [])
+    await expect.poll(async () => (await barrado()).length).toBeGreaterThan(0)
+    expect(await barrado()).not.toContain(true)
+    // O resto é do navegador: Chromium e Firefox convertem Shift+roda em
+    // rolagem horizontal; o WebKit do Linux (Playwright, CI) não converte,
+    // e no macOS quem converte é o sistema, que já entrega `deltaX`.
+    if (browserName === "webkit") {
+      await esperarQuadros(page)
+      return
+    }
     await expect
       .poll(() => tabela.evaluate((el) => el.scrollLeft))
       .toBeGreaterThan(0)
