@@ -15,6 +15,7 @@ import { cn } from "@/lib/cn"
 import { Heading } from "@/components/ui/heading"
 import { Text } from "@/components/ui/text"
 import { EditorialLayout } from "@/components/patterns/editorial-layout"
+import { TransicaoDePagina } from "../_components/transicao-de-pagina"
 
 const privacidade = getPrivacidadePage()
 
@@ -55,7 +56,13 @@ function Blocos({ blocos }: { blocos: PrivacidadeBlock[] }): ReactElement {
           }
           case "table":
             return (
-              <div key={indice} className="overflow-x-auto">
+              // Gesto horizontal (roda com Shift, trackpad) fica nativo na
+              // tabela; a roda vertical por cima dela segue com inércia.
+              <div
+                key={indice}
+                className="overflow-x-auto"
+                data-lenis-prevent-horizontal
+              >
                 <table className="w-full border-collapse text-body text-ink">
                   <caption className="p-(--space-2) text-left text-caption text-ink-muted">
                     {bloco.caption}
@@ -118,50 +125,52 @@ export default function PrivacidadePage() {
   ])
 
   return (
-    <div className="relative py-(--space-8) lg:py-(--space-9)">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdGraph) }}
-      />
+    <TransicaoDePagina>
+      <div className="relative py-(--space-8) lg:py-(--space-9)">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdGraph) }}
+        />
 
-      <EditorialLayout variante="texto">
-        <header className="flex flex-col gap-(--space-4)">
-          <Heading nivel={1}>{privacidade.title}</Heading>
-          <Text papel="caption" tom="muted">
-            Última atualização:{" "}
-            <time dateTime={privacidade.lastUpdated}>
-              {formatarDataPorExtenso(privacidade.lastUpdated)}
-            </time>
-          </Text>
-        </header>
+        <EditorialLayout variante="texto">
+          <header className="flex flex-col gap-(--space-4)">
+            <Heading nivel={1}>{privacidade.title}</Heading>
+            <Text papel="caption" tom="muted">
+              Última atualização:{" "}
+              <time dateTime={privacidade.lastUpdated}>
+                {formatarDataPorExtenso(privacidade.lastUpdated)}
+              </time>
+            </Text>
+          </header>
 
-        {privacidade.sections.map((section) => (
-          <section
-            key={section.id}
-            id={section.id}
-            aria-labelledby={`${section.id}-titulo`}
-            className="flex flex-col gap-(--space-4)"
-          >
-            <Heading nivel={2} id={`${section.id}-titulo`}>
-              {`${section.number}. ${section.title}`}
-            </Heading>
-            {section.blocks ? <Blocos blocos={section.blocks} /> : null}
-            {section.subsections?.map((sub) => (
-              <section
-                key={sub.id}
-                id={sub.id}
-                aria-labelledby={`${sub.id}-titulo`}
-                className="flex flex-col gap-(--space-3) pt-(--space-3)"
-              >
-                <Heading nivel={3} id={`${sub.id}-titulo`}>
-                  {`${sub.number} ${sub.title}`}
-                </Heading>
-                <Blocos blocos={sub.blocks} />
-              </section>
-            ))}
-          </section>
-        ))}
-      </EditorialLayout>
-    </div>
+          {privacidade.sections.map((section) => (
+            <section
+              key={section.id}
+              id={section.id}
+              aria-labelledby={`${section.id}-titulo`}
+              className="flex flex-col gap-(--space-4)"
+            >
+              <Heading nivel={2} id={`${section.id}-titulo`}>
+                {`${section.number}. ${section.title}`}
+              </Heading>
+              {section.blocks ? <Blocos blocos={section.blocks} /> : null}
+              {section.subsections?.map((sub) => (
+                <section
+                  key={sub.id}
+                  id={sub.id}
+                  aria-labelledby={`${sub.id}-titulo`}
+                  className="flex flex-col gap-(--space-3) pt-(--space-3)"
+                >
+                  <Heading nivel={3} id={`${sub.id}-titulo`}>
+                    {`${sub.number} ${sub.title}`}
+                  </Heading>
+                  <Blocos blocos={sub.blocks} />
+                </section>
+              ))}
+            </section>
+          ))}
+        </EditorialLayout>
+      </div>
+    </TransicaoDePagina>
   )
 }

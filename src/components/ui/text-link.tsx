@@ -102,6 +102,24 @@ export function TextLink({
     )
   }
 
+  // Âncora do mesmo documento: `<a>` simples. O `next/link` passaria pelo
+  // roteador (`scrollIntoView()`, sem mover o foco); assim ela segue o mesmo
+  // caminho do skip link e do índice de `;` — nativo, ou com a curva da
+  // inércia da roda quando ela está ativa (src/lib/rolagem).
+  if (href.startsWith("#")) {
+    return (
+      <a
+        id={id}
+        href={href}
+        aria-current={ariaCurrent}
+        data-indice-link={dataIndiceLink}
+        className={classes}
+      >
+        {conteudo}
+      </a>
+    )
+  }
+
   return (
     <Link
       id={id}

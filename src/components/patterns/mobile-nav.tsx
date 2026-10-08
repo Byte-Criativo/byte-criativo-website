@@ -143,6 +143,9 @@ export function MobileNav({
         onClose={() => gatilho.current?.focus()}
         onKeyDown={aoTeclar}
         aria-labelledby={ID_TITULO}
+        // Inércia da roda (src/lib/rolagem): dentro do diálogo a rolagem é
+        // nativa. Inerte sem o motor carregado.
+        data-lenis-prevent
         className="h-full max-h-none w-full max-w-none bg-surface text-ink"
       >
         <div className="flex items-center justify-between gap-(--space-4) px-(--grid-margin) py-(--space-3)">

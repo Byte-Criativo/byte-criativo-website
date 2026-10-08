@@ -1,5 +1,10 @@
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import {
+  oferecerRelogio,
+  retirarRelogio,
+  vetarInercia,
+} from "@/lib/rolagem/ponte"
 import { LINHAS_DE_CODIGO } from "./codigo"
 import { GLOBO as CONFIG, type GloboVariante } from "./config"
 import type { HeroCanvasEstado } from "./use-hero-canvas"
@@ -1232,9 +1237,12 @@ export function montarGlobo(
   }
 
   let pronto = false
+  // Rolagem com que o último quadro foi desenhado (ver `desenharRolagem`).
+  let rolagemDesenhada = Number.NaN
   const desenhar = (agora: number) => {
     const atlasDeLinhas = atlas
     if (!atlasDeLinhas) return
+    rolagemDesenhada = estado.rolagem
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.clearRect(0, 0, W, H)
     if (!pronto) {
@@ -2327,6 +2335,7 @@ export function montarGlobo(
   const cairParaEstatico = () => {
     if (!animar) return
     animar = false
+    vetarInercia(true)
     dormir()
     linha.progress(1).pause()
     canvas.dataset.modo = "estatico"
@@ -2508,6 +2517,40 @@ export function montarGlobo(
     desenhar(performance.now())
   }
 
+  // Modo estático: a rolagem redesenha no máximo uma vez por quadro, e só
+  // quando `estado.rolagem` mudou. Antes o `onUpdate` desenhava a cada evento
+  // `scroll` (e o ScrollTrigger também atualiza em `wheel`); com a inércia da
+  // roda a rolagem passa a mudar a cada quadro, e no renderizador por
+  // software cada quadro do canvas é uma cópia cara na composição. O rAF
+  // pedido no evento `scroll` roda no mesmo quadro: nada muda na tela.
+  let quadroDaRolagem = 0
+  const desenharRolagem = () => {
+    quadroDaRolagem = 0
+    if (estado.rolagem !== rolagemDesenhada) desenhar(performance.now())
+  }
+
+  // `scrub` aqui não suaviza nada: o gatilho não tem `animation`, e o
+  // ScrollTrigger só cria o tween de scrub dentro de `if (animation)`. O
+  // `self.progress` que chega ao `onUpdate` é o da rolagem crua (medido
+  // quadro a quadro contra `scrollY`, com e sem a inércia da roda). Não há
+  // suavização dupla a tirar; o atraso de um quadro (o evento `scroll` vem
+  // depois da escrita da inércia) sai com `aoRolar` no relógio abaixo.
+  // `scroll-behavior` da raiz e o `refresh` do ScrollTrigger. O GSAP lê o
+  // valor uma vez só, no primeiro gatilho, e com "smooth" grava
+  // `scroll-behavior` inline na raiz depois de cada `refresh` (o que venceria
+  // o `auto` que a inércia da roda põe por classe). Por isso o gatilho nasce
+  // com `auto` inline (o GSAP guarda "não suave" e não grava mais nada) e,
+  // em todo `refresh`, a rolagem a 0 para medir e a volta ficam instantâneas
+  // por `auto` inline, com ou sem a inércia montada (o CSS suave da raiz vale
+  // sem ela).
+  const raiz = document.documentElement
+  const forcarRolagemSeca = () => {
+    raiz.style.scrollBehavior = "auto"
+  }
+  const soltarRolagemSeca = () => {
+    raiz.style.removeProperty("scroll-behavior")
+  }
+  forcarRolagemSeca()
   const gatilho = ScrollTrigger.create({
     trigger: secao,
     start: "top top",
@@ -2515,9 +2558,31 @@ export function montarGlobo(
     scrub: 0.6,
     onUpdate: (self) => {
       estado.rolagem = self.progress
-      if (reduzido.matches || !animar) desenhar(performance.now())
+      if ((reduzido.matches || !animar) && !quadroDaRolagem) {
+        quadroDaRolagem = requestAnimationFrame(desenharRolagem)
+      }
     },
   })
+
+  soltarRolagemSeca()
+  ScrollTrigger.addEventListener("refreshInit", forcarRolagemSeca)
+  ScrollTrigger.addEventListener("refresh", soltarRolagemSeca)
+
+  // Um relógio só na home: a inércia da roda (src/lib/rolagem/motor.ts)
+  // entra no ticker com prioridade, escreve a rolagem antes do `desenhar`
+  // do mesmo quadro e atualiza o gatilho na hora. Pela ponte, sem importar
+  // o Lenis aqui. Quando o teto do ticker (`fps()` é global: 60, ou 30 no
+  // último degrau) fica abaixo da taxa da tela, a inércia volta ao rAF
+  // próprio.
+  oferecerRelogio({
+    adicionar: (passo) => gsap.ticker.add(passo, false, true),
+    remover: (passo) => gsap.ticker.remove(passo),
+    aoRolar: () => ScrollTrigger.update(),
+    // Folga de 5 Hz: telas de "60 Hz" medem 59–63.
+    noRitmoDaTela: (hz) => (DESEMPENHO.degraus[degrau]?.fps ?? 60) >= hz - 5,
+  })
+  // Sem aceleração o globo fica estático e a inércia sai (ver `vetarInercia`).
+  if (!animar) vetarInercia(true)
 
   // --- eventos ---------------------------------------------------------------
   /**
@@ -2764,6 +2829,11 @@ export function montarGlobo(
     cancelarMontagem?.()
     cancelarLaranja?.()
     if (rafInicial) cancelAnimationFrame(rafInicial)
+    if (quadroDaRolagem) cancelAnimationFrame(quadroDaRolagem)
+    retirarRelogio()
+    vetarInercia(false)
+    ScrollTrigger.removeEventListener("refreshInit", forcarRolagemSeca)
+    ScrollTrigger.removeEventListener("refresh", soltarRolagemSeca)
     dormir()
     gsap.ticker.fps(60)
     linha.kill()

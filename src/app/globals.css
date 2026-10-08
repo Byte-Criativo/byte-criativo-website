@@ -666,6 +666,52 @@ dialog::backdrop {
   background: var(--bg, Canvas);
 }
 
+/* A rolagem dentro do diálogo não vaza para a página no fim do conteúdo
+   (a página já está travada acima; isto evita o "quique" passar adiante). */
+dialog {
+  overscroll-behavior: contain;
+}
+
+/* Rolagem suave nas âncoras quando a inércia da roda não está ativa (toque,
+   trackpad sem roda, antes do motor carregar). Só sem pedido de movimento
+   reduzido: com ele, o bloco `reduce` lá em cima já força `auto !important`.
+   Só com JS (`data-js`, gravado no <head> antes da primeira pintura e
+   retirado se a hidratação falhar): sem JS o site fica igual ao de antes.
+   A troca de rota do Next segue instantânea por `data-scroll-behavior` no
+   <html>. Com o Lenis ativo (classe `lenis` na raiz) o CSS suave sai: uma
+   rolagem nativa suave no meio da inércia (`focus()`, busca na página) seria
+   cancelada pela escrita instantânea seguinte do Lenis antes de andar um
+   quadro; seca, ela muda a posição na hora e o motor percebe e interrompe a
+   inércia. O ScrollTrigger do globo não depende deste valor (ver o
+   `refresh` em globo-motor.ts). */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-js] {
+    scroll-behavior: smooth;
+  }
+}
+
+:root[data-js].lenis {
+  scroll-behavior: auto;
+}
+
+/* Do lenis.css (1.3.26), só o necessário. Fica de fora a trava
+   `.lenis-stopped { overflow: clip }`: tem especificidade maior que a de
+   `html:has(dialog[open])` acima e `scrollbar-gutter` não vale com `clip`,
+   então a barra sumiria e o conteúdo alargaria ao abrir a galeria; a trava
+   da casa já cobre. Fica de fora também o `height: auto` de html e body
+   (já é o valor deles aqui) e o `contain` nas variantes por eixo
+   (`-horizontal`): na tabela de /privacidade ele bloquearia o PgDn depois de
+   um clique no texto dela, que encadeia da tabela para a página. */
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Durante a inércia o iframe (o desafio do Turnstile no contato) não engole
+   a roda no meio do deslizamento. */
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
 /* GaleriaDialog: o gatilho de ampliação cobre a figura inteira sem mudar a
    caixa dela nem remontar a imagem. `position: absolute` e `inset: 0` são
    estruturais (a mesma posição, não um valor de espaçamento com escala
@@ -1145,5 +1191,97 @@ dialog::backdrop {
   .hero-rolar-linha {
     animation: none;
     transform: none;
+  }
+}
+
+/* Troca de página com <ViewTransition> (React, App Router). Cada page.tsx
+   de (site) envolve o conteúdo em <TransicaoDePagina> (classe `pagina`): a
+   página velha sai e a nova entra num crossfade curto. O header tem nome
+   próprio e não anima (a âncora do olho); a raiz troca seca. Sem suporte no
+   navegador a navegação segue igual. */
+[data-site-header] {
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: var(--z-header);
+}
+
+::view-transition-old(site-header),
+::view-transition-old(root) {
+  display: none;
+}
+
+::view-transition-new(site-header),
+::view-transition-new(root) {
+  animation: none;
+}
+
+/* Rodapé: com ele visível (clique num link dele), a faixa sai junto com o
+   conteúdo, no mesmo lugar. Com nome próprio e o grupo sem animação, a
+   imagem velha iria para a posição do rodapé novo (fora da tela, a página
+   nova abre no topo) e sumiria na hora; no snapshot da raiz, o conteúdo
+   novo a cobriria. Por isso o grupo SEGURA a geometria velha a transição
+   inteira (`steps(1, end)` sobre a animação padrão dele) e a imagem nova
+   fica oculta até o fim, quando a página real assume. */
+[data-site-footer] {
+  view-transition-name: site-footer;
+}
+
+::view-transition-group(site-footer) {
+  animation-duration: var(--dur-base);
+  animation-timing-function: steps(1, end);
+  z-index: var(--z-header);
+}
+
+::view-transition-old(site-footer) {
+  animation: var(--dur-base) ease-out both pagina-sai;
+}
+
+::view-transition-new(site-footer) {
+  animation: var(--dur-base) linear rodape-espera;
+}
+
+@keyframes rodape-espera {
+  0%,
+  100% {
+    opacity: 0;
+  }
+}
+
+::view-transition-old(.pagina) {
+  animation: var(--dur-base) ease-out both pagina-sai;
+}
+
+::view-transition-new(.pagina) {
+  animation: var(--dur-base) ease-out both pagina-entra;
+}
+
+@keyframes pagina-sai {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes pagina-entra {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Cliques durante a transição passam para a página viva. */
+::view-transition {
+  pointer-events: none;
+}
+
+/* A regra global `*` do movimento reduzido não alcança estes
+   pseudo-elementos: sem isto o crossfade rodaria. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 }

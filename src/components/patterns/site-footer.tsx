@@ -39,7 +39,9 @@ export function SiteFooter({
   navId?: string
 }): ReactElement {
   return (
-    <footer className="bg-bg text-ink">
+    // `data-site-footer`: nome próprio na troca de página (view transition
+    // em globals.css), para o rodapé visível sair junto com o conteúdo.
+    <footer data-site-footer className="bg-bg text-ink">
       <Container className="pt-(--space-9)">
         {/* tabIndex -1: recebe o foco quando o link "Menu" sem JS chega
             aqui, sem entrar na ordem de Tab e sem desenhar anel. */}

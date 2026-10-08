@@ -16,6 +16,7 @@ import { HomeFormaDePensar } from "./_components/home-forma-de-pensar"
 import { HomeOQueFazemos } from "./_components/home-o-que-fazemos"
 import { HomeComoAnda } from "./_components/home-como-anda"
 import { HomeConversa } from "./_components/home-conversa"
+import { TransicaoDePagina } from "./_components/transicao-de-pagina"
 
 const home = getHomePage()
 const site = getSiteConfig()
@@ -62,39 +63,41 @@ export default function HomePage() {
   ])
 
   return (
-    <div className="relative">
-      <link rel="canonical" href="https://www.bcriativo.com/" />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdGraph) }}
-      />
-      <SalaObserver
-        salas={["sala-underground-pb", "sala-festival-alumio"]}
-        secoes={[
-          "hero",
-          "trabalhos",
-          "forma-de-pensar",
-          "o-que-fazemos",
-          "como-anda",
-          "conversa",
-        ]}
-      />
-      <IndiceSemicolon itens={ITENS_INDICE} />
+    <TransicaoDePagina>
+      <div className="relative">
+        <link rel="canonical" href="https://www.bcriativo.com/" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdGraph) }}
+        />
+        <SalaObserver
+          salas={["sala-underground-pb", "sala-festival-alumio"]}
+          secoes={[
+            "hero",
+            "trabalhos",
+            "forma-de-pensar",
+            "o-que-fazemos",
+            "como-anda",
+            "conversa",
+          ]}
+        />
+        <IndiceSemicolon itens={ITENS_INDICE} />
 
-      <HomeHero hero={home.hero} />
-      <HomeSalas
-        salas={home.salas}
-        estudoDeCasoHrefs={Object.fromEntries(
-          home.salas.items.map((sala) => [sala.slug, hrefEstudoDeCaso(sala)]),
-        )}
-      />
-      <HomeFormaDePensar formaDePensar={home.formaDePensar} />
-      <HomeOQueFazemos
-        oQueFazemos={home.oQueFazemos}
-        casesPublicados={publicados}
-      />
-      <HomeComoAnda comoAnda={home.comoAnda} />
-      <HomeConversa conversa={home.conversa} site={site} />
-    </div>
+        <HomeHero hero={home.hero} />
+        <HomeSalas
+          salas={home.salas}
+          estudoDeCasoHrefs={Object.fromEntries(
+            home.salas.items.map((sala) => [sala.slug, hrefEstudoDeCaso(sala)]),
+          )}
+        />
+        <HomeFormaDePensar formaDePensar={home.formaDePensar} />
+        <HomeOQueFazemos
+          oQueFazemos={home.oQueFazemos}
+          casesPublicados={publicados}
+        />
+        <HomeComoAnda comoAnda={home.comoAnda} />
+        <HomeConversa conversa={home.conversa} site={site} />
+      </div>
+    </TransicaoDePagina>
   )
 }
