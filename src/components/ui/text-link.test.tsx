@@ -15,6 +15,25 @@ describe("TextLink", () => {
     expect(link).not.toHaveAttribute("rel")
   })
 
+  // Âncora do mesmo documento vira `<a>` simples (o next/link passaria pelo
+  // roteador): segue o caminho nativo ou o da inércia da roda, com as mesmas
+  // classes da variante.
+  it("âncora #… usa <a> simples, sem nova aba e com as mesmas classes", () => {
+    render(
+      <TextLink href="#manutencao" variante="acao" data-indice-link="1">
+        Ir para manutenção
+      </TextLink>,
+    )
+    const link = screen.getByRole("link", { name: "Ir para manutenção" })
+    expect(link).toHaveAttribute("href", "#manutencao")
+    expect(link).toHaveAttribute("data-indice-link", "1")
+    expect(link).not.toHaveAttribute("target")
+    expect(link).toHaveClass("min-h-(--alvo-toque)")
+    expect(link).toHaveClass(
+      "focus-visible:decoration-(length:--border-w-focus)",
+    )
+  })
+
   it("link externo abre em nova aba com rel seguro e anuncia isso", () => {
     render(
       <TextLink

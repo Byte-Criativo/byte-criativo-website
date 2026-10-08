@@ -101,6 +101,9 @@ export function GaleriaDialog({
       <dialog
         ref={dialogo}
         aria-labelledby={idLegenda}
+        // Inércia da roda (src/lib/rolagem): dentro do diálogo a rolagem é
+        // nativa. Inerte sem o motor carregado.
+        data-lenis-prevent
         // O retorno de foco ao gatilho é nativo no navegador; o evento
         // `close` cobre também Esc e o fechamento por comando.
         onClose={() => gatilhoAtivo.current?.focus()}

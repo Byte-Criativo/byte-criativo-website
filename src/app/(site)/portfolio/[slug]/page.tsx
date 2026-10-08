@@ -20,6 +20,7 @@ import { GaleriaDialog } from "@/components/patterns/galeria-dialog"
 import { NavegacaoTrabalhos } from "@/components/patterns/navegacao-trabalhos"
 import { BrowserFrame } from "@/components/patterns/browser-frame"
 import { Media } from "@/components/patterns/media"
+import { TransicaoDePagina } from "../../_components/transicao-de-pagina"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -99,193 +100,197 @@ export default async function CasePage({ params }: PageProps) {
   ])
 
   return (
-    <div className="relative">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdGraph) }}
-      />
+    <TransicaoDePagina>
+      <div className="relative">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdGraph) }}
+        />
 
-      <div className="mx-auto w-full max-w-(--grid-container-max) px-(--grid-margin) pt-(--space-6)">
-        <Breadcrumbs
-          trilha={[
-            { rotulo: "Início", href: "/" },
-            { rotulo: "Projetos", href: "/portfolio" },
-            { rotulo: nome },
-          ]}
+        <div className="mx-auto w-full max-w-(--grid-container-max) px-(--grid-margin) pt-(--space-6)">
+          <Breadcrumbs
+            trilha={[
+              { rotulo: "Início", href: "/" },
+              { rotulo: "Projetos", href: "/portfolio" },
+              { rotulo: nome },
+            ]}
+          />
+        </div>
+
+        <article
+          data-case={estudo.slug}
+          className="bg-bg pb-(--space-8) text-ink"
+        >
+          <CaseHero
+            titulo={estudo.title}
+            subtitulo={estudo.subtitle}
+            imagem={
+              <BrowserFrame dominio={dominio} legenda={estudo.media.cover.alt}>
+                <Media
+                  tipo="captura"
+                  src={estudo.media.cover.src}
+                  alt={estudo.media.cover.alt}
+                  width={estudo.media.cover.width}
+                  height={estudo.media.cover.height}
+                  sizes="(min-width: 64rem) 58vw, 100vw"
+                  prioridade
+                />
+              </BrowserFrame>
+            }
+            fichaTecnica={[
+              { termo: "Tipo", descricao: estudo.projectType },
+              {
+                termo: "Atuação da Byte",
+                descricao: estudo.role.disciplines.join(" · "),
+              },
+              { termo: "Plataformas", descricao: "Web" },
+              {
+                termo: "Tecnologias",
+                descricao: estudo.engineering
+                  .map((item) => item.name)
+                  .join(", "),
+              },
+            ]}
+            projetoNoAr={{ nome, href: estudo.liveUrl }}
+          />
+
+          <EditorialLayout className="pt-(--space-8)">
+            <Heading nivel={2}>O que o site reúne</Heading>
+            <ul className="flex flex-col gap-(--space-3)">
+              {estudo.needs.map((necessidade) => (
+                <li
+                  key={necessidade}
+                  className="flex items-start gap-(--space-3)"
+                >
+                  <span aria-hidden="true" className="font-bold select-none">
+                    —
+                  </span>
+                  <Text medida>{necessidade}</Text>
+                </li>
+              ))}
+            </ul>
+
+            <Heading nivel={2}>Como a experiência funciona</Heading>
+            {estudo.uxDecisions.map((decisao) => (
+              <section key={decisao.title} aria-label={decisao.title}>
+                <Heading nivel={3}>{decisao.title}</Heading>
+                <Text medida tom="muted">
+                  {decisao.problem}
+                </Text>
+                <Text medida>{decisao.decision}</Text>
+              </section>
+            ))}
+
+            <Heading nivel={2}>Engenharia verificada</Heading>
+            <ul className="flex flex-col gap-(--space-3)">
+              {estudo.engineering.map((item) => (
+                <li key={item.name}>
+                  <Text medida>
+                    <strong>{item.name}</strong>
+                    {` — ${item.evidence}`}
+                  </Text>
+                </li>
+              ))}
+            </ul>
+
+            <Heading nivel={2}>Retrato do site na data da verificação</Heading>
+            <dl className="flex flex-col gap-(--space-3)">
+              {estudo.observableResults.map((fato) => (
+                <div key={fato.label}>
+                  <dt className="text-caption text-ink-muted">{fato.label}</dt>
+                  <dd>
+                    <Text medida>
+                      {`${fato.value} (fonte: ${fato.source}, verificado em ${fato.checkedAt})`}
+                    </Text>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            {estudo.thirdPartyCredits.length > 0 && (
+              <Heading nivel={2}>Créditos de terceiros</Heading>
+            )}
+            <ul className="flex flex-col gap-(--space-3)">
+              {estudo.thirdPartyCredits.map((credito) => (
+                <li key={credito.item}>
+                  <Text medida>
+                    <strong>{credito.item}</strong>
+                    {` — ${credito.credit}`}
+                  </Text>
+                </li>
+              ))}
+            </ul>
+
+            <Heading nivel={2}>Galeria</Heading>
+            <GaleriaDialog
+              itens={estudo.media.gallery.map((imagem, indice) => ({
+                id: `galeria-${indice + 1}`,
+                legenda: imagem.caption ?? imagem.alt,
+                ampliada: (
+                  <Media
+                    tipo="captura"
+                    src={imagem.src}
+                    alt={imagem.alt}
+                    width={imagem.width}
+                    height={imagem.height}
+                    sizes="(min-width: 64rem) 80vw, 100vw"
+                    className={
+                      imagem.width < imagem.height
+                        ? "mx-auto max-w-96"
+                        : undefined
+                    }
+                  />
+                ),
+              }))}
+            >
+              {estudo.media.gallery.map((imagem, indice) => (
+                <figure
+                  key={`galeria-${indice + 1}`}
+                  data-galeria-item={`galeria-${indice + 1}`}
+                  className="relative md:col-span-8 lg:col-span-10"
+                >
+                  <Media
+                    tipo="captura"
+                    src={imagem.src}
+                    alt={imagem.alt}
+                    width={imagem.width}
+                    height={imagem.height}
+                    sizes="(min-width: 64rem) 58vw, 100vw"
+                    className={
+                      imagem.width < imagem.height
+                        ? "mx-auto max-w-96"
+                        : undefined
+                    }
+                  />
+                  <figcaption className="pt-(--space-2) pr-(--space-7) text-caption text-ink-muted">
+                    {imagem.caption ?? imagem.alt}
+                  </figcaption>
+                </figure>
+              ))}
+            </GaleriaDialog>
+          </EditorialLayout>
+        </article>
+
+        <NavegacaoTrabalhos
+          anterior={
+            anterior
+              ? {
+                  nome: nomeCurto(anterior.title),
+                  href: `/portfolio/${anterior.slug}`,
+                }
+              : undefined
+          }
+          proximo={
+            proximo
+              ? {
+                  nome: nomeCurto(proximo.title),
+                  href: `/portfolio/${proximo.slug}`,
+                }
+              : undefined
+          }
+          todosHref="/portfolio"
         />
       </div>
-
-      <article
-        data-case={estudo.slug}
-        className="bg-bg pb-(--space-8) text-ink"
-      >
-        <CaseHero
-          titulo={estudo.title}
-          subtitulo={estudo.subtitle}
-          imagem={
-            <BrowserFrame dominio={dominio} legenda={estudo.media.cover.alt}>
-              <Media
-                tipo="captura"
-                src={estudo.media.cover.src}
-                alt={estudo.media.cover.alt}
-                width={estudo.media.cover.width}
-                height={estudo.media.cover.height}
-                sizes="(min-width: 64rem) 58vw, 100vw"
-                prioridade
-              />
-            </BrowserFrame>
-          }
-          fichaTecnica={[
-            { termo: "Tipo", descricao: estudo.projectType },
-            {
-              termo: "Atuação da Byte",
-              descricao: estudo.role.disciplines.join(" · "),
-            },
-            { termo: "Plataformas", descricao: "Web" },
-            {
-              termo: "Tecnologias",
-              descricao: estudo.engineering.map((item) => item.name).join(", "),
-            },
-          ]}
-          projetoNoAr={{ nome, href: estudo.liveUrl }}
-        />
-
-        <EditorialLayout className="pt-(--space-8)">
-          <Heading nivel={2}>O que o site reúne</Heading>
-          <ul className="flex flex-col gap-(--space-3)">
-            {estudo.needs.map((necessidade) => (
-              <li
-                key={necessidade}
-                className="flex items-start gap-(--space-3)"
-              >
-                <span aria-hidden="true" className="font-bold select-none">
-                  —
-                </span>
-                <Text medida>{necessidade}</Text>
-              </li>
-            ))}
-          </ul>
-
-          <Heading nivel={2}>Como a experiência funciona</Heading>
-          {estudo.uxDecisions.map((decisao) => (
-            <section key={decisao.title} aria-label={decisao.title}>
-              <Heading nivel={3}>{decisao.title}</Heading>
-              <Text medida tom="muted">
-                {decisao.problem}
-              </Text>
-              <Text medida>{decisao.decision}</Text>
-            </section>
-          ))}
-
-          <Heading nivel={2}>Engenharia verificada</Heading>
-          <ul className="flex flex-col gap-(--space-3)">
-            {estudo.engineering.map((item) => (
-              <li key={item.name}>
-                <Text medida>
-                  <strong>{item.name}</strong>
-                  {` — ${item.evidence}`}
-                </Text>
-              </li>
-            ))}
-          </ul>
-
-          <Heading nivel={2}>Retrato do site na data da verificação</Heading>
-          <dl className="flex flex-col gap-(--space-3)">
-            {estudo.observableResults.map((fato) => (
-              <div key={fato.label}>
-                <dt className="text-caption text-ink-muted">{fato.label}</dt>
-                <dd>
-                  <Text medida>
-                    {`${fato.value} (fonte: ${fato.source}, verificado em ${fato.checkedAt})`}
-                  </Text>
-                </dd>
-              </div>
-            ))}
-          </dl>
-
-          {estudo.thirdPartyCredits.length > 0 && (
-            <Heading nivel={2}>Créditos de terceiros</Heading>
-          )}
-          <ul className="flex flex-col gap-(--space-3)">
-            {estudo.thirdPartyCredits.map((credito) => (
-              <li key={credito.item}>
-                <Text medida>
-                  <strong>{credito.item}</strong>
-                  {` — ${credito.credit}`}
-                </Text>
-              </li>
-            ))}
-          </ul>
-
-          <Heading nivel={2}>Galeria</Heading>
-          <GaleriaDialog
-            itens={estudo.media.gallery.map((imagem, indice) => ({
-              id: `galeria-${indice + 1}`,
-              legenda: imagem.caption ?? imagem.alt,
-              ampliada: (
-                <Media
-                  tipo="captura"
-                  src={imagem.src}
-                  alt={imagem.alt}
-                  width={imagem.width}
-                  height={imagem.height}
-                  sizes="(min-width: 64rem) 80vw, 100vw"
-                  className={
-                    imagem.width < imagem.height
-                      ? "mx-auto max-w-96"
-                      : undefined
-                  }
-                />
-              ),
-            }))}
-          >
-            {estudo.media.gallery.map((imagem, indice) => (
-              <figure
-                key={`galeria-${indice + 1}`}
-                data-galeria-item={`galeria-${indice + 1}`}
-                className="relative md:col-span-8 lg:col-span-10"
-              >
-                <Media
-                  tipo="captura"
-                  src={imagem.src}
-                  alt={imagem.alt}
-                  width={imagem.width}
-                  height={imagem.height}
-                  sizes="(min-width: 64rem) 58vw, 100vw"
-                  className={
-                    imagem.width < imagem.height
-                      ? "mx-auto max-w-96"
-                      : undefined
-                  }
-                />
-                <figcaption className="pt-(--space-2) pr-(--space-7) text-caption text-ink-muted">
-                  {imagem.caption ?? imagem.alt}
-                </figcaption>
-              </figure>
-            ))}
-          </GaleriaDialog>
-        </EditorialLayout>
-      </article>
-
-      <NavegacaoTrabalhos
-        anterior={
-          anterior
-            ? {
-                nome: nomeCurto(anterior.title),
-                href: `/portfolio/${anterior.slug}`,
-              }
-            : undefined
-        }
-        proximo={
-          proximo
-            ? {
-                nome: nomeCurto(proximo.title),
-                href: `/portfolio/${proximo.slug}`,
-              }
-            : undefined
-        }
-        todosHref="/portfolio"
-      />
-    </div>
+    </TransicaoDePagina>
   )
 }

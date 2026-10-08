@@ -11,6 +11,7 @@ import {
   type ColunaRodape,
 } from "@/components/patterns/site-footer"
 import { getPublishedCases, getSiteConfig } from "@/content"
+import { MotorDeRolagem } from "./_components/motor-de-rolagem"
 
 const WORDMARK = <BrandLogo />
 
@@ -89,6 +90,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
         copyright={site.footer.copyright}
         navId="navegacao-rodape"
       />
+      <MotorDeRolagem />
     </>
   )
 }

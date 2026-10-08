@@ -20,7 +20,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={sans.variable} suppressHydrationWarning>
+    // `data-scroll-behavior="smooth"`: o Next 16 só desliga o
+    // `scroll-behavior: smooth` do CSS durante a troca de rota com este
+    // atributo; sem ele a rota nova chegaria ao topo deslizando.
+    <html
+      lang="pt-BR"
+      className={sans.variable}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         {/* RC9: antes da primeira pintura, para o estado com JS não dar
             salto de layout. */}
