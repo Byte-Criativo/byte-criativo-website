@@ -34,7 +34,7 @@ const PROPS = {
       ],
     },
   ],
-  email: "contato@bcriativo.com",
+  email: "contato@bytecriativo.com.br",
   whatsapp: {
     rotulo: "WhatsApp +55 (83) 99125-3377",
     mensagem: "Olá!",
@@ -80,8 +80,8 @@ describe("SiteFooter", () => {
   it("a linha final traz e-mail, WhatsApp com o nome da RC5 e copyright", () => {
     render(<SiteFooter {...PROPS} />)
     expect(
-      screen.getByRole("link", { name: "contato@bcriativo.com" }),
-    ).toHaveAttribute("href", "mailto:contato@bcriativo.com")
+      screen.getByRole("link", { name: "contato@bytecriativo.com.br" }),
+    ).toHaveAttribute("href", "mailto:contato@bytecriativo.com.br")
     expect(
       screen.getByRole("link", {
         name: "WhatsApp +55 (83) 99125-3377 (abre em nova aba)",

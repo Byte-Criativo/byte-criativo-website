@@ -464,7 +464,7 @@ export const privacidadePageRaw = {
           items: [
             "Nome: Byte Criativo",
             "CNPJ: 52.652.130/0001-02",
-            "E-mail: contato@bcriativo.com",
+            "E-mail: contato@bytecriativo.com.br",
           ],
         },
       ],
@@ -601,7 +601,7 @@ export const privacidadePageRaw = {
           blocks: [
             {
               type: "paragraph",
-              text: "Se você escrever para contato@bcriativo.com, o seu endereço e o conteúdo da mensagem são usados para responder.",
+              text: "Se você escrever para contato@bytecriativo.com.br, o seu endereço e o conteúdo da mensagem são usados para responder.",
             },
             {
               type: "list",
@@ -788,7 +788,7 @@ export const privacidadePageRaw = {
       blocks: [
         {
           type: "paragraph",
-          text: 'Para exercer seus direitos ou tirar dúvidas sobre esta política, escreva para contato@bcriativo.com com o assunto "Privacidade".',
+          text: 'Para exercer seus direitos ou tirar dúvidas sobre esta política, escreva para contato@bytecriativo.com.br com o assunto "Privacidade".',
         },
       ],
     },

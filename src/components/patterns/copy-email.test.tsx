@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { CopyEmail } from "./copy-email"
 
-const EMAIL = "contato@bcriativo.com"
+const EMAIL = "contato@bytecriativo.com.br"
 const escrever = vi.fn(() => Promise.resolve())
 
 beforeEach(() => {
