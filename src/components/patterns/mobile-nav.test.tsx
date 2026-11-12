@@ -50,7 +50,7 @@ function elemento() {
     <MobileNav
       navegacao={NAVEGACAO}
       whatsapp={{ rotulo: "Chamar no WhatsApp", mensagem: "Olá!" }}
-      emailHref="mailto:contato@bcriativo.com"
+      emailHref="mailto:contato@bytecriativo.com.br"
       wordmark={<BrandLogo />}
     />
   )

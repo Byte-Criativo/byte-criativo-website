@@ -1,4 +1,4 @@
-export const CONTACT_EMAIL = "contato@bcriativo.com"
+export const CONTACT_EMAIL = "contato@bytecriativo.com.br"
 export const CONTACT_PHONE_E164 = "+5583991253377"
 export const WHATSAPP_NUMBER = "5583991253377"
 export const WHATSAPP_DISPLAY = "+55 (83) 99125-3377"

@@ -56,12 +56,12 @@ Turnstile são validados no servidor antes de chamar o Resend.
 Em Production e Preview, `RESEND_API_KEY`, `LEAD_EMAIL_FROM`,
 `LEAD_EMAIL_TO` e `TURNSTILE_SECRET_KEY` são variáveis do tipo **Secret** na
 Vercel. `NEXT_PUBLIC_TURNSTILE_SITE_KEY` é **Config**, pois o widget precisa
-expor essa chave pública no navegador. O domínio `bcriativo.com` está
+expor essa chave pública no navegador. O domínio `bytecriativo.com.br` está
 verificado no Resend Free para envio. A caixa pública
-`contato@bcriativo.com` recebe pelo MX raiz do Resend; as mensagens aparecem
+`contato@bytecriativo.com.br` recebe pelo MX raiz do Resend; as mensagens aparecem
 na aba **Emails → Receiving** da conta Resend e não são encaminhadas
 automaticamente ao destinatário privado dos leads. O MX do subdomínio
-`send.bcriativo.com` atende apenas o retorno do envio e deve ser mantido.
+`send.bytecriativo.com.br` atende apenas o retorno do envio e deve ser mantido.
 
 O Next sobe na porta 3000 por padrão; se estiver ocupada, use
 `PORT=<porta> npm run dev`. Para e2e, `PW_CHANNEL=chrome` usa o Google
@@ -123,7 +123,7 @@ a `main`. Procedimento e seleção: [docs/portfolio-captures.md](docs/portfolio-
 ## Operação em produção
 
 - O projeto Vercel usa Node.js 24.x, como `.nvmrc`, `package.json` e CI.
-- O widget Turnstile Free atende `bcriativo.com`, `www.bcriativo.com` e a URL
+- O widget Turnstile Free atende `bytecriativo.com.br`, `www.bytecriativo.com.br` e a URL
   estável de Preview da branch `redesign/v2`. Se um host mudar, atualize a
   lista no Cloudflare antes de testar o formulário.
 - A regra WAF da Vercel limita `POST /contato` a cinco requisições por IP a
