@@ -1,4 +1,4 @@
-export const CANONICAL_ORIGIN = "https://www.bcriativo.com"
+export const CANONICAL_ORIGIN = "https://www.bytecriativo.com.br"
 
 export const PRESERVED_ROUTES = [
   "/",

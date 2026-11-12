@@ -22,8 +22,8 @@ const home = getHomePage()
 const site = getSiteConfig()
 
 // O resolvedor de metadata do Next converte o canonical da rota raiz para a
-// origem SEM barra final ("https://www.bcriativo.com"), mas o contrato de
-// rotas preservadas exige "https://www.bcriativo.com/". Por isso a home
+// origem SEM barra final ("https://www.bytecriativo.com.br"), mas o contrato de
+// rotas preservadas exige "https://www.bytecriativo.com.br/". Por isso a home
 // omite o canonical da metadata e emite o <link> manualmente no componente.
 export const metadata: Metadata = {
   ...buildMetadata({
@@ -65,7 +65,7 @@ export default function HomePage() {
   return (
     <TransicaoDePagina>
       <div className="relative">
-        <link rel="canonical" href="https://www.bcriativo.com/" />
+        <link rel="canonical" href="https://www.bytecriativo.com.br/" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdGraph) }}

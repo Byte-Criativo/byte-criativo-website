@@ -89,7 +89,7 @@ test("robots aponta para o sitemap", async ({ request }) => {
   const response = await request.get("/robots.txt")
   expect(response.status()).toBe(200)
   expect(await response.text()).toContain(
-    "Sitemap: https://www.bcriativo.com/sitemap.xml",
+    "Sitemap: https://www.bytecriativo.com.br/sitemap.xml",
   )
 })
 
@@ -108,7 +108,7 @@ test("organização com CNPJ no JSON-LD da home", async ({ request }) => {
   const html = await (await request.get("/")).text()
   const serialized = JSON.stringify(jsonLdBlocks(html))
   expect(serialized).toContain("52.652.130/0001-02")
-  expect(serialized).toContain("https://www.bcriativo.com/#organization")
+  expect(serialized).toContain("https://www.bytecriativo.com.br/#organization")
 })
 
 test("rota inexistente responde 404", async ({ request }) => {

@@ -7,6 +7,6 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   reporter: [["list"]],
   use: {
-    baseURL: process.env.BASE_URL ?? "https://www.bcriativo.com",
+    baseURL: process.env.BASE_URL ?? "https://www.bytecriativo.com.br",
   },
 })
