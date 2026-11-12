@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-export const SITE_URL = "https://www.bcriativo.com"
+export const SITE_URL = "https://www.bytecriativo.com.br"
 export const SITE_NAME = "Byte Criativo"
 
 const DEFAULT_OG_IMAGE = "/og-image.png"

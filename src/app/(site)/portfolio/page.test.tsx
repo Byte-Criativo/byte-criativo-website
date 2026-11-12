@@ -209,7 +209,7 @@ describe("Hub de Trabalhos — gate D5 (estudos de caso)", () => {
         item: {
           "@type": "CreativeWork",
           name: salaPublicada.name,
-          url: `https://www.bcriativo.com${salaPublicada.caseStudyUrl}`,
+          url: `https://www.bytecriativo.com.br${salaPublicada.caseStudyUrl}`,
         },
       },
     ])

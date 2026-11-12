@@ -35,7 +35,7 @@ describe("json-ld", () => {
       path: "/servicos",
     })
     expect(page["@type"]).toBe("WebPage")
-    expect(page["@id"]).toBe("https://www.bcriativo.com/servicos#webpage")
+    expect(page["@id"]).toBe("https://www.bytecriativo.com.br/servicos#webpage")
     expect(page["isPartOf"]).toEqual({ "@id": WEBSITE_ID })
     expect(page["about"]).toEqual({ "@id": ORGANIZATION_ID })
   })
@@ -48,7 +48,7 @@ describe("json-ld", () => {
     })
     expect(s["@type"]).toBe("Service")
     expect(s["@id"]).toBe(
-      "https://www.bcriativo.com/servicos/desenvolvimento-de-sites#service",
+      "https://www.bytecriativo.com.br/servicos/desenvolvimento-de-sites#service",
     )
     expect(s["provider"]).toEqual({ "@id": ORGANIZATION_ID })
     expect(s["serviceType"]).toBe("Desenvolvimento de sites")
@@ -82,13 +82,13 @@ describe("json-ld", () => {
         "@type": "ListItem",
         position: 1,
         name: "Início",
-        item: "https://www.bcriativo.com/",
+        item: "https://www.bytecriativo.com.br/",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Serviços",
-        item: "https://www.bcriativo.com/servicos",
+        item: "https://www.bytecriativo.com.br/servicos",
       },
     ])
   })
@@ -107,7 +107,7 @@ describe("json-ld", () => {
       type: "AboutPage",
     })
     expect(sobre["@type"]).toBe("AboutPage")
-    expect(sobre["@id"]).toBe("https://www.bcriativo.com/sobre#webpage")
+    expect(sobre["@id"]).toBe("https://www.bytecriativo.com.br/sobre#webpage")
 
     const contato = webPage({
       name: "Contato",
@@ -129,7 +129,9 @@ describe("json-ld", () => {
       ],
     })
     expect(colecao["@type"]).toBe("CollectionPage")
-    expect(colecao["@id"]).toBe("https://www.bcriativo.com/portfolio#webpage")
+    expect(colecao["@id"]).toBe(
+      "https://www.bytecriativo.com.br/portfolio#webpage",
+    )
     expect(colecao["isPartOf"]).toEqual({ "@id": WEBSITE_ID })
     expect(colecao["about"]).toEqual({ "@id": ORGANIZATION_ID })
 
@@ -142,7 +144,7 @@ describe("json-ld", () => {
         item: {
           "@type": "CreativeWork",
           name: "Underground PB",
-          url: "https://www.bcriativo.com/portfolio/underground-pb",
+          url: "https://www.bytecriativo.com.br/portfolio/underground-pb",
         },
       },
       {
@@ -151,7 +153,7 @@ describe("json-ld", () => {
         item: {
           "@type": "CreativeWork",
           name: "Festival Alumiô",
-          url: "https://www.bcriativo.com/portfolio/festival-alumio",
+          url: "https://www.bytecriativo.com.br/portfolio/festival-alumio",
         },
       },
     ])
@@ -166,10 +168,10 @@ describe("json-ld", () => {
     })
     expect(obra["@type"]).toBe("CreativeWork")
     expect(obra["@id"]).toBe(
-      "https://www.bcriativo.com/portfolio/festival-alumio#creativework",
+      "https://www.bytecriativo.com.br/portfolio/festival-alumio#creativework",
     )
     expect(obra["url"]).toBe(
-      "https://www.bcriativo.com/portfolio/festival-alumio",
+      "https://www.bytecriativo.com.br/portfolio/festival-alumio",
     )
     expect(obra["name"]).toContain("Festival Alumiô")
     expect(obra["creator"]).toEqual({ "@id": ORGANIZATION_ID })

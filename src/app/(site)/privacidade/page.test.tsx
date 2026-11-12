@@ -163,7 +163,9 @@ describe("Página Privacidade (/privacidade)", () => {
     const secao = screen.getByRole("region", {
       name: "13. Aplicativo Pomodoro",
     })
-    expect(secao).toHaveTextContent("www.bcriativo.com/pomodoro/privacidade")
+    expect(secao).toHaveTextContent(
+      "www.bytecriativo.com.br/pomodoro/privacidade",
+    )
     expect(secao).toHaveTextContent(
       "Esta política não se aplica ao aplicativo.",
     )

@@ -457,7 +457,7 @@ export const privacidadePageRaw = {
       blocks: [
         {
           type: "paragraph",
-          text: "Esta política explica como a Byte Criativo trata os dados pessoais de quem visita o site www.bcriativo.com ou entra em contato por ele. A Byte Criativo é a controladora desses dados, nos termos da Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018, a LGPD).",
+          text: "Esta política explica como a Byte Criativo trata os dados pessoais de quem visita o site www.bytecriativo.com.br ou entra em contato por ele. A Byte Criativo é a controladora desses dados, nos termos da Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018, a LGPD).",
         },
         {
           type: "list",
@@ -821,7 +821,7 @@ export const privacidadePageRaw = {
       blocks: [
         {
           type: "paragraph",
-          text: "O aplicativo Pomodoro para macOS tem política de privacidade própria, em www.bcriativo.com/pomodoro/privacidade. Esta política não se aplica ao aplicativo.",
+          text: "O aplicativo Pomodoro para macOS tem política de privacidade própria, em www.bytecriativo.com.br/pomodoro/privacidade. Esta política não se aplica ao aplicativo.",
         },
       ],
     },
